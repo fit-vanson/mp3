@@ -31,6 +31,11 @@ Route::get('/clear', function () {
 
 });
 
+Route::get('/link',function (){
+    Artisan::call('storage:link');
+    echo 1;
+});
+
 Route::group(['prefix'=>'users'], function (){
     Route::get('/',[UsersController::class,'index'])->name('users.index');
     Route::post('/getIndex',[UsersController::class,'getIndex'])->name('users.getIndex');
