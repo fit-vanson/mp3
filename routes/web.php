@@ -66,6 +66,9 @@ Route::group(['prefix'=>'categories'], function (){
     Route::get('/edit/{id}',[CategoriesController::class,'edit'])->name('categories.edit');
     Route::post('/update',[CategoriesController::class,'update'])->name('categories.update');
     Route::get('/delete/{id}',[CategoriesController::class,'delete'])->name('categories.delete');
+    Route::get('/import', [CategoriesController::class, 'import'])->name('categories.import');
+    Route::post('/postImport', [CategoriesController::class, 'postImport'])->name('categories.postImport');
+    Route::get('/importToDb', [CategoriesController::class, 'importToDb'])->name('categories.importToDb');
 });
 
 Route::group(['prefix'=>'wallpapers'], function (){
@@ -76,6 +79,9 @@ Route::group(['prefix'=>'wallpapers'], function (){
     Route::post('/update',[WallpapersController::class,'update'])->name('wallpapers.update');
     Route::get('/delete/{id}',[WallpapersController::class,'delete'])->name('wallpapers.delete');
     Route::post('/deleteSelect', [WallpapersController::class, 'deleteSelect'])->name('wallpapers.deleteSelect');
+    Route::get('/import', [WallpapersController::class, 'import'])->name('wallpapers.import');
+    Route::post('/postImport', [WallpapersController::class, 'postImport'])->name('wallpapers.postImport');
+    Route::get('/importToDb', [WallpapersController::class, 'importToDb'])->name('wallpapers.importToDb');
 });
 
 Route::group(['prefix'=>'sites'], function (){

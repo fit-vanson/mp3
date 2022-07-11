@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 
 use App\Categories;
+use App\CategoriesHasSites;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -212,5 +213,46 @@ class CategoriesController extends Controller
         $cate->delete();
         return response()->json(['success'=>'Xoá thành công']);
 
+    }
+
+    public function import(){
+        return view('categories.import');
+    }
+    public function postImport(Request $request){
+        $file = file($request->file->getRealPath());
+        $data = array_slice($file,1);
+        $parts = array_chunk($data,1000);
+        foreach ($parts as $index =>$part){
+//            $fileName = resource_path('files/categories/'.date('y-m-d-H-i-s-').$index.'.csv');
+            $fileName = resource_path('files/categoriesHasSites/'.date('y-m-d-H-i-s-').$index.'.csv');
+            file_put_contents($fileName, $part);
+        }
+        dd(1);
+
+        return route('categories.importToDb');
+    }
+    public function importToDb(){
+        $path = resource_path('files/categoriesHasSites/*.csv');
+        $g = glob($path);
+        foreach (array_slice($g,0,1) as $file){
+            $data = array_map('str_getcsv',file($file));
+
+            foreach ($data as $row){
+//                dd($row);
+                CategoriesHasSites::updateOrCreate(
+                    [
+                        'id' => $row[0],
+                    ],
+                    [
+                        'category_id' => $row[1],
+                        'site_id' => $row[2],
+                        'site_image' =>$row[3],
+
+                    ]);
+            }
+//            unlink($file);
+        }
+
+//        echo '<META http-equiv="refresh" content="1;URL=' . route('categories.importToDb') . '">';
     }
 }

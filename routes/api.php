@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\v0\CategoriesController;
 use App\Http\Controllers\Api\v0\FavoriteController;
 use App\Http\Controllers\Api\v0\WallpapersController;
+use App\Http\Controllers\Api\v1\ApiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -40,4 +41,21 @@ Route::group([
     Route::post('/wallpaper-favorite-unsaved', [FavoriteController::class, 'disLikeWallpaper']);
     Route::get('/favorite/{device_id}', [FavoriteController::class, 'getSaved']);
 });
+
+
+Route::group([
+    "prefix" => "v1"
+//    'middleware' => 'auth.apikey'
+], function() {
+    Route::get('/get_categories',[ApiController::class, 'get_categories']);
+    Route::get('/get_wallpapers',[ApiController::class, 'get_wallpapers']);
+    Route::get('/get_category_details',[ApiController::class, 'get_category_details']);
+    Route::get('/get_ads',[ApiController::class, 'get_ads']);
+    Route::get('/get_settings',[ApiController::class, 'get_settings']);
+    Route::post('/update_view',[ApiController::class, 'update_view']);
+    Route::post('/update_download',[ApiController::class, 'update_download']);
+
+    Route::get('/',[ApiController::class, 'index']);
+});
+
 

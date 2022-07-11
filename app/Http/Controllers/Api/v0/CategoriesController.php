@@ -22,7 +22,7 @@ class CategoriesController extends Controller
                     $q->withCount('wallpaper')
                         ->where('category_checked_ip', 1);
                 }])
-                ->first();;
+                ->first();
         } else{
             $data = Sites::where('sites.site_web',$domain)
                 ->with(['categories'=>function ($q){

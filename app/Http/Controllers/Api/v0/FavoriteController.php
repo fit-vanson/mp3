@@ -74,9 +74,9 @@ class FavoriteController extends Controller
     public function getSaved($device_id)
     {
         $page_limit = 12;
-        $limit=($_GET['page']-1) * $page_limit;
+        $limit=(isset($_GET['page'])? $_GET['page'] -1 : 0) * $page_limit;
         $domain=$_SERVER['SERVER_NAME'];
-        $visitor = Visitors::where('device_id', $device_id)->first();
+//        $visitor = Visitors::where('device_id', $device_id)->first();
         try {
             $data =  VisitorFavorite::where([
                 'visitor_id' => Visitors::where('device_id', $device_id)->value('id'),
@@ -86,6 +86,7 @@ class FavoriteController extends Controller
                 ->skip($limit)
                 ->take($page_limit)
                 ->get();
+
             $wallpaper = [];
             foreach ($data as $item){
                 $wallpaper[] = $item->wallpaper;

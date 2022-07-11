@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Categories;
+use App\CategoriesHasSites;
+use App\CategoriesHasWallpaper;
 use App\Wallpapers;
 use DateTime;
 use Illuminate\Http\Request;
@@ -11,6 +13,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\ImportWallpapers;
 
 class WallpapersController extends Controller
 {
@@ -219,15 +223,16 @@ class WallpapersController extends Controller
     public function delete($id)
     {
         $wallpaper = Wallpapers::find($id);
-        $path_origin    =   storage_path('app/public/wallpapers/').$wallpaper->wallpaper_image;
+        $path_remove    =   storage_path('app/public/wallpapers/').$wallpaper->wallpaper_image;
         try {
-            if(file_exists($path_origin)){
-                unlink($path_origin);
+            if(file_exists($path_remove)){
+                unlink($path_remove);
             }
         }catch (\Exception $ex) {
             Log::error($ex->getMessage());
         }
         $wallpaper->categories()->detach();
+        $wallpaper->visitor_favorites()->delete();
         $wallpaper->delete();
         return response()->json(['success'=>'Xoá thành công']);
 
@@ -239,18 +244,77 @@ class WallpapersController extends Controller
         $wallpapers = Wallpapers::whereIn('id',$id)->get();
 
         foreach ( $wallpapers as $wallpaper){
-            $path_origin    =   storage_path('app/public/wallpapers/').$wallpaper->wallpaper_image;
+            $path_remove    =   storage_path('app/public/wallpapers/').$wallpaper->wallpaper_image;
             try {
-                if(file_exists($path_origin)){
-                    unlink($path_origin);
+                if(file_exists($path_remove)){
+                    unlink($path_remove);
                 }
             }catch (\Exception $ex) {
                 Log::error($ex->getMessage());
             }
             $wallpaper->categories()->detach();
+            $wallpaper->visitor_favorites()->delete();
             $wallpaper->delete();
         }
         return response()->json(['success'=>'Xóa thành công.']);
+    }
+
+
+    public function import(){
+//        $walls = Wallpapers::all();
+//
+//        $cateHas = [];
+//        foreach ($walls as $wall){
+//            $cate = [
+//                'category_id' => $wall->cate_id,
+//                'wallpaper_id' => $wall->id
+//            ];
+//            $cateHas[] = $cate;
+//        }
+//
+//
+//        CategoriesHasWallpaper::insert($cateHas);
+
+        return view('wallpapers.import');
+
+    }
+    public function postImport(Request $request){
+        $file = file($request->file->getRealPath());
+        $data = array_slice($file,1);
+        $parts = array_chunk($data,1000);
+        foreach ($parts as $index =>$part){
+            $fileName = resource_path('files/wallpapers/'.date('y-m-d-H-i-s-').$index.'.csv');
+            file_put_contents($fileName, $part);
+        }
+        return route('wallpapers.importToDb');
+    }
+    public function importToDb(){
+        $path = resource_path('files/wallpapers/*.csv');
+        $g = glob($path);
+        foreach (array_slice($g,0,1) as $file){
+            $data = array_map('str_getcsv',file($file));
+
+            foreach ($data as $row){
+//                dd($row);
+                Wallpapers::updateOrCreate(
+                    [
+                       'id' => $row[0],
+                    ],
+                    [
+
+                        'wallpaper_name' => $row[2],
+                        'wallpaper_image' => $row[5],
+                        'wallpaper_view_count' => rand(500,3000),
+                        'wallpaper_like_count' => rand(500,3000),
+                        'wallpaper_download_count' => rand(500,3000),
+                        'wallpaper_feature' => rand(0,1),
+                        'image_extension' => $row[10],
+                    ]);
+            }
+            unlink($file);
+        }
+
+//        echo '<META http-equiv="refresh" content="1;URL=' . route('wallpapers.importToDb') . '">';
     }
 
 }

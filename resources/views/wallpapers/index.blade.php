@@ -84,7 +84,12 @@
                                        style="width: 100%;">
                                     <thead>
                                     <tr>
-                                        <th></th>
+                                        <th>
+                                            <div class="custom-control custom-checkbox">
+                                                <input class="custom-control-input" type="checkbox" name="select_all" value="1" id="select_all" />
+                                                <label class="custom-control-label" for="select_all"></label>
+                                            </div>
+                                        </th>
                                         <th style="width: 20%">Image</th>
                                         <th style="width: 20%">Name</th>
                                         <th style="width: 10%">View Count</th>
@@ -186,12 +191,18 @@
                         responsivePriority: 3,
                         render: function (data, type, full, meta) {
                             return (
-                                '<div class="form-check"> <input class="form-check-input dt-checkboxes" type="checkbox" value="' + [full.id] + '" name="id[]" id="checkbox' +
-                                data +
-                                '" /><label class="form-check-label" for="checkbox' +
-                                data +
-                                '"></label></div>'
+                                '<div class="custom-control custom-checkbox"> ' +
+                                    '<input class="custom-control-input" type="checkbox" value="' + [full.id] + '" name="id[]" id="checkbox' +data +'" />' +
+                                '<label class="custom-control-label" for="checkbox' +data +'"></label>' +
+                                '</div>'
                             );
+
+                            // return (
+                            //     '<div class="custom-control custom-checkbox">'+
+                            //         '<input type="checkbox" class="custom-control-input" id="customCheck1">'+
+                            //         '<label class="custom-control-label" for="customCheck1"></label>'+
+                            //     '</div>'
+                            // );
                         },
                         checkboxes: {
                             selectAllRender:
@@ -242,6 +253,27 @@
 
                         }
                     });
+                }
+            });
+
+            // Handle click on "Select all" control
+            $('#select_all').on('click', function(){
+                // Check/uncheck all checkboxes in the table
+                var rows = dtTable.rows({ 'search': 'applied' }).nodes();
+                $('input[type="checkbox"]', rows).prop('checked', this.checked);
+            });
+
+            // Handle click on checkbox to set state of "Select all" control
+            $('#table{{preg_replace('/\s+/','',$page_title)}} tbody').on('change', 'input[type="checkbox"]', function(){
+                // If checkbox is not checked
+                if(!this.checked){
+                    var el = $('#select_all').get(0);
+                    // If "Select all" control is checked and has 'indeterminate' property
+                    if(el && el.checked && ('indeterminate' in el)){
+                        // Set visual state of "Select all" control
+                        // as 'indeterminate'
+                        el.indeterminate = true;
+                    }
                 }
             });
 
