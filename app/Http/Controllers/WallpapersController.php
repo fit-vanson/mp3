@@ -15,6 +15,7 @@ use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\ImportWallpapers;
+use Rolandstarke\Thumbnail\Facades\Thumbnail;
 
 class WallpapersController extends Controller
 {
@@ -69,12 +70,16 @@ class WallpapersController extends Controller
 //            $btn = ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-warning editWallpapers"><i class="ti-pencil-alt"></i></a>';
             $btn = ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-danger deleteWallpapers"><i class="ti-trash"></i></a>';
 
+            $img = Thumbnail::src('/wallpapers/'.$record->wallpaper_image, 'public')->smartcrop(360, 640)->url();
+
 
             $data_arr[] = array(
                 "id" => $record->id,
-//                "wallpaper_image" => '<img src="storage/wallpapers/'.$record->wallpaper_image.'" alt="Wallpaper" height="100px">',
-                "wallpaper_image" => '<a class="image-popup-no-margins" href="storage/wallpapers/'.$record->wallpaper_image.'">
-                                <img class="img-fluid" alt="" src="storage/wallpapers/'.$record->wallpaper_image.'" width="75">
+//                "wallpaper_image" => '<a class="image-popup-no-margins" href="storage/wallpapers/'.$record->wallpaper_image.'">
+//                                <img class="img-fluid" alt="'.$record->wallpaper_name.'" src="storage/wallpapers/'.$record->wallpaper_image.'" width="75">
+//                            </a>',
+                "wallpaper_image" => '<a class="image-popup-no-margins" href="'.$img.'">
+                                <img class="img-fluid" alt="'.$record->wallpaper_name.'" src="'.$img.'" width="75">
                             </a>',
                 "wallpaper_name" => $record->wallpaper_name,
                 "image_extension" => $record->image_extension,
