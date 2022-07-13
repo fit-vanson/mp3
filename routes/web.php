@@ -87,6 +87,7 @@ Route::group(['prefix'=>'wallpapers'], function (){
     Route::get('/import', [WallpapersController::class, 'import'])->name('wallpapers.import');
     Route::post('/postImport', [WallpapersController::class, 'postImport'])->name('wallpapers.postImport');
     Route::get('/importToDb', [WallpapersController::class, 'importToDb'])->name('wallpapers.importToDb');
+    Route::get('/optimization', [WallpapersController::class, 'optimization'])->name('wallpapers.optimization');
 });
 
 Route::group(['prefix'=>'sites'], function (){

@@ -8,6 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Visitors extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'device_id'
+    ];
 
     public function sites()
     {

@@ -16,6 +16,7 @@ use Intervention\Image\Facades\Image;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\ImportWallpapers;
 use Rolandstarke\Thumbnail\Facades\Thumbnail;
+use Spatie\ImageOptimizer\OptimizerChainFactory;
 
 class WallpapersController extends Controller
 {
@@ -69,18 +70,14 @@ class WallpapersController extends Controller
 //            $btn  = ' <a href="javascript:void(0)" onclick="editRolesPermissions('.$record->id.')" class="btn btn-warning"><i class="ti-pencil-alt"></i></a>';
 //            $btn = ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-warning editWallpapers"><i class="ti-pencil-alt"></i></a>';
             $btn = ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-danger deleteWallpapers"><i class="ti-trash"></i></a>';
-
-            $img = Thumbnail::src('/wallpapers/'.$record->wallpaper_image, 'public')->smartcrop(360, 640)->url();
-
-
             $data_arr[] = array(
                 "id" => $record->id,
-//                "wallpaper_image" => '<a class="image-popup-no-margins" href="storage/wallpapers/'.$record->wallpaper_image.'">
-//                                <img class="img-fluid" alt="'.$record->wallpaper_name.'" src="storage/wallpapers/'.$record->wallpaper_image.'" width="75">
-//                            </a>',
-                "wallpaper_image" => '<a class="image-popup-no-margins" href="'.$img.'">
-                                <img class="img-fluid" alt="'.$record->wallpaper_name.'" src="'.$img.'" width="75">
+                "wallpaper_image" => '<a class="image-popup-no-margins" href="storage/wallpapers/thumbnails/'.$record->wallpaper_image.'">
+                                <img class="img-fluid" alt="'.$record->wallpaper_name.'" src="storage/wallpapers/thumbnails/'.$record->wallpaper_image.'" width="75">
                             </a>',
+//                "wallpaper_image" => '<a class="image-popup-no-margins" href="'.$img.'">
+//                                <img class="img-fluid" alt="'.$record->wallpaper_name.'" src="'.$img.'" width="75">
+//                            </a>',
                 "wallpaper_name" => $record->wallpaper_name,
                 "image_extension" => $record->image_extension,
                 "wallpaper_view_count" => $record->wallpaper_view_count,
@@ -128,11 +125,7 @@ class WallpapersController extends Controller
         if (!file_exists($path_origin)) {
             mkdir($path_origin, 0777, true);
         }
-
-
-
         $insert_data = [];
-
         foreach ($request->file as $file){
             $filenameWithExt=$file->getClientOriginalName();
             $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
@@ -322,4 +315,28 @@ class WallpapersController extends Controller
 //        echo '<META http-equiv="refresh" content="1;URL=' . route('wallpapers.importToDb') . '">';
     }
 
+    public function optimization(){
+        ini_set('max_execution_time', 1800);
+        $path = public_path('storage/wallpapers/');
+        $dir = scandir($path);
+        $dir = array_slice($dir, 2);;
+        foreach ($dir as $r){
+            if (!file_exists($path.'thumbnails/'.$r)) {
+                mkdir($path.'thumbnails/'.$r, 0777, true);
+            }
+        }
+        $wallpapers = Wallpapers::paginate(20);
+        $page = $wallpapers->currentPage()+1;
+        foreach ($wallpapers as $wallpaper){
+            $pathToImage = public_path('storage/wallpapers/'.$wallpaper->wallpaper_image);
+            $optimizerChain = OptimizerChainFactory::create();
+            $optimizerChain->optimize($pathToImage);
+
+            $img = Image::make($pathToImage);
+            $img->resize(360, 640);
+            $img->save($path.'thumbnails/'.$wallpaper->wallpaper_image);
+            echo '<br>'.$wallpaper->id . ' - '. $wallpaper->wallpaper_name .' - '. $wallpaper->wallpaper_image;
+        }
+        echo '<META http-equiv="refresh" content="1;URL=' . route('wallpapers.optimization'). '?page='.$page.'">';
+    }
 }
