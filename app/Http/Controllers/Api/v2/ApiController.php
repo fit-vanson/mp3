@@ -317,7 +317,7 @@ class ApiController extends Controller
         $row['featured_wallpaper'] =  $this->sortWallpaper($wallpaper,'wallpaper_like_count',$type, $get_method['android_id']);
         $getCategoryResource = CategoriesResource::collection($data);
         $row['wallpaper_category'] = $getCategoryResource;
-        $row['latest_wallpaper'] = $this->sortWallpaper($wallpaper,'wallpaper_download_count',$type, $get_method['android_id']);
+        $row['latest_wallpaper'] = $this->sortWallpaper($wallpaper,null,$type, $get_method['android_id']);
         $row['popular_wallpaper'] = $this->sortWallpaper($wallpaper,'wallpaper_view_count',$type, $get_method['android_id']);
         $row['recent_wallpapers'] = $this->sortWallpaper($wallpaper,'created_at',$type, $get_method['android_id']);
         $set['HD_WALLPAPER'] = $row;
