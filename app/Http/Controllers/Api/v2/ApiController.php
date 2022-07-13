@@ -451,8 +451,11 @@ class ApiController extends Controller
             $type = trim($get_method['type']);
             $page_limit = 12;
             $limit=($get_method['page']-1) * $page_limit;
-
-            $wallpaper = Categories::find($get_method['cat_id'])->wallpaper()->get();
+            $wallpaper = Categories::find($get_method['cat_id'])
+                ->wallpaper()
+                ->skip($limit)
+                ->take($page_limit)
+                ->get();
             $row = $this->getWallpaper($wallpaper,$type,$get_method['android_id']);
             $set['HD_WALLPAPER'] = $row;
             header('Content-Type: application/json; charset=utf-8');
