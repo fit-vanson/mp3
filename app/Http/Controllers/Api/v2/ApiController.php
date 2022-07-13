@@ -534,15 +534,21 @@ class ApiController extends Controller
                         'site_id' => Sites::where('site_web', $domain)->value('id'),
                     ])
 
-                        ->with('wallpaper')
+
                         ->skip($limit)
                         ->take($page_limit)
-                        ->get()->toArray();
-
+                        ->get();
                     $wallpaper = [];
                     foreach ($data as $item){
-                        $wallpaper[] = $item['wallpaper'];
+                        $item->wallpaper()->with('categories')->get()->toArray();
+                        foreach ($item->wallpaper()->where('image_extension','<>','image/gif')->with('categories')->orderBy('wallpaper_view_count', 'desc')->get()->toArray() as $wall){
+                            $wallpaper[] = $wall;
+                        }
                     }
+
+                    dd($wallpaper);
+
+
 
                     $row = $this->getWallpaper($wallpaper,$type,$get_method['android_id']);
                 }
@@ -1104,7 +1110,7 @@ class ApiController extends Controller
     }
 
     private  function singleWallpaper($data, $android_id){
-        $path = storage_path('app/public/wallpapers/download/'.$data->origin_image);
+        $path = storage_path('app/public/wallpapers/'.$data->wallpaper_image);
         $image = $size = '';
         if (file_exists($path)){
             $image = getimagesize($path);
@@ -1116,12 +1122,9 @@ class ApiController extends Controller
 
 
         $data_arr['id'] = (string)$data->id;
-//        $data_arr['cat_id'] = (string)$data->cate_id;
-//        $data_arr['category_name'] = $data->name;
-//            $data_arr['category_name'] = $item['category']['category_name'];
         $data_arr['wallpaper_type'] = '' ;
         $data_arr['wallpaper_image'] = asset('storage/wallpapers/' . $data['wallpaper_image']);
-        $data_arr['wallpaper_image_thumb'] = Thumbnail::src('/wallpapers/'.$data['wallpaper_image'], 'public')->smartcrop(360, 640)->url();
+        $data_arr['wallpaper_image_thumb'] = asset('storage/wallpapers/thumbnails/' . $data['wallpaper_image']);
 
 
 
