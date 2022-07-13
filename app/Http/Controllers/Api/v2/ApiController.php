@@ -303,6 +303,7 @@ class ApiController extends Controller
                 ->where('category_checked_ip',0)
                 ->withCount('wallpaper')
                 ->get();
+            dd($data);
 
             $wallpaper = [];
             foreach ($data as $item ){
