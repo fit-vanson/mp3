@@ -218,7 +218,8 @@ class ApiController extends Controller
 
     function checkSignSalt($data_info)
     {
-        $key = "zxcv@vietmmo";
+//        $key = "zxcv@vietmmo";
+        $key = "viaviweb";
         $data_json = $data_info;
         $data_arr = json_decode(urldecode(base64_decode($data_json)), true);
 
@@ -683,11 +684,10 @@ class ApiController extends Controller
                 }
             }
         }
+
         $result = array_slice($wallpaper, $limit, $page_limit);
-
-
-
-        $row = $this->getlatestgif($result, $get_method['android_id']);
+//        $row = $this->getlatestgif($result, $get_method['android_id']);
+        $row = $this->getlatestgif($result);
         $set['HD_WALLPAPER'] = $row;
         header('Content-Type: application/json; charset=utf-8');
         echo $val = str_replace('\\/', '/', json_encode($set, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
@@ -839,7 +839,7 @@ class ApiController extends Controller
             $wallpaper = [];
             foreach ($data as $item ){
                 $item->wallpaper()->with('categories')->get()->toArray();
-                foreach ($item->wallpaper()->where('image_extension','<>','image/gif')->with('categories')->orderBy('wallpaper_view_count', 'desc')->get()->toArray() as $wall){
+                foreach ($item->wallpaper()->where('image_extension','image/gif')->with('categories')->orderBy('wallpaper_view_count', 'desc')->get()->toArray() as $wall){
                     $wallpaper[] = $wall;
                 }
             }
@@ -851,7 +851,7 @@ class ApiController extends Controller
             $wallpaper = [];
             foreach ($data as $item ){
                 $item->wallpaper()->with('categories')->get()->toArray();
-                foreach ($item->wallpaper()->where('image_extension','<>','image/gif')->with('categories')->orderBy('wallpaper_view_count', 'desc')->get()->toArray() as $wall){
+                foreach ($item->wallpaper()->where('image_extension','image/gif')->with('categories')->orderBy('wallpaper_view_count', 'desc')->get()->toArray() as $wall){
                     $wallpaper[] = $wall;
                 }
             }
@@ -879,7 +879,7 @@ class ApiController extends Controller
             $wallpaper = [];
             foreach ($data as $item ){
                 $item->wallpaper()->with('categories')->get()->toArray();
-                foreach ($item->wallpaper()->where('image_extension','<>','image/gif')->with('categories')->orderBy('wallpaper_like_count', 'desc')->get()->toArray() as $wall){
+                foreach ($item->wallpaper()->where('image_extension','image/gif')->with('categories')->orderBy('wallpaper_like_count', 'desc')->get()->toArray() as $wall){
                     $wallpaper[] = $wall;
                 }
             }
@@ -891,7 +891,7 @@ class ApiController extends Controller
             $wallpaper = [];
             foreach ($data as $item ){
                 $item->wallpaper()->with('categories')->get()->toArray();
-                foreach ($item->wallpaper()->where('image_extension','<>','image/gif')->with('categories')->orderBy('wallpaper_like_count', 'desc')->get()->toArray() as $wall){
+                foreach ($item->wallpaper()->where('image_extension','image/gif')->with('categories')->orderBy('wallpaper_like_count', 'desc')->get()->toArray() as $wall){
                     $wallpaper[] = $wall;
                 }
             }
