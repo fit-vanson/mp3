@@ -303,7 +303,7 @@ class ApiController extends Controller
                 ->where('category_checked_ip',0)
                 ->withCount('wallpaper')
                 ->get();
-            dd($data);
+
 
             $wallpaper = [];
             foreach ($data as $item ){
@@ -313,6 +313,7 @@ class ApiController extends Controller
                 }
             }
         }
+        dd($data);
         dd($wallpaper);
         $row['featured_wallpaper'] =  $this->sortWallpaper($wallpaper,'wallpaper_like_count',$type, $get_method['android_id']);
         $getCategoryResource = CategoriesResource::collection($data);
