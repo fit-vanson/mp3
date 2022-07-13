@@ -1135,7 +1135,7 @@ class ApiController extends Controller
     }
 
     private  function singleWallpaperGif($data, $android_id){
-        $path = storage_path('app/public/wallpapers/download/'.$data->origin_image);
+        $path = storage_path('app/public/wallpapers/'.$data->wallpaper_image);
         $image = $size = '';
         if (file_exists($path)){
             $image = getimagesize($path);
@@ -1144,8 +1144,8 @@ class ApiController extends Controller
         $jsonObj = [];
 
         $data_arr['id'] = (string)$data->id;
-        $data_arr['gif_image'] = asset('storage/wallpapers/download/' . $data['origin_image']);
-        $data_arr['gif_tags'] = isset($data['category']) ? $data['category']['category_name'] : ''.','. $data['name'];
+        $data_arr['gif_image'] = asset('storage/wallpapers/' . $data['wallpaper_image']);
+        $data_arr['gif_tags'] = $data['wallpaper_name'];
         $data_arr['total_views'] = $data['view_count'];
         $data_arr['total_rate'] = $data['like_count'];
         $data_arr['rate_avg'] = $data['like_count'];
