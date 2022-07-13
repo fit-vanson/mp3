@@ -475,29 +475,34 @@ class ApiController extends Controller
 
     private function favorite_post($get_method){
         $jsonObj= array();
+        $domain=$_SERVER['SERVER_NAME'];
         $visitorFavorite = VisitorFavorite::where(
             [
-                'wallpaper_id' => $get_method['post_id'],
-                'visitor_id' => Visitor::where('device_id', $get_method['android_id'])->value('id')
+                'wallpaper_id' =>$get_method['post_id'],
+                'visitor_id' => Visitors::where('device_id', $get_method['android_id'])->value('id'),
+                'site_id' => Sites::where('site_web', $domain)->value('id')
             ])
             ->first();
+
         if ($visitorFavorite) {
             VisitorFavorite::where([
                 'wallpaper_id' => $get_method['post_id'],
-                'visitor_id' => Visitor::where('device_id', $get_method['android_id'])->value('id')
+                'visitor_id' => Visitors::where('device_id', $get_method['android_id'])->value('id'),
+                'site_id' => Sites::where('site_web', $domain)->value('id')
             ])->delete();
             $wallpaper = Wallpapers::where('id', $get_method['android_id'])->first();
-            $wallpaper->decrement('like_count');
+            $wallpaper->decrement('wallpaper_like_count');
             $info['success']="1";
             $info['MSG']= 'favourite remove success';
 
         } else {
             VisitorFavorite::create([
                 'wallpaper_id' => $get_method['post_id'],
-                'visitor_id' => Visitor::where('device_id', $get_method['android_id'])->value('id')
+                'visitor_id' => Visitors::where('device_id', $get_method['android_id'])->value('id'),
+                'site_id' => Sites::where('site_web', $domain)->value('id')
             ])->first();
             $wallpaper = Wallpapers::where('id', $get_method['post_id'])->first();
-            $wallpaper->increment('like_count');
+            $wallpaper->increment('wallpaper_like_count');
 
             $info['success']="1";
             $info['MSG']='favourite success';
@@ -515,23 +520,36 @@ class ApiController extends Controller
         $page_limit = 12;
         $limit=($get_method['page']-1) * $page_limit;
         $type = trim($get_method['type']);
-        $visitor = Visitor::where('device_id', $get_method['android_id'])->first();
+//        $visitor = Visitors::where('device_id', $get_method['android_id'])->first();
+        $domain=$_SERVER['SERVER_NAME'];
+
+
         switch ($fav_type) {
             case 'wallpaper':
                 {
-                    $wallpaper = Visitor::findOrFail($visitor->id)
-                        ->wallpapers()
-                        ->where('image_extension','<>', 'image/gif')
-                        ->limit($page_limit)
-                        ->offset($limit)
-                        ->get()
-                        ->toArray();
+//                    dd(Visitors::where('device_id',$get_method['android_id'])->get());
+
+                    $data =  VisitorFavorite::where([
+                        'visitor_id' => Visitors::where('device_id',$get_method['android_id'])->value('id'),
+                        'site_id' => Sites::where('site_web', $domain)->value('id'),
+                    ])
+
+                        ->with('wallpaper')
+                        ->skip($limit)
+                        ->take($page_limit)
+                        ->get()->toArray();
+
+                    $wallpaper = [];
+                    foreach ($data as $item){
+                        $wallpaper[] = $item['wallpaper'];
+                    }
+
                     $row = $this->getWallpaper($wallpaper,$type,$get_method['android_id']);
                 }
                 break;
             case 'gif':
             {
-                $wallpaper = Visitor::findOrFail($visitor->id)
+                $wallpaper = Visitors::findOrFail($visitor->id)
                     ->wallpapers()
                     ->where('image_extension', 'image/gif')
                     ->limit($page_limit)
@@ -1031,10 +1049,10 @@ class ApiController extends Controller
     private  function getWallpaper($data,$type,$android_id){
         $jsonObj = [];
         foreach ($data as $item){
-            $category = Categories::find($item['pivot']['category_id']);
+            $category = isset($item['pivot']) ? Categories::find($item['pivot']['category_id']) : null;
             $data_arr['num'] = count($data);
             $data_arr['id'] = $item['id'];
-            $data_arr['cat_id'] = $item['pivot']['category_id'];
+            $data_arr['cat_id'] = isset($item['pivot']) ? $item['pivot']['category_id'] : '';
             $data_arr['wallpaper_type'] = $type ;
             $data_arr['wallpaper_image'] = asset('storage/wallpapers/' . $item['wallpaper_image']);
             $data_arr['wallpaper_image_thumb'] = asset('storage/wallpapers/thumbnails/' . $item['wallpaper_image']);
@@ -1047,7 +1065,7 @@ class ApiController extends Controller
             $data_arr['wall_tags'] = $item['wallpaper_name'];
             $data_arr['wall_colors'] = 1;
 
-            $data_arr['cid'] = $item['pivot']['category_id'];
+            $data_arr['cid'] = isset($category) ? $category->id : '';
             $data_arr['category_name'] = $item['wallpaper_name'];
             $data_arr['category_image'] = isset($category)  ? asset('storage/categories/'.$category->category_image) : '';
             $data_arr['category_image_thumb'] =  isset($category) ? asset('storage/categories/'.$category->category_image) : '';
