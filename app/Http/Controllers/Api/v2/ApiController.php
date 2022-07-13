@@ -686,7 +686,9 @@ class ApiController extends Controller
         }
 
         $result = array_slice($wallpaper, $limit, $page_limit);
+
         $row = $this->getlatestgif($result, $get_method['android_id']);
+
 //        $row = $this->getlatestgif($result);
         $set['HD_WALLPAPER'] = $row;
         header('Content-Type: application/json; charset=utf-8');
@@ -1159,15 +1161,28 @@ class ApiController extends Controller
     }
     private  function getlatestgif($data,$android_id){
         $jsonObj = [];
-        foreach ($data as $item){
-            $data_arr['num'] = count($data);
-            $data_arr['id'] = $item['id'];
-            $data_arr['gif_image'] = asset('storage/wallpapers/' . $item['wallpaper_image']);
-            $data_arr['gif_tags'] = $item['wallpaper_name'];
-            $data_arr['total_views'] = $item['wallpaper_view_count'];
-            $data_arr['total_rate'] = $item['wallpaper_like_count'];
-            $data_arr['rate_avg'] = $item['wallpaper_download_count'];
-            $data_arr['is_favorite']= $this->is_favorite($item['id'], 'wallpaper', $android_id);
+
+        if (count($data) > 0){
+            foreach ($data as $item){
+                $data_arr['num'] = count($data);
+                $data_arr['id'] = $item['id'];
+                $data_arr['gif_image'] = asset('storage/wallpapers/' . $item['wallpaper_image']);
+                $data_arr['gif_tags'] = $item['wallpaper_name'];
+                $data_arr['total_views'] = $item['wallpaper_view_count'];
+                $data_arr['total_rate'] = $item['wallpaper_like_count'];
+                $data_arr['rate_avg'] = $item['wallpaper_download_count'];
+                $data_arr['is_favorite']= $this->is_favorite($item['id'], 'wallpaper', $android_id);
+                array_push($jsonObj,$data_arr);
+            }
+        }else{
+            $data_arr['num'] = 0;
+            $data_arr['id'] ='';
+            $data_arr['gif_image'] = '';
+            $data_arr['gif_tags'] = '';
+            $data_arr['total_views'] = '';
+            $data_arr['total_rate'] = '';
+            $data_arr['rate_avg'] = '';
+            $data_arr['is_favorite']= '';
             array_push($jsonObj,$data_arr);
         }
         return $jsonObj;
