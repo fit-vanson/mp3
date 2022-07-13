@@ -520,25 +520,20 @@ class ApiController extends Controller
         $page_limit = 12;
         $limit=($get_method['page']-1) * $page_limit;
         $type = trim($get_method['type']);
-//        $visitor = Visitors::where('device_id', $get_method['android_id'])->first();
         $domain=$_SERVER['SERVER_NAME'];
 
+        $data =  VisitorFavorite::where([
+            'visitor_id' => Visitors::where('device_id',$get_method['android_id'])->value('id'),
+            'site_id' => Sites::where('site_web', $domain)->value('id'),
+        ])
+            ->skip($limit)
+            ->take($page_limit)
+            ->get();
+        $wallpaper = [];
 
         switch ($fav_type) {
             case 'wallpaper':
                 {
-//                    dd(Visitors::where('device_id',$get_method['android_id'])->get());
-
-                    $data =  VisitorFavorite::where([
-                        'visitor_id' => Visitors::where('device_id',$get_method['android_id'])->value('id'),
-                        'site_id' => Sites::where('site_web', $domain)->value('id'),
-                    ])
-
-
-                        ->skip($limit)
-                        ->take($page_limit)
-                        ->get();
-                    $wallpaper = [];
                     foreach ($data as $item){
                         $item->wallpaper()->with('categories')->get()->toArray();
                         foreach ($item->wallpaper()->where('image_extension','<>','image/gif')->with('categories')->orderBy('wallpaper_view_count', 'desc')->get()->toArray() as $wall){
@@ -546,22 +541,17 @@ class ApiController extends Controller
                         }
                     }
 
-                    dd($wallpaper);
-
-
-
                     $row = $this->getWallpaper($wallpaper,$type,$get_method['android_id']);
                 }
                 break;
             case 'gif':
             {
-                $wallpaper = Visitors::findOrFail($visitor->id)
-                    ->wallpapers()
-                    ->where('image_extension', 'image/gif')
-                    ->limit($page_limit)
-                    ->offset($limit)
-                    ->get()
-                    ->toArray();
+                foreach ($data as $item){
+                    $item->wallpaper()->with('categories')->get()->toArray();
+                    foreach ($item->wallpaper()->where('image_extension','image/gif')->with('categories')->orderBy('wallpaper_view_count', 'desc')->get()->toArray() as $wall){
+                        $wallpaper[] = $wall;
+                    }
+                }
                 $row = $this->getWallpaperGif($wallpaper,$get_method['android_id']);
             }
             default:
