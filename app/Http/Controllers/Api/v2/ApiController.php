@@ -218,8 +218,8 @@ class ApiController extends Controller
 
     function checkSignSalt($data_info)
     {
-//        $key = "zxcv@vietmmo";
-        $key = "viaviweb";
+        $key = "zxcv@vietmmo";
+//        $key = "viaviweb";
         $data_json = $data_info;
         $data_arr = json_decode(urldecode(base64_decode($data_json)), true);
 
