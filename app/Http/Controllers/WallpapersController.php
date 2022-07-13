@@ -325,7 +325,7 @@ class WallpapersController extends Controller
                 mkdir($path.'thumbnails/'.$r, 0777, true);
             }
         }
-        $wallpapers = Wallpapers::paginate(20);
+        $wallpapers = Wallpapers::where('image_extension','<>','image/gif')->paginate(20);
         $page = $wallpapers->currentPage()+1;
         foreach ($wallpapers as $wallpaper){
             $pathToImage = public_path('storage/wallpapers/'.$wallpaper->wallpaper_image);
