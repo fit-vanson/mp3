@@ -22,6 +22,8 @@ class ApiController extends Controller
 
         $get_method = $this->checkSignSalt($_POST['data']);
 
+        dd($get_method);
+
         if( $get_method['method_name']=="get_home")
         {
             $this->get_home($get_method);
@@ -458,6 +460,7 @@ class ApiController extends Controller
             $limit=($get_method['page']-1) * $page_limit;
             $wallpaper = Categories::find($get_method['cat_id'])
                 ->wallpaper()
+                ->where('image_extension','<>','image/gif')
                 ->distinct()
                 ->skip($limit)
                 ->take($page_limit)
