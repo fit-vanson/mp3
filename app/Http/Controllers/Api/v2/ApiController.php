@@ -458,6 +458,7 @@ class ApiController extends Controller
                 ->distinct()
                 ->skip($limit)
                 ->take($page_limit)
+                ->inRandomOrder()
                 ->get();
 
             $row = $this->getWallpaper($wallpaper,$type,$get_method['android_id']);
