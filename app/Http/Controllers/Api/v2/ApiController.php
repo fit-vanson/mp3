@@ -10,6 +10,7 @@ use App\Sites;
 use App\VisitorFavorite;
 use App\Visitors;
 use App\Wallpapers;
+use Dflydev\DotAccessData\Data;
 use Illuminate\Http\Request;
 use Rolandstarke\Thumbnail\Facades\Thumbnail;
 
@@ -364,9 +365,11 @@ class ApiController extends Controller
                     }
                 }
             }
-            $result = array_slice($wallpaper, $limit, $page_limit);
 
 
+            $temp = array_unique(array_column($wallpaper, 'id'));
+            $unique_arr = array_intersect_key($wallpaper, $temp);
+            $result = array_slice($unique_arr, $limit, $page_limit);
 
             $row = $this->getWallpaper($result,$type,$get_method['android_id']);
 
@@ -410,7 +413,9 @@ class ApiController extends Controller
                     }
                 }
             }
-            $result = array_slice($wallpaper, $limit, $page_limit);
+            $temp = array_unique(array_column($wallpaper, 'id'));
+            $unique_arr = array_intersect_key($wallpaper, $temp);
+
 
             $row = $this->getWallpaper($result,$type,$get_method['android_id']);
 
@@ -607,7 +612,10 @@ class ApiController extends Controller
                     }
                 }
             }
-            $result = array_slice($wallpaper, $limit, $page_limit);
+            $temp = array_unique(array_column($wallpaper, 'id'));
+            $unique_arr = array_intersect_key($wallpaper, $temp);
+            $result = array_slice($unique_arr, $limit, $page_limit);
+
 
 
             $row = $this->getWallpaper($result, $type, $get_method['android_id']);
@@ -649,8 +657,11 @@ class ApiController extends Controller
                     }
                 }
             }
-            $result = array_slice($wallpaper, $limit, $page_limit);
-            $row = $this->getWallpaper($wallpaper, $type, $get_method['android_id']);
+            $temp = array_unique(array_column($wallpaper, 'id'));
+            $unique_arr = array_intersect_key($wallpaper, $temp);
+            $result = array_slice($unique_arr, $limit, $page_limit);
+
+            $row = $this->getWallpaper($result, $type, $get_method['android_id']);
             $set['HD_WALLPAPER'] = $row;
             header('Content-Type: application/json; charset=utf-8');
             echo $val = str_replace('\\/', '/', json_encode($set, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
