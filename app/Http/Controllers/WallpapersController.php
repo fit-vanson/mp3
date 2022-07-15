@@ -3,21 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Categories;
-use App\CategoriesHasSites;
-use App\CategoriesHasWallpaper;
 use App\Tags;
 use App\Wallpapers;
 use DateTime;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
-use Maatwebsite\Excel\Facades\Excel;
-use App\Imports\ImportWallpapers;
-use Rolandstarke\Thumbnail\Facades\Thumbnail;
-use Spatie\ImageOptimizer\OptimizerChainFactory;
+
+
 
 class WallpapersController extends Controller
 {
@@ -139,6 +134,7 @@ class WallpapersController extends Controller
 
             if($img->mime() == "image/gif"){
                 copy($file->getRealPath(), $path_origin.$fileNameToStore);
+                copy($file->getRealPath(), $fileNameToStore.$fileNameToStore);
             }else{
                 $img->save($path_origin.$fileNameToStore);
                 $img->resize(360, 640,function ($constraint) {
