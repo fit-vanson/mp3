@@ -1120,14 +1120,7 @@ class ApiController extends Controller
             }
         }
         else{
-            $data_arr['num'] = '';
-            $data_arr['id'] ='';
-            $data_arr['gif_image'] = '';
-            $data_arr['gif_tags'] = '';
-            $data_arr['total_views'] = '';
-            $data_arr['total_rate'] = '';
-            $data_arr['rate_avg'] = '';
-            $data_arr['is_favorite']= '';
+            $data_arr = [];
             array_push($jsonObj,$data_arr);
         }
         return $jsonObj;
@@ -1226,14 +1219,7 @@ class ApiController extends Controller
             }
         }
         else{
-            $data_arr['num'] = '';
-            $data_arr['id'] ='';
-            $data_arr['gif_image'] = '';
-            $data_arr['gif_tags'] = '';
-            $data_arr['total_views'] = '';
-            $data_arr['total_rate'] = '';
-            $data_arr['rate_avg'] = '';
-            $data_arr['is_favorite']= '';
+            $data_arr = [];
             array_push($jsonObj,$data_arr);
         }
         return $jsonObj;
