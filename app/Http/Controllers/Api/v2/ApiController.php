@@ -1121,17 +1121,18 @@ class ApiController extends Controller
                 $data_arr['is_favorite']= $this->is_favorite($item['id'], 'wallpaper', $android_id);
                 array_push($jsonObj,$data_arr);
             }
-        }else{
-            $data_arr['num'] = 0;
-            $data_arr['id'] ='';
-            $data_arr['gif_image'] = '';
-            $data_arr['gif_tags'] = '';
-            $data_arr['total_views'] = '';
-            $data_arr['total_rate'] = '';
-            $data_arr['rate_avg'] = '';
-            $data_arr['is_favorite']= '';
-            array_push($jsonObj,$data_arr);
         }
+//        else{
+//            $data_arr['num'] = 0;
+//            $data_arr['id'] ='';
+//            $data_arr['gif_image'] = '';
+//            $data_arr['gif_tags'] = '';
+//            $data_arr['total_views'] = '';
+//            $data_arr['total_rate'] = '';
+//            $data_arr['rate_avg'] = '';
+//            $data_arr['is_favorite']= '';
+//            array_push($jsonObj,$data_arr);
+//        }
         return $jsonObj;
     }
 
@@ -1226,17 +1227,18 @@ class ApiController extends Controller
                 $data_arr['is_favorite']= $this->is_favorite($item['id'], 'wallpaper', $android_id);
                 array_push($jsonObj,$data_arr);
             }
-        }else{
-            $data_arr['num'] = 0;
-            $data_arr['id'] ='';
-            $data_arr['gif_image'] = '';
-            $data_arr['gif_tags'] = '';
-            $data_arr['total_views'] = '';
-            $data_arr['total_rate'] = '';
-            $data_arr['rate_avg'] = '';
-            $data_arr['is_favorite']= '';
-            array_push($jsonObj,$data_arr);
         }
+//        else{
+//            $data_arr['num'] = 0;
+//            $data_arr['id'] ='';
+//            $data_arr['gif_image'] = '';
+//            $data_arr['gif_tags'] = '';
+//            $data_arr['total_views'] = '';
+//            $data_arr['total_rate'] = '';
+//            $data_arr['rate_avg'] = '';
+//            $data_arr['is_favorite']= '';
+//            array_push($jsonObj,$data_arr);
+//        }
         return $jsonObj;
     }
 
