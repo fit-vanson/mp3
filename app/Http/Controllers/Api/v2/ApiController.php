@@ -831,7 +831,11 @@ class ApiController extends Controller
                 }
             }
         }
-        $row = $this->getWallpaperGif($wallpaper, $get_method['android_id']);
+        $temp = array_unique(array_column($wallpaper, 'id'));
+        $unique_arr = array_intersect_key($wallpaper, $temp);
+
+        $row = $this->getWallpaperGif($unique_arr, $get_method['android_id']);
+
         $set['HD_WALLPAPER'] = $row;
         header('Content-Type: application/json; charset=utf-8');
         echo $val = str_replace('\\/', '/', json_encode($set, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
@@ -869,9 +873,12 @@ class ApiController extends Controller
                 }
             }
         }
-        $result = array_slice($wallpaper, $limit, $page_limit);
 
+        $temp = array_unique(array_column($wallpaper, 'id'));
+        $unique_arr = array_intersect_key($wallpaper, $temp);
+        $result = array_slice($unique_arr, $limit, $page_limit);
         $row = $this->getWallpaperGif($result, $get_method['android_id']);
+
         $set['HD_WALLPAPER'] = $row;
         header('Content-Type: application/json; charset=utf-8');
         echo $val = str_replace('\\/', '/', json_encode($set, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
@@ -909,9 +916,12 @@ class ApiController extends Controller
                 }
             }
         }
-        $result = array_slice($wallpaper, $limit, $page_limit);
 
+        $temp = array_unique(array_column($wallpaper, 'id'));
+        $unique_arr = array_intersect_key($wallpaper, $temp);
+        $result = array_slice($unique_arr, $limit, $page_limit);
         $row = $this->getWallpaperGif($result, $get_method['android_id']);
+
         $set['HD_WALLPAPER'] = $row;
         header('Content-Type: application/json; charset=utf-8');
         echo $val = str_replace('\\/', '/', json_encode($set, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
