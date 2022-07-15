@@ -21,8 +21,6 @@ class ApiController extends Controller
 
         $get_method = $this->checkSignSalt($_POST['data']);
 
-//        dd($get_method);
-
         if( $get_method['method_name']=="get_home")
         {
             $this->get_home($get_method);
@@ -415,7 +413,7 @@ class ApiController extends Controller
             }
             $temp = array_unique(array_column($wallpaper, 'id'));
             $unique_arr = array_intersect_key($wallpaper, $temp);
-
+            $result = array_slice($unique_arr, $limit, $page_limit);
 
             $row = $this->getWallpaper($result,$type,$get_method['android_id']);
 
@@ -461,9 +459,11 @@ class ApiController extends Controller
             $limit=($get_method['page']-1) * $page_limit;
             $wallpaper = Categories::find($get_method['cat_id'])
                 ->wallpaper()
+                ->distinct()
                 ->skip($limit)
                 ->take($page_limit)
                 ->get();
+
             $row = $this->getWallpaper($wallpaper,$type,$get_method['android_id']);
             $set['HD_WALLPAPER'] = $row;
             header('Content-Type: application/json; charset=utf-8');
