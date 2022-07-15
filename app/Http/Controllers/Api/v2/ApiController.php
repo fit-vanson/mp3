@@ -295,13 +295,11 @@ class ApiController extends Controller
             $data = Sites::where('site_web',$domain)->first()
                 ->categories()
                 ->where('category_checked_ip',1)
-                ->withCount('wallpaper')
                 ->get();
         } else {
             $data = Sites::where('site_web',$domain)->first()
                 ->categories()
                 ->where('category_checked_ip',0)
-                ->withCount('wallpaper')
                 ->get();
 
 
