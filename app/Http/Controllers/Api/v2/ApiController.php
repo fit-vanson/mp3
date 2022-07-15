@@ -22,7 +22,6 @@ class ApiController extends Controller
 
         $get_method = $this->checkSignSalt($_POST['data']);
 
-        dd($get_method);
 
         if( $get_method['method_name']=="get_home")
         {
