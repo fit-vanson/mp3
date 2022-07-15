@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Categories;
 use App\CategoriesHasSites;
 use App\CategoriesHasWallpaper;
+use App\Tags;
 use App\Wallpapers;
 use DateTime;
 use Illuminate\Http\Request;
@@ -27,10 +28,11 @@ class WallpapersController extends Controller
     public function index()
     {
         $page_title =  'Wallpapers';
-        $categories = Categories::get();
+//        $categories = Categories::get();
+        $tags = Tags::all();
         return view('wallpapers.index',[
             'page_title' => $page_title,
-            'categories' => $categories
+            'tags' => $tags
         ]);
     }
     public function getIndex(Request $request)
@@ -55,11 +57,13 @@ class WallpapersController extends Controller
         $totalRecords = Wallpapers::select('count(*) as allcount')->count();
         $totalRecordswithFilter = Wallpapers::select('count(*) as allcount')
             ->where('wallpaper_name', 'like', '%' . $searchValue . '%')
+            ->orwhereRelation('tags','tag_name','like', '%' . $searchValue . '%')
             ->count();
 
         // Get records, also we have included search filter as well
-        $records = Wallpapers::with('categories')
+        $records = Wallpapers::with('tags')
             ->where('wallpaper_name', 'like', '%' . $searchValue . '%')
+            ->orwhereRelation('tags','tag_name','like', '%' . $searchValue . '%')
             ->select('*')
             ->orderBy($columnName, $columnSortOrder)
             ->skip($start)
@@ -72,17 +76,12 @@ class WallpapersController extends Controller
             $btn = ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-danger deleteWallpapers"><i class="ti-trash"></i></a>';
             $data_arr[] = array(
                 "id" => $record->id,
-                "wallpaper_image" => '<a class="image-popup-no-margins" href="storage/wallpapers/thumbnails/'.$record->wallpaper_image.'">
-                                <img class="img-fluid" alt="'.$record->wallpaper_name.'" src="storage/wallpapers/thumbnails/'.$record->wallpaper_image.'" width="75">
-                            </a>',
-//                "wallpaper_image" => '<a class="image-popup-no-margins" href="'.$img.'">
-//                                <img class="img-fluid" alt="'.$record->wallpaper_name.'" src="'.$img.'" width="75">
-//                            </a>',
+                "wallpaper_image" => '<a class="image-popup-no-margins" href="storage/wallpapers/'.$record->wallpaper_image.'"><img class="img-fluid" alt="'.$record->wallpaper_name.'" src="storage/wallpapers/thumbnails/'.$record->wallpaper_image.'" width="75"></a>',
                 "wallpaper_name" => $record->wallpaper_name,
                 "image_extension" => $record->image_extension,
                 "wallpaper_view_count" => $record->wallpaper_view_count,
                 "wallpaper_like_count" => $record->wallpaper_like_count,
-                "categories" => $record->categories,
+                "tags" => $record->tags,
                 "action" => $btn,
             );
         }
@@ -102,12 +101,12 @@ class WallpapersController extends Controller
 
         $rules = [
             'file.*' => 'max:20000|mimes:jpeg,jpg,png,gif',
-            'select_categories' => 'required'
+            'select_tags' => 'required'
         ];
         $message = [
             'file.mimes'=>'Định dạng File',
             'file.max'=>'Dung lượng File',
-            'select_categories.required'=>'Chọn Category',
+            'select_tags.required'=>'Tags',
         ];
         $error = Validator::make($request->all(),$rules, $message );
         if($error->fails()){
@@ -125,6 +124,10 @@ class WallpapersController extends Controller
         if (!file_exists($path_origin)) {
             mkdir($path_origin, 0777, true);
         }
+        $path_thumbnails    =  storage_path('app/public/wallpapers/thumbnails/'.$monthYear.'/');
+        if (!file_exists($path_thumbnails)) {
+            mkdir($path_thumbnails, 0777, true);
+        }
         $insert_data = [];
         foreach ($request->file as $file){
             $filenameWithExt=$file->getClientOriginalName();
@@ -138,6 +141,9 @@ class WallpapersController extends Controller
                 copy($file->getRealPath(), $path_origin.$fileNameToStore);
             }else{
                 $img->save($path_origin.$fileNameToStore);
+                $img->resize(360, 640,function ($constraint) {
+                    $constraint->aspectRatio();
+                })->save($path_thumbnails.$fileNameToStore);
             }
 
             $origin =  $monthYear.'/'.$fileNameToStore;
@@ -151,7 +157,9 @@ class WallpapersController extends Controller
                 'wallpaper_feature' => rand(0,1),
                 'image_extension' => $img->mime()
             ]);
-            $wallpaper->categories()->attach($request->select_categories);
+
+
+            $wallpaper->tags()->attach($request->select_tags);
             }
         return response()->json(['success'=>'Thành công','data'=>$wallpaper]);
 
@@ -221,19 +229,22 @@ class WallpapersController extends Controller
     public function delete($id)
     {
         $wallpaper = Wallpapers::find($id);
-        $path_remove    =   storage_path('app/public/wallpapers/').$wallpaper->wallpaper_image;
+        $path    =   storage_path('app/public/wallpapers/').$wallpaper->wallpaper_image;
+        $pathThumbnail    =   storage_path('app/public/wallpapers/thumbnails/').$wallpaper->wallpaper_image;
         try {
-            if(file_exists($path_remove)){
-                unlink($path_remove);
+            if(file_exists($path)){
+                unlink($path);
+            }
+            if(file_exists($pathThumbnail)){
+                unlink($pathThumbnail);
             }
         }catch (\Exception $ex) {
             Log::error($ex->getMessage());
         }
-        $wallpaper->categories()->detach();
+        $wallpaper->tags()->detach();
         $wallpaper->visitor_favorites()->delete();
         $wallpaper->delete();
         return response()->json(['success'=>'Xoá thành công']);
-
     }
 
     public function deleteSelect(Request $request)
@@ -242,15 +253,19 @@ class WallpapersController extends Controller
         $wallpapers = Wallpapers::whereIn('id',$id)->get();
 
         foreach ( $wallpapers as $wallpaper){
-            $path_remove    =   storage_path('app/public/wallpapers/').$wallpaper->wallpaper_image;
+            $path    =   storage_path('app/public/wallpapers/').$wallpaper->wallpaper_image;
+            $pathThumbnail    =   storage_path('app/public/wallpapers/thumbnails/').$wallpaper->wallpaper_image;
             try {
-                if(file_exists($path_remove)){
-                    unlink($path_remove);
+                if(file_exists($path)){
+                    unlink($path);
+                }
+                if(file_exists($pathThumbnail)){
+                    unlink($pathThumbnail);
                 }
             }catch (\Exception $ex) {
                 Log::error($ex->getMessage());
             }
-            $wallpaper->categories()->detach();
+            $wallpaper->tags()->detach();
             $wallpaper->visitor_favorites()->delete();
             $wallpaper->delete();
         }
@@ -317,24 +332,26 @@ class WallpapersController extends Controller
 
     public function optimization(){
         ini_set('max_execution_time', 1800);
-        $path = public_path('storage/wallpapers/');
-        $dir = scandir($path);
-        $dir = array_slice($dir, 2);;
-        foreach ($dir as $r){
-            if (!file_exists($path.'thumbnails/'.$r)) {
-                mkdir($path.'thumbnails/'.$r, 0777, true);
-            }
-        }
+//        $path = public_path('storage/wallpapers/');
+//        $dir = scandir($path);
+//        $dir = array_slice($dir, 2);;
+//        foreach ($dir as $r){
+//            if (!file_exists($path.'thumbnails/'.$r)) {
+//                mkdir($path.'thumbnails/'.$r, 0777, true);
+//            }
+//        }
         $wallpapers = Wallpapers::where('image_extension','<>','image/gif')->paginate(20);
         $page = $wallpapers->currentPage()+1;
         foreach ($wallpapers as $wallpaper){
-            $pathToImage = public_path('storage/wallpapers/'.$wallpaper->wallpaper_image);
+            $path = public_path('storage/wallpapers/'.$wallpaper->wallpaper_image);
+            $pathToImage = public_path('storage/wallpapers/thumbnails/'.$wallpaper->wallpaper_image);
             $optimizerChain = OptimizerChainFactory::create();
+            $optimizerChain->optimize($path);
             $optimizerChain->optimize($pathToImage);
 
-            $img = Image::make($pathToImage);
-            $img->resize(360, 640);
-            $img->save($path.'thumbnails/'.$wallpaper->wallpaper_image);
+//            $img = Image::make($pathToImage);
+//            $img->resize(360, 640);
+//            $img->save($path.'thumbnails/'.$wallpaper->wallpaper_image);
             echo '<br>'.$wallpaper->id . ' - '. $wallpaper->wallpaper_name .' - '. $wallpaper->wallpaper_image;
         }
         echo '<META http-equiv="refresh" content="1;URL=' . route('wallpapers.optimization'). '?page='.$page.'">';

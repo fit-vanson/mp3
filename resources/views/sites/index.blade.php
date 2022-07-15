@@ -42,7 +42,7 @@
                                     <th style="width: 40%">Image</th>
                                     <th style="width: 30%">Name</th>
                                     <th style="width: 10%">Ads</th>
-                                    <th style="width: 10%">Categories</th>
+                                    <th style="width: 10%">Project</th>
                                     <th style="width: 10%">Action</th>
                                 </tr>
                                 </thead>
@@ -77,25 +77,30 @@
                         <img id="avatar" width="200px" src="{{asset('assets/images/1.png')}}">
                         <div class="form-group">
                             <label>Site name</label>
-                            <input type="text" class="form-control" id="site_name" name="site_name" required>
+                            <input type="text" class="form-control" id="site_name" name="site_name" placeholder="zxcv" required>
                         </div>
 
                         <div class="form-group">
                             <label>Website</label>
-                            <input type="text" class="form-control" id="site_web" name="site_web"  required>
+                            <input type="text" class="form-control" id="site_web" name="site_web" placeholder="zxcv.com" required>
                         </div>
 
                         <div class="form-group">
-                            <label>Categories</label>
-                            <select class="select2 form-control select2-multiple" id="select_categories"
-                                    name="select_categories[]" multiple="multiple"
-                                    data-placeholder="Choose ..." style="width: 100%">
-                                @foreach($categories as $category)
-                                    <option value="{{$category->id}}">{{$category->category_name}}</option>
-                                @endforeach
-                            </select>
-
+                            <label>Project ID AIO</label>
+                            <input type="text" class="form-control" id="site_project" name="site_project" placeholder="DAxxx-yy" required>
                         </div>
+
+{{--                        <div class="form-group">--}}
+{{--                            <label>Categories</label>--}}
+{{--                            <select class="select2 form-control select2-multiple" id="select_categories"--}}
+{{--                                    name="select_categories[]" multiple="multiple"--}}
+{{--                                    data-placeholder="Choose ..." style="width: 100%">--}}
+{{--                                @foreach($categories as $category)--}}
+{{--                                    <option value="{{$category->id}}">{{$category->category_name}}</option>--}}
+{{--                                @endforeach--}}
+{{--                            </select>--}}
+
+{{--                        </div>--}}
 
 
 
@@ -165,23 +170,8 @@
                     { data: 'site_image',className: "align-middle text-center " },
                     { data: 'site_name',  className: "align-middle", },
                     { data: 'site_ads',className: "align-middle",},
-                    { data: 'categories',className: "align-middle",},
+                    { data: 'site_project',className: "align-middle",},
                     { data: 'action',className: "align-middle text-center ", }
-                ],
-                columnDefs: [
-                    {
-                        targets: 3,
-                        responsivePriority: 1,
-                        render: function (data) {
-                            var categories = data,
-                                $output = '';
-                            $.each(categories, function(i, item) {
-                                $output += ' <p class="badge badge-success">' + item.category_name + '</p><br> ';
-                                return i<2;
-                            });
-                            return $output
-                        }
-                    },
                 ],
                 order: [1, 'asc'],
 
@@ -312,11 +302,7 @@
                         $('#id').val(data.site.id);
                         $('#site_name').val(data.site.site_name);
                         $('#site_web').val(data.site.site_web);
-                        var id_cate =[];
-                        $.each(data.site.categories, function(i, item) {
-                            id_cate.push(item.id.toString())
-                        });
-                        $('#select_categories').val(id_cate).trigger('change');
+                        $('#site_project').val(data.site.site_project);
                         $('#avatar').attr('src','../storage/sites/'+data.site.site_image);
 
                     },

@@ -26,7 +26,7 @@ class WallpapersResource extends JsonResource
             'image_id' => $this->id,
             'image_name' => $this->wallpaper_name,
             'image_upload' => $this->wallpaper_name,
-            'image_url' => $this->image_url ? $this->image_url: '',
+            'image_url' =>  '',
             'type' => 'upload',
             'resolution' =>$image ?  $image[0]. ' x '.$image[1]: 'n/a',
             'size' => $size ? $size : 'n/a',

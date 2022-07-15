@@ -18,7 +18,7 @@ class CategoriesResource extends JsonResource
             'id' => $this->id,
             'name' => $this->category_name,
             'view_count' => $this->category_view_count,
-            'image' => $this->pivot->site_image ? asset('storage/categories/' . $this->pivot->site_image) : asset('storage/categories/' . $this->category_image),
+            'image' => asset('storage/categories/' . $this->category_image),
         ];
     }
 }

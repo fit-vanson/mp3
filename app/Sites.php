@@ -26,9 +26,14 @@ class Sites extends Model
         'site_view_page',
     ];
 
+//    public function categories()
+//    {
+//        return $this->belongsToMany(Categories::class, CategoriesHasSites::class, 'site_id', 'category_id')->withPivot('site_image');
+//    }
+
     public function categories()
     {
-        return $this->belongsToMany(Categories::class, CategoriesHasSites::class, 'site_id', 'category_id')->withPivot('site_image');
+        return $this->hasMany(Categories::class,'site_id');
     }
 
     public function list_ips()

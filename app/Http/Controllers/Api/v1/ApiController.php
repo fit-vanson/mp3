@@ -305,7 +305,6 @@ class ApiController extends Controller
                 ->get();
             $wallpaper = [];
             foreach ($data as $item ){
-                $item->wallpaper()->with('categories')->get()->toArray();
                 foreach ($item->wallpaper()->where('image_extension','<>','image/gif')->with('categories')->get()->toArray() as $wall){
                     $wallpaper[] = $wall;
                 }
@@ -315,40 +314,44 @@ class ApiController extends Controller
                 ->categories()
                 ->where('category_checked_ip',0)
                 ->get();
+
             $wallpaper = [];
             foreach ($data as $item ){
-               $item->wallpaper()->with('categories')->get()->toArray();
                 foreach ($item->wallpaper()->where('image_extension','<>','image/gif')->with('categories')->get()->toArray() as $wall){
                     $wallpaper[] = $wall;
                 }
             }
         }
 
+        $temp = array_unique(array_column($wallpaper, 'id'));
+        $unique_arr = array_intersect_key($wallpaper, $temp);
+
+
         if($order == 1){
-            usort($wallpaper, function($a, $b) {
+            usort($unique_arr, function($a, $b) {
                 return $b['id'] <=> $a['id'];
             });
 
         }elseif ($order ==2){
-            usort($wallpaper, function($a, $b) {
+            usort($unique_arr, function($a, $b) {
                 return $b['updated_at'] <=> $a['updated_at'];
             });
         }elseif ($order ==3){
-            usort($wallpaper, function($a, $b) {
+            usort($unique_arr, function($a, $b) {
                 return $b['wallpaper_view_count'] <=> $a['wallpaper_view_count'];
             });
         }elseif ($order ==4){
-            shuffle($wallpaper);
+            shuffle($unique_arr);
         }else{
-            usort($wallpaper, function($a, $b) {
+            usort($unique_arr, function($a, $b) {
                 return $b['wallpaper_like_count'] <=> $a['wallpaper_like_count'];
             });
         }
 
-        $result = array_slice($wallpaper, $limit, $page_limit);
+        $result = array_slice($unique_arr, $limit, $page_limit);
 
         $getResource= WallpapersResource::collection(json_decode(json_encode($result), FALSE));
-        $count_total = count($wallpaper);
+        $count_total = count($unique_arr);
         $count = count($result);
         $respon = array(
             'status' => 'ok', 'count' => $count, 'count_total' => $count_total, 'pages' => $page, 'posts' => $getResource
@@ -379,7 +382,6 @@ class ApiController extends Controller
                 ->first();
         }
 
-
         $categories =  CategoriesResource::collection($data->categories);
         $count = count($categories);
         $respon = array(
@@ -401,14 +403,18 @@ class ApiController extends Controller
 
         $data = Categories::findorFail($id)
             ->wallpaper()
+            ->distinct()
             ->orderBy('wallpaper_like_count', 'desc')
             ->skip($limit)
             ->take($page_limit)
             ->get();
 
+
         $wallpapers= WallpapersResource::collection($data);
         $count_total = Categories::findOrFail($id)
             ->wallpaper()
+            ->distinct()
+            ->get()
             ->count();
         $count = count($wallpapers);
 ;

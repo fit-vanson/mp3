@@ -19,7 +19,6 @@ class WallpapersResource extends JsonResource
         return [
             'categories' =>
                 CategoriesResource::collection($this->categories),
-//                array(new CategoriesResource($this->categories)),
             'id' => $this->id,
             'name' => $this->wallpaper_name ,
             'thumbnail_image' => asset('storage/wallpapers/thumbnails/'.$this->wallpaper_image),

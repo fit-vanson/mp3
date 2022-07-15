@@ -309,18 +309,21 @@ class ApiController extends Controller
             $wallpaper = [];
             foreach ($data as $item ){
                 $item->wallpaper()->with('categories')->get()->toArray();
-                foreach ($item->wallpaper()->where('image_extension','<>','image/gif')->with('categories')->get()->toArray() as $wall){
+                foreach ($item->wallpaper()->where('image_extension','<>','image/gif')->with('categories','tags')->get()->toArray() as $wall){
                     $wallpaper[] = $wall;
                 }
             }
         }
 
-        $row['featured_wallpaper'] =  $this->sortWallpaper($wallpaper,'wallpaper_like_count',$type, $get_method['android_id']);
+        $temp = array_unique(array_column($wallpaper, 'id'));
+        $unique_arr = array_intersect_key($wallpaper, $temp);
+
+        $row['featured_wallpaper'] =  $this->sortWallpaper($unique_arr,'wallpaper_like_count',$type, $get_method['android_id']);
         $getCategoryResource = CategoriesResource::collection($data);
         $row['wallpaper_category'] = $getCategoryResource;
-        $row['latest_wallpaper'] = $this->sortWallpaper($wallpaper,null,$type, $get_method['android_id']);
-        $row['popular_wallpaper'] = $this->sortWallpaper($wallpaper,'wallpaper_view_count',$type, $get_method['android_id']);
-        $row['recent_wallpapers'] = $this->sortWallpaper($wallpaper,'created_at',$type, $get_method['android_id']);
+        $row['latest_wallpaper'] = $this->sortWallpaper($unique_arr,null,$type, $get_method['android_id']);
+        $row['popular_wallpaper'] = $this->sortWallpaper($unique_arr,'wallpaper_view_count',$type, $get_method['android_id']);
+        $row['recent_wallpapers'] = $this->sortWallpaper($unique_arr,'created_at',$type, $get_method['android_id']);
         $set['HD_WALLPAPER'] = $row;
         header('Content-Type: application/json; charset=utf-8');
         echo $val = str_replace('\\/', '/', json_encode($set, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
@@ -919,7 +922,8 @@ class ApiController extends Controller
 
         $ads = json_decode($data['site_ads'], true);
 //
-        $type=explode(',', 'Portrait,Landscape,Square');
+//        $type=explode(',', 'Portrait,Landscape,Square');
+        $type=explode(',', 'Portrait');
 
         $row['ios_bundle_identifier'] =  'com.viavi.hdwallpapers' ;
         $row['package_name'] = 'com.vpapps.hdwallpaper';
@@ -1023,9 +1027,17 @@ class ApiController extends Controller
         $output = array_slice($data, 0, 12);
 //        $output = array_slice($data, $limit, $page_limit);
         foreach ($output as $item){
-            $category = Categories::with('sites')->find($item['pivot']['category_id']);
+//            dd($item['tags']);
+            $tags = [];
+            foreach ($item['tags'] as $tag){
+
+                $tags[] = $tag['tag_name'];
+            }
+
+
+//            $category = Categories::with('sites')->find($item['pivot']['category_id']);
             $data_arr['id'] = $item['id'];
-            $data_arr['cat_id'] = $item['pivot']['category_id'];
+            $data_arr['cat_id'] = '';
             $data_arr['wallpaper_type'] = $type;
             $data_arr['wallpaper_image'] = asset('storage/wallpapers/'.$item['wallpaper_image']);
             $data_arr['wallpaper_image_thumb'] = asset('storage/wallpapers/thumbnails/'.$item['wallpaper_image']);
@@ -1033,15 +1045,14 @@ class ApiController extends Controller
             $data_arr['total_rate'] = $item['wallpaper_like_count'];
             $data_arr['rate_avg'] = $item['wallpaper_download_count'];
 
-
             $data_arr['is_favorite']= $this->is_favorite($item['id'], 'wallpaper', $android_id);
 
-            $data_arr['wall_tags'] = $item['wallpaper_name'];
+            $data_arr['wall_tags'] = implode(",", $tags);
             $data_arr['wall_colors'] = 1;
-            $data_arr['cid'] = $item['pivot']['category_id'];
+            $data_arr['cid'] = '';
             $data_arr['category_name'] = $item['wallpaper_name'];
-            $data_arr['category_image'] =   asset('storage/categories/'.$category->category_image);
-            $data_arr['category_image_thumb'] = asset('storage/categories/'.$category->category_image);
+            $data_arr['category_image'] =   '';
+            $data_arr['category_image_thumb'] ='';
             array_push($jsonObj,$data_arr);
         }
         return $jsonObj;
@@ -1106,12 +1117,10 @@ class ApiController extends Controller
     private  function getCategory($data){
         $jsonObj = [];
         foreach ($data as $item){
-
-
             $data_arr['cid'] = $item['id'];
             $data_arr['category_name'] = $item['category_name'];
-            $data_arr['category_image'] = $item->pivot->site_image ? asset('storage/categories/'.$item->pivot->site_image) : asset('storage/categories/'.$item->category_image);
-            $data_arr['category_image_thumb'] = $item->pivot->site_image ? asset('storage/categories/' . $item->pivot->site_image) : asset('storage/categories/' . $item->category_image);
+            $data_arr['category_image'] = asset('storage/categories/'.$item->category_image);
+            $data_arr['category_image_thumb'] = asset('storage/categories/' . $item->category_image);
             $data_arr['category_total_wall'] = $item['wallpaper_count'];
             array_push($jsonObj,$data_arr);
         }

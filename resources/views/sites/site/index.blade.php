@@ -38,7 +38,7 @@
                     <!-- Nav tabs -->
                     <ul class="nav nav-pills nav-justified" role="tablist">
                         <li class="nav-item waves-effect waves-light">
-                            <a class="nav-link active" data-toggle="tab" href="#home-1" role="tab">
+                            <a class="nav-link" data-toggle="tab" href="#home-1" role="tab">
                                 <span class="d-block d-sm-block"><i class="fas fa-home"></i></span>
                                 <span class="d-none d-sm-block">Home</span>
                             </a>
@@ -56,7 +56,7 @@
                             </a>
                         </li>
                         <li class="nav-item waves-effect waves-light">
-                            <a class="nav-link" data-toggle="tab" href="#categories-1" role="tab">
+                            <a class="nav-link active" data-toggle="tab" href="#categories-1" role="tab">
                                 <span class="d-block d-sm-block"><i class="far fa-folder-open"></i></span>
                                 <span class="d-none d-sm-block">Categories</span>
                             </a>
@@ -72,7 +72,7 @@
 
                     <!-- Tab panes -->
                     <div class="tab-content">
-                        <div class="tab-pane active p-3" id="home-1" role="tabpanel">
+                        <div class="tab-pane p-3" id="home-1" role="tabpanel">
                             <form id="form{{preg_replace('/\s+/','',$page_title)}}_home">
                                 <div class="row">
                                     <input type="hidden" name="id" id="id" value="{{$site->id}}">
@@ -255,7 +255,7 @@
                                 </div>
                             </form>
                         </div>
-                        <div class="tab-pane p-3" id="categories-1" role="tabpanel">
+                        <div class="tab-pane active p-3" id="categories-1" role="tabpanel">
                             <div class="row">
                                 <div class="col-12">
                                     <div class="card">
@@ -266,9 +266,10 @@
                                                            style="width: 100%;">
                                                         <thead>
                                                         <tr>
-                                                            <th style="width: 40%">Image</th>
-                                                            <th style="width: 30%">Name</th>
+                                                            <th style="width: 30%">Image</th>
+                                                            <th style="width: 20%">Name</th>
                                                             <th style="width: 10%">Real</th>
+                                                            <th style="width: 20%">Tags</th>
                                                             <th style="width: 10%">Image Count</th>
                                                             <th style="width: 10%">Action</th>
                                                         </tr>
@@ -324,7 +325,6 @@
         </div> <!-- end col -->
     </div> <!-- end row -->
 
-
     <!--  Modal content for the above example -->
     <div class="modal fade" id="modalFeatureImages" tabindex="-1" role="dialog"
          aria-labelledby="myLargeModalLabel" aria-hidden="true">
@@ -360,30 +360,56 @@
                 </div>
                 <div class="card-body">
                     <form id="form{{preg_replace('/\s+/','',$page_title)}}Category">
-                        <input type="hidden" name="category_id" id="id_Category">
-                        <input type="hidden" name="site_id" id="id_Site">
+
+                        <input type="hidden" name="site_id" id="site_id" value="{{$site->id}}">
+                        <input type="hidden" name="category_id" id="category_id">
                         <input  id="image" type="file" name="image" class="form-control" hidden accept="image/*" onchange="changeImg(this)">
                         <img id="avatar" width="200px" src="{{asset('assets/images/1.png')}}">
-{{--                        <div class="form-group">--}}
-{{--                            <label>Category name</label>--}}
-{{--                            <input type="text" class="form-control" id="category_name" name="category_name" disabled>--}}
-{{--                        </div>--}}
 
-                        <div class="form-group mb-0">
-                            <div>
+                        <div class="form-group">
+                            <label>Category name</label>
+                            <input type="text" class="form-control" id="category_name" name="category_name" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label">Tags Select</label>
+                            <select class="select2 form-control select2-multiple" id="select_tags"
+                                    name="select_tags[]" multiple="multiple"
+                                    data-placeholder="Choose ..." style="width: 100%" required>
+                                @foreach($tags as $tag)
+                                    <option value="{{$tag->id}}">{{$tag->tag_name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Order</label>
+                            <input type="text" class="form-control" id="category_order" name="category_order" >
+                        </div>
+
+                        <div class="form-group">
+                            <label>View Count</label>
+                            <input type="text" class="form-control" id="category_view_count" name="category_view_count" >
+                        </div>
+
+                        <div class="form-group">
+                            <input type="checkbox" id="category_checked_ip" name="category_checked_ip"  switch="none" checked="">
+                            <label for="category_checked_ip" data-on-label="Real" data-off-label="Fake"></label>
+                        </div>
+
+                        <div class="form-group">
                                 <button type="submit" id="saveBtn{{preg_replace('/\s+/','',$page_title)}}Category" class="btn btn-primary waves-effect waves-light mr-1">
                                     Submit
                                 </button>
-                                <button type="reset" class="btn btn-secondary waves-effect">
-                                    Cancel
-                                </button>
-                            </div>
+                                <button type="reset" class="btn btn-secondary waves-effect">Cancel</button>
                         </div>
                     </form>
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
+
+
 
 
 
@@ -567,6 +593,7 @@
             {{--        }--}}
             {{--    });--}}
             {{--});--}}
+
             var dtTable = $('#table{{preg_replace('/\s+/','',$page_title)}}_categories').DataTable({
                 processing: true,
                 serverSide: true,
@@ -583,9 +610,55 @@
                     { data: 'category_image',className: "align-middle text-center " },
                     { data: 'category_name',  className: "align-middle", },
                     { data: 'category_checked_ip',className: "align-middle",},
+                    { data: 'tags',className: "align-middle", orderable: false},
                     { data: 'wallpaper_count',className: "align-middle",},
-                    { data: 'action',className: "align-middle text-center ", }
+                    { data: 'action',className: "align-middle text-center ", orderable: false }
                 ],
+                dom:
+                    '<"d-flex justify-content-between mx-2 row mt-75"' +
+                    '<" col-sm-12 col-lg-2 d-flex justify-content-center justify-content-lg-start" l>' +
+                    // '<"button-items"B>'+
+                    '<"col-sm-12 col-lg-4 ps-xl-75 ps-0"<" d-flex align-items-center justify-content-center justify-content-lg-end flex-lg-nowrap flex-wrap"<"me-1"f><"col-sm-12 col-md-3"B>>>' +
+                    '>t' +
+                    '<"d-flex justify-content-between mx-2 row mb-1"' +
+                    '<"col-sm-12 col-md-3"i>' +
+                    '<"col-sm-12 col-md-6"p>' +
+                    '>',
+
+                columnDefs: [
+                    {
+                        targets: 3,
+                        responsivePriority: 1,
+                        render: function (data) {
+                            var tags = data,
+                                $output = '';
+                            var stateNum = Math.floor(Math.random() * 6) + 1;
+                            var states = ['success', 'danger', 'warning', 'info', 'dark', 'primary', 'secondary'];
+                            var $state = states[stateNum];
+                            $.each(tags, function(i, item) {
+                                $output += ' <span class="badge badge-'+$state+'" style="font-size: 100%">' + item.tag_name + '</span> ';
+                                return i<2;
+                            });
+                            if(tags.length > 3){
+                                $output += ' <span class="badge badge-'+$state+'" style="font-size: 100%"> ...</span> '
+                            }
+                            return $output
+                        }
+                    },
+                ],
+                buttons: [
+                    {
+                        text: 'Create',
+                        className: 'createSiteCategory btn btn-success',
+                        attr: {
+                            'type': 'submit'
+                        },
+                        init: function (api, node, config) {
+                            $(node).removeClass('btn-secondary');
+                        }
+                    }
+                ],
+
                 order: [1, 'asc'],
 
                 fnDrawCallback: function () {
@@ -609,6 +682,21 @@
 
             });
 
+            $('.create{{preg_replace('/\s+/','',$page_title)}}Category').click(function () {
+                $('#form{{preg_replace('/\s+/','',$page_title)}}Category').trigger("reset");
+                $('#modal{{preg_replace('/\s+/','',$page_title)}}Category').modal('show');
+                $('#{{preg_replace('/\s+/','',$page_title)}}CategoryModalLabel').html("Add {{$page_title}} Category");
+                $('#saveBtn{{preg_replace('/\s+/','',$page_title)}}Category').val("create");
+
+                $('#id').val('');
+                $('#category_view_count').val(Math.floor(Math.random() * 1000) + 1000);
+                $('#category_order').val(Math.floor(Math.random() * 2));
+
+                $(".select2").select2({
+                    closeOnSelect: false,
+                });
+            });
+
 
             $(document).on('click','.editSiteCategory', function (data) {
                 $('#form{{preg_replace('/\s+/','',$page_title)}}Category').trigger("reset");
@@ -619,11 +707,26 @@
                     success: function (data) {
                         $('#modal{{preg_replace('/\s+/','',$page_title)}}Category').modal('show');
                         $('#{{preg_replace('/\s+/','',$page_title)}}CategoryModalLabel').html("Edit Category {{$page_title}}: "+ data.categories.category_name);
-                        $('#id_Category').val(data.categories.id);
-                        $('#id_Site').val({{ request()->id }});
-                        // $('#category_name').val(data.categories.category_name);
-                        $('#avatar').attr('src','{{\Illuminate\Support\Facades\URL::asset('storage/categories')}}/'+data.categories.category_image);
+                        $('#saveBtn{{preg_replace('/\s+/','',$page_title)}}Category').val("update");
+                        $('#form{{preg_replace('/\s+/','',$page_title)}}Category').trigger("reset");
 
+                        $('#category_id').val(data.categories.id);
+                        $('#site_id').val({{ request()->id }});
+                        $('#category_name').val(data.categories.category_name);
+                        $('#category_order').val(data.categories.category_order);
+                        $('#category_view_count').val(data.categories.category_view_count);
+                        if (data.categories.category_checked_ip == 0) {
+                            $('#category_checked_ip').prop('checked', true);
+                        } else {
+                            $('#category_checked_ip').prop('checked', false);
+                        }
+                        var id_cate =[];
+                        $.each(data.categories.tags, function(i, item) {
+                            id_cate.push(item.id.toString())
+                        });
+                        $('#select_tags').val(id_cate).trigger('change');
+                        $('#select_tags').select2();
+                        $('#avatar').attr('src','{{\Illuminate\Support\Facades\URL::asset('storage/categories')}}/'+data.categories.category_image);
                     },
                     error: function (data) {
                         console.log('Error:', data);
@@ -631,22 +734,23 @@
                 });
             });
 
+
             $('#form{{preg_replace('/\s+/','',$page_title)}}Category').on('submit', function (event) {
                 event.preventDefault();
                 var formData = new FormData($("#form{{preg_replace('/\s+/','',$page_title)}}Category")[0]);
-
+                if ($('#saveBtn{{preg_replace('/\s+/','',$page_title)}}Category').val() == 'create') {
                     $.ajax({
                         data: formData,
-                        url: '{{route('sites.update_category')}}',
+                        url: '{{route('categories.create')}}',
                         type: "POST",
                         dataType: 'json',
                         processData: false,
                         contentType: false,
                         success: function (data) {
                             if (data.success) {
-                                $('#form{{preg_replace('/\s+/','',$page_title)}}').trigger("reset");
+                                $('#form{{preg_replace('/\s+/','',$page_title)}}Category').trigger("reset");
                                 toastr['success'](data.success, 'Success!');
-                                $('#modal{{preg_replace('/\s+/','',$page_title)}}').modal('hide');
+                                $('#modal{{preg_replace('/\s+/','',$page_title)}}Category').modal('hide');
                                 dtTable.draw();
                             }
                             if (data.errors) {
@@ -656,9 +760,42 @@
                             }
                         }
                     });
-
+                }
+                if ($('#saveBtn{{preg_replace('/\s+/','',$page_title)}}Category').val() == 'update') {
+                    $.ajax({
+                        data: formData,
+                        url: '{{route('categories.update')}}',
+                        type: "POST",
+                        dataType: 'json',
+                        processData: false,
+                        contentType: false,
+                        success: function (data) {
+                            if (data.success) {
+                                $('#form{{preg_replace('/\s+/','',$page_title)}}Category').trigger("reset");
+                                toastr['success'](data.success, 'Success!');
+                                $('#modal{{preg_replace('/\s+/','',$page_title)}}Category').modal('hide');
+                                dtTable.draw();
+                            }
+                            if (data.errors) {
+                                for (var count = 0; count < data.errors.length; count++) {
+                                    toastr['error'](data.errors[count], 'Error!',);
+                                }
+                            }
+                        }
+                    });
+                }
 
             });
+
+            document.getElementById('category_checked_ip').onclick = function(e){
+                var category_name = $('#category_name').val();
+                if (this.checked){
+                    $('#category_name').val(category_name.replaceAll('Phace_', ''))
+                }
+                else{
+                    $('#category_name').val('Phace_'+category_name)
+                }
+            };
 
             var dtTable_listips = $('#table{{preg_replace('/\s+/','',$page_title)}}_listips').DataTable({
                 processing: true,

@@ -3,6 +3,8 @@
     <div class="card">
         <div class="card-body">
 
+
+
             <h4 class="card-title">{{$site->site_name}}</h4>
             <p class="card-title-desc">{{$site->site_web}}</p>
             <p style="text-align: center">
@@ -10,8 +12,6 @@
                     <img class="img-fluid" alt="" src="{{ URL::asset('/storage/sites/'.$site->site_image) }}" width="75">
                 </a>
             </p>
-
-
             <dl class="row mb-0">
                 <dt class="col-sm-3">Categories</dt>
                 <dd class="col-sm-9">{{count($site->categories)}}</dd>

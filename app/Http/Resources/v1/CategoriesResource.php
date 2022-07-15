@@ -17,7 +17,7 @@ class CategoriesResource extends JsonResource
             'category_id' => $this->id,
             'category_name' => $this->category_name,
             'total_wallpaper'=>$this->wallpaper_count,
-            'category_image' => $this->pivot->site_image ? $this->pivot->site_image : $this->category_image,
+            'category_image' => $this->category_image,
         ];
     }
 }

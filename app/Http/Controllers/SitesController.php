@@ -7,6 +7,7 @@ use App\CategoriesHasSites;
 use App\ListIP;
 use App\Models\SiteManage;
 use App\Sites;
+use App\Tags;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -24,10 +25,10 @@ class SitesController extends Controller
     public function index()
     {
         $page_title =  'Sites';
-        $categories = Categories::get();
+//        $categories = Categories::get();
         return view('sites.index',[
             'page_title' => $page_title,
-            'categories' => $categories
+//            'categories' => $categories
         ]);
     }
     public function getIndex(Request $request)
@@ -71,10 +72,10 @@ class SitesController extends Controller
 
             $data_arr[] = array(
                 "id" => $record->id,
-                "site_image" => '<a class="image-popup-no-margins" href="storage/sites/'.$record->site_image.'"><img class="img-fluid" alt="Site" src="storage/sites/'.$record->site_image.'" width="150"></a>',
+                "site_image" => '<a class="image-popup-no-margins" href="storage/sites/'.$record->site_image.'"><img class="img-fluid" alt="'.$record->site_name.'" src="storage/sites/'.$record->site_image.'" width="150"></a>',
 //                "site_name" => '<a href="/admin/site/view/'. $record->site_web.'" data-id="'.$record->id.'"><h5 class="font-size-16">'.$record->site_name.'</h5></a>',
                 "site_name" => '<a href="'.route('sites.view',$record->id).'"><h5 class="font-size-16">'.$record->site_name.'</h5></a>',
-                "categories" => $record->categories,
+                "site_project" =>'<span class="badge badge-success" style="font-size: 100%">' . $record->site_project. '</span>',
                 "site_ads" => $record->ad_switch == 1 ? '<a href="javascript:void(0)" data-id="'.$record->id.'" class="changeAds"><span class="badge badge-success">Active</span></a>': '<a href="javascript:void(0)" data-id="'.$record->id.'" class="changeAds"><span class="badge badge-danger">Deactivated</span></a>',
 
                 "action" => $btn,
@@ -93,6 +94,7 @@ class SitesController extends Controller
 
     }
     public function create(Request $request){
+
         $rules = [
             'site_web' =>'unique:sites,site_web',
 
@@ -108,9 +110,9 @@ class SitesController extends Controller
 
 
         $data = new Sites();
-        $data['site_name'] = $request->site_name;
-        $data['site_web'] = $request->site_web;
-
+        $data['site_name'] = trim($request->site_name);
+        $data['site_web'] = trim($request->site_web);
+        $data['site_project'] = trim($request->site_project);
         if($request->image){
             $file = $request->image;
             $filename = Str::slug($request->site_web);
@@ -134,7 +136,7 @@ class SitesController extends Controller
             $data['site_image'] = 'default.png';
         }
         $data->save();
-        $data->categories()->attach($request->select_categories);
+
         return response()->json(['success'=>'Thêm mới thành công']);
     }
     public function edit($id){
@@ -153,7 +155,6 @@ class SitesController extends Controller
         ];
         $message = [
             'site_web.unique'=>'Web đã tồn tại',
-
         ];
         $error = Validator::make($request->all(),$rules, $message );
         if($error->fails()){
@@ -162,6 +163,7 @@ class SitesController extends Controller
         $data= Sites::find($id);
         $data->site_web = $request->site_web;
         $data->site_name = $request->site_name;
+        $data->site_project = $request->site_project;
 
 
         if($request->image){
@@ -192,7 +194,6 @@ class SitesController extends Controller
             $data->site_image = $path_image;
         }
         $data->save();
-        $data->categories()->sync($request->select_categories);
         return response()->json(['success'=>'Cập nhật thành công']);
     }
     public function delete($id)
@@ -228,11 +229,12 @@ class SitesController extends Controller
 
     public function viewSite($id){
         $page_title =  'Site';
-        $site = Sites::with('categories.wallpaper')->find($id);
-//        dd($site);
+        $site = Sites::find($id);
+        $tags = Tags::all();
         return view('sites.site.index',[
             'page_title' => $page_title,
-            'site' => $site
+            'site' => $site,
+            'tags' => $tags,
         ]);
 
     }
@@ -321,31 +323,27 @@ class SitesController extends Controller
             ->where('category_name', 'like', '%' . $searchValue . '%')
             ->select('count(*) as allcount')->count();
 
-
-        // Get records, also we have included search filter as well
-        $records = Sites::where('id', $request->id)
-            ->with(['categories'=>function ($q) use ($columnSortOrder, $columnName, $searchValue) {
-                $q->withCount('wallpaper')
-                    ->where('category_name', 'like', '%' . $searchValue . '%')
-                    ->orderBy($columnName, $columnSortOrder);
-            }])
+        $records = Sites::findOrFail($request->id)
+            ->categories()
+            ->where('category_name', 'like', '%' . $searchValue . '%')
+            ->orderBy($columnName, $columnSortOrder)
             ->select('*')
+            ->with('tags')
+            ->withCount('wallpaper')
             ->skip($start)
             ->take($rowperpage)
-            ->first();
-
+            ->get();
         $data_arr = array();
-        foreach ($records->categories as $record) {
+        foreach ($records as $record) {
             $btn = ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-warning editSiteCategory"><i class="ti-pencil-alt"></i></a>';
-//            $btn .= ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-danger deleteSites"><i class="ti-trash"></i></a>';
-
+            $btn .= ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-danger deleteSiteCategory"><i class="ti-trash"></i></a>';
             $data_arr[] = array(
                 "id" => $record->id,
-                "category_image" => '<a class="image-popup-no-margins" href="'.URL::asset('storage/categories').'/'.($record->pivot->site_image ? $record->pivot->site_image : $record->category_image).'"><img class="img-fluid" alt="" src="'.URL::asset('storage/categories/').'/'.($record->pivot->site_image ? $record->pivot->site_image : $record->category_image).'" width="150"></a>',
-//                "category_image" => $record->pivot->site_image,
+                "category_image" => '<a class="image-popup-no-margins" href="'.URL::asset('storage/categories').'/'.$record->category_image.'"><img class="img-fluid" alt="" src="'.URL::asset('storage/categories/').'/'. $record->category_image.'" width="150"></a>',
                 "category_name" => $record->category_name,
                 "category_checked_ip" => $record->category_checked_ip == 1 ? '<span class="badge badge-danger">FAKE</span>' : '<span class="badge badge-success">REAL</span>',
                 "wallpaper_count" => $record->wallpaper_count,
+                "tags" => $record->tags,
                 "action" => $btn,
             );
         }

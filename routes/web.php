@@ -5,6 +5,7 @@ use App\Http\Controllers\BlockIPsController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\RolesPermissionsController;
 use App\Http\Controllers\SitesController;
+use App\Http\Controllers\TagsController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\WallpapersController;
 use App\User;
@@ -74,6 +75,20 @@ Route::group(['prefix'=>'categories'], function (){
     Route::get('/import', [CategoriesController::class, 'import'])->name('categories.import');
     Route::post('/postImport', [CategoriesController::class, 'postImport'])->name('categories.postImport');
     Route::get('/importToDb', [CategoriesController::class, 'importToDb'])->name('categories.importToDb');
+});
+
+
+Route::group(['prefix'=>'tags'], function (){
+    Route::get('/',[TagsController::class,'index'])->name('tags.index');
+    Route::post('/getIndex',[TagsController::class,'getIndex'])->name('tags.getIndex');
+    Route::post('/create',[TagsController::class,'create'])->name('tags.create');
+    Route::get('/edit/{id}',[TagsController::class,'edit'])->name('tags.edit');
+    Route::post('/update',[TagsController::class,'update'])->name('tags.update');
+    Route::get('/delete/{id}',[TagsController::class,'delete'])->name('tags.delete');
+    Route::get('/find',[TagsController::class,'find'])->name('tags.find');
+
+
+
 });
 
 Route::group(['prefix'=>'wallpapers'], function (){

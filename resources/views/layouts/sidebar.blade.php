@@ -39,9 +39,9 @@
                 <li class="menu-title">Wallpaper</li>
 
                 <li>
-                    <a href="{{route('categories.index')}}" >
-                        <i class="ti-layout-tab"></i>
-                        <span> Categories </span>
+                    <a href="{{route('tags.index')}}" >
+                        <i class="fas fa-tag"></i>
+                        <span> Tags </span>
                     </a>
                     <a href="{{route('wallpapers.index')}}" >
                         <i class="ti-image"></i>

@@ -55,13 +55,25 @@
                         <form method="post" action="{{route('wallpapers.create')}}" enctype="multipart/form-data"
                               class="dropzone" id="form{{preg_replace('/\s+/','',$page_title)}}">
                             @csrf
+{{--                            <div class="form-group mb-0">--}}
+{{--                                <label class="control-label">Categories Select</label>--}}
+{{--                                <select class="select2 form-control select2-multiple" id="select_categories"--}}
+{{--                                        name="select_categories[]" required multiple="multiple"--}}
+{{--                                        data-placeholder="Choose ...">--}}
+{{--                                    @foreach($categories as $category)--}}
+{{--                                        <option value="{{$category->id}}">{{$category->category_name}}</option>--}}
+{{--                                    @endforeach--}}
+{{--                                </select>--}}
+
+{{--                            </div>--}}
+
                             <div class="form-group mb-0">
-                                <label class="control-label">Categories Select</label>
-                                <select class="select2 form-control select2-multiple" id="select_categories"
-                                        name="select_categories[]" required multiple="multiple"
+                                <label class="control-label">Tags Select</label>
+                                <select class="select2 form-control select2-multiple" id="select_tags"
+                                        name="select_tags[]" multiple="multiple"
                                         data-placeholder="Choose ...">
-                                    @foreach($categories as $category)
-                                        <option value="{{$category->id}}">{{$category->category_name}}</option>
+                                    @foreach($tags as $tag)
+                                        <option value="{{$tag->id}}">{{$tag->tag_name}}</option>
                                     @endforeach
                                 </select>
 
@@ -95,7 +107,7 @@
                                         <th style="width: 10%">View Count</th>
                                         <th style="width: 10%">Like Count</th>
                                         <th style="width: 10%">Extension</th>
-                                        <th style="width: 15%">Categories</th>
+                                        <th style="width: 15%">Tags</th>
                                         <th style="width: 10%">Action</th>
                                     </tr>
                                     </thead>
@@ -136,8 +148,41 @@
         Dropzone.autoDiscover = false;
 
         $(".select2").select2({
-            closeOnSelect: false,
+            // closeOnSelect: false,
+            tags: true,
+            tokenSeparators: [',', ' '],
+            createTag: function (params) {
+                var term = $.trim(params.term);
+
+                if (term === '') {
+                    return null;
+                }
+                return {
+                    id: term,
+                    text: term,
+                    newTag: true // add additional parameters
+                }
+            }
+        }).on("change", function(e) {
+            var isNew = $(this).find('[data-select2-tag="true"]');
+            if(isNew.length && $.inArray(isNew.val(), $(this).val()) !== -1){
+                $.ajax({
+                    url: '/tags/create',
+                    type: 'post',
+                    dataType: 'json',
+                    data: {tag_name: isNew.val()},
+                    success: function (data) {
+                        if (data.success) {
+                            isNew.replaceWith('<option selected value="'+data.tag.id+'">'+data.tag.tag_name+'</option>');
+                        }
+                        if (data.errors) {
+                            console.log(data.errors)
+                        }
+                    }
+                });
+            }
         });
+
         $(function () {
             $.ajaxSetup({
                 headers: {
@@ -161,7 +206,7 @@
                     {data: 'wallpaper_view_count', className: "align-middle",},
                     {data: 'wallpaper_like_count', className: "align-middle",},
                     {data: 'image_extension', className: "align-middle",},
-                    {data: 'categories',className: "align-middle",orderable: false,},
+                    {data: 'tags',className: "align-middle",orderable: false,},
                     {data: 'action', className: "align-middle text-center ",orderable: false,}
                 ],
                 dom:
@@ -213,12 +258,18 @@
                         targets: 6,
                         responsivePriority: 1,
                         render: function (data) {
-                            var categories = data,
+                            var tags = data,
                                 $output = '';
-                            $.each(categories, function(i, item) {
-                                $output += ' <p class="badge badge-success">' + item.category_name + '</p><br> ';
+                            var stateNum = Math.floor(Math.random() * 6) + 1;
+                            var states = ['success', 'danger', 'warning', 'info', 'dark', 'primary', 'secondary'];
+                            var $state = states[stateNum];
+                            $.each(tags, function(i, item) {
+                                $output += ' <span class="badge badge-'+$state+'" style="font-size: 100%">' + item.tag_name + '</span> ';
                                 return i<2;
                             });
+                            if(tags.length > 3){
+                                $output += ' <span class="badge badge-'+$state+'" style="font-size: 100%"> ...</span> '
+                            }
                             return $output
                         }
                     },
@@ -255,6 +306,15 @@
                     });
                 }
             });
+
+            const queryString = window.location.search;
+            const urlParams = new URLSearchParams(queryString);
+            const search = urlParams.get('search')
+            if(search !== null){
+                dtTable.search(search)
+                    .draw();
+            }
+
 
             // Handle click on "Select all" control
             $('#select_all').on('click', function(){

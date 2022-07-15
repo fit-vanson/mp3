@@ -91,21 +91,25 @@ class CategoriesController extends Controller
 
     }
     public function create(Request $request){
-        $rules = [
-            'category_name' =>'unique:categories,category_name',
-
-        ];
-        $message = [
-            'category_name.unique'=>'Category đã tồn tại',
-
-        ];
-        $error = Validator::make($request->all(),$rules, $message );
-        if($error->fails()){
-            return response()->json(['errors'=> $error->errors()->all()]);
-        }
+//
+//        $site_id = $request->site_id;
+//
+//        $rules = [
+//            'category_name' =>'unique:categories,category_name,'.$site_id.',site_id',
+//
+//        ];
+//        $message = [
+//            'category_name.unique'=>'Category đã tồn tại',
+//
+//        ];
+//        $error = Validator::make($request->all(),$rules, $message );
+//        if($error->fails()){
+//            return response()->json(['errors'=> $error->errors()->all()]);
+//        }
 
 
         $data = new Categories();
+        $data['site_id'] = $request->site_id;
         $data['category_name'] = $request->category_name;
         $data['category_order'] = $request->category_order;
         $data['category_view_count'] = $request->category_view_count;
@@ -133,32 +137,32 @@ class CategoriesController extends Controller
         }else{
             $data['category_image'] = 'default.png';
         }
-
         $data->save();
+        $data->tags()->attach($request->select_tags);
         return response()->json(['success'=>'Thêm mới thành công']);
     }
     public function edit($id){
 
-        $categories = Categories::find($id);
+        $categories = Categories::with('tags')->find($id);
         return response()->json([
             'categories' =>$categories,
         ]);
     }
     public function update(Request $request)
     {
-        $id = $request->id;
-        $rules = [
-            'category_name' =>'unique:categories,category_name,'.$id.',id',
-
-        ];
-        $message = [
-            'category_name.unique'=>'Category đã tồn tại',
-
-        ];
-        $error = Validator::make($request->all(),$rules, $message );
-        if($error->fails()){
-            return response()->json(['errors'=> $error->errors()->all()]);
-        }
+        $id = $request->category_id;
+//        $rules = [
+//            'category_name' =>'unique:categories,category_name,'.$id.',id',
+//
+//        ];
+//        $message = [
+//            'category_name.unique'=>'Category đã tồn tại',
+//
+//        ];
+//        $error = Validator::make($request->all(),$rules, $message );
+//        if($error->fails()){
+//            return response()->json(['errors'=> $error->errors()->all()]);
+//        }
         $data= Categories::find($id);
         $data->category_name = $request->category_name;
         $data->category_order = $request->category_order;
@@ -192,10 +196,8 @@ class CategoriesController extends Controller
             $path_image =  $monthYear.'/'.$fileNameToStore;
             $data->category_image = $path_image;
         }
-
         $data->save();
-
-
+        $data->tags()->sync($request->select_tags);
 
         return response()->json(['success'=>'Cập nhật thành công']);
     }

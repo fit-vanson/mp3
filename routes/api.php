@@ -71,18 +71,18 @@ Route::group([
     "prefix" => "v3",
 //    'middleware' => 'auth.apikey'
 ], function() {
-    Route::get('version/check/{id}',[ApiV3Controller::class, 'checkCode']);
-    Route::get('/',[ApiV3Controller::class, 'index']);
-    Route::get('first',[ApiV3Controller::class, 'first']);
+    Route::get('version/check',[App\Http\Controllers\Api\v3\ApiController::class, 'checkCode']);
+    Route::get('/',[App\Http\Controllers\Api\v3\ApiController::class, 'index']);
+    Route::get('first',[App\Http\Controllers\Api\v3\ApiController::class, 'first']);
 
-    Route::get('category/all',[ApiV3Controller::class, 'categoryAll']);
-    Route::get('wallpaper/all/{order}/{page}',[ApiV3Controller::class, 'wallpapersAll']);
-    Route::get('wallpaper/random/{page}',[ApiV3Controller::class, 'wallpapersRandom']);
-    Route::get('wallpaper/category/{page}/{category}',[ApiV3Controller::class, 'wallpapersByCategory']);
-    Route::get('wallpaper/query/{page}/{query}',[ApiV3Controller::class, 'wallpapersBysearch']);
-    Route::get('wallpaper/add/set/{id}',[ApiV3Controller::class, 'api_add_set']);
-    Route::get('wallpaper/add/view/{id}',[ApiV3Controller::class, 'api_add_view']);
-    Route::get('wallpaper/add/download/{id}',[ApiV3Controller::class, 'api_add_download']);
+    Route::get('category/all',[App\Http\Controllers\Api\v3\ApiController::class, 'categoryAll']);
+    Route::get('wallpaper/all/{order}/{page}',[App\Http\Controllers\Api\v3\ApiController::class, 'wallpapersAll']);
+    Route::get('wallpaper/random/{page}',[App\Http\Controllers\Api\v3\ApiController::class, 'wallpapersRandom']);
+    Route::get('wallpaper/category/{page}/{category}',[App\Http\Controllers\Api\v3\ApiController::class, 'wallpapersByCategory']);
+    Route::get('wallpaper/query/{page}/{query}',[App\Http\Controllers\Api\v3\ApiController::class, 'wallpapersBysearch']);
+    Route::get('wallpaper/add/set/{id}',[App\Http\Controllers\Api\v3\ApiController::class, 'api_add_set']);
+    Route::get('wallpaper/add/view/{id}',[App\Http\Controllers\Api\v3\ApiController::class, 'api_add_view']);
+    Route::get('wallpaper/add/download/{id}',[App\Http\Controllers\Api\v3\ApiController::class, 'api_add_download']);
 
 });
 

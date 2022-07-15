@@ -259,7 +259,6 @@ class WallpapersController extends Controller
     }
     public function getNewest()
     {
-
         $page_limit = 12;
         $limit=($_GET['page']-1) * $page_limit;
 
