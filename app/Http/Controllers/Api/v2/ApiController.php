@@ -13,6 +13,7 @@ use App\Wallpapers;
 use Dflydev\DotAccessData\Data;
 use Illuminate\Http\Request;
 use Rolandstarke\Thumbnail\Facades\Thumbnail;
+use function PHPUnit\Framework\isEmpty;
 
 class ApiController extends Controller
 {
@@ -1099,9 +1100,9 @@ class ApiController extends Controller
     }
 
     private  function getWallpaperGif($data,$android_id){
-
         $jsonObj = [];
-        if (count($data) > 0){
+
+        if (!empty($data)){
             foreach ($data as $item){
                 $tags = [];
                 foreach ($item['tags'] as $tag){
@@ -1119,10 +1120,7 @@ class ApiController extends Controller
                 array_push($jsonObj,$data_arr);
             }
         }
-        else{
-            $data_arr = [];
-            array_push($jsonObj,$data_arr);
-        }
+
         return $jsonObj;
     }
 
@@ -1199,7 +1197,7 @@ class ApiController extends Controller
     }
     private  function getlatestgif($data,$android_id){
         $jsonObj = [];
-        if (count($data) > 0){
+        if (!empty($data)){
             foreach ($data as $item){
                 $tags = [];
                 foreach ($item['tags'] as $tag){
@@ -1217,10 +1215,6 @@ class ApiController extends Controller
                 $data_arr['is_favorite']= $this->is_favorite($item['id'], 'wallpaper', $android_id);
                 array_push($jsonObj,$data_arr);
             }
-        }
-        else{
-            $data_arr = [];
-            array_push($jsonObj,$data_arr);
         }
         return $jsonObj;
     }
