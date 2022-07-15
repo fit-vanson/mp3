@@ -1042,15 +1042,12 @@ class ApiController extends Controller
         $output = array_slice($data, 0, 12);
 //        $output = array_slice($data, $limit, $page_limit);
         foreach ($output as $item){
-
             $tags = [];
             foreach ($item['tags'] as $tag){
 
                 $tags[] = $tag['tag_name'];
             }
 
-
-//            $category = Categories::with('sites')->find($item['pivot']['category_id']);
             $data_arr['id'] = $item['id'];
             $data_arr['cat_id'] = '';
             $data_arr['wallpaper_type'] = $type;
@@ -1122,17 +1119,17 @@ class ApiController extends Controller
                 array_push($jsonObj,$data_arr);
             }
         }
-//        else{
-//            $data_arr['num'] = 0;
-//            $data_arr['id'] ='';
-//            $data_arr['gif_image'] = '';
-//            $data_arr['gif_tags'] = '';
-//            $data_arr['total_views'] = '';
-//            $data_arr['total_rate'] = '';
-//            $data_arr['rate_avg'] = '';
-//            $data_arr['is_favorite']= '';
-//            array_push($jsonObj,$data_arr);
-//        }
+        else{
+            $data_arr['num'] = '';
+            $data_arr['id'] ='';
+            $data_arr['gif_image'] = '';
+            $data_arr['gif_tags'] = '';
+            $data_arr['total_views'] = '';
+            $data_arr['total_rate'] = '';
+            $data_arr['rate_avg'] = '';
+            $data_arr['is_favorite']= '';
+            array_push($jsonObj,$data_arr);
+        }
         return $jsonObj;
     }
 
@@ -1228,17 +1225,17 @@ class ApiController extends Controller
                 array_push($jsonObj,$data_arr);
             }
         }
-//        else{
-//            $data_arr['num'] = 0;
-//            $data_arr['id'] ='';
-//            $data_arr['gif_image'] = '';
-//            $data_arr['gif_tags'] = '';
-//            $data_arr['total_views'] = '';
-//            $data_arr['total_rate'] = '';
-//            $data_arr['rate_avg'] = '';
-//            $data_arr['is_favorite']= '';
-//            array_push($jsonObj,$data_arr);
-//        }
+        else{
+            $data_arr['num'] = '';
+            $data_arr['id'] ='';
+            $data_arr['gif_image'] = '';
+            $data_arr['gif_tags'] = '';
+            $data_arr['total_views'] = '';
+            $data_arr['total_rate'] = '';
+            $data_arr['rate_avg'] = '';
+            $data_arr['is_favorite']= '';
+            array_push($jsonObj,$data_arr);
+        }
         return $jsonObj;
     }
 
