@@ -134,7 +134,7 @@ class WallpapersController extends Controller
 
             if($img->mime() == "image/gif"){
                 copy($file->getRealPath(), $path_origin.$fileNameToStore);
-                copy($file->getRealPath(), $fileNameToStore.$fileNameToStore);
+                copy($file->getRealPath(), $path_thumbnails.$fileNameToStore);
             }else{
                 $img->save($path_origin.$fileNameToStore);
                 $img->resize(360, 640,function ($constraint) {
