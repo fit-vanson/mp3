@@ -682,7 +682,7 @@ class ApiController extends Controller
             $wallpaper = [];
             foreach ($data as $item ){
                 $item->wallpaper()->with('categories')->get()->toArray();
-                foreach ($item->wallpaper()->where('image_extension','image/gif')->with('categories')->orderBy('wallpaper_like_count', 'desc')->get()->toArray() as $wall){
+                foreach ($item->wallpaper()->where('image_extension','image/gif')->with('categories','tags')->orderBy('wallpaper_like_count', 'desc')->get()->toArray() as $wall){
                     $wallpaper[] = $wall;
                 }
             }
@@ -694,14 +694,14 @@ class ApiController extends Controller
             $wallpaper = [];
             foreach ($data as $item ){
                 $item->wallpaper()->with('categories')->get()->toArray();
-                foreach ($item->wallpaper()->where('image_extension','image/gif')->with('categories')->orderBy('wallpaper_like_count', 'desc')->get()->toArray() as $wall){
+                foreach ($item->wallpaper()->where('image_extension','image/gif')->with('categories','tags')->orderBy('wallpaper_like_count', 'desc')->get()->toArray() as $wall){
                     $wallpaper[] = $wall;
                 }
             }
         }
-
-        $result = array_slice($wallpaper, $limit, $page_limit);
-
+        $temp = array_unique(array_column($wallpaper, 'id'));
+        $unique_arr = array_intersect_key($wallpaper, $temp);
+        $result = array_slice($unique_arr, $limit, $page_limit);
         $row = $this->getlatestgif($result, $get_method['android_id']);
 
 //        $row = $this->getlatestgif($result);
@@ -1036,7 +1036,7 @@ class ApiController extends Controller
         $output = array_slice($data, 0, 12);
 //        $output = array_slice($data, $limit, $page_limit);
         foreach ($output as $item){
-//            dd($item['tags']);
+
             $tags = [];
             foreach ($item['tags'] as $tag){
 
@@ -1099,6 +1099,11 @@ class ApiController extends Controller
         $jsonObj = [];
         if (count($data) > 0){
             foreach ($data as $item){
+                $tags = [];
+                foreach ($item['tags'] as $tag){
+
+                    $tags[] = $tag['tag_name'];
+                }
                 $data_arr['num'] = count($data);
                 $data_arr['id'] = $item['id'];
                 $data_arr['gif_image'] = asset('storage/wallpapers/' . $item['wallpaper_image']);
@@ -1196,13 +1201,18 @@ class ApiController extends Controller
     }
     private  function getlatestgif($data,$android_id){
         $jsonObj = [];
-
         if (count($data) > 0){
             foreach ($data as $item){
+                $tags = [];
+                foreach ($item['tags'] as $tag){
+
+                    $tags[] = $tag['tag_name'];
+                }
+
                 $data_arr['num'] = count($data);
                 $data_arr['id'] = $item['id'];
                 $data_arr['gif_image'] = asset('storage/wallpapers/' . $item['wallpaper_image']);
-                $data_arr['gif_tags'] = $item['wallpaper_name'];
+                $data_arr['gif_tags'] = implode(",", $tags);
                 $data_arr['total_views'] = $item['wallpaper_view_count'];
                 $data_arr['total_rate'] = $item['wallpaper_like_count'];
                 $data_arr['rate_avg'] = $item['wallpaper_download_count'];
