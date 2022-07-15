@@ -304,7 +304,6 @@ class ApiController extends Controller
                 ->where('category_checked_ip',0)
                 ->get();
 
-
             $wallpaper = [];
             foreach ($data as $item ){
                 $item->wallpaper()->with('categories')->get()->toArray();
@@ -1076,6 +1075,12 @@ class ApiController extends Controller
     private  function getWallpaper($data,$type,$android_id){
         $jsonObj = [];
         foreach ($data as $item){
+            $tags = [];
+            foreach ($item['tags'] as $tag){
+
+                $tags[] = $tag['tag_name'];
+            }
+
             $category = isset($item['pivot']) ? Categories::find($item['pivot']['category_id']) : null;
             $data_arr['num'] = count($data);
             $data_arr['id'] = $item['id'];
@@ -1089,7 +1094,7 @@ class ApiController extends Controller
 
             $data_arr['is_favorite']= $this->is_favorite($item['id'], 'wallpaper', $android_id);
 
-            $data_arr['wall_tags'] = $item['wallpaper_name'];
+            $data_arr['wall_tags'] = implode(",", $tags);
             $data_arr['wall_colors'] = 1;
 
             $data_arr['cid'] = isset($category) ? $category->id : '';
@@ -1114,7 +1119,7 @@ class ApiController extends Controller
                 $data_arr['num'] = count($data);
                 $data_arr['id'] = $item['id'];
                 $data_arr['gif_image'] = asset('storage/wallpapers/' . $item['wallpaper_image']);
-                $data_arr['gif_tags'] = $item['wallpaper_name'];
+                $data_arr['gif_tags'] = implode(",", $tags);
                 $data_arr['total_views'] = $item['wallpaper_view_count'];
                 $data_arr['total_rate'] = $item['wallpaper_like_count'];
                 $data_arr['rate_avg'] = $item['wallpaper_download_count'];
@@ -1149,6 +1154,14 @@ class ApiController extends Controller
 
         $jsonObj = [];
 
+        $tags = [];
+        foreach ($data['tags'] as $tag){
+
+            $tags[] = $tag['tag_name'];
+        }
+
+
+
 
 
         $data_arr['id'] = (string)$data->id;
@@ -1165,7 +1178,7 @@ class ApiController extends Controller
         $data_arr['total_download'] = (string)$data['wallpaper_download_count'];
 
 
-//        $data_arr['wall_tags'] = $data['categories']['category_name'].','.$data->name ;
+        $data_arr['wall_tags'] = implode(",", $tags);
         $data_arr['wall_colors'] = "2";
         $data_arr['resolution'] = $image ?  $image[0]. ' x '.$image[1]: 'n/a';
         $data_arr['size'] = $size ? $size : 'n/a';
@@ -1182,10 +1195,16 @@ class ApiController extends Controller
             $size = $this->filesize_formatted($path);
         }
         $jsonObj = [];
+        $tags = [];
+        foreach ($data['tags'] as $tag){
+
+            $tags[] = $tag['tag_name'];
+        }
+
 
         $data_arr['id'] = (string)$data->id;
         $data_arr['gif_image'] = asset('storage/wallpapers/' . $data['wallpaper_image']);
-        $data_arr['gif_tags'] = $data['wallpaper_name'];
+        $data_arr['gif_tags'] = implode(",", $tags);
         $data_arr['total_views'] = $data['view_count'];
         $data_arr['total_rate'] = $data['like_count'];
         $data_arr['rate_avg'] = $data['like_count'];
