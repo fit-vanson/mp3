@@ -1132,7 +1132,7 @@ class ApiController extends Controller
             $data_arr['category_name'] = $item['category_name'];
             $data_arr['category_image'] = asset('storage/categories/'.$item->category_image);
             $data_arr['category_image_thumb'] = asset('storage/categories/' . $item->category_image);
-            $data_arr['category_total_wall'] = $item['wallpaper_count'];
+            $data_arr['category_total_wall'] = $item->wallpaper()->distinct()->get()->count();
             array_push($jsonObj,$data_arr);
         }
         return $jsonObj;
