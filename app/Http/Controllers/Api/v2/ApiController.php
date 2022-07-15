@@ -546,7 +546,7 @@ class ApiController extends Controller
                 {
                     foreach ($data as $item){
                         $item->wallpaper()->with('categories')->get()->toArray();
-                        foreach ($item->wallpaper()->where('image_extension','<>','image/gif')->with('categories')->orderBy('wallpaper_view_count', 'desc')->get()->toArray() as $wall){
+                        foreach ($item->wallpaper()->where('image_extension','<>','image/gif')->with('categories','tags')->orderBy('wallpaper_view_count', 'desc')->get()->toArray() as $wall){
                             $wallpaper[] = $wall;
                         }
                     }
@@ -558,7 +558,7 @@ class ApiController extends Controller
             {
                 foreach ($data as $item){
                     $item->wallpaper()->with('categories')->get()->toArray();
-                    foreach ($item->wallpaper()->where('image_extension','image/gif')->with('categories')->orderBy('wallpaper_view_count', 'desc')->get()->toArray() as $wall){
+                    foreach ($item->wallpaper()->where('image_extension','image/gif')->with('categories','tags')->orderBy('wallpaper_view_count', 'desc')->get()->toArray() as $wall){
                         $wallpaper[] = $wall;
                     }
                 }
@@ -795,7 +795,6 @@ class ApiController extends Controller
                     }
                 }
             }
-
             $row = $this->getWallpaper($wallpaper, $type, $get_method['android_id']);
             $set['HD_WALLPAPER'] = $row;
             header('Content-Type: application/json; charset=utf-8');
@@ -806,34 +805,31 @@ class ApiController extends Controller
     }
 
     private function search_gif($get_method){
-
         $domain = $_SERVER['SERVER_NAME'];
         if (checkBlockIp()) {
-            $wallpaper = Wallpapers::where('image_extension', 'image/gif')
-                ->with('category')
-                ->where('name', 'like', '%' . $get_method['gif_search_text'] . '%')
-                ->whereHas('category', function ($q) use ($domain) {
-                    $q->leftJoin('tbl_category_has_site', 'tbl_category_has_site.category_id', '=', 'tbl_category_manages.id')
-                        ->leftJoin('tbl_site_manages', 'tbl_site_manages.id', '=', 'tbl_category_has_site.site_id')
-                        ->where('site_name', $domain)
-                        ->where('tbl_category_manages.checked_ip', 1)
-                        ->select('tbl_category_manages.*');
-                })
-                ->orderBy('like_count', 'desc')
-                ->get()->toArray();
+            $data = Sites::where('site_web',$domain)->first()
+                ->categories()
+                ->where('category_checked_ip',1)
+                ->get();
+            $wallpaper = [];
+            foreach ($data as $item ){
+                $item->wallpaper()->with('categories')->get()->toArray();
+                foreach ($item->wallpaper()->where('image_extension','image/gif')->where('wallpaper_name', 'like', '%' . $get_method['gif_search_text'] . '%')->with('categories')->orderBy('wallpaper_like_count', 'desc')->get()->toArray() as $wall){
+                    $wallpaper[] = $wall;
+                }
+            }
         } else {
-            $wallpaper = Wallpapers::where('image_extension', 'image/gif')
-                ->with('category')
-                ->where('name', 'like', '%' . $get_method['gif_search_text'] . '%')
-                ->whereHas('category', function ($q) use ($domain) {
-                    $q->leftJoin('tbl_category_has_site', 'tbl_category_has_site.category_id', '=', 'tbl_category_manages.id')
-                        ->leftJoin('tbl_site_manages', 'tbl_site_manages.id', '=', 'tbl_category_has_site.site_id')
-                        ->where('site_name', $domain)
-                        ->where('tbl_category_manages.checked_ip', 0)
-                        ->select('tbl_category_manages.*');
-                })
-                ->orderBy('like_count', 'desc')
-                ->get()->toArray();
+            $data = Sites::where('site_web',$domain)->first()
+                ->categories()
+                ->where('category_checked_ip',0)
+                ->get();
+            $wallpaper = [];
+            foreach ($data as $item ){
+                $item->wallpaper()->with('categories')->get()->toArray();
+                foreach ($item->wallpaper()->where('image_extension','image/gif')->where('wallpaper_name', 'like', '%' . $get_method['gif_search_text'] . '%')->with('categories')->orderBy('wallpaper_like_count', 'desc')->get()->toArray() as $wall){
+                    $wallpaper[] = $wall;
+                }
+            }
         }
         $row = $this->getWallpaperGif($wallpaper, $get_method['android_id']);
         $set['HD_WALLPAPER'] = $row;
@@ -856,7 +852,7 @@ class ApiController extends Controller
             $wallpaper = [];
             foreach ($data as $item ){
                 $item->wallpaper()->with('categories')->get()->toArray();
-                foreach ($item->wallpaper()->where('image_extension','image/gif')->with('categories')->orderBy('wallpaper_view_count', 'desc')->get()->toArray() as $wall){
+                foreach ($item->wallpaper()->where('image_extension','image/gif')->with('categories','tags')->orderBy('wallpaper_view_count', 'desc')->get()->toArray() as $wall){
                     $wallpaper[] = $wall;
                 }
             }
@@ -868,7 +864,7 @@ class ApiController extends Controller
             $wallpaper = [];
             foreach ($data as $item ){
                 $item->wallpaper()->with('categories')->get()->toArray();
-                foreach ($item->wallpaper()->where('image_extension','image/gif')->with('categories')->orderBy('wallpaper_view_count', 'desc')->get()->toArray() as $wall){
+                foreach ($item->wallpaper()->where('image_extension','image/gif')->with('categories','tags')->orderBy('wallpaper_view_count', 'desc')->get()->toArray() as $wall){
                     $wallpaper[] = $wall;
                 }
             }
@@ -896,7 +892,7 @@ class ApiController extends Controller
             $wallpaper = [];
             foreach ($data as $item ){
                 $item->wallpaper()->with('categories')->get()->toArray();
-                foreach ($item->wallpaper()->where('image_extension','image/gif')->with('categories')->orderBy('wallpaper_like_count', 'desc')->get()->toArray() as $wall){
+                foreach ($item->wallpaper()->where('image_extension','image/gif')->with('categories','tags')->orderBy('wallpaper_like_count', 'desc')->get()->toArray() as $wall){
                     $wallpaper[] = $wall;
                 }
             }
@@ -908,7 +904,7 @@ class ApiController extends Controller
             $wallpaper = [];
             foreach ($data as $item ){
                 $item->wallpaper()->with('categories')->get()->toArray();
-                foreach ($item->wallpaper()->where('image_extension','image/gif')->with('categories')->orderBy('wallpaper_like_count', 'desc')->get()->toArray() as $wall){
+                foreach ($item->wallpaper()->where('image_extension','image/gif')->with('categories','tags')->orderBy('wallpaper_like_count', 'desc')->get()->toArray() as $wall){
                     $wallpaper[] = $wall;
                 }
             }
@@ -1096,6 +1092,7 @@ class ApiController extends Controller
     }
 
     private  function getWallpaperGif($data,$android_id){
+
         $jsonObj = [];
         if (count($data) > 0){
             foreach ($data as $item){
