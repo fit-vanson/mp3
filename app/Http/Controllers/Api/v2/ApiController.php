@@ -438,7 +438,7 @@ class ApiController extends Controller
                 $category = Sites::where('site_web',$domain)->first()
                     ->categories()
                     ->where('category_checked_ip',0)
-                    ->withCount('wallpaper')
+//                    ->withCount('wallpaper')
                     ->get();
             }
 
