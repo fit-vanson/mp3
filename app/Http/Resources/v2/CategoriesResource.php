@@ -21,7 +21,7 @@ class CategoriesResource extends JsonResource
             'category_name' => $this->category_name,
             'category_image' =>   asset('storage/categories/'.$this->category_image),
             'category_image_thumb' =>  asset('storage/categories/'.$this->category_image),
-            'category_total_wall' => $this->wallpaper_count,
+            'category_total_wall' => $this->wallpaper()->distinct()->get()->count(),
         ];
     }
 }
