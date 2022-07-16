@@ -71,7 +71,7 @@ Route::group([
     "prefix" => "v3",
 //    'middleware' => 'auth.apikey'
 ], function() {
-    Route::get('version/check',[App\Http\Controllers\Api\v3\ApiController::class, 'checkCode']);
+    Route::get('version/check/{id}',[App\Http\Controllers\Api\v3\ApiController::class, 'checkCode']);
     Route::get('/',[App\Http\Controllers\Api\v3\ApiController::class, 'index']);
     Route::get('first',[App\Http\Controllers\Api\v3\ApiController::class, 'first']);
 

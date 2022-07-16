@@ -299,6 +299,13 @@ class ApiController extends Controller
                 ->where('category_checked_ip',1)
                 ->inRandomOrder()
                 ->get();
+
+            $wallpaper = [];
+            foreach ($data as $item ){
+                foreach ($item->wallpaper()->where('image_extension','<>','image/gif')->with('categories','tags')->get()->toArray() as $wall){
+                    $wallpaper[] = $wall;
+                }
+            }
         } else {
             $data = Sites::where('site_web',$domain)->first()
                 ->categories()
