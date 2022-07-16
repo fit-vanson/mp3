@@ -7,7 +7,9 @@ use App\Http\Controllers\Controller;
 use App\ListIP;
 use App\Sites;
 use App\Wallpapers;
+use BaconQrCode\Renderer\Color\Rgb;
 use Carbon\Carbon;
+use ColorThief\ColorThief;
 use Dflydev\DotAccessData\Data;
 use League\ColorExtractor\Palette;
 use Symfony\Component\HttpFoundation\Response;
@@ -148,7 +150,7 @@ class ApiController extends Controller
             $wallpaper = [];
             foreach ($data as $item) {
 
-                foreach ($item->wallpaper()->with('categories','tags')->orderBy('updated_at', 'desc')->get()->toArray() as $wall) {
+                foreach ($item->wallpaper()->with('tags')->orderBy('updated_at', 'desc')->get()->toArray() as $wall) {
                     $wallpaper[] = $wall;
                 }
             }
@@ -159,7 +161,7 @@ class ApiController extends Controller
                 ->get();
             $wallpaper = [];
             foreach ($data as $item) {
-                foreach ($item->wallpaper()->with('categories','tags')->orderBy('updated_at', 'desc')->get()->toArray() as $wall) {
+                foreach ($item->wallpaper()->with('tags')->orderBy('updated_at', 'desc')->get()->toArray() as $wall) {
                     $wallpaper[] = $wall;
                 }
             }
@@ -211,7 +213,7 @@ class ApiController extends Controller
             foreach ($data as $item) {
                 foreach (
                     $item->wallpaper()
-                        ->with('categories','tags')
+                        ->with('tags')
                         ->get()
                         ->toArray() as $wall) {
                     $wallpaper[] = $wall;
@@ -226,7 +228,7 @@ class ApiController extends Controller
             foreach ($data as $item) {
                 foreach (
                     $item->wallpaper()
-                        ->with('categories','tags')
+                        ->with('tags')
                         ->get()
                         ->toArray() as $wall) {
                     $wallpaper[] = $wall;
@@ -261,7 +263,7 @@ class ApiController extends Controller
             foreach ($data as $item) {
                 foreach (
                     $item->wallpaper()
-                        ->with('categories','tags')
+                        ->with('tags')
                         ->get()
                         ->toArray() as $wall) {
                     $wallpaper[] = $wall;
@@ -276,7 +278,7 @@ class ApiController extends Controller
             foreach ($data as $item) {
                 foreach (
                     $item->wallpaper()
-                        ->with('categories','tags')
+                        ->with('tags')
                         ->get()
                         ->toArray() as $wall) {
                     $wallpaper[] = $wall;
@@ -327,7 +329,7 @@ class ApiController extends Controller
             foreach ($data as $item) {
                 foreach (
                     $item->wallpaper()
-                        ->with('categories','tags')
+                        ->with('tags')
                         ->where('wallpaper_name', 'like', '%' . $query . '%')
                         ->get()
                         ->toArray() as $wall) {
@@ -343,7 +345,7 @@ class ApiController extends Controller
             foreach ($data as $item) {
                 foreach (
                     $item->wallpaper()
-                        ->with('categories','tags')
+                        ->with('tags')
                         ->where('wallpaper_name', 'like', '%' . $query . '%')
                         ->get()
                         ->toArray() as $wall) {
@@ -404,6 +406,9 @@ class ApiController extends Controller
         $jsonObj = [];
         foreach ($data as $item) {
 
+            $sourceImage = public_path('storage/wallpapers/'.$item['wallpaper_image']);
+            $color = ColorThief::getColor($sourceImage,25,null,'hex');
+
             $tags = [];
             foreach ($item['tags'] as $tag){
                 $tags[] = $tag['tag_name'];
@@ -412,7 +417,8 @@ class ApiController extends Controller
             $data_arr['kind'] = $item['image_extension'] != 'image/gif' ? 'image' : 'gif';
             $data_arr['title'] = $item['wallpaper_name'];
             $data_arr['description'] = $item['wallpaper_name'];
-            $data_arr['color'] = substr(md5(rand()), 0, 6);
+//            $data_arr['color'] = substr(md5(rand()), 0, 6);
+            $data_arr['color'] = str_replace('#','',$color);
             $data_arr['downloads'] = $item['wallpaper_download_count'];
             $data_arr['views'] = $item['wallpaper_view_count'];
             $data_arr['shares'] = rand(500,2000);
