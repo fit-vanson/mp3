@@ -297,11 +297,13 @@ class ApiController extends Controller
             $data = Sites::where('site_web',$domain)->first()
                 ->categories()
                 ->where('category_checked_ip',1)
+                ->inRandomOrder()
                 ->get();
         } else {
             $data = Sites::where('site_web',$domain)->first()
                 ->categories()
                 ->where('category_checked_ip',0)
+                ->inRandomOrder()
                 ->get();
 
             $wallpaper = [];
