@@ -629,7 +629,8 @@ class ApiController extends Controller
 
     public function hashtag(Request $request){
         $wallpapers = Wallpapers::orderByDesc('id')
-            ->where('name', 'like', '%'.$request['query'].'%')
+            ->where('wallpaper_name', 'like', '%'.$request['query'].'%')
+            ->orwhereRelation('tags','tag_name','like', '%' . $request['query'] . '%')
             ->paginate(21);
 
         $data['current_page'] = $wallpapers->currentPage();
