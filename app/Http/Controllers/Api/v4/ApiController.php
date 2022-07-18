@@ -167,10 +167,25 @@ class ApiController extends Controller
     }
 
     public function viewWallpaper(Request $request){
-        $model = Wallpapers::find($request['id']);
+
+        $model = Wallpapers::with('tags')->findorFail($_GET['id']);
         $model->wallpaper_view_count = $model->wallpaper_view_count + 1;
         $model->save();
-        return  $this->jsonWallpaper($model);
+        $tags = [];
+        foreach ($model->tags as $tag){
+            $tags[] = $tag->tag_name;
+        }
+        $data_arr = [
+            'id' =>$model->id,
+            'image' => asset('storage/wallpapers/'.$model->wallpaper_image),
+            'type' =>$model->image_extension == 'image/jpeg' ? 'IMAGE' : 'GIF'  ,
+            'premium' => 0,
+            'tags' => implode(",", $tags),
+            'view' =>$model->wallpaper_view_count,
+            'download' =>$model->wallpaper_download_count,
+            'like' =>$model->wallpaper_like_count,
+        ];
+        return collect($data_arr);
     }
 
 
