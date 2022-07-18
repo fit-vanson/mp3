@@ -21,7 +21,7 @@ class WallpaperResource extends JsonResource
         return [
             'id' =>$this->id,
             'image' => asset('storage/wallpapers/'.$this->wallpaper_image),
-            'type' =>$this->image_extension == 'image/jpeg' ? 'IMAGE' : 'GIF'  ,
+            'type' =>$this->image_extension != 'image/gif' ? 'IMAGE' : 'GIF'  ,
             'premium' => 0,
             'tags' => implode(",", $tags),
             'view' =>$this->wallpaper_view_count,
