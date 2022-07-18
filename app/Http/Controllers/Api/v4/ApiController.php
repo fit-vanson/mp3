@@ -93,7 +93,6 @@ class ApiController extends Controller
             array_push($data, [
                 'name' => 'live', 'data' => $this->getWallpaper('id',$domain,1,'=',10)
             ]);
-
         } else {
             array_push($data, [
                 'name' => 'latest', 'data' => $this->getWallpaper('id',$domain,0,'<>',10)
@@ -117,12 +116,12 @@ class ApiController extends Controller
 
 
     private  function getWallpaper($order, $domain, $checkBlock, $gif, $limit){
-
-
         $data = Sites::where('site_web', $domain)->first()
             ->categories()
             ->where('category_checked_ip', $checkBlock)
             ->get();
+
+
 
         $jsonObj = [];
         foreach ($data as $item) {
@@ -142,7 +141,7 @@ class ApiController extends Controller
                     'id' =>$wall->id,
 //                    'cid' =>$wall->cate_id,
                     'image' => asset('storage/wallpapers/'.$wall->wallpaper_image),
-                    'type' =>$wall->image_extension == 'image/jpeg' ? 'IMAGE' : 'GIF'  ,
+                    'type' =>$wall->image_extension != 'image/gif' ? 'IMAGE' : 'GIF'  ,
                     'premium' => 0,
                     'tags' => implode(",", $tags),
                     'view' =>$wall->wallpaper_view_count,
