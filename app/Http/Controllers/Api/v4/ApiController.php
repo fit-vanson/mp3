@@ -628,16 +628,86 @@ class ApiController extends Controller
     }
 
     public function hashtag(Request $request){
-        $wallpapers = Wallpapers::orderByDesc('id')
-            ->where('wallpaper_name', 'like', '%'.$request['query'].'%')
-            ->orwhereRelation('tags','tag_name','like', '%' . $request['query'] . '%')
-            ->paginate(21);
 
-        $data['current_page'] = $wallpapers->currentPage();
-        $data['last_page'] = $wallpapers->lastPage();
-        $data['total'] = $wallpapers->total();
-        $data['data'] = WallpaperResource::collection($wallpapers);
-        return $data;
+        $page_limit = 21;
+        $limit = ($_GET['page'] -1) * $page_limit;;
+        $domain = $_SERVER['SERVER_NAME'];
+        $jsonObj =[];
+
+        if (checkBlockIp()) {
+            $data = Sites::where('site_web', $domain)->first()
+                ->categories()
+                ->where('category_checked_ip', 1)
+                ->get();
+            foreach ($data as $item) {
+                foreach (
+                    $item->wallpaper()
+                        ->where('wallpaper_name', 'like', '%'.$request['query'].'%')
+                        ->orwhereRelation('tags','tag_name','like', '%' . $request['query'] . '%')
+                        ->with('tags')
+                        ->get()
+                    as $wall) {
+
+                    $tags = [];
+                    foreach ($wall->tags as $tag){
+                        $tags[] = $tag->tag_name;
+                    }
+                    $data_arr = [
+                        'id' =>$wall->id,
+                        'image' => asset('storage/wallpapers/'.$wall->wallpaper_image),
+                        'type' =>$wall->image_extension != 'image/gif' ? 'IMAGE' : 'GIF'  ,
+                        'premium' => 0,
+                        'tags' => implode(",", $tags),
+                        'view' =>$wall->wallpaper_view_count,
+                        'download' =>$wall->wallpaper_download_count,
+                        'like' =>$wall->wallpaper_like_count,
+                    ];
+                    array_push($jsonObj, $data_arr);
+                }
+            }
+        } else {
+            $data = Sites::where('site_web', $domain)->first()
+                ->categories()
+                ->where('category_checked_ip', 0)
+                ->get();
+            foreach ($data as $item) {
+                foreach (
+                    $item->wallpaper()
+                        ->where('wallpaper_name', 'like', '%'.$request['query'].'%')
+                        ->orwhereRelation('tags','tag_name','like', '%' . $request['query'] . '%')
+                        ->with('tags')
+                        ->get()
+                    as $wall) {
+                    $tags = [];
+                    foreach ($wall->tags as $tag){
+                        $tags[] = $tag->tag_name;
+                    }
+                    $data_arr = [
+                        'id' =>$wall->id,
+                        'image' => asset('storage/wallpapers/'.$wall->wallpaper_image),
+                        'type' =>$wall->image_extension != 'image/gif' ? 'IMAGE' : 'GIF'  ,
+                        'premium' => 0,
+                        'tags' => implode(",", $tags),
+                        'view' =>$wall->wallpaper_view_count,
+                        'download' =>$wall->wallpaper_download_count,
+                        'like' =>$wall->wallpaper_like_count,
+                    ];
+                    array_push($jsonObj, $data_arr);
+                }
+            }
+        }
+
+        $temp = array_unique(array_column($jsonObj, 'id'));
+        $unique_arr = array_intersect_key($jsonObj, $temp);
+        $result = array_slice($unique_arr, $limit, $page_limit);
+        shuffle($result);
+
+
+        $dataResult['current_page'] = $_GET['page'];
+        $dataResult['last_page'] = round(count($unique_arr)/$page_limit);
+        $dataResult['total'] = count($unique_arr);
+        $dataResult['data'] = json_decode(json_encode($result), FALSE);
+        return $dataResult;
 
     }
 }
