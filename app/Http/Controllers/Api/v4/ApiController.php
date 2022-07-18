@@ -345,6 +345,7 @@ class ApiController extends Controller
 
         $wallpapers = Categories::findOrFail($request['id'])
             ->wallpaper()
+            ->distinct()
             ->inRandomOrder()
             ->paginate(21);
 
