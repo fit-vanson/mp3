@@ -90,24 +90,24 @@ Route::group([
     "prefix" => "v4",
 //    'middleware' => 'auth.apikey'
 ], function() {
-    Route::get('admob',[ApiV4Controller::class, 'admob']);
-    Route::get('settings',[ApiV4Controller::class, 'settings']);
-    Route::get('home',[ApiV4Controller::class, 'home']);
+    Route::get('admob',[App\Http\Controllers\Api\v4\ApiController::class, 'admob']);
+    Route::get('settings',[App\Http\Controllers\Api\v4\ApiController::class, 'settings']);
+    Route::get('home',[App\Http\Controllers\Api\v4\ApiController::class, 'home']);
 
-    Route::get('categories',[ApiV4Controller::class, 'categories']);
+    Route::get('categories',[App\Http\Controllers\Api\v4\ApiController::class, 'categories']);
 
-    Route::get('wallpaper',[ApiV4Controller::class, 'wallpaper']);
-    Route::get('wallpaper/popular',[ApiV4Controller::class, 'popular']);
-    Route::get('wallpaper/download',[ApiV4Controller::class, 'download']);
-    Route::get('wallpaper/random',[ApiV4Controller::class, 'random']);
-    Route::get('wallpaper/cid',[ApiV4Controller::class, 'cid']);
-    Route::get('wallpaper/live',[ApiV4Controller::class, 'live']);
+    Route::get('wallpaper',[App\Http\Controllers\Api\v4\ApiController::class, 'wallpaper']);
+    Route::get('wallpaper/popular',[App\Http\Controllers\Api\v4\ApiController::class, 'popular']);
+    Route::get('wallpaper/download',[App\Http\Controllers\Api\v4\ApiController::class, 'download']);
+    Route::get('wallpaper/random',[App\Http\Controllers\Api\v4\ApiController::class, 'random']);
+    Route::get('wallpaper/cid',[App\Http\Controllers\Api\v4\ApiController::class, 'cid']);
+    Route::get('wallpaper/live',[App\Http\Controllers\Api\v4\ApiController::class, 'live']);
 
-    Route::get('wallpaper/hashtag',[ApiV4Controller::class, 'hashtag']);
+    Route::get('wallpaper/hashtag',[App\Http\Controllers\Api\v4\ApiController::class, 'hashtag']);
 
 
 
-    Route::get('add/show/wallpaper',[ApiV4Controller::class, 'viewWallpaper']);
+    Route::get('add/show/wallpaper',[App\Http\Controllers\Api\v4\ApiController::class, 'viewWallpaper']);
 
 
 

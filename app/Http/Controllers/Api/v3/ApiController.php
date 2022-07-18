@@ -379,26 +379,26 @@ class ApiController extends Controller
     public function api_add_set($id)
     {
         $wallpaper = Wallpapers::find($id);
-        $wallpaper->view_count = $wallpaper->wallpaper_view_count + 1;
+        $wallpaper->wallpaper_view_count = $wallpaper->wallpaper_view_count + 1;
         $wallpaper->save();
-        return json_encode($wallpaper->view_count, JSON_UNESCAPED_UNICODE);
+        return json_encode($wallpaper->wallpaper_view_count, JSON_UNESCAPED_UNICODE);
     }
 
     public function api_add_view($id)
     {
 
         $wallpaper = Wallpapers::find($id);
-        $wallpaper->view_count = $wallpaper->wallpaperview_count + 1;
+        $wallpaper->wallpaper_view_count = $wallpaper->wallpaper_view_count + 1;
         $wallpaper->save();
-        return json_encode($wallpaper->view_count, JSON_UNESCAPED_UNICODE);
+        return json_encode($wallpaper->wallpaper_view_count, JSON_UNESCAPED_UNICODE);
     }
 
     public function api_add_download($id)
     {
         $wallpaper = Wallpapers::find($id);
-        $wallpaper->view_count = $wallpaper->wallpaper_download_count + 1;
+        $wallpaper->wallpaper_download_count = $wallpaper->wallpaper_download_count + 1;
         $wallpaper->save();
-        return json_encode($wallpaper->view_count, JSON_UNESCAPED_UNICODE);
+        return json_encode($wallpaper->wallpaper_download_count, JSON_UNESCAPED_UNICODE);
     }
 
     private function getWallpaper($data)
@@ -417,7 +417,7 @@ class ApiController extends Controller
             $data_arr['kind'] = $item['image_extension'] != 'image/gif' ? 'image' : 'gif';
             $data_arr['title'] = $item['wallpaper_name'];
             $data_arr['description'] = $item['wallpaper_name'];
-//            $data_arr['color'] = substr(md5(rand()), 0, 6);
+
             $data_arr['color'] = str_replace('#','',$color);
             $data_arr['downloads'] = $item['wallpaper_download_count'];
             $data_arr['views'] = $item['wallpaper_view_count'];
