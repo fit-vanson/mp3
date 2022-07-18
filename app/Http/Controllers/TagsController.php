@@ -148,6 +148,7 @@ class TagsController extends Controller
     {
         $tag = Tags::find($id);
         $tag->wallpaper()->detach();
+        $tag->categories()->detach();
         $tag->delete();
         return response()->json(['success'=>'Xoá thành công']);
 

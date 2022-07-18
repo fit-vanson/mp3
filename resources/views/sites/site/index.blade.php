@@ -734,6 +734,32 @@
                 });
             });
 
+            $(document).on('click','.delete{{preg_replace('/\s+/','',$page_title)}}Category', function (data){
+                var id = $(this).data("id");
+                Swal.fire({
+                    title: "Are you sure?",
+                    text: "You won't be able to revert this!",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#34c38f",
+                    cancelButtonColor: "#f46a6a",
+                    confirmButtonText: "Yes, delete it!"
+                }).then(function (result) {
+
+                    $.ajax({
+                        type: "get",
+                        url: "{{ asset("categories/delete") }}/"+id,
+                        success: function (data) {
+                            toastr['success'](data.success, 'Success!');
+                            dtTable.draw();
+                        },
+                        error: function (data) {
+                            console.log('Error:', data);
+                        }
+                    });
+                });
+            });
+
 
             $('#form{{preg_replace('/\s+/','',$page_title)}}Category').on('submit', function (event) {
                 event.preventDefault();

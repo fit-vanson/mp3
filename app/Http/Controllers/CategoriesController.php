@@ -212,6 +212,7 @@ class CategoriesController extends Controller
         }catch (\Exception $ex) {
             Log::error($ex->getMessage());
         }
+        $cate->tags()->detach();
         $cate->delete();
         return response()->json(['success'=>'Xoá thành công']);
 
