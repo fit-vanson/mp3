@@ -447,7 +447,7 @@
                 var id = $(this).data("id");
                 $.ajax({
                     type: "get",
-                    url: "{{ asset("sites/change-ads") }}/" + id,
+                    url: "{{ asset("admin/sites/change-ads") }}/" + id,
 
                     success: function (data) {
                         $(".site_ads").load(" .site_ads");
@@ -703,7 +703,7 @@
                 var id = $(this).data("id");
                 $.ajax({
                     type: "get",
-                    url: "{{ asset("categories/edit") }}/"+id,
+                    url: "{{ asset("admin/categories/edit") }}/"+id,
                     success: function (data) {
                         $('#modal{{preg_replace('/\s+/','',$page_title)}}Category').modal('show');
                         $('#{{preg_replace('/\s+/','',$page_title)}}CategoryModalLabel').html("Edit Category {{$page_title}}: "+ data.categories.category_name);
@@ -748,7 +748,7 @@
 
                     $.ajax({
                         type: "get",
-                        url: "{{ asset("categories/delete") }}/"+id,
+                        url: "{{ asset("admin/categories/delete") }}/"+id,
                         success: function (data) {
                             toastr['success'](data.success, 'Success!');
                             dtTable.draw();

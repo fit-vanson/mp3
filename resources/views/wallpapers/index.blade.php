@@ -55,18 +55,6 @@
                         <form method="post" action="{{route('wallpapers.create')}}" enctype="multipart/form-data"
                               class="dropzone" id="form{{preg_replace('/\s+/','',$page_title)}}">
                             @csrf
-{{--                            <div class="form-group mb-0">--}}
-{{--                                <label class="control-label">Categories Select</label>--}}
-{{--                                <select class="select2 form-control select2-multiple" id="select_categories"--}}
-{{--                                        name="select_categories[]" required multiple="multiple"--}}
-{{--                                        data-placeholder="Choose ...">--}}
-{{--                                    @foreach($categories as $category)--}}
-{{--                                        <option value="{{$category->id}}">{{$category->category_name}}</option>--}}
-{{--                                    @endforeach--}}
-{{--                                </select>--}}
-
-{{--                            </div>--}}
-
                             <div class="form-group mb-0">
                                 <label class="control-label">Tags Select</label>
                                 <select class="select2 form-control select2-multiple" id="select_tags"
@@ -167,7 +155,7 @@
             var isNew = $(this).find('[data-select2-tag="true"]');
             if(isNew.length && $.inArray(isNew.val(), $(this).val()) !== -1){
                 $.ajax({
-                    url: '/tags/create',
+                    url: '/admin/tags/create',
                     type: 'post',
                     dataType: 'json',
                     data: {tag_name: isNew.val()},
@@ -241,13 +229,6 @@
                                 '<label class="custom-control-label" for="checkbox' +data +'"></label>' +
                                 '</div>'
                             );
-
-                            // return (
-                            //     '<div class="custom-control custom-checkbox">'+
-                            //         '<input type="checkbox" class="custom-control-input" id="customCheck1">'+
-                            //         '<label class="custom-control-label" for="customCheck1"></label>'+
-                            //     '</div>'
-                            // );
                         },
                         checkboxes: {
                             selectAllRender:
@@ -351,7 +332,7 @@
                 }).then(function (result) {
                     $.ajax({
                         type: "get",
-                        url: "{{ asset("wallpapers/delete") }}/" + id,
+                        url: "{{ asset("admin/wallpapers/delete") }}/" + id,
                         success: function (data) {
                             toastr['success'](data.success, 'Success!');
                             dtTable.draw();
@@ -368,7 +349,7 @@
                 var id = $(this).data("id");
                 $.ajax({
                     type: "get",
-                    url: "{{ asset("categories/edit") }}/" + id,
+                    url: "{{ asset("admin/wallpapers/edit") }}/" + id,
                     success: function (data) {
                         $('#modal{{preg_replace('/\s+/','',$page_title)}}').modal('show');
                         $('#{{preg_replace('/\s+/','',$page_title)}}ModalLabel').html("Edit {{$page_title}}");

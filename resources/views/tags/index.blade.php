@@ -166,7 +166,7 @@
 
                     $.ajax({
                         type: "get",
-                        url: "{{ asset("tags/delete") }}/"+id,
+                        url: "{{ asset("admin/tags/delete") }}/"+id,
                         success: function (data) {
                             toastr['success'](data.success, 'Success!');
                             dtTable.draw();

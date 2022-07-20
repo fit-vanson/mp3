@@ -265,7 +265,7 @@
 
                     $.ajax({
                         type: "get",
-                        url: "{{ asset("categories/delete") }}/"+id,
+                        url: "{{ asset("admin/categories/delete") }}/"+id,
                         success: function (data) {
                             toastr['success'](data.success, 'Success!');
                             dtTable.draw();
@@ -282,7 +282,7 @@
                 var id = $(this).data("id");
                 $.ajax({
                     type: "get",
-                    url: "{{ asset("categories/edit") }}/"+id,
+                    url: "{{ asset("admin/categories/edit") }}/"+id,
                     success: function (data) {
                         $('#modal{{preg_replace('/\s+/','',$page_title)}}').modal('show');
                         $('#{{preg_replace('/\s+/','',$page_title)}}ModalLabel').html("Edit {{$page_title}}");

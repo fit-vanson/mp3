@@ -90,20 +90,6 @@
                             <input type="text" class="form-control" id="site_project" name="site_project" placeholder="DAxxx-yy" required>
                         </div>
 
-{{--                        <div class="form-group">--}}
-{{--                            <label>Categories</label>--}}
-{{--                            <select class="select2 form-control select2-multiple" id="select_categories"--}}
-{{--                                    name="select_categories[]" multiple="multiple"--}}
-{{--                                    data-placeholder="Choose ..." style="width: 100%">--}}
-{{--                                @foreach($categories as $category)--}}
-{{--                                    <option value="{{$category->id}}">{{$category->category_name}}</option>--}}
-{{--                                @endforeach--}}
-{{--                            </select>--}}
-
-{{--                        </div>--}}
-
-
-
                         <div class="form-group mb-0">
                             <div>
                                 <button type="submit" id="saveBtn{{preg_replace('/\s+/','',$page_title)}}" class="btn btn-primary waves-effect waves-light mr-1">
@@ -182,7 +168,6 @@
                         closeBtnInside: false,
                         fixedContentPos: true,
                         mainClass: 'mfp-no-margins mfp-with-zoom',
-                        // class to remove default margin from left and right side
                         image: {
                             verticalFit: true
                         },
@@ -276,7 +261,7 @@
 
                     $.ajax({
                         type: "get",
-                        url: "{{ asset("sites/delete") }}/"+id,
+                        url: "{{ asset("admin/sites/delete") }}/"+id,
                         success: function (data) {
                             toastr['success'](data.success, 'Success!');
                             dtTable.draw();
@@ -293,7 +278,7 @@
                 var id = $(this).data("id");
                 $.ajax({
                     type: "get",
-                    url: "{{ asset("sites/edit") }}/"+id,
+                    url: "{{ asset("admin/sites/edit") }}/"+id,
                     success: function (data) {
                         $('#modal{{preg_replace('/\s+/','',$page_title)}}').modal('show');
                         $('#{{preg_replace('/\s+/','',$page_title)}}ModalLabel').html("Edit {{$page_title}}");
@@ -316,7 +301,7 @@
                 var id = $(this).data("id");
                 $.ajax({
                     type: "get",
-                    url: "{{ asset("sites/change-ads") }}/"+id,
+                    url: "{{ asset("admin/sites/change-ads") }}/"+id,
                     success: function (data) {
                         dtTable.draw();
                         toastr['success']('', data.success, {

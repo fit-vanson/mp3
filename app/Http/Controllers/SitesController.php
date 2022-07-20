@@ -72,7 +72,7 @@ class SitesController extends Controller
 
             $data_arr[] = array(
                 "id" => $record->id,
-                "site_image" => '<a class="image-popup-no-margins" href="storage/sites/'.$record->site_image.'"><img class="img-fluid" alt="'.$record->site_name.'" src="storage/sites/'.$record->site_image.'" width="150"></a>',
+                "site_image" => '<a class="image-popup-no-margins" href="../storage/sites/'.$record->site_image.'"><img class="img-fluid" alt="'.$record->site_name.'" src="../storage/sites/'.$record->site_image.'" width="150"></a>',
 //                "site_name" => '<a href="/admin/site/view/'. $record->site_web.'" data-id="'.$record->id.'"><h5 class="font-size-16">'.$record->site_name.'</h5></a>',
                 "site_name" => '<a href="'.route('sites.view',$record->id).'"><h5 class="font-size-16">'.$record->site_name.'</h5></a>',
                 "site_project" =>'<span class="badge badge-success" style="font-size: 100%">' . $record->site_project. '</span>',
@@ -339,7 +339,7 @@ class SitesController extends Controller
             $btn .= ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-danger deleteSiteCategory"><i class="ti-trash"></i></a>';
             $data_arr[] = array(
                 "id" => $record->id,
-                "category_image" => '<a class="image-popup-no-margins" href="'.URL::asset('storage/categories').'/'.$record->category_image.'"><img class="img-fluid" alt="" src="'.URL::asset('storage/categories/').'/'. $record->category_image.'" width="150"></a>',
+                "category_image" => '<a class="image-popup-no-margins" href="'.URL::asset('../storage/categories').'/'.$record->category_image.'"><img class="img-fluid" alt="" src="'.URL::asset('../storage/categories/').'/'. $record->category_image.'" width="150"></a>',
                 "category_name" => $record->category_name,
                 "category_checked_ip" => $record->category_checked_ip == 1 ? '<span class="badge badge-danger">FAKE</span>' : '<span class="badge badge-success">REAL</span>',
                 "wallpaper_count" => $record->wallpaper_count,

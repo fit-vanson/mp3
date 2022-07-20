@@ -192,7 +192,8 @@
                 var id = $(this).data("id");
                 $.ajax({
                     type: "get",
-                    url: "{{ asset("api-keys/change-status") }}/"+id,
+                    url: "{{ asset("admin/api-keys/change-status") }}/"+id,
+
                     success: function (data) {
                         dtTable.draw();
                         toastr['success']('', data.success, {

@@ -71,7 +71,7 @@ class WallpapersController extends Controller
             $btn = ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-danger deleteWallpapers"><i class="ti-trash"></i></a>';
             $data_arr[] = array(
                 "id" => $record->id,
-                "wallpaper_image" => '<a class="image-popup-no-margins" href="storage/wallpapers/'.$record->wallpaper_image.'"><img class="img-fluid" alt="'.$record->wallpaper_name.'" src="storage/wallpapers/thumbnails/'.$record->wallpaper_image.'" width="75"></a>',
+                "wallpaper_image" => '<a class="image-popup-no-margins" href="../storage/wallpapers/'.$record->wallpaper_image.'"><img class="img-fluid" alt="'.$record->wallpaper_name.'" src="../storage/wallpapers/thumbnails/'.$record->wallpaper_image.'" width="75"></a>',
                 "wallpaper_name" => $record->wallpaper_name,
                 "image_extension" => $record->image_extension,
                 "wallpaper_view_count" => $record->wallpaper_view_count,

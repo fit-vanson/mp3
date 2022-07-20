@@ -232,7 +232,7 @@
 
                     $.ajax({
                         type: "get",
-                        url: "{{ asset("block-ips/delete") }}/"+id,
+                        url: "{{ asset("admin/block-ips/delete") }}/"+id,
                         success: function (data) {
                             toastr['success'](data.success, 'Success!');
                             dtTable.draw();
@@ -249,7 +249,7 @@
                 var id = $(this).data("id");
                 $.ajax({
                     type: "get",
-                    url: "{{ asset("block-ips/edit") }}/"+id,
+                    url: "{{ asset("admin/block-ips/edit") }}/"+id,
                     success: function (data) {
                         console.log(data)
                         $('#modal{{preg_replace('/\s+/','',$page_title)}}').modal('show');
@@ -263,8 +263,6 @@
                         }else {
                             $('#block_ip_status').prop('checked', false);
                         }
-
-
                     },
                     error: function (data) {
                         console.log('Error:', data);

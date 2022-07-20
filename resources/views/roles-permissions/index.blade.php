@@ -301,7 +301,7 @@
 
                     $.ajax({
                         type: "get",
-                        url: "{{ asset("roles-permissions/delete") }}/"+id,
+                        url: "{{ asset("admin/roles-permissions/delete") }}/"+id,
                         success: function (data) {
                             toastr['success'](data.success, 'Success!');
                             dtTable.draw();
@@ -349,7 +349,7 @@
                 var id = $(this).data("id");
                 $.ajax({
                     type: "get",
-                    url: "{{ asset("roles-permissions/edit") }}/"+id,
+                    url: "{{ asset("admin/roles-permissions/edit") }}/"+id,
                     success: function (data) {
                         $('#modal{{preg_replace('/\s+/','',$page_title)}}').modal('show');
                         $('#{{preg_replace('/\s+/','',$page_title)}}ModalLabel').html("Edit {{$page_title}}");
