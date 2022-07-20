@@ -27,8 +27,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/clear', function () {
     echo  Artisan::call('optimize');
-    echo  Artisan::call('config:cache');
-    echo  Artisan::call('route:cache');
+//    echo  Artisan::call('config:cache');
+//    echo  Artisan::call('route:cache');
 
 });
 
