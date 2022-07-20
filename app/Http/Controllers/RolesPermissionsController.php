@@ -97,10 +97,11 @@ class RolesPermissionsController extends Controller
             return response()->json(['errors'=> $error->errors()->all()]);
         }
 
+        $createPermissions = preg_replace('/\s+/','',$request->userManagement);
+        $this->createPermissions($createPermissions);
+
         $role = Role::create(['name' => trim($request->nameRolesPermissions)]);
-//        $permissions = preg_replace('/\s+/','',$request->userManagement);
         $permissions = $request->userManagement;
-//        $this->createPermissions($permissions);
         $role->givePermissionTo($permissions);
         return response()->json(['success'=>'Thêm mới thành công']);
     }
