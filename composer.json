@@ -10,6 +10,7 @@
     "require": {
         "php": "^7.3|^8.0",
         "ext-gd": "*",
+        "barryvdh/laravel-debugbar": "^3.7",
         "ejarnutowski/laravel-api-key": "^1.0",
         "fideloper/proxy": "^4.2",
         "fruitcake/laravel-cors": "^2.0",
