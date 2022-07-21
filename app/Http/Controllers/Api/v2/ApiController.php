@@ -951,32 +951,32 @@ class ApiController extends Controller
 
         $row['publisher_id'] = $ads ? ( $ads['AdMob_Publisher_ID'] ?  $ads['AdMob_Publisher_ID'] : '') : '';
 
-        $row['interstital_ad'] = $data['ad_switch'] != 0 ? 'true':'false' ;
+        $row['interstital_ad'] = $data['ad_switch'] == 1 ? 'true':'false' ;
         $row['interstital_ad_id'] = $ads ? ( $ads['AdMob_Interstitial_Ad_Unit_ID'] ?  $ads['AdMob_Interstitial_Ad_Unit_ID'] : '' ) : '';
 
         $row['interstital_ad_click'] = '12';
-        $row['banner_ad'] = $data['ad_switch'] != 0 ? 'true':'false' ;
+        $row['banner_ad'] = $data['ad_switch'] == 1 ? 'true':'false' ;
         $row['banner_ad_id'] = $ads ? ( $ads['AdMob_Banner_Ad_Unit_ID'] ? $ads['AdMob_Banner_Ad_Unit_ID'] :"" ):  "";
 
 
-        $row['facebook_interstital_ad'] = $data['ad_switch'] != 0 ? 'true':'false';
+        $row['facebook_interstital_ad'] = $data['ad_switch'] == 1 ? 'true':'false';
         $row['facebook_interstital_ad_id'] = '1393008281089270_1393009821089116';
         $row['facebook_interstital_ad_click'] = '5';
         $row['facebook_banner_ad'] = 'false';
         $row['facebook_banner_ad_id'] = '1393008281089270_1393010137755751';
 
-        $row['facebook_native_ad'] = $data['ad_switch'] != 0 ? 'true':'false';
+        $row['facebook_native_ad'] = $data['ad_switch'] == 1 ? 'true':'false';
         $row['facebook_native_ad_id'] = '1393008281089270_1393009201089178';
         $row['facebook_native_ad_click'] = '12';
-        $row['admob_nathive_ad'] = $data['ad_switch'] != 0 ? 'true':'false' ;
+        $row['admob_nathive_ad'] = $data['ad_switch'] == 1 ? 'true':'false' ;
         $row['admob_native_ad_id'] = $ads ? ( $ads['AdMob_Native_Ad_Unit_ID'] ?  $ads['AdMob_Native_Ad_Unit_ID'] : "") :"";
         $row['admob_native_ad_click'] = 12;
 
         $row['publisher_id_ios'] = '';
-        $row['interstital_ad_ios'] = $data['ad_switch'] != 0 ? 'true':'false';
+        $row['interstital_ad_ios'] = $data['ad_switch'] == 1 ? 'true':'false';
         $row['interstital_ad_id_ios'] = '';
         $row['interstital_ad_click_ios'] = '5';
-        $row['banner_ad_ios'] = $data['ad_switch'] != 0 ? 'true':'false';
+        $row['banner_ad_ios'] = $data['ad_switch'] == 1 ? 'true':'false';
         $row['banner_ad_id_ios'] = '';
 
         $row['gif_on_off'] = 'true';
