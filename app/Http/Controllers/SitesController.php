@@ -69,12 +69,12 @@ class SitesController extends Controller
 //            $btn  = ' <a href="javascript:void(0)" onclick="editRolesPermissions('.$record->id.')" class="btn btn-warning"><i class="ti-pencil-alt"></i></a>';
             $btn = ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-warning editSites"><i class="ti-pencil-alt"></i></a>';
             $btn .= ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-danger deleteSites"><i class="ti-trash"></i></a>';
+            $btn .= ' <a href="'.route('sites.view',$record->id).'" class="btn btn-info"><i class="ti-info-alt"></i></a>';
 
             $data_arr[] = array(
                 "id" => $record->id,
                 "site_image" => '<a class="image-popup-no-margins" href="../storage/sites/'.$record->site_image.'"><img class="img-fluid" alt="'.$record->site_name.'" src="../storage/sites/'.$record->site_image.'" width="150"></a>',
-//                "site_name" => '<a href="/admin/site/view/'. $record->site_web.'" data-id="'.$record->id.'"><h5 class="font-size-16">'.$record->site_name.'</h5></a>',
-                "site_name" => '<a href="'.route('sites.view',$record->id).'"><h5 class="font-size-16">'.$record->site_name.'</h5></a>',
+                "site_name" => '<h3>'.$record->site_name.'</h3><a target="_blank" href="//'.$record->site_web.'"><h6 class="font-size-16">'.$record->site_web.'</h6></h3>',
                 "site_project" =>'<span class="badge badge-success" style="font-size: 100%">' . $record->site_project. '</span>',
                 "site_ads" => $record->ad_switch == 1 ? '<a href="javascript:void(0)" data-id="'.$record->id.'" class="changeAds"><span class="badge badge-success">Active</span></a>': '<a href="javascript:void(0)" data-id="'.$record->id.'" class="changeAds"><span class="badge badge-danger">Deactivated</span></a>',
 
@@ -469,5 +469,55 @@ class SitesController extends Controller
         }
 
         return rmdir($dir);
+    }
+
+    public function import(){
+        return view('sites.import');
+    }
+    public function postImport(Request $request){
+        $file = file($request->file->getRealPath());
+        $data = array_slice($file,1);
+        $parts = array_chunk($data,1000);
+        foreach ($parts as $index =>$part){
+            $fileName = resource_path('files/sites/'.date('y-m-d-H-i-s-').$index.'.json');
+            file_put_contents($fileName, $part);
+        }
+        return route('sites.importToDb');
+    }
+    public function importToDb(){
+        $path = resource_path('files/sites/*.json');
+        $g = glob($path);
+        foreach (array_slice($g,0,1) as $file){
+            $data = json_decode(file_get_contents($file),true);
+            $dataArray = [];
+            foreach ($data as $row){
+                $dataArray[] =
+                    [
+                        'id' => $row['id'],
+                        'ad_switch' => $row['ad_switch'],
+                        'load_view_by' => $row['load_view_by'],
+                        'site_name' =>$row['name_site'],
+                        'site_web' =>$row['site_name'],
+                        'site_image' =>$row['header_image'],
+                        'site_feature_images' =>'',
+                        'site_header_title' =>$row['header_title'],
+                        'site_header_content' =>$row['header_content'],
+                        'site_body_title' =>$row['body_title'],
+                        'site_body_content' =>$row['body_content'],
+                        'site_footer_title' =>$row['footer_title'],
+                        'site_footer_content' =>$row['footer_content'],
+                        'site_policy' =>$row['footer_content'],
+                        'site_ads' => $row['ads'],
+                        'site_project' => $row['id'],
+                        'site_direct_link' => $row['directlink'],
+                        'site_chplay_link' => $row['directlink'],
+                        'site_view_page' =>$row['view_page'],
+                    ];
+            }
+            Sites::insert($dataArray);
+
+        }
+
+//        echo '<META http-equiv="refresh" content="1;URL=' . route('categories.importToDb') . '">';
     }
 }

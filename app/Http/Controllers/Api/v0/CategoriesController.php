@@ -9,7 +9,7 @@ use App\Http\Resources\v0\CategoriesResource;
 use App\Http\Resources\v0\WallpapersResource;
 use App\Sites;
 use Illuminate\Http\Request;
-//use \Staudenmeir\EloquentEagerLimit\HasEagerLimit;
+
 
 class CategoriesController extends Controller
 {
@@ -39,31 +39,14 @@ class CategoriesController extends Controller
         $limit= ($_GET['page']-1) * $page_limit ;
         try{
 
-            $data = Categories::where('id',$id)
-                ->with(['wallpaper'=>function ($q) use ($page_limit) {
-                    $q
-                        ->where('image_extension', '<>', 'image/gif')
-                        ->distinct()
-                        ->orderBy('wallpaper_like_count', 'desc')
-                        ->paginate($page_limit);
-
-                }])
-                ->first();
-//
-//            dd($data);
-//
-//
-//            $wallpapers = Categories::findOrFail($id)
-//                ->wallpaper()
-//                ->where('image_extension', '<>', 'image/gif')
-//                ->distinct()
-//                ->orderBy('wallpaper_like_count', 'desc')
-//                ->skip($limit)
-//                ->take($page_limit)
-//                ->get();
-//            dd($wallpapers);
-//            Categories::findOrFail($id)->increment('category_view_count');
-            return WallpapersResource::collection($data->wallpaper);
+            $wallpapers = Categories::findOrFail($id)
+                ->wallpaper()
+                ->distinct()
+                ->inRandomOrder()
+                ->skip($limit)
+                ->take($page_limit)
+                ->get();
+            return WallpapersResource::collection($wallpapers);
         }catch (\Exception $e){
             return response()->json(['warning' => ['This Category is not exist']], 200);
         }

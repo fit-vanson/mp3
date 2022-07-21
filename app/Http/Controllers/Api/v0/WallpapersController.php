@@ -106,54 +106,32 @@ class WallpapersController extends Controller
 
         if (checkBlockIp()) {
             if($load_feature ==0){
-                $data = Sites::with(
-                    ['categories'=>function ($q) {
-                        $q->with(['wallpaper'=>function ($q) {
-                            $q->where('image_extension', '<>', 'image/gif')->latest();
-                        }])
-                            ->where('category_checked_ip',1)
-                            ->inRandomOrder()
-                            ->get();
-                    }])
-                    ->where('site_web',$domain)
-                    ->first();
-                $getResource= FeatureWallpaperResource::collection($data->categories);
+                $data = Sites::where('site_web',$domain)->first()
+                    ->categories()
+                    ->where('category_checked_ip',1)
+                    ->inRandomOrder()
+                    ->get();
+                $getResource= FeatureWallpaperResource::collection($data);
             }elseif($load_feature ==1){
-                $data = Sites::with(
-                    ['categories'=>function ($q) {
-                        $q->with(['wallpaper'=>function ($q) {
-                            $q->where('image_extension', '<>', 'image/gif')->latest();
-                        }])
-                            ->where('category_checked_ip',1)
-                            ->orderBy('category_order', 'desc')
-                            ->get();
-                    }])
-                    ->where('site_web',$domain)
-                    ->first();
-                $getResource= FeatureWallpaperResource::collection($data->categories);
+                $data = Sites::where('site_web',$domain)->first()
+                    ->categories()
+                    ->where('category_checked_ip',1)
+                    ->orderBy('category_order', 'desc')
+                    ->get();
+                $getResource= FeatureWallpaperResource::collection($data);
             }elseif($load_feature ==2){
-
-                $data = Sites::with(
-                    ['categories'=>function ($q) {
-                        $q->with(['wallpaper'=>function ($q) {
-                            $q->where('image_extension', '<>', 'image/gif')->latest();
-                        }])
-                            ->where('category_checked_ip',1)
-                            ->orderBy('category_view_count', 'desc')
-                            ->get();
-                    }])
-                    ->where('site_web',$domain)
-                    ->first();
-                $getResource= FeatureWallpaperResource::collection($data->categories);
+                $data = Sites::where('site_web',$domain)->first()
+                    ->categories()
+                    ->where('category_checked_ip',1)
+                    ->orderBy('category_view_count', 'desc')
+                    ->get();
+                $getResource= FeatureWallpaperResource::collection($data);
             }elseif($load_feature ==3){
-                $data = Wallpapers::where('wallpaper_feature', 0)
-                    ->where('image_extension', '<>', 'image/gif')
-                    ->whereHas('categories', function ($q) use ($domain) {
-                        $q->with(['sites'=>function ($q) use ($domain) {
-                            $q->where('site_web', $domain)->latest();
-                        }])
-                            ->where('category_checked_ip',1)
-                            ->select('categories.*');
+                $data = Wallpapers::with('tags')
+                    ->where('image_extension', '<>','image/gif')
+                    ->whereHas('categories', function ($query) use ($site) {
+                        $query->where('category_checked_ip', 1)
+                            ->where('site_id',$site->id);
                     })
                     ->inRandomOrder()
                     ->take(12)
@@ -162,55 +140,34 @@ class WallpapersController extends Controller
             }
         } else {
             if($load_feature ==0){
-                $data = Sites::with(
-                    ['categories'=>function ($q) {
-                        $q->with(['wallpaper'=>function ($q) {
-                            $q->where('image_extension', '<>', 'image/gif')->latest();
-                            }])
-                            ->where('category_checked_ip',0)
-                            ->inRandomOrder()
-                            ->get();
-                    }])
-                    ->where('site_web',$domain)
-                    ->first();
-                $getResource= FeatureWallpaperResource::collection($data->categories);
+                $data = Sites::where('site_web',$domain)->first()
+                    ->categories()
+                    ->where('category_checked_ip',0)
+                    ->inRandomOrder()
+                    ->get();
+                $getResource= FeatureWallpaperResource::collection($data);
             }elseif($load_feature ==1){
-                $data = Sites::with(
-                    ['categories'=>function ($q) {
-                        $q->with(['wallpaper'=>function ($q) {
-                            $q->where('image_extension', '<>', 'image/gif')->latest();
-                            }])
-                            ->where('category_checked_ip',0)
-                            ->orderBy('category_order', 'desc')
-                            ->get();
-                    }])
-                    ->where('site_web',$domain)
-                    ->first();
-                $getResource= FeatureWallpaperResource::collection($data->categories);
+                $data = Sites::where('site_web',$domain)->first()
+                    ->categories()
+                    ->where('category_checked_ip',0)
+                    ->orderBy('category_order', 'desc')
+                    ->get();
+                $getResource= FeatureWallpaperResource::collection($data);
             }elseif($load_feature ==2){
+                $data = Sites::where('site_web',$domain)->first()
+                    ->categories()
+                    ->where('category_checked_ip',0)
+                    ->orderBy('category_view_count', 'desc')
+                    ->get();
+                $getResource= FeatureWallpaperResource::collection($data);
 
-                $data = Sites::with(
-                    ['categories'=>function ($q) {
-                        $q->with(['wallpaper'=>function ($q) {
-                            $q->where('image_extension', '<>', 'image/gif')->latest();
-                        }])
-                            ->where('category_checked_ip',0)
-                            ->orderBy('category_view_count', 'desc')
-                            ->get();
-                    }])
-                    ->where('site_web',$domain)
-                    ->first();
-                $getResource= FeatureWallpaperResource::collection($data->categories);
             }elseif($load_feature ==3){
-                $data = Wallpapers::where('wallpaper_feature', 0)
-                    ->where('image_extension', '<>', 'image/gif')
-                    ->whereHas('categories', function ($q) use ($domain) {
-                        $q->with(['sites'=>function ($q) use ($domain) {
-                                $q->where('site_web', $domain)->latest();
-                            }])
-                        ->where('category_checked_ip',0)
-                        ->select('categories.*');
-                        })
+                $data = Wallpapers::with('tags')
+                    ->where('image_extension', '<>','image/gif')
+                    ->whereHas('categories', function ($query) use ($site) {
+                        $query->where('category_checked_ip', 0)
+                            ->where('site_id',$site->id);
+                    })
                     ->inRandomOrder()
                     ->take(12)
                     ->get();

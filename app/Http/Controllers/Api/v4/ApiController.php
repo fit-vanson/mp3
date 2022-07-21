@@ -178,29 +178,6 @@ class ApiController extends Controller
         $dataResult['total'] = $data->total();
         $dataResult['data'] = $data;
         return $dataResult;
-//        $page_limit = 21;
-//        $domain = $_SERVER['SERVER_NAME'];
-//        $site = Sites::where('site_web', $domain)->first();
-//        if (checkBlockIp()) {
-//            $data = Wallpapers::with('tags')
-//                ->where('image_extension', '<>','image/gif')
-//                ->whereRelation('categories','category_checked_ip',1)
-//                ->whereRelation('categories','site_id',$site->id)
-//                ->orderBy('wallpaper_view_count', 'desc')
-//                ->paginate($page_limit);
-//        } else {
-//            $data = Wallpapers::with('tags')
-//                ->where('image_extension', '<>','image/gif')
-//                ->whereRelation('categories','category_checked_ip',0)
-//                ->whereRelation('categories','site_id',$site->id)
-//                ->orderBy('wallpaper_view_count', 'desc')
-//                ->paginate($page_limit);
-//        }
-//        $dataResult['current_page'] = $data->currentPage();
-//        $dataResult['last_page'] = $data->lastPage();
-//        $dataResult['total'] = $data->total();
-//        $dataResult['data'] = WallpaperResource::collection($data);
-//        return $dataResult;
     }
 
     public function download(){
@@ -215,29 +192,6 @@ class ApiController extends Controller
         $dataResult['total'] = $data->total();
         $dataResult['data'] = $data;
         return $dataResult;
-//        $page_limit = 21;
-//        $domain = $_SERVER['SERVER_NAME'];
-//        $site = Sites::where('site_web', $domain)->first();
-//        if (checkBlockIp()) {
-//            $data = Wallpapers::with('tags')
-//                ->where('image_extension', '<>','image/gif')
-//                ->whereRelation('categories','category_checked_ip',1)
-//                ->whereRelation('categories','site_id',$site->id)
-//                ->orderBy('wallpaper_download_count', 'desc')
-//                ->paginate($page_limit);
-//        } else {
-//            $data = Wallpapers::with('tags')
-//                ->where('image_extension', '<>','image/gif')
-//                ->whereRelation('categories','category_checked_ip',0)
-//                ->whereRelation('categories','site_id',$site->id)
-//                ->orderBy('wallpaper_download_count', 'desc')
-//                ->paginate($page_limit);
-//        }
-//        $dataResult['current_page'] = $data->currentPage();
-//        $dataResult['last_page'] = $data->lastPage();
-//        $dataResult['total'] = $data->total();
-//        $dataResult['data'] = WallpaperResource::collection($data);
-//        return $dataResult;
     }
 
     public function random(){
@@ -252,32 +206,6 @@ class ApiController extends Controller
         $dataResult['total'] = $data->total();
         $dataResult['data'] = $data;
         return $dataResult;
-
-//
-//
-//        $page_limit = 21;
-//        $domain = $_SERVER['SERVER_NAME'];
-//        $site = Sites::where('site_web', $domain)->first();
-//        if (checkBlockIp()) {
-//            $data = Wallpapers::with('tags')
-//                ->where('image_extension', '<>','image/gif')
-//                ->whereRelation('categories','category_checked_ip',1)
-//                ->whereRelation('categories','site_id',$site->id)
-//                ->inRandomOrder()
-//                ->paginate($page_limit);
-//        } else {
-//            $data = Wallpapers::with('tags')
-//                ->where('image_extension', '<>','image/gif')
-//                ->whereRelation('categories','category_checked_ip',0)
-//                ->whereRelation('categories','site_id',$site->id)
-//                ->inRandomOrder()
-//                ->paginate($page_limit);
-//        }
-//        $dataResult['current_page'] = $data->currentPage();
-//        $dataResult['last_page'] = $data->lastPage();
-//        $dataResult['total'] = $data->total();
-//        $dataResult['data'] = WallpaperResource::collection($data);
-//        return $dataResult;
     }
 
     public function live(){

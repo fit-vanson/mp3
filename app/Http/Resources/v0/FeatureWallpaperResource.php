@@ -16,7 +16,7 @@ class FeatureWallpaperResource extends JsonResource
     public function toArray($request)
     {
 
-        foreach ($this->wallpaper->take(1) as $item){
+        foreach ($this->wallpaper->where('image_extension', '<>', 'image/gif')->take(1) as $item){
             return [
                 'categories' =>
                     array(new CategoriesResource($this)),

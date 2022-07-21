@@ -117,6 +117,10 @@ Route::group(['prefix'=>env('ADMIN_PAGE','admin')], function (){
         Route::post('/view/getIndexCategories',[SitesController::class,'getIndexCategories'])->name('sites.getIndexCategories');
         Route::post('/view/getIndexListIPs',[SitesController::class,'getIndexListIPs'])->name('sites.getIndexListIPs');
 
+        Route::get('/import', [SitesController::class, 'import'])->name('sites.import');
+        Route::post('/postImport', [SitesController::class, 'postImport'])->name('sites.postImport');
+        Route::get('/importToDb', [SitesController::class, 'importToDb'])->name('sites.importToDb');
+
     });
 
     Route::group(['prefix'=>'api-keys'], function (){
