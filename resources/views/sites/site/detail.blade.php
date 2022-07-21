@@ -20,7 +20,7 @@
                 <dd class="col-sm-9 FeatureImagesNum">{{isset($site->site_feature_images)? count(json_decode($site->site_feature_images)): 0}}</dd>
 
                 <dt class="col-sm-3">ADS</dt>
-                <dd class="col-sm-9 site_ads">
+                <dd class="col-sm-9 site_adss">
                     @if($site->ad_switch ==1)
                         <a href="javascript:void(0)" data-id="{{$site->id}}" class="changeAds"><span class="badge badge-success">Active</span></a>
                     @else

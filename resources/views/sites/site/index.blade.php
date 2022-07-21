@@ -50,7 +50,7 @@
                             </a>
                         </li>
                         <li class="nav-item waves-effect waves-light">
-                            <a class="nav-link" data-toggle="tab" href="#ads-1" role="tab">
+                            <a class="nav-link" data-toggle="tab" href="#adss-1" role="tab">
                                 <span class="d-block d-sm-block"><i class="fas fa-ad"></i></span>
                                 <span class="d-none d-sm-block">Ads</span>
                             </a>
@@ -168,7 +168,7 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="tab-pane p-3" id="ads-1" role="tabpanel">
+                        <div class="tab-pane p-3" id="adss-1" role="tabpanel">
                             <form id="form{{preg_replace('/\s+/','',$page_title)}}_ads">
                                 <input type="hidden" name="id" id="id_ads" value="{{$site->id}}">
 
@@ -450,7 +450,7 @@
                     url: "{{ asset("admin/sites/change-ads") }}/" + id,
 
                     success: function (data) {
-                        $(".site_ads").load(" .site_ads");
+                        $(".site_adss").load(" .site_adss");
                         toastr['success']('', data.success, {
                             showMethod: 'fadeIn',
                             hideMethod: 'fadeOut',
