@@ -16,6 +16,7 @@
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "intervention/image": "^2.7",
+        "jenssegers/imagehash": "^0.8.0",
         "ksubileau/color-thief-php": "^2.0",
         "laravel/fortify": "^1.13",
         "laravel/framework": "^8.0",
