@@ -38,6 +38,10 @@ Route::get('/link',function (){
     Artisan::call('storage:link');
     echo 1;
 });
+Route::get('/',function (){
+    Artisan::call('storage:link');
+    echo 1;
+});
 
 Route::group(['prefix'=>env('ADMIN_PAGE','admin')], function (){
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
@@ -96,7 +100,9 @@ Route::group(['prefix'=>env('ADMIN_PAGE','admin')], function (){
         Route::get('/import', [WallpapersController::class, 'import'])->name('wallpapers.import');
         Route::post('/postImport', [WallpapersController::class, 'postImport'])->name('wallpapers.postImport');
         Route::get('/importToDb', [WallpapersController::class, 'importToDb'])->name('wallpapers.importToDb');
-        Route::get('/optimization', [WallpapersController::class, 'optimization'])->name('wallpapers.optimization');
+        Route::get('/compare', [WallpapersController::class, 'compare'])->name('wallpapers.compare');
+
+
     });
 
     Route::group(['prefix'=>'sites'], function (){

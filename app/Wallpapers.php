@@ -19,6 +19,8 @@ class Wallpapers extends Model
         'wallpaper_download_count',
         'wallpaper_feature',
         'image_extension',
+        'wallpaper_status',
+        'wallpaper_hash'
     ];
 
 //    public function categories()

@@ -16,22 +16,22 @@
 
     <link href="{{ URL::asset('/assets/libs/select2/select2.min.css') }}" rel="stylesheet" type="text/css"/>
 
-    <style>
-        .select2-selection__choice {
-            /*margin-top: 0px!important;*/
-            /*padding-right: 5px!important;*/
-            /*padding-left: 5px!important;*/
-            background-color: transparent !important;
-            border: none !important;
-            border-radius: 4px !important;
-            background-color: rgba(0, 255, 13, 0.29) !important;
-        }
+{{--    <style>--}}
+{{--        .select2-selection__choice {--}}
+{{--            /*margin-top: 0px!important;*/--}}
+{{--            /*padding-right: 5px!important;*/--}}
+{{--            /*padding-left: 5px!important;*/--}}
+{{--            background-color: transparent !important;--}}
+{{--            border: none !important;--}}
+{{--            border-radius: 4px !important;--}}
+{{--            background-color: rgba(0, 255, 13, 0.29) !important;--}}
+{{--        }--}}
 
-        .select2-selection__choice__remove:hover {
-            background-color: transparent !important;
-            color: #ef5454 !important;
-        }
-    </style>
+{{--        .select2-selection__choice__remove:hover {--}}
+{{--            background-color: transparent !important;--}}
+{{--            color: #ef5454 !important;--}}
+{{--        }--}}
+{{--    </style>--}}
 @endsection
 
 @section('content')
@@ -46,11 +46,11 @@
     </div>
     <!-- end page title -->
 
+
     <div class="row">
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-
                     <div class="mb-5">
                         <form method="post" action="{{route('wallpapers.create')}}" enctype="multipart/form-data"
                               class="dropzone" id="form{{preg_replace('/\s+/','',$page_title)}}">
@@ -73,12 +73,60 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    @if(isset($data))
+
+        <div class="infinite-scroll">
+            <div class="row">
+            @foreach($data as $item)
+                <div class="col-md-6 col-lg-6 col-xl-2">
+                    <!-- Simple card -->
+                    <div class="card">
+                        <a class="image-popup-no-margins" href="{{url('/storage/wallpapers').'/'.$item->wallpaper_image}}">
+                            <img class="img-fluid" alt="{{$item->wallpaper_name}}" src="{{url('/storage/wallpapers/thumbnails').'/'.$item->wallpaper_image}}">
+                        </a>
+
+                        <div class="card-body">
+                            <p>
+                                <span class="card-title" style="font-size: larger; font-weight: bold">{{$item->wallpaper_name}}</span>
+                                @if($item->wallpaper_status == 1)
+                                <i class="fas fa-check-circle" style="color: green"></i>
+                                @elseif($item->wallpaper_status == 0)
+                                <i class="fas fa-times-circle" style="color: red"></i>
+                                @endif
+                            </p>
+
+                            <?php
+                            $tags = [];
+                            foreach ($item->tags as $tag){
+                            ?>
+                                <span class="badge badge-pill badge-success">{{$tag->tag_name}}</span>
+                            <?php
+                            }
+                            ?>
+
+                        </div>
+                    </div>
+
+                </div><!-- end col -->
+            @endforeach
+        </div>
+        </div>
+        {{ $data->appends(['view' => 'grid'])->links() }}
+
+
+
+    @else
+
+    <div class="row">
+        <div class="col-12">
             <div class="card">
                 <div class="card-body">
                     <div class="table-rep-plugin">
                         <div class="table-responsive mb-1">
                             <form id="checkForm" name="checkForm">
-                            {{--                            <table id="tech-companies-1" class="table table-striped">--}}
                                 <table id="table{{preg_replace('/\s+/','',$page_title)}}"
                                        class="table table-bordered dt-responsive"
                                        style="width: 100%;">
@@ -108,8 +156,11 @@
                     </div>
                 </div>
             </div>
+
         </div> <!-- end col -->
     </div> <!-- end row -->
+
+    @endif
 
 
 
@@ -117,6 +168,8 @@
 
 @section('script')
     <!-- Plugins js -->
+{{--    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>--}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jscroll/2.4.1/jquery.jscroll.min.js"></script>
 
     <script src="{{ URL::asset('/assets/libs/rwd-table/rwd-table.min.js') }}"></script>
     <script src="{{ URL::asset('/assets/libs/datatables/datatables.min.js') }}"></script>
@@ -131,6 +184,40 @@
     <script src="{{ URL::asset('/assets/libs/dropzone/dropzone.min.js') }}"></script>
 
     <script src="{{ URL::asset('/assets/libs/magnific-popup/magnific-popup.min.js') }}"></script>
+
+
+
+
+{{--    <script type="text/javascript">--}}
+{{--        $('ul.pagination').hide();--}}
+{{--        $(function() {--}}
+{{--            $('.infinite-scroll').jscroll({--}}
+{{--                autoTrigger: true,--}}
+{{--                // loadingHtml: '<img class="center-block" src="/images/loading.gif" alt="Loading..." />',--}}
+{{--                padding: 0,--}}
+{{--                nextSelector: '.pagination li.active + li a',--}}
+{{--                contentSelector: 'div.infinite-scroll',--}}
+{{--                callback: function() {--}}
+{{--                    $('ul.pagination').remove();--}}
+{{--                }--}}
+{{--            });--}}
+{{--        });--}}
+{{--    </script>--}}
+
+    <script type="text/javascript">
+        // $('ul.pagination').hide();
+        $(function() {
+            $('.infinite-scroll').jscroll({
+                autoTrigger: true,
+                padding: 0,
+                nextSelector: '.pagination li.active + li a',
+                contentSelector: 'div.infinite-scroll',
+                callback: function() {
+                    $('ul.pagination').remove();
+                }
+            });
+        });
+    </script>
 
     <script>
         Dropzone.autoDiscover = false;
