@@ -134,18 +134,54 @@
                         <div class="tab-pane p-3" id="feature-images-1" role="tabpanel">
 
                             <div class="form-group">
-                                <label class="d-block mb-3">Load Feature</label>
+
                                 <form id="form{{preg_replace('/\s+/','',$page_title)}}_load_view_by">
+
                                     <input type="hidden" name="id" id="id_load_view_by" value="{{$site->id}}">
+
+                                    <label class="d-block mb-3">Load Feature Image</label>
                                     <?php
                                         $loads = ['Random','Manual','Most View','Feature Wallpaper'];
                                         foreach ($loads as $key=>$load){
                                     ?>
 
                                         <div class="custom-control custom-radio custom-control-inline">
-                                            <input type="radio"  id="load_feature_{{$key}}" name="load_view_by" class="custom-control-input" value="1" {{$site->load_view_by == $key ? 'checked' : ''}} >
+                                            <input type="radio"  id="load_feature_{{$key}}" name="load_view_by" class="custom-control-input" value="{{$key}}" {{$site->load_view_by == $key ? 'checked' : ''}} >
                                             <label class="custom-control-label" for="load_feature_{{$key}}">{{$load}}</label>
                                         </div>
+
+                                    <?php
+                                    }
+                                    ?>
+                                    <hr>
+
+                                    <label class="d-block mb-3">Load Categories</label>
+                                    <?php
+                                    $loads = ['Random','Most View','Update New'];
+                                    foreach ($loads as $key=>$load){
+                                    ?>
+
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio"  id="load_categories_{{$key}}" name="load_categories" class="custom-control-input" value="{{$key}}" {{$site->load_categories == $key ? 'checked' : ''}} >
+                                        <label class="custom-control-label" for="load_categories_{{$key}}">{{$load}}</label>
+                                    </div>
+
+                                    <?php
+                                    }
+                                    ?>
+
+                                    <hr>
+
+                                    <label class="d-block mb-3">Load Wallpaper By Category</label>
+                                    <?php
+                                    $loads = ['Random','Most Like','Most View','Update New'];
+                                    foreach ($loads as $key=>$load){
+                                    ?>
+
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio"  id="load_wallpapers_category_{{$key}}" name="load_wallpapers_category" class="custom-control-input" value="{{$key}}" {{$site->load_wallpapers_category == $key ? 'checked' : ''}} >
+                                        <label class="custom-control-label" for="load_wallpapers_category_{{$key}}">{{$load}}</label>
+                                    </div>
 
                                     <?php
                                     }
@@ -476,7 +512,7 @@
 
             $('#form{{preg_replace('/\s+/','',$page_title)}}_home').on('submit', function (event) {
                 event.preventDefault();
-                var id = $('#id').val();
+                // var id = $('#id').val();
                 var formData = new FormData($("#form{{preg_replace('/\s+/','',$page_title)}}_home")[0]);
 
                 $.ajax({
@@ -572,27 +608,32 @@
                     },
                 });
 
-            {{--document.body.addEventListener('change', function (e) {--}}
-            {{--    var formData = new FormData($("#form{{preg_replace('/\s+/','',$page_title)}}_load_view_by")[0]);--}}
-            {{--    $.ajax({--}}
-            {{--        data: formData,--}}
-            {{--        url: '{{route('sites.update_site')}}',--}}
-            {{--        type: "POST",--}}
-            {{--        dataType: 'json',--}}
-            {{--        processData: false,--}}
-            {{--        contentType: false,--}}
-            {{--        success: function (data) {--}}
-            {{--            if (data.success) {--}}
-            {{--                toastr['success'](data.success, 'Success!');--}}
-            {{--            }--}}
-            {{--            if (data.errors) {--}}
-            {{--                for (var count = 0; count < data.errors.length; count++) {--}}
-            {{--                    toastr['error'](data.errors[count], 'Error!',);--}}
-            {{--                }--}}
-            {{--            }--}}
-            {{--        }--}}
-            {{--    });--}}
-            {{--});--}}
+            var button = $('input[type=radio]')
+
+            button.change(function() {
+                var formData = new FormData($("#form{{preg_replace('/\s+/','',$page_title)}}_load_view_by")[0]);
+                $.ajax({
+                    data: formData,
+                    url: '{{route('sites.update_site')}}',
+                    type: "POST",
+                    dataType: 'json',
+                    processData: false,
+                    contentType: false,
+                    success: function (data) {
+                        if (data.success) {
+                            toastr['success'](data.success, 'Success!');
+                        }
+                        if (data.errors) {
+                            for (var count = 0; count < data.errors.length; count++) {
+                                toastr['error'](data.errors[count], 'Error!',);
+                            }
+                        }
+                    }
+                });
+            });
+
+
+
 
             var dtTable = $('#table{{preg_replace('/\s+/','',$page_title)}}_categories').DataTable({
                 processing: true,

@@ -183,29 +183,29 @@ class WallpapersController extends Controller
     public function getPopulared()
     {
         $page_limit = 12;
-        $limit=($_GET['page']-1) * $page_limit;
+        $page = isset($_GET['page']) ? $_GET['page'] : 1;
+        $limit=($page-1) * $page_limit;
         $domain=$_SERVER['SERVER_NAME'];
+        $site = Sites::where('site_web',$domain)->first();
+
         if (checkBlockIp()){
-            $data = Wallpapers::where('image_extension', '<>', 'image/gif')
-                ->whereHas('categories', function ($q) use ($domain) {
-                    $q->with(['sites'=>function ($q) use ($domain) {
-                        $q->where('site_web', $domain)->latest();
-                    }])
-                        ->where('category_checked_ip',1)
-                        ->select('categories.*');
-                    })
+            $data = Wallpapers::with('tags')
+                ->where('image_extension', '<>','image/gif')
+                ->whereHas('categories', function ($query) use ($site) {
+                    $query->where('category_checked_ip', 1)
+                        ->where('site_id',$site->id);
+                })
                 ->orderBy('wallpaper_like_count','desc')
                 ->skip($limit)
                 ->take($page_limit)
                 ->get();
+
         }else{
-            $data = Wallpapers::where('image_extension', '<>', 'image/gif')
-                ->whereHas('categories', function ($q) use ($domain) {
-                    $q->with(['sites'=>function ($q) use ($domain) {
-                        $q->where('site_web', $domain)->latest();
-                    }])
-                        ->where('category_checked_ip',0)
-                        ->select('categories.*');
+            $data = Wallpapers::with('tags')
+                ->where('image_extension', '<>','image/gif')
+                ->whereHas('categories', function ($query) use ($site) {
+                    $query->where('category_checked_ip', 0)
+                        ->where('site_id',$site->id);
                 })
                 ->orderBy('wallpaper_like_count','desc')
                 ->skip($limit)
@@ -217,36 +217,38 @@ class WallpapersController extends Controller
     public function getNewest()
     {
         $page_limit = 12;
-        $limit=($_GET['page']-1) * $page_limit;
+        $page = isset($_GET['page']) ? $_GET['page'] : 1;
+        $limit=($page-1) * $page_limit;
 
         $domain=$_SERVER['SERVER_NAME'];
+        $site = Sites::where('site_web',$domain)->first();
+
+
         if (checkBlockIp()){
-            $data = Wallpapers::where('image_extension', '<>', 'image/gif')
-                ->whereHas('categories', function ($q) use ($domain) {
-                    $q->with(['sites'=>function ($q) use ($domain) {
-                        $q->where('site_web', $domain)->latest();
-                    }])
-                        ->where('category_checked_ip',1)
-                        ->select('categories.*');
+            $data = Wallpapers::with('tags')
+                ->where('image_extension', '<>','image/gif')
+                ->whereHas('categories', function ($query) use ($site) {
+                    $query->where('category_checked_ip', 1)
+                        ->where('site_id',$site->id);
                 })
                 ->orderBy('created_at','desc')
                 ->skip($limit)
                 ->take($page_limit)
                 ->get();
+
         }else{
-            $data = Wallpapers::where('image_extension', '<>', 'image/gif')
-                ->whereHas('categories', function ($q) use ($domain) {
-                    $q->with(['sites'=>function ($q) use ($domain) {
-                        $q->where('site_web', $domain)->latest();
-                    }])
-                        ->where('category_checked_ip',0)
-                        ->select('categories.*');
+            $data = Wallpapers::with('tags')
+                ->where('image_extension', '<>','image/gif')
+                ->whereHas('categories', function ($query) use ($site) {
+                    $query->where('category_checked_ip', 0)
+                        ->where('site_id',$site->id);
                 })
                 ->orderBy('created_at','desc')
                 ->skip($limit)
                 ->take($page_limit)
                 ->get();
         }
+
         return WallpapersResource::collection($data);
     }
 }

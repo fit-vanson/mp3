@@ -16,8 +16,8 @@
                 <dt class="col-sm-3">Categories</dt>
                 <dd class="col-sm-9">{{count($site->categories)}}</dd>
 
-                <dt class="col-sm-3">Feature Images</dt>
-                <dd class="col-sm-9 FeatureImagesNum">{{isset($site->site_feature_images)? count(json_decode($site->site_feature_images)): 0}}</dd>
+{{--                <dt class="col-sm-3">Feature Images</dt>--}}
+{{--                <dd class="col-sm-9 FeatureImagesNum">{{isset($site->site_feature_images)? count(json_decode($site->site_feature_images)): 0}}</dd>--}}
 
                 <dt class="col-sm-3">ADS</dt>
                 <dd class="col-sm-9 site_adss">

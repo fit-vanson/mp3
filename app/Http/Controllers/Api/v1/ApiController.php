@@ -13,63 +13,16 @@ use Illuminate\Http\Request;
 
 class ApiController extends Controller
 {
-
     public $_content_type = "application/json";
     private $_code = 200;
     public $_request = array();
     public function index(){
+
+        dd(\request()->all());
         $api_key = 'UMvz0pkHexZ3ApdN4fpmVSJSiBXEEqLd8mZhgywEXVQvJ4LPTOWcYYSt0j4QO8Zm';
-        if(isset($_GET['keyapi']) && $_GET['keyapi'] == $api_key ){
-            if (isset($_GET['action']) && $_GET['action'] == "get_category") {
-                $this->getCategory();
 
-            } else if (isset($_GET['action']) && $_GET['action'] == "get_category_detail") {
-                $id = $_GET['id'];
-                $offset = $_GET['offset'];
-                $this->getCategoryDetail($id, $offset);
-
-            } else if (isset($_GET['action']) && $_GET['action'] == "get_recent") {
-
-                $offset = $_GET['offset'];
-
-                $this->getRecent($offset);
-
-            } else if (isset($_GET['action']) && $_GET['action'] == "get_popular") {
-
-                $offset = $_GET['offset'];
-                $this->getPopular($offset);
-
-            } else if (isset($_GET['action']) && $_GET['action'] == "get_random") {
-
-                $offset = $_GET['offset'];
-                $this->getRandom($offset);
-
-            } else if (isset($_GET['action']) && $_GET['action'] == "get_featured") {
-
-                $offset = $_GET['offset'];
-                $this->getFeatured($offset);
-
-            } else if (isset($_GET['action']) && $_GET['action'] == "get_search") {
-
-                $search = $_GET['search'];
-                $offset = $_GET['offset'];
-                $this->getSearch($search, $offset);
-
-            } else if (isset($_GET['action']) && $_GET['action'] == "view_count") {
-
-                $id = $_GET['id'];
-                $this->viewCount($id);
-
-            } else if (isset($_GET['action']) && $_GET['action'] == "download_count") {
-
-                $id = $_GET['id'];
-                $this->downloadCount($id);
-
-            } else if (isset($_GET['action']) && $_GET['action'] == "get_privacy_policy") {
-
-                $this->getPrivacyPolicy();
-
-            } else if (isset($_GET['get_wallpapers'])) {
+//        if(isset($_GET['keyapi']) && $_GET['keyapi'] == $api_key ){
+            if (isset($_GET['get_wallpapers'])) {
                 $this->get_wallpapers();
             } else if (isset($_GET['get_one_wallpaper'])) {
                 $this->get_one_wallpaper();
@@ -92,149 +45,13 @@ class ApiController extends Controller
             } else {
                 $this->processApi();
             }
-        }else {
-            $this->processApi();
-        }
+//        }else {
+//            $this->processApi();
+//        }
 
     }
 
 
-    function getCategory() {
-        $domain=$_SERVER['SERVER_NAME'];
-        if(checkBlockIp()){
-            $data = CategoryManage::
-            leftJoin('tbl_category_has_site', 'tbl_category_has_site.category_id', '=', 'tbl_category_manages.id')
-                ->leftJoin('tbl_site_manages', 'tbl_site_manages.id', '=', 'tbl_category_has_site.site_id')
-                ->has('wallpaper','>',0)
-                ->where('site_name',$domain)
-                ->where('tbl_category_manages.checked_ip',1)
-                ->select('tbl_category_manages.*','tbl_category_has_site.image as site_image')
-                ->withCount('wallpaper')
-                ->get();
-        } else{
-            $data = CategoryManage::
-            leftJoin('tbl_category_has_site', 'tbl_category_has_site.category_id', '=', 'tbl_category_manages.id')
-                ->leftJoin('tbl_site_manages', 'tbl_site_manages.id', '=', 'tbl_category_has_site.site_id')
-                ->has('wallpaper','>',0)
-                ->where('site_name',$domain)
-                ->where('tbl_category_manages.checked_ip',0)
-                ->select('tbl_category_manages.*','tbl_category_has_site.image as site_image')
-                ->withCount('wallpaper')
-                ->get();
-        }
-        dd($data);
-
-
-
-
-
-
-
-        $setting_qry = "SELECT * FROM tbl_settings where id = '1'";
-        $result = mysqli_query($connect, $setting_qry);
-        $row    = mysqli_fetch_assoc($result);
-        $sort   = $row['category_sort'];
-        $order  = $row['category_order'];
-
-        $json_object = array();
-
-        $query = "SELECT cid, category_name, category_image FROM tbl_category ORDER BY $sort $order";
-        $sql = mysqli_query($connect, $query);
-
-        while ($data = mysqli_fetch_assoc($sql)) {
-
-            $query = "SELECT COUNT(*) as num FROM tbl_gallery WHERE cat_id = '".$data['cid']."'";
-            $total = mysqli_fetch_array(mysqli_query($connect, $query));
-            $total = $total['num'];
-
-            $object['category_id'] = $data['cid'];
-            $object['category_name'] = $data['category_name'];
-            $object['category_image'] = $data['category_image'];
-            $object['total_wallpaper'] = $total;
-
-            array_push($json_object, $object);
-
-        }
-
-        $set = $json_object;
-
-        header( 'Content-Type: application/json; charset=utf-8' );
-        echo $val = str_replace('\\/', '/', json_encode($set, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
-        die();
-
-    }
-
-    function getCategoryDetail($id, $offset) {
-
-
-
-        dd(1);
-
-        include_once "../includes/config.php";
-
-        $qry = "SELECT * FROM tbl_settings where id = '1'";
-        $result = mysqli_query($connect, $qry);
-        $settings_row = mysqli_fetch_assoc($result);
-        $load_more = $settings_row['limit_recent_wallpaper'];
-
-        $id = $_GET['id'];
-        $offset = isset($_GET['offset']) && $_GET['offset'] != '' ? $_GET['offset'] : 0;
-
-
-        $all = mysqli_query($connect, "SELECT * FROM tbl_gallery ORDER BY id DESC");
-        $count_all = mysqli_num_rows($all);
-        $query = mysqli_query($connect, "SELECT w.id, w.image, w.image_url, w.type, w.view_count, w.download_count, w.featured, w.tags, c.cid AS 'category_id', c.category_name FROM tbl_category c, tbl_gallery w WHERE c.cid = w.cat_id AND c.cid = $id ORDER BY w.id DESC LIMIT $offset, $load_more");
-        $count = mysqli_num_rows($query);
-        $json_empty = 0;
-        if ($count < $load_more) {
-            if ($count == 0) {
-                $json_empty = 1;
-            } else {
-                $query = mysqli_query($connect, "SELECT w.id, w.image, w.image_url, w.type, w.view_count, w.download_count, w.featured, w.tags, c.cid AS 'category_id', c.category_name FROM tbl_category c, tbl_gallery w WHERE c.cid = w.cat_id AND c.cid = $id ORDER BY w.id DESC LIMIT $offset, $count");
-                $count = mysqli_num_rows($query);
-                if (empty($count)) {
-                    $query = mysqli_query($connect, "SELECT w.id, w.image, w.image_url, w.type, w.view_count, w.download_count, w.featured, w.tags, c.cid AS 'category_id', c.category_name FROM tbl_category c, tbl_gallery w WHERE c.cid = w.cat_id AND c.cid = $id ORDER BY w.id DESC LIMIT 0, $load_more");
-                    $num = 0;
-                } else {
-                    $num = $offset;
-                }
-            }
-        } else {
-            $num = $offset;
-        }
-        $json = '[';
-        while ($row = mysqli_fetch_array($query)) {
-            $num++;
-            $char ='"';
-            $json .= '{
-				"no": '.$num.',
-				"image_id": "'.$row['id'].'",
-				"image_upload": "'.$row['image'].'",
-				"image_url": "'.$row['image_url'].'",
-				"type": "'.$row['type'].'",
-				"view_count": "'.$row['view_count'].'",
-				"download_count": "'.$row['download_count'].'",
-				"featured": "'.$row['featured'].'",
-				"tags": "'.$row['tags'].'",
-				"category_id": "'.$row['category_id'].'",
-				"category_name": "'.$row['category_name'].'"
-			},';
-        }
-
-        $json = substr($json,0, strlen($json)-1);
-
-        if ($json_empty == 1) {
-            $json = '[]';
-        } else {
-            $json .= ']';
-        }
-
-        header('Content-Type: application/json; charset=utf-8');
-        echo $json;
-
-        mysqli_close($connect);
-
-    }
 
 
     public function processApi() {
@@ -298,92 +115,190 @@ class ApiController extends Controller
             $listIp->update(['count' => $listIp->count +1]);
         }
 
-        if (checkBlockIp()) {
-            $data = Sites::where('site_web',$domain)->first()
-                ->categories()
-                ->where('category_checked_ip',1)
-                ->get();
-            $wallpaper = [];
-            foreach ($data as $item ){
-                foreach ($item->wallpaper()->where('image_extension','<>','image/gif')->with('categories')->get()->toArray() as $wall){
-                    $wallpaper[] = $wall;
-                }
+
+
+        if (checkBlockIp()){
+            if($order == 1){
+                $data = Wallpapers::with('tags')
+                    ->where('image_extension', '<>','image/gif')
+                    ->whereHas('categories', function ($query) use ($site) {
+                        $query->where('category_checked_ip', 1)
+                            ->where('site_id',$site->id);
+                    })
+                    ->distinct()
+                    ->orderBy('id','desc')
+                    ->paginate($page_limit);
             }
-        } else {
-            $data = Sites::where('site_web',$domain)->first()
-                ->categories()
-                ->where('category_checked_ip',0)
-                ->get();
-
-            $wallpaper = [];
-            foreach ($data as $item ){
-                foreach ($item->wallpaper()->where('image_extension','<>','image/gif')->with('categories')->get()->toArray() as $wall){
-                    $wallpaper[] = $wall;
-                }
+            elseif($order == 2){
+                $data = Wallpapers::with('tags')
+                    ->where('image_extension', '<>','image/gif')
+                    ->whereHas('categories', function ($query) use ($site) {
+                        $query->where('category_checked_ip', 1)
+                            ->where('site_id',$site->id);
+                    })
+                    ->distinct()
+                    ->orderBy('updated_at','desc')
+                    ->paginate($page_limit);
             }
-        }
+            elseif($order == 3){
+                $data = Wallpapers::with('tags')
+                    ->where('image_extension', '<>','image/gif')
+                    ->whereHas('categories', function ($query) use ($site) {
+                        $query->where('category_checked_ip', 1)
+                            ->where('site_id',$site->id);
+                    })
+                    ->distinct()
+                    ->orderBy('wallpaper_view_count','desc')
+                    ->paginate($page_limit);
+            }
+            elseif($order == 4){
+                $data = Wallpapers::with('tags')
+                    ->where('image_extension', '<>','image/gif')
+                    ->whereHas('categories', function ($query) use ($site) {
+                        $query->where('category_checked_ip', 1)
+                            ->where('site_id',$site->id);
+                    })
+                    ->distinct()
+                    ->inRandomOrder()
+                    ->paginate($page_limit);
+            }else{
+                $data = Wallpapers::with('tags')
+                    ->where('image_extension','image/gif')
+                    ->whereHas('categories', function ($query) use ($site) {
+                        $query->where('category_checked_ip', 1)
+                            ->where('site_id',$site->id);
+                    })
+                    ->distinct()
+                    ->inRandomOrder()
+                    ->paginate($page_limit);
+            }
 
-        $temp = array_unique(array_column($wallpaper, 'id'));
-        $unique_arr = array_intersect_key($wallpaper, $temp);
 
-
-        if($order == 1){
-            usort($unique_arr, function($a, $b) {
-                return $b['id'] <=> $a['id'];
-            });
-
-        }elseif ($order ==2){
-            usort($unique_arr, function($a, $b) {
-                return $b['updated_at'] <=> $a['updated_at'];
-            });
-        }elseif ($order ==3){
-            usort($unique_arr, function($a, $b) {
-                return $b['wallpaper_view_count'] <=> $a['wallpaper_view_count'];
-            });
-        }elseif ($order ==4){
-            shuffle($unique_arr);
         }else{
-            usort($unique_arr, function($a, $b) {
-                return $b['wallpaper_like_count'] <=> $a['wallpaper_like_count'];
-            });
+            if($order == 1){
+                $data = Wallpapers::with('tags')
+                    ->where('image_extension', '<>','image/gif')
+                    ->whereHas('categories', function ($query) use ($site) {
+                        $query->where('category_checked_ip', 0)
+                            ->where('site_id',$site->id);
+                    })
+                    ->distinct()
+                    ->orderBy('id','desc')
+                    ->paginate($page_limit);
+            }
+            elseif($order == 2){
+                $data = Wallpapers::with('tags')
+                    ->where('image_extension', '<>','image/gif')
+                    ->whereHas('categories', function ($query) use ($site) {
+                        $query->where('category_checked_ip',0)
+                            ->where('site_id',$site->id);
+                    })
+                    ->distinct()
+                    ->orderBy('updated_at','desc')
+                    ->paginate($page_limit);
+            }
+            elseif($order == 3){
+                $data = Wallpapers::with('tags')
+                    ->where('image_extension', '<>','image/gif')
+                    ->whereHas('categories', function ($query) use ($site) {
+                        $query->where('category_checked_ip', 0)
+                            ->where('site_id',$site->id);
+                    })
+                    ->distinct()
+                    ->orderBy('wallpaper_view_count','desc')
+                    ->paginate($page_limit);
+            }
+            elseif($order == 4){
+                $data = Wallpapers::with('tags')
+                    ->where('image_extension', '<>','image/gif')
+                    ->whereHas('categories', function ($query) use ($site) {
+                        $query->where('category_checked_ip', 0)
+                            ->where('site_id',$site->id);
+                    })
+                    ->distinct()
+                    ->inRandomOrder()
+                    ->paginate($page_limit);
+            }else{
+                $data = Wallpapers::with('tags')
+                    ->where('image_extension','image/gif')
+                    ->whereHas('categories', function ($query) use ($site) {
+                        $query->where('category_checked_ip', 0)
+                            ->where('site_id',$site->id);
+                    })
+                    ->distinct()
+                    ->inRandomOrder()
+                    ->paginate($page_limit);
+            }
         }
-
-        $result = array_slice($unique_arr, $limit, $page_limit);
-
-        $getResource= WallpapersResource::collection(json_decode(json_encode($result), FALSE));
-        $count_total = count($unique_arr);
-        $count = count($result);
+        $getResource= WallpapersResource::collection($data);
+        $count_total = $data->total();
+        $count = $data->perPage();
         $respon = array(
             'status' => 'ok', 'count' => $count, 'count_total' => $count_total, 'pages' => $page, 'posts' => $getResource
         );
         $this->response($this->json($respon), 200);
     }
 
-
-
     public function get_categories() {
         if($this->get_request_method() != "GET") $this->response('',406);
         $domain=$_SERVER['SERVER_NAME'];
+        $site = Sites::where('site_web',$domain)->first();
+        $load_categories = $site->load_categories;
 
         if(checkBlockIp()){
-            $data = Sites::where('sites.site_web',$domain)
-                ->with(['categories'=>function ($q){
-                    $q->withCount('wallpaper')
-                        ->where('category_checked_ip', 1);
-                }])
-                ->first();
-
+            if($load_categories == 0 ){
+                $data = $site
+                    ->categories()
+                    ->where('category_checked_ip', 1)
+                    ->inRandomOrder()
+                    ->withCount('wallpaper')
+                    ->get();
+            }
+            elseif($load_categories == 1 ){
+                $data = $site
+                    ->categories()
+                    ->where('category_checked_ip', 1)
+                    ->orderBy('category_view_count','desc')
+                    ->withCount('wallpaper')
+                    ->get();
+            }
+            elseif($load_categories == 2 ){
+                $data = $site
+                    ->categories()
+                    ->where('category_checked_ip', 1)
+                    ->orderBy('updated_at','desc')
+                    ->withCount('wallpaper')
+                    ->get();
+            }
         } else{
-            $data = Sites::where('sites.site_web',$domain)
-                ->with(['categories'=>function ($q){
-                    $q->withCount('wallpaper')
-                        ->where('category_checked_ip', 0);
-                }])
-                ->first();
+            if($load_categories == 0 ){
+                $data = $site
+                    ->categories()
+                    ->where('category_checked_ip', 0)
+                    ->inRandomOrder()
+                    ->withCount('wallpaper')
+                    ->get();
+            }
+            elseif($load_categories == 1 ){
+                $data = $site
+                    ->categories()
+                    ->where('category_checked_ip', 0)
+                    ->orderBy('category_view_count','desc')
+                    ->withCount('wallpaper')
+                    ->get();
+            }
+            elseif($load_categories == 2 ){
+                $data = $site
+                    ->categories()
+                    ->where('category_checked_ip', 0)
+                    ->orderBy('updated_at','desc')
+                    ->withCount('wallpaper')
+                    ->get();
+            }
         }
 
-        $categories =  CategoriesResource::collection($data->categories);
-        $count = count($categories);
+        $categories =  CategoriesResource::collection($data);
+        $count = count($data);
         $respon = array(
             'status' => 'ok', 'count' => $count, 'categories' => $categories
         );
@@ -393,41 +308,55 @@ class ApiController extends Controller
 
     public function get_category_details() {
 
-
         if($this->get_request_method() != "GET") $this->response('',406);
-//        dd($_GET['page']);
+
         $page_limit = isset($_GET['count']) ? ((int)$_GET['count']) : 10;
         $page = isset($_GET['page']) ? $_GET['page'] : 1;
-        $limit=($page - 1) * $page_limit;
         $id = $_GET['id'];
+        $domain=$_SERVER['SERVER_NAME'];
+        $site = Sites::where('site_web',$domain)->first();
+        $load_wallpapers_category = $site->load_wallpapers_category;
 
-        $data = Categories::findorFail($id)
-            ->wallpaper()
-            ->distinct()
-            ->orderBy('wallpaper_like_count', 'desc')
-            ->skip($limit)
-            ->take($page_limit)
-            ->get();
+        $category = Categories::findOrFail($id);
+        if($load_wallpapers_category==0){
+            $data = $category
+                ->wallpaper()
+                ->distinct()
+                ->inRandomOrder()
+                ->paginate($page_limit);
+        }
+        elseif($load_wallpapers_category==1){
+            $data = $category
+                ->wallpaper()
+                ->distinct()
+                ->orderBy('wallpaper_like_count','desc')
+                ->paginate($page_limit);
+        }
+        elseif($load_wallpapers_category==2){
+            $data = $category
+                ->wallpaper()
+                ->distinct()
+                ->orderBy('wallpaper_view_count','desc')
+                ->paginate($page_limit);
+        }
+        elseif($load_wallpapers_category==3){
+            $data = $category
+                ->wallpaper()
+                ->distinct()
+                ->orderBy('created_at','desc')
+                ->paginate($page_limit);
 
-
+        }
+        $category->update(['category_view_count'=>$category->category_view_count+1]);
         $wallpapers= WallpapersResource::collection($data);
-        $count_total = Categories::findOrFail($id)
-            ->wallpaper()
-            ->distinct()
-            ->get()
-            ->count();
-        $count = count($wallpapers);
-;
+        $count_total = $data->total();
+        $count = $data->perPage();
+
         $respon = array(
             'status' => 'ok', 'count' => $count, 'count_total' => $count_total, 'pages' => $page, 'posts' => $wallpapers
         );
         $this->response($this->json($respon), 200);
-
     }
-
-
-
-
 
     public function update_view() {
         $image_id = $_POST['image_id'];
@@ -537,6 +466,83 @@ class ApiController extends Controller
         $this->response($this->json($respon), 200);
     }
 
+    public function get_search(){
+        $domain = $_SERVER['SERVER_NAME'];
+        $site = Sites::where('site_web',$domain)->first();
+        $page_limit = isset($_GET['count']) ? ((int)$_GET['count']) : 10;
+        $page = isset($_GET['page']) ? ((int)$_GET['page']) : 1;
+
+        if (checkBlockIp()){
+
+                $data = Wallpapers::with('tags')
+                    ->where('wallpaper_name', 'like', '%' . $_GET['search'] . '%')
+                    ->whereHas('categories', function ($query) use ($site) {
+                        $query->where('category_checked_ip', 1)
+                            ->where('site_id',$site->id);
+                    })
+                    ->distinct()
+                    ->orderBy('id','desc')
+                    ->paginate($page_limit);
+
+
+        }else{
+                $data = Wallpapers::with('tags')
+                    ->where('wallpaper_name', 'like', '%' . $_GET['search'] . '%')
+                    ->whereHas('categories', function ($query) use ($site) {
+                        $query->where('category_checked_ip', 0)
+                            ->where('site_id',$site->id);
+                    })
+                    ->distinct()
+                    ->orderBy('id','desc')
+                    ->paginate($page_limit);
+
+        }
+        $getResource= WallpapersResource::collection($data);
+        $count_total = $data->total();
+        $count = $data->perPage();
+        $respon = array(
+            'status' => 'ok', 'count' => $count, 'count_total' => $count_total, 'pages' => $page, 'posts' => $getResource
+        );
+        $this->response($this->json($respon), 200);
+    }
+
+    public function get_search_category(){
+        $domain = $_SERVER['SERVER_NAME'];
+        $site = Sites::where('site_web',$domain)->first();
+        $page_limit = isset($_GET['count']) ? ((int)$_GET['count']) : 10;
+        $page = isset($_GET['page']) ? ((int)$_GET['page']) : 1;
+
+        if (checkBlockIp()){
+
+            $data = $site
+                ->categories()
+                ->where('category_checked_ip', 1)
+                ->where('category_name', 'like', '%' . $_GET['search'] . '%')
+                ->inRandomOrder()
+                ->withCount('wallpaper')
+                ->get();
+
+
+
+        }else{
+            $data = $site
+                ->categories()
+                ->where('category_checked_ip', 0)
+                ->where('category_name', 'like', '%' . $_GET['search'] . '%')
+                ->inRandomOrder()
+                ->withCount('wallpaper')
+                ->get();
+
+        }
+        $categories =  CategoriesResource::collection($data);
+        $count = count($data);
+        $respon = array(
+            'status' => 'ok', 'count' => $count, 'categories' => $categories
+        );
+        $this->response($this->json($respon), 200);
+    }
+
+
 
 
     private function responseInvalidParam() {
@@ -556,10 +562,7 @@ class ApiController extends Controller
         }
     }
 
-    /* String mysqli_real_escape_string */
-    private function real_escape($s) {
-        return mysqli_real_escape_string($this->mysqli, $s);
-    }
+
 
     public function get_request_method(){
         return $_SERVER['REQUEST_METHOD'];

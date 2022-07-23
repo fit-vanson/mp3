@@ -24,6 +24,9 @@ class Sites extends Model
         'site_ads',
         'site_direct_link',
         'site_view_page',
+        'load_view_by',
+        'load_categories',
+        'load_wallpapers_category',
     ];
 
 //    public function categories()

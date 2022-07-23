@@ -53,6 +53,8 @@ Route::group([
     Route::get('/get_category_details',[ApiController::class, 'get_category_details']);
     Route::get('/get_ads',[ApiController::class, 'get_ads']);
     Route::get('/get_settings',[ApiController::class, 'get_settings']);
+    Route::get('/get_search',[ApiController::class, 'get_search']);
+    Route::get('/get_search_category',[ApiController::class, 'get_search_category']);
     Route::post('/update_view',[ApiController::class, 'update_view']);
     Route::post('/update_download',[ApiController::class, 'update_download']);
     Route::get('/',[ApiController::class, 'index']);
