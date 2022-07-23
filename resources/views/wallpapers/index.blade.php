@@ -16,6 +16,8 @@
 
     <link href="{{ URL::asset('/assets/libs/select2/select2.min.css') }}" rel="stylesheet" type="text/css"/>
 
+
+
 {{--    <style>--}}
 {{--        .select2-selection__choice {--}}
 {{--            /*margin-top: 0px!important;*/--}}
@@ -80,42 +82,41 @@
 
         <div class="infinite-scroll">
             <div class="row">
-            @foreach($data as $item)
-                <div class="col-md-6 col-lg-6 col-xl-2">
-                    <!-- Simple card -->
-                    <div class="card">
-                        <a class="image-popup-no-margins" href="{{url('/storage/wallpapers').'/'.$item->wallpaper_image}}">
-                            <img class="img-fluid" alt="{{$item->wallpaper_name}}" src="{{url('/storage/wallpapers/thumbnails').'/'.$item->wallpaper_image}}">
-                        </a>
+                @foreach($data as $item)
+                    <div class="col-md-6 col-lg-6 col-xl-2">
+                        <!-- Simple card -->
+                        <div class="card">
+                            <a class="image-popup-no-margins" href="{{url('/storage/wallpapers').'/'.$item->wallpaper_image}}">
+                                <img class="img-fluid" alt="{{$item->wallpaper_name}}" src="{{url('/storage/wallpapers/thumbnails').'/'.$item->wallpaper_image}}">
+                            </a>
 
-                        <div class="card-body">
-                            <p>
-                                <span class="card-title" style="font-size: larger; font-weight: bold">{{$item->wallpaper_name}}</span>
-                                @if($item->wallpaper_status == 1)
-                                <i class="fas fa-check-circle" style="color: green"></i>
-                                @elseif($item->wallpaper_status == 0)
-                                <i class="fas fa-times-circle" style="color: red"></i>
-                                @endif
-                            </p>
+                            <div class="card-body">
+                                <p>
+                                    <span class="card-title" style="font-size: larger; font-weight: bold">{{$item->wallpaper_name}}</span>
+                                    @if($item->wallpaper_status == 1)
+                                    <i class="fas fa-check-circle" style="color: green"></i>
+                                    @elseif($item->wallpaper_status == 0)
+                                    <i class="fas fa-times-circle" style="color: red"></i>
+                                    @endif
+                                </p>
 
-                            <?php
-                            $tags = [];
-                            foreach ($item->tags as $tag){
-                            ?>
-                                <span class="badge badge-pill badge-success">{{$tag->tag_name}}</span>
-                            <?php
-                            }
-                            ?>
+                                <?php
+                                $tags = [];
+                                foreach ($item->tags as $tag){
+                                ?>
+                                    <span class="badge badge-pill badge-success">{{$tag->tag_name}}</span>
+                                <?php
+                                }
+                                ?>
 
+                            </div>
                         </div>
-                    </div>
 
-                </div><!-- end col -->
-            @endforeach
+                    </div><!-- end col -->
+                @endforeach
+                    {{ $data->appends(['view' => 'grid'])->links() }}
+            </div>
         </div>
-        </div>
-        {{ $data->appends(['view' => 'grid'])->links() }}
-
 
 
     @else
@@ -168,9 +169,6 @@
 
 @section('script')
     <!-- Plugins js -->
-{{--    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>--}}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jscroll/2.4.1/jquery.jscroll.min.js"></script>
-
     <script src="{{ URL::asset('/assets/libs/rwd-table/rwd-table.min.js') }}"></script>
     <script src="{{ URL::asset('/assets/libs/datatables/datatables.min.js') }}"></script>
     <script src="{{ URL::asset('/assets/libs/jszip/jszip.min.js') }}"></script>
@@ -184,6 +182,7 @@
     <script src="{{ URL::asset('/assets/libs/dropzone/dropzone.min.js') }}"></script>
 
     <script src="{{ URL::asset('/assets/libs/magnific-popup/magnific-popup.min.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jscroll/2.4.1/jquery.jscroll.min.js"></script>
 
 
 
@@ -204,20 +203,10 @@
 {{--        });--}}
 {{--    </script>--}}
 
-    <script type="text/javascript">
-        // $('ul.pagination').hide();
-        $(function() {
-            $('.infinite-scroll').jscroll({
-                autoTrigger: true,
-                padding: 0,
-                nextSelector: '.pagination li.active + li a',
-                contentSelector: 'div.infinite-scroll',
-                callback: function() {
-                    $('ul.pagination').remove();
-                }
-            });
-        });
-    </script>
+
+
+
+
 
     <script>
         Dropzone.autoDiscover = false;
@@ -296,13 +285,7 @@
                     '<"col-sm-12 col-md-6"p>' +
                     '>',
 
-                // select: {
-                //     style: 'multi'
-                // },
                 columnDefs: [
-
-                    // '<"button-items"B>'+
-
                     {
                         // For Checkboxes
                         targets: 0,
@@ -532,7 +515,32 @@
                     },
                 });
 
+            $('ul.pagination').hide();
+            $('.infinite-scroll').jscroll({
+                autoTrigger: true,
+                padding: 0,
+                nextSelector: '.pagination li.active + li a',
+                contentSelector: 'div.infinite-scroll',
+                callback: function() {
+                    $('ul.pagination').remove();
+                    $('.image-popup-no-margins').magnificPopup({
+                        type: 'image',
+                        closeOnContentClick: true,
+                        closeBtnInside: false,
+                        fixedContentPos: true,
+                        mainClass: 'mfp-no-margins mfp-with-zoom',
+                        // class to remove default margin from left and right side
+                        image: {
+                            verticalFit: true
+                        },
+                        zoom: {
+                            enabled: true,
+                            duration: 300 // don't foget to change the duration also in CSS
 
+                        }
+                    });
+                }
+            });
         })
     </script>
 

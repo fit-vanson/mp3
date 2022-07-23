@@ -477,7 +477,11 @@ class WallpapersController extends Controller
                 }
             }
         }
-        echo '<META http-equiv="refresh" content="2;URL=' . route('wallpapers.compare') . '">';
-
+        $time = isset($_GET['time']) ? $_GET['time'] : 2;
+        if(isset($_GET['action']) && $_GET['action']== 'auto'){
+            echo '<META http-equiv="refresh" content="'.$time.';URL=' . route('wallpapers.compare') . '?action=auto&time='.$time.'">';
+        }else{
+            echo 1;
+        }
     }
 }
