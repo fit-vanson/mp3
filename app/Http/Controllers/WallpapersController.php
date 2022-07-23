@@ -20,7 +20,7 @@ class WallpapersController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth')->except('compare');;
     }
     public function index()
     {

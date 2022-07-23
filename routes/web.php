@@ -101,8 +101,6 @@ Route::group(['prefix'=>env('ADMIN_PAGE','admin')], function (){
         Route::post('/postImport', [WallpapersController::class, 'postImport'])->name('wallpapers.postImport');
         Route::get('/importToDb', [WallpapersController::class, 'importToDb'])->name('wallpapers.importToDb');
         Route::get('/compare', [WallpapersController::class, 'compare'])->name('wallpapers.compare');
-
-
     });
 
     Route::group(['prefix'=>'sites'], function (){
