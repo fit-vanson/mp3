@@ -184,30 +184,6 @@
     <script src="{{ URL::asset('/assets/libs/magnific-popup/magnific-popup.min.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jscroll/2.4.1/jquery.jscroll.min.js"></script>
 
-
-
-
-{{--    <script type="text/javascript">--}}
-{{--        $('ul.pagination').hide();--}}
-{{--        $(function() {--}}
-{{--            $('.infinite-scroll').jscroll({--}}
-{{--                autoTrigger: true,--}}
-{{--                // loadingHtml: '<img class="center-block" src="/images/loading.gif" alt="Loading..." />',--}}
-{{--                padding: 0,--}}
-{{--                nextSelector: '.pagination li.active + li a',--}}
-{{--                contentSelector: 'div.infinite-scroll',--}}
-{{--                callback: function() {--}}
-{{--                    $('ul.pagination').remove();--}}
-{{--                }--}}
-{{--            });--}}
-{{--        });--}}
-{{--    </script>--}}
-
-
-
-
-
-
     <script>
         Dropzone.autoDiscover = false;
 
@@ -362,9 +338,23 @@
             const urlParams = new URLSearchParams(queryString);
             const search = urlParams.get('search')
             if(search !== null){
-                dtTable.search(search)
-                    .draw();
+                dtTable.search(search).draw();
             }
+
+            $(".dataTables_filter input")
+                .unbind() // Unbind previous default bindings
+                .bind("input", function(e) { // Bind our desired behavior
+                    // If the length is 3 or more characters, or the user pressed ENTER, search
+                    if(this.value.length >= 3 || e.keyCode == 13) {
+                        // Call the API search function
+                        dtTable.search(this.value).draw();
+                    }
+                    // Ensure we clear the search if they backspace far enough
+                    if(this.value == "") {
+                        dtTable.search("").draw();
+                    }
+                    return;
+                });
 
 
             // Handle click on "Select all" control
