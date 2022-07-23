@@ -466,6 +466,7 @@ class WallpapersController extends Controller
                         }
                         $wallpaper_check->tags()->detach();
                         $wallpaper_check->delete();
+                        break;
                     }else{
                         $wallpaper_check->wallpaper_status = 1;
                         $wallpaper_check->wallpaper_hash = $hash_check;
