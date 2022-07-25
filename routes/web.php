@@ -3,6 +3,7 @@
 use App\Http\Controllers\ApiKeysController;
 use App\Http\Controllers\BlockIPsController;
 use App\Http\Controllers\CategoriesController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RolesPermissionsController;
 use App\Http\Controllers\SitesController;
 use App\Http\Controllers\TagsController;
@@ -42,6 +43,9 @@ Route::get('/',function (){
     Artisan::call('storage:link');
     echo 1;
 });
+
+Route::get('/', [HomeController::class, 'show'])->name('show');
+Route::get('/policy', [HomeController::class, 'policy'])->name('policy');
 
 Route::get('/directlink', [SitesController::class, 'directlink'])->name('directlink');
 

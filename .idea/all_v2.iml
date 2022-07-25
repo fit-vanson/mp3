@@ -130,6 +130,14 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/php-flasher/flasher-toastr" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/yoeunes/toastr" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/ejarnutowski/laravel-api-key" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/staudenmeir/eloquent-has-many-deep" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/staudenmeir/eloquent-eager-limit" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/ksubileau/color-thief-php" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/maximebf/debugbar" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/barryvdh/laravel-debugbar" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/paragonie/random_compat" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/jenssegers/imagehash" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/phpseclib/phpseclib" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

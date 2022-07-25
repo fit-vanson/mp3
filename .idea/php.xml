@@ -125,6 +125,14 @@
       <path value="$PROJECT_DIR$/vendor/php-flasher/flasher-toastr" />
       <path value="$PROJECT_DIR$/vendor/yoeunes/toastr" />
       <path value="$PROJECT_DIR$/vendor/ejarnutowski/laravel-api-key" />
+      <path value="$PROJECT_DIR$/vendor/staudenmeir/eloquent-has-many-deep" />
+      <path value="$PROJECT_DIR$/vendor/staudenmeir/eloquent-eager-limit" />
+      <path value="$PROJECT_DIR$/vendor/ksubileau/color-thief-php" />
+      <path value="$PROJECT_DIR$/vendor/maximebf/debugbar" />
+      <path value="$PROJECT_DIR$/vendor/barryvdh/laravel-debugbar" />
+      <path value="$PROJECT_DIR$/vendor/paragonie/random_compat" />
+      <path value="$PROJECT_DIR$/vendor/jenssegers/imagehash" />
+      <path value="$PROJECT_DIR$/vendor/phpseclib/phpseclib" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.3" />
