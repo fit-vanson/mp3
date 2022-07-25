@@ -10,7 +10,6 @@
                     <span class="logo-lg">
                         <hr>
                         <img src="{{ URL::asset('/assets/images/logo-light.png') }}" alt="" height="80">
-
                     </span>
                 </a>
 
