@@ -20,7 +20,7 @@ class SitesController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth')->except('directlink');
     }
     public function index()
     {
