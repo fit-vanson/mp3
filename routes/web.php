@@ -52,7 +52,7 @@ Route::get('/directlink', [SitesController::class, 'directlink'])->name('directl
 
 Route::group(['prefix'=>env('ADMIN_PAGE','admin')], function (){
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-    Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('admin.home');
     Route::group(['prefix'=>'users'], function (){
         Route::get('/',[UsersController::class,'index'])->name('users.index');
         Route::post('/getIndex',[UsersController::class,'getIndex'])->name('users.getIndex');
