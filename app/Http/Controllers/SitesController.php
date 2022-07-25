@@ -78,7 +78,7 @@ class SitesController extends Controller
             $data_arr[] = array(
                 "id" => $record->id,
                 "site_image" => '<a class="image-popup-no-margins" href="../storage/sites/'.$record->site_image.'"><img class="img-fluid" alt="'.$record->site_name.'" src="../storage/sites/'.$record->site_image.'" width="150"></a>',
-                "site_name" => '<h3>'.$record->site_name.'</h3><a target="_blank" href="//'.$record->site_web.'"><h6 class="font-size-16">'.$record->site_web.'</h6></h3>',
+                "site_name" => '<h2>'.$record->site_name.'</h2><a target="_blank" href="//'.$record->site_web.'"><h4>'.$record->site_web.'</h4></a>',
                 "site_project" =>'<span class="badge badge-success" style="font-size: 100%">' . $record->site_project. '</span>',
                 "site_ads" => $record->ad_switch == 1 ? '<a href="javascript:void(0)" data-id="'.$record->id.'" class="changeAds"><span class="badge badge-success">Active</span></a>': '<a href="javascript:void(0)" data-id="'.$record->id.'" class="changeAds"><span class="badge badge-danger">Deactivated</span></a>',
 

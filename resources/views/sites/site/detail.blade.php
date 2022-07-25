@@ -6,7 +6,7 @@
 
 
             <h4 class="card-title">{{$site->site_name}}</h4>
-            <p class="card-title-desc">{{$site->site_web}}</p>
+            <a target="_blank" href="//{{$site->site_web}}"><p class="card-title-desc">{{$site->site_web}}</p></a>
             <p style="text-align: center">
                 <a class="image-popup-no-margins" href="{{ URL::asset('/storage/sites/'.$site->site_image) }}">
                     <img class="img-fluid" alt="" src="{{ URL::asset('/storage/sites/'.$site->site_image) }}" width="75">
