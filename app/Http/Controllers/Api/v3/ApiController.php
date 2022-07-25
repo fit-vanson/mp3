@@ -214,7 +214,7 @@ class ApiController extends Controller
 
         if (checkBlockIp()){
             $data = Wallpapers::with('tags')
-                ->where('image_extension', '<>','image/gif')
+//                ->where('image_extension', '<>','image/gif')
                 ->whereHas('categories', function ($query) use ($site) {
                     $query->where('category_checked_ip', 1)
                         ->where('site_id',$site->id);
@@ -227,7 +227,7 @@ class ApiController extends Controller
 
         }else{
             $data = Wallpapers::with('tags')
-                ->where('image_extension', '<>','image/gif')
+//                ->where('image_extension', '<>','image/gif')
                 ->whereHas('categories', function ($query) use ($site) {
                     $query->where('category_checked_ip', 0)
                         ->where('site_id',$site->id);
@@ -252,7 +252,7 @@ class ApiController extends Controller
 
         if (checkBlockIp()){
             $data = Wallpapers::with('tags')
-                ->where('image_extension', '<>','image/gif')
+//                ->where('image_extension', '<>','image/gif')
                 ->whereHas('categories', function ($query) use ($site) {
                     $query->where('category_checked_ip', 1)
                         ->where('site_id',$site->id);
@@ -265,7 +265,7 @@ class ApiController extends Controller
 
         }else{
             $data = Wallpapers::with('tags')
-                ->where('image_extension', '<>','image/gif')
+//                ->where('image_extension', '<>','image/gif')
                 ->whereHas('categories', function ($query) use ($site) {
                     $query->where('category_checked_ip', 0)
                         ->where('site_id',$site->id);
@@ -346,7 +346,7 @@ class ApiController extends Controller
 
         if (checkBlockIp()) {
             $data = Wallpapers::with('tags')
-                ->where('image_extension', '<>','image/gif')
+//                ->where('image_extension', '<>','image/gif')
                 ->where('wallpaper_name', 'like', '%' . $query . '%')
                 ->whereHas('categories', function ($query) use ($site) {
                     $query->where('category_checked_ip', 1)
@@ -359,7 +359,7 @@ class ApiController extends Controller
                 ->get();
         } else {
             $data = Wallpapers::with('tags')
-                ->where('image_extension', '<>','image/gif')
+//                ->where('image_extension', '<>','image/gif')
                 ->where('wallpaper_name', 'like', '%' . $query . '%')
                 ->whereHas('categories', function ($query) use ($site) {
                     $query->where('category_checked_ip', 0)
