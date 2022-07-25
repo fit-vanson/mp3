@@ -509,7 +509,6 @@ class SitesController extends Controller
                         'site_policy' =>$row['policy'],
                         'site_ads' => $row['ads'],
                         'site_project' => $row['id'],
-                        'site_direct_link' => $row['directlink'],
                         'site_chplay_link' => $row['directlink'],
                         'site_view_page' =>$row['view_page'],
                     ];
@@ -520,4 +519,24 @@ class SitesController extends Controller
 
 //        echo '<META http-equiv="refresh" content="1;URL=' . route('categories.importToDb') . '">';
     }
+
+    public function directlink(){
+        $domain=$_SERVER['SERVER_NAME'];
+        $site = Sites::where('site_web',$domain)->first();
+        if($site){
+            $directlink = $site->site_direct_link;
+            if ($directlink){
+                $site->site_view_page = $site->site_view_page+1;
+                $site->save();
+                return redirect($directlink);
+            }else{
+                return redirect('/');
+            }
+        }
+        else{
+            return redirect('/');
+        }
+    }
+
+
 }

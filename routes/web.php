@@ -43,6 +43,9 @@ Route::get('/',function (){
     echo 1;
 });
 
+Route::get('/directlink', [SitesController::class, 'directlink'])->name('directlink');
+
+
 Route::group(['prefix'=>env('ADMIN_PAGE','admin')], function (){
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
     Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
