@@ -53,11 +53,15 @@ class SitesController extends Controller
         $totalRecords = Sites::select('count(*) as allcount')->count();
         $totalRecordswithFilter = Sites::select('count(*) as allcount')
             ->where('site_name', 'like', '%' . $searchValue . '%')
+            ->orwhere('site_web', 'like', '%' . $searchValue . '%')
+            ->orwhere('site_project', 'like', '%' . $searchValue . '%')
             ->count();
 
         // Get records, also we have included search filter as well
         $records = Sites::with('categories')
             ->where('site_name', 'like', '%' . $searchValue . '%')
+            ->orwhere('site_web', 'like', '%' . $searchValue . '%')
+            ->orwhere('site_project', 'like', '%' . $searchValue . '%')
             ->select('*')
             ->orderBy($columnName, $columnSortOrder)
             ->skip($start)
