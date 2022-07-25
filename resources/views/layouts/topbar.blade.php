@@ -3,12 +3,14 @@
         <div class="d-flex" >
             <!-- LOGO -->
             <div class="navbar-brand-box">
-                <a href="index" class="logo logo-light">
+                <a href="{{route('admin.home')}}" class="logo logo-light">
                     <span class="logo-sm">
-                        <img src="{{ URL::asset('/assets/images/logo-sm.png') }}" alt="" height="22">
+                        <img src="{{ URL::asset('/assets/images/logo-sm.png') }}" alt="" height="30">
                     </span>
                     <span class="logo-lg">
-                        <img src="{{ URL::asset('/assets/images/logo-light.png') }}" alt="" height="18">
+                        <hr>
+                        <img src="{{ URL::asset('/assets/images/logo-light.png') }}" alt="" height="80">
+
                     </span>
                 </a>
 
