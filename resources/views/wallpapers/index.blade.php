@@ -313,7 +313,7 @@
                         }
                     }
                 ],
-                order: [1, 'asc'],
+                order: [0, 'desc'],
                 fnDrawCallback: function () {
                     $('.image-popup-no-margins').magnificPopup({
                         type: 'image',
