@@ -200,10 +200,17 @@ class ApiController extends Controller
 
     public function wallpapersAll($order, $page)
     {
+
         $page_limit = 10;
         $limit = $page * $page_limit;
         $domain = $_SERVER['SERVER_NAME'];
         $site = Sites::where('site_web',$domain)->first();
+
+        if($order == 'created_at'){
+            $orderBy = $order;
+        }else{
+            $orderBy = 'wallpaper_'.$order;
+        }
 
         if (checkBlockIp()){
             $data = Wallpapers::with('tags')
@@ -212,7 +219,7 @@ class ApiController extends Controller
                     $query->where('category_checked_ip', 1)
                         ->where('site_id',$site->id);
                 })
-                ->orderBy($order,'desc')
+                ->orderBy($orderBy,'desc')
                 ->distinct()
                 ->skip($limit)
                 ->take($page_limit)
@@ -225,7 +232,7 @@ class ApiController extends Controller
                     $query->where('category_checked_ip', 0)
                         ->where('site_id',$site->id);
                 })
-                ->orderBy($order,'desc')
+                ->orderBy($orderBy,'desc')
                 ->distinct()
                 ->skip($limit)
                 ->take($page_limit)
