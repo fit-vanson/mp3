@@ -96,13 +96,15 @@
 
         <div id="flipster-carousel" class="flipster-carousel pt-md-3">
             <div class="flip-items pb-5">
-                @foreach(json_decode($site->site_feature_images,true) as $image)
-                    <div class="flip-item text-center text-md-left">
-                        <div class="item-inner shadow-lg rounded">
-                            <img src="{{asset('storage/featureimages/'.Str::slug($site->site_web).'/'.$image)}}"/>
-                        </div><!--//item-inner-->
-                    </div><!--//flip-item-->
-                @endforeach
+                @if(isset($site->site_feature_images))
+                    @foreach(json_decode($site->site_feature_images,true) as $image)
+                        <div class="flip-item text-center text-md-left">
+                            <div class="item-inner shadow-lg rounded">
+                                <img src="{{asset('storage/featureimages/'.Str::slug($site->site_web).'/'.$image)}}"/>
+                            </div><!--//item-inner-->
+                        </div><!--//flip-item-->
+                    @endforeach
+                @endif
             </div><!--//items-wrapper-->
             <div class="pt-5 text-center">
                 <a class="btn btn-primary theme-btn font-weight-bold" href="#">Try Now</a>
