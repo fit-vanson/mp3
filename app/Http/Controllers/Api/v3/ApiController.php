@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\v3;
 
 use App\Categories;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\v3\CategoriesResource;
 use App\ListIP;
 use App\Sites;
 use App\Wallpapers;
@@ -136,42 +137,9 @@ class ApiController extends Controller
 
     public function first()
     {
-        $page_limit = 10;
-        $limit = 0;
+        $data_arr['categories'] = json_decode($this->categoryAll(),true);
+        $data_arr['wallpapers'] = json_decode($this->wallpapersAll('created_at',0),true);
 
-        $domain = $_SERVER['SERVER_NAME'];
-
-
-        if (checkBlockIp()) {
-            $data = Sites::where('site_web', $domain)->first()
-                ->categories()
-                ->where('category_checked_ip', 1)
-                ->get();
-            $wallpaper = [];
-            foreach ($data as $item) {
-
-                foreach ($item->wallpaper()->with('tags')->orderBy('updated_at', 'desc')->get()->toArray() as $wall) {
-                    $wallpaper[] = $wall;
-                }
-            }
-        } else {
-            $data = Sites::where('site_web', $domain)->first()
-                ->categories()
-                ->where('category_checked_ip', 0)
-                ->get();
-            $wallpaper = [];
-            foreach ($data as $item) {
-                foreach ($item->wallpaper()->with('tags')->orderBy('updated_at', 'desc')->get()->toArray() as $wall) {
-                    $wallpaper[] = $wall;
-                }
-            }
-        }
-
-        $temp = array_unique(array_column($wallpaper, 'id'));
-        $unique_arr = array_intersect_key($wallpaper, $temp);
-        $result = array_slice($unique_arr, $limit, $page_limit);
-        $data_arr['categories'] = $this->getCategories($data);
-        $data_arr['wallpapers'] = $this->getWallpaper($result);
         return json_encode($data_arr, JSON_UNESCAPED_UNICODE);
 
     }
@@ -179,23 +147,55 @@ class ApiController extends Controller
     public function categoryAll()
     {
         $domain = $_SERVER['SERVER_NAME'];
+        $site = Sites::where('site_web',$domain)->first();
+        $load_categories = $site->load_categories;
 
-        if (checkBlockIp()) {
-            $data = Sites::where('site_web',$domain)->first()
-                ->categories()
-                ->where('category_checked_ip',1)
-                ->inRandomOrder()
-                ->get();
-        } else {
-            $data = Sites::where('site_web',$domain)->first()
-                ->categories()
-                ->where('category_checked_ip',0)
-                ->inRandomOrder()
-                ->get();
+        if(checkBlockIp()){
+            if($load_categories == 0 ){
+                $data = $site
+                    ->categories()
+                    ->where('category_checked_ip', 1)
+                    ->inRandomOrder()
+                    ->get();
+            }
+            elseif($load_categories == 1 ){
+                $data = $site
+                    ->categories()
+                    ->where('category_checked_ip', 1)
+                    ->orderBy('category_view_count','desc')
+                    ->get();
+            }
+            elseif($load_categories == 2 ){
+                $data = $site
+                    ->categories()
+                    ->where('category_checked_ip', 1)
+                    ->orderBy('updated_at','desc')
+                    ->get();
+            }
+        } else{
+            if($load_categories == 0 ){
+                $data = $site
+                    ->categories()
+                    ->where('category_checked_ip', 0)
+                    ->inRandomOrder()
+                    ->get();
+            }
+            elseif($load_categories == 1 ){
+                $data = $site
+                    ->categories()
+                    ->where('category_checked_ip', 0)
+                    ->orderBy('category_view_count','desc')
+                    ->get();
+            }
+            elseif($load_categories == 2 ){
+                $data = $site
+                    ->categories()
+                    ->where('category_checked_ip', 0)
+                    ->orderBy('updated_at','desc')
+                    ->get();
+            }
         }
-        $data_arr = $this->getCategories($data);
-        return json_encode($data_arr);
-
+        return json_encode($this->getCategories($data));
     }
 
     public function wallpapersAll($order, $page)
@@ -203,47 +203,35 @@ class ApiController extends Controller
         $page_limit = 10;
         $limit = $page * $page_limit;
         $domain = $_SERVER['SERVER_NAME'];
+        $site = Sites::where('site_web',$domain)->first();
 
-        if (checkBlockIp()) {
-            $data = Sites::where('site_web', $domain)->first()
-                ->categories()
-                ->where('category_checked_ip', 1)
+        if (checkBlockIp()){
+            $data = Wallpapers::with('tags')
+                ->where('image_extension', '<>','image/gif')
+                ->whereHas('categories', function ($query) use ($site) {
+                    $query->where('category_checked_ip', 1)
+                        ->where('site_id',$site->id);
+                })
+                ->orderBy($order,'desc')
+                ->distinct()
+                ->skip($limit)
+                ->take($page_limit)
                 ->get();
-            $wallpaper = [];
-            foreach ($data as $item) {
-                foreach (
-                    $item->wallpaper()
-                        ->with('tags')
-                        ->get()
-                        ->toArray() as $wall) {
-                    $wallpaper[] = $wall;
-                }
-            }
-        } else {
-            $data = Sites::where('site_web', $domain)->first()
-                ->categories()
-                ->where('category_checked_ip', 0)
+
+        }else{
+            $data = Wallpapers::with('tags')
+                ->where('image_extension', '<>','image/gif')
+                ->whereHas('categories', function ($query) use ($site) {
+                    $query->where('category_checked_ip', 0)
+                        ->where('site_id',$site->id);
+                })
+                ->orderBy($order,'desc')
+                ->distinct()
+                ->skip($limit)
+                ->take($page_limit)
                 ->get();
-            $wallpaper = [];
-            foreach ($data as $item) {
-                foreach (
-                    $item->wallpaper()
-                        ->with('tags')
-                        ->get()
-                        ->toArray() as $wall) {
-                    $wallpaper[] = $wall;
-                }
-            }
         }
-
-        $temp = array_unique(array_column($wallpaper, 'id'));
-        $unique_arr = array_intersect_key($wallpaper, $temp);
-        usort($unique_arr, function($a, $b) use ($order) {
-            return $b['wallpaper_'.$order] <=> $a['wallpaper_'.$order];
-        });
-        $result = array_slice($unique_arr, $limit, $page_limit);
-
-        $data_arr = $this->getWallpaper($result);
+        $data_arr = $this->getWallpaper($data);
         return json_encode($data_arr, JSON_UNESCAPED_UNICODE);
 
     }
@@ -253,46 +241,35 @@ class ApiController extends Controller
         $page_limit = 10;
         $limit = $page * $page_limit;
         $domain = $_SERVER['SERVER_NAME'];
+        $site = Sites::where('site_web',$domain)->first();
 
-        if (checkBlockIp()) {
-            $data = Sites::where('site_web', $domain)->first()
-                ->categories()
-                ->where('category_checked_ip', 1)
+        if (checkBlockIp()){
+            $data = Wallpapers::with('tags')
+                ->where('image_extension', '<>','image/gif')
+                ->whereHas('categories', function ($query) use ($site) {
+                    $query->where('category_checked_ip', 1)
+                        ->where('site_id',$site->id);
+                })
+                ->inRandomOrder()
+                ->distinct()
+                ->skip($limit)
+                ->take($page_limit)
                 ->get();
-            $wallpaper = [];
-            foreach ($data as $item) {
-                foreach (
-                    $item->wallpaper()
-                        ->with('tags')
-                        ->get()
-                        ->toArray() as $wall) {
-                    $wallpaper[] = $wall;
-                }
-            }
-        } else {
-            $data = Sites::where('site_web', $domain)->first()
-                ->categories()
-                ->where('category_checked_ip', 0)
+
+        }else{
+            $data = Wallpapers::with('tags')
+                ->where('image_extension', '<>','image/gif')
+                ->whereHas('categories', function ($query) use ($site) {
+                    $query->where('category_checked_ip', 0)
+                        ->where('site_id',$site->id);
+                })
+                ->inRandomOrder()
+                ->distinct()
+                ->skip($limit)
+                ->take($page_limit)
                 ->get();
-            $wallpaper = [];
-            foreach ($data as $item) {
-                foreach (
-                    $item->wallpaper()
-                        ->with('tags')
-                        ->get()
-                        ->toArray() as $wall) {
-                    $wallpaper[] = $wall;
-                }
-            }
         }
-
-        $temp = array_unique(array_column($wallpaper, 'id'));
-        $unique_arr = array_intersect_key($wallpaper, $temp);
-        shuffle($unique_arr);
-        $result = array_slice($unique_arr, $limit, $page_limit);
-
-
-        $data_arr = $this->getWallpaper($result);
+        $data_arr = $this->getWallpaper($data);
         return json_encode($data_arr, JSON_UNESCAPED_UNICODE);
 
     }
@@ -301,15 +278,52 @@ class ApiController extends Controller
     {
         $page_limit = 10;
         $limit = $page * $page_limit;
-        $wallpaper = Categories::findOrFail($category)
-            ->wallpaper()
-            ->with('tags')
-            ->distinct()
-            ->inRandomOrder()
-            ->limit($page_limit)
-            ->offset($limit)
-            ->get()->toArray();
-        $data_arr = $this->getWallpaper($wallpaper);
+        $domain=$_SERVER['SERVER_NAME'];
+        $site = Sites::where('site_web',$domain)->first();
+        $load_wallpapers_category = $site->load_wallpapers_category;
+
+        if($load_wallpapers_category==0){
+            $wallpapers = Categories::findOrFail($category)
+                ->wallpaper()
+                ->with('tags')
+                ->distinct()
+                ->inRandomOrder()
+                ->skip($limit)
+                ->take($page_limit)
+                ->get();
+        }
+        elseif($load_wallpapers_category==1){
+            $wallpapers = Categories::findOrFail($category)
+                ->wallpaper()
+                ->with('tags')
+                ->distinct()
+                ->orderBy('wallpaper_like_count','desc')
+                ->skip($limit)
+                ->take($page_limit)
+                ->get();
+        }
+        elseif($load_wallpapers_category==2){
+            $wallpapers = Categories::findOrFail($category)
+                ->wallpaper()
+                ->with('tags')
+                ->distinct()
+                ->orderBy('wallpaper_view_count','desc')
+                ->skip($limit)
+                ->take($page_limit)
+                ->get();
+        }
+        elseif($load_wallpapers_category==3){
+            $wallpapers = Categories::findOrFail($category)
+                ->wallpaper()
+                ->with('tags')
+                ->distinct()
+                ->orderBy('created_at','desc')
+                ->skip($limit)
+                ->take($page_limit)
+                ->get();
+        }
+
+        $data_arr = $this->getWallpaper($wallpapers->toArray());
         return json_encode($data_arr, JSON_UNESCAPED_UNICODE);
 
     }
@@ -320,44 +334,39 @@ class ApiController extends Controller
         $limit = $page * $page_limit;
         $domain = $_SERVER['SERVER_NAME'];
 
+        $site = Sites::where('site_web',$domain)->first();
+
+
         if (checkBlockIp()) {
-            $data = Sites::where('site_web', $domain)->first()
-                ->categories()
-                ->where('category_checked_ip', 1)
+            $data = Wallpapers::with('tags')
+                ->where('image_extension', '<>','image/gif')
+                ->where('wallpaper_name', 'like', '%' . $query . '%')
+                ->whereHas('categories', function ($query) use ($site) {
+                    $query->where('category_checked_ip', 1)
+                        ->where('site_id',$site->id);
+                })
+                ->distinct()
+                ->orderBy('wallpaper_view_count','desc')
+                ->skip($limit)
+                ->take($page_limit)
                 ->get();
-            $wallpaper = [];
-            foreach ($data as $item) {
-                foreach (
-                    $item->wallpaper()
-                        ->with('tags')
-                        ->where('wallpaper_name', 'like', '%' . $query . '%')
-                        ->get()
-                        ->toArray() as $wall) {
-                    $wallpaper[] = $wall;
-                }
-            }
         } else {
-            $data = Sites::where('site_web', $domain)->first()
-                ->categories()
-                ->where('category_checked_ip', 0)
+            $data = Wallpapers::with('tags')
+                ->where('image_extension', '<>','image/gif')
+                ->where('wallpaper_name', 'like', '%' . $query . '%')
+                ->whereHas('categories', function ($query) use ($site) {
+                    $query->where('category_checked_ip', 0)
+                        ->where('site_id',$site->id);
+                })
+                ->distinct()
+                ->orderBy('wallpaper_view_count','desc')
+                ->skip($limit)
+                ->take($page_limit)
                 ->get();
-            $wallpaper = [];
-            foreach ($data as $item) {
-                foreach (
-                    $item->wallpaper()
-                        ->with('tags')
-                        ->where('wallpaper_name', 'like', '%' . $query . '%')
-                        ->get()
-                        ->toArray() as $wall) {
-                    $wallpaper[] = $wall;
-                }
-            }
         }
-        $temp = array_unique(array_column($wallpaper, 'id'));
-        $unique_arr = array_intersect_key($wallpaper, $temp);
-        shuffle($unique_arr);
-        $result = array_slice($unique_arr, $limit, $page_limit);
-        $data_arr = $this->getWallpaper($result);
+
+
+        $data_arr = $this->getWallpaper($data);
 
         return json_encode($data_arr, JSON_UNESCAPED_UNICODE);
 

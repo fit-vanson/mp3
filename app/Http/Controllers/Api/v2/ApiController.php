@@ -397,25 +397,63 @@ class ApiController extends Controller
 
     private function get_wallpaper($get_method)
     {
-        if ($get_method['type'] != '') {
-            $type = trim($get_method['type']);
-            $page_limit = 12;
-            $limit=($get_method['page']-1) * $page_limit;
-            $wallpaper = Categories::find($get_method['cat_id'])
+        $domain = $_SERVER['SERVER_NAME'];
+        $site = Sites::where('site_web',$domain)->first();
+
+
+        $type = trim($get_method['type']);
+        $page_limit = 12;
+        $limit=($get_method['page']-1) * $page_limit;
+        $load_wallpapers_category = $site->load_wallpapers_category;
+
+
+        if($load_wallpapers_category==0){
+            $wallpapers = Categories::findOrFail($get_method['cat_id'])
                 ->wallpaper()
-                ->where('image_extension','<>','image/gif')
+                ->with('tags')
                 ->distinct()
+                ->inRandomOrder()
                 ->skip($limit)
                 ->take($page_limit)
-                ->inRandomOrder()
                 ->get();
-
-            $row = $this->getWallpaper($wallpaper,$type,$get_method['android_id']);
-            $set['HD_WALLPAPER'] = $row;
-            header('Content-Type: application/json; charset=utf-8');
-            echo $val = str_replace('\\/', '/', json_encode($set, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
-            die();
         }
+        elseif($load_wallpapers_category==1){
+            $wallpapers = Categories::findOrFail($get_method['cat_id'])
+                ->wallpaper()
+                ->with('tags')
+                ->distinct()
+                ->orderBy('wallpaper_like_count','desc')
+                ->skip($limit)
+                ->take($page_limit)
+                ->get();
+        }
+        elseif($load_wallpapers_category==2){
+            $wallpapers = Categories::findOrFail($get_method['cat_id'])
+                ->wallpaper()
+                ->with('tags')
+                ->distinct()
+                ->orderBy('wallpaper_view_count','desc')
+                ->skip($limit)
+                ->take($page_limit)
+                ->get();
+        }
+        elseif($load_wallpapers_category==3){
+            $wallpapers = Categories::findOrFail($get_method['cat_id'])
+                ->wallpaper()
+                ->with('tags')
+                ->distinct()
+                ->orderBy('created_at','desc')
+                ->skip($limit)
+                ->take($page_limit)
+                ->get();
+        }
+
+        $row = $this->getWallpaper($wallpapers,$get_method['android_id']);
+        $set['HD_WALLPAPER'] = $row;
+        header('Content-Type: application/json; charset=utf-8');
+        echo $val = str_replace('\\/', '/', json_encode($set, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+        die();
+
     }
 
     private function get_single_wallpaper($get_method){
@@ -1174,12 +1212,6 @@ class ApiController extends Controller
                     ->get();
             }
 
-            $wallpaper = [];
-            foreach ($data as $item ){
-                foreach ($item->wallpaper()->where('image_extension','<>','image/gif')->with('categories','tags')->get()->toArray() as $wall){
-                    $wallpaper[] = $wall;
-                }
-            }
         } else {
 
             if($load_categories == 0 ){

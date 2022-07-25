@@ -223,18 +223,56 @@ class ApiController extends Controller
 
     public function categories(){
         $domain=$_SERVER['SERVER_NAME'];
+        $site = Sites::where('site_web',$domain)->first();
+        $load_categories = $site->load_categories;
+
         if (checkBlockIp()) {
-            $data = Sites::where('site_web',$domain)->first()
-                ->categories()
-                ->where('category_checked_ip',1)
-                ->inRandomOrder()
-                ->paginate(10);
+
+            if($load_categories == 0 ){
+                $data = $site
+                    ->categories()
+                    ->where('category_checked_ip', 1)
+                    ->inRandomOrder()
+                    ->paginate(10);
+            }
+            elseif($load_categories == 1 ){
+                $data = $site
+                    ->categories()
+                    ->where('category_checked_ip', 1)
+                    ->orderBy('category_view_count','desc')
+                    ->paginate(10);
+            }
+            elseif($load_categories == 2 ){
+                $data = $site
+                    ->categories()
+                    ->where('category_checked_ip', 1)
+                    ->orderBy('updated_at','desc')
+                    ->paginate(10);
+            }
+
         } else {
-            $data = Sites::where('site_web',$domain)->first()
-                ->categories()
-                ->where('category_checked_ip',0)
-                ->inRandomOrder()
-                ->paginate(10);
+
+            if($load_categories == 0 ){
+                $data = $site
+                    ->categories()
+                    ->where('category_checked_ip', 0)
+                    ->inRandomOrder()
+                    ->paginate(10);
+            }
+            elseif($load_categories == 1 ){
+                $data = $site
+                    ->categories()
+                    ->where('category_checked_ip',0)
+                    ->orderBy('category_view_count','desc')
+                    ->paginate(10);
+            }
+            elseif($load_categories == 2 ){
+                $data = $site
+                    ->categories()
+                    ->where('category_checked_ip', 0)
+                    ->orderBy('updated_at','desc')
+                    ->paginate(10);
+            }
         }
         $result['current_page'] = $data->currentPage();
         $result['last_page'] = $data->lastPage();
@@ -245,12 +283,43 @@ class ApiController extends Controller
 
     public function cid(Request $request){
 
-        $wallpapers = Categories::findOrFail($request['id'])
-            ->wallpaper()
-            ->distinct()
-            ->inRandomOrder()
-            ->paginate(21);
+        $domain = $_SERVER['SERVER_NAME'];
+        $site = Sites::where('site_web',$domain)->first();
+        $load_wallpapers_category = $site->load_wallpapers_category;
 
+
+        if($load_wallpapers_category==0){
+            $wallpapers = Categories::findOrFail($request['id'])
+                ->wallpaper()
+                ->with('tags')
+                ->distinct()
+                ->inRandomOrder()
+                ->paginate(21);
+        }
+        elseif($load_wallpapers_category==1){
+            $wallpapers = Categories::findOrFail($request['id'])
+                ->wallpaper()
+                ->with('tags')
+                ->distinct()
+                ->orderBy('wallpaper_like_count','desc')
+                ->paginate(21);
+        }
+        elseif($load_wallpapers_category==2){
+            $wallpapers = Categories::findOrFail($request['id'])
+                ->wallpaper()
+                ->with('tags')
+                ->distinct()
+                ->orderBy('wallpaper_view_count','desc')
+                ->paginate(21);
+        }
+        elseif($load_wallpapers_category==3){
+            $wallpapers = Categories::findOrFail($request['id'])
+                ->wallpaper()
+                ->with('tags')
+                ->distinct()
+                ->orderBy('created_at','desc')
+                ->paginate(21);
+        }
         $data['current_page'] = $wallpapers->currentPage();
         $data['last_page'] = $wallpapers->lastPage();
         $data['total'] = $wallpapers->total();
