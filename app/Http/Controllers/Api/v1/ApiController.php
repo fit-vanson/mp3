@@ -542,9 +542,6 @@ class ApiController extends Controller
         $this->response($this->json($respon), 200);
     }
 
-
-
-
     private function responseInvalidParam() {
         $resp = array("status" => 'Failed', "msg" => 'Invalid Parameter' );
         $this->response($this->json($resp), 200);
