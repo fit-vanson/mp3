@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Tags;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Validator;
 
 
 class TagsController extends Controller
@@ -79,6 +79,20 @@ class TagsController extends Controller
 
     }
     public function create(Request $request){
+
+        $rules = [
+            'tag_name' =>'unique:tags,tag_name',
+
+        ];
+        $message = [
+            'tag_name.unique'=>'Tên đã tồn tại',
+
+        ];
+        $error = Validator::make($request->all(),$rules, $message );
+        if($error->fails()){
+            return response()->json(['errors'=> $error->errors()->all()]);
+        }
+
         $data = Tags::updateOrCreate($request->all());
         return response()->json(['success'=>'Thành công','tag'=>$data]);
     }
