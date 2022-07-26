@@ -243,6 +243,7 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
+
             var dtTable = $('#table{{preg_replace('/\s+/','',$page_title)}}').DataTable({
                 processing: true,
                 serverSide: true,
@@ -351,8 +352,6 @@
             const urlParams = new URLSearchParams(queryString);
             const search = urlParams.get('search')
             if(search !== null){
-                console.log(search)
-                $(".select2").select2().select2('val',search);
                 dtTable.search(search).draw();
             }
 
