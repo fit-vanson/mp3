@@ -418,7 +418,7 @@ class WallpapersController extends Controller
 
         $hasher = new ImageHash(new DifferenceHash());
         try {
-            $hash_check = $hasher->hash(storage_path('app/public/wallpapers/thumbnails/').$wallpaper_check->wallpaper_image)->toBits();
+            $hash_check = $hasher->hash(storage_path('app/public/wallpapers/thumbnails/').$wallpaper_check->wallpaper_image);
         }catch (\Exception $exception) {
             Log::error('Message:' . $exception->getMessage() .'--: '.$wallpaper_check->wallpaper_name. ' error ----'.$wallpaper_check->wallpaper_image.'---' . $exception->getLine());
             $wallpaper_check->wallpaper_status = 2;
@@ -426,11 +426,13 @@ class WallpapersController extends Controller
         }
 
         if (isset($hash_check)){
-            echo 'check: '.$wallpaper_check->wallpaper_name.'<br>';
+            echo 'check: '.$wallpaper_check->id. '--' .$wallpaper_check->wallpaper_name.'<br>';
             echo 'compare:'.count($wallpapers_compare).'<br>';
             foreach ($wallpapers_compare as $wallpaper_compare){
                 try {
                     $hash_compare = $wallpaper_compare->wallpaper_hash ?  $wallpaper_compare->wallpaper_hash : $hasher->hash(storage_path('app/public/wallpapers/thumbnails/').$wallpaper_compare->wallpaper_image)->toBits();
+
+
                     $bits1 = $hash_check;
                     $bits2 = $hash_compare;
                     $length = max(strlen($bits1), strlen($bits2));
@@ -478,8 +480,6 @@ class WallpapersController extends Controller
         $time = isset($_GET['time']) ? $_GET['time'] : 2;
         if(isset($_GET['action']) && $_GET['action']== 'auto'){
             echo '<META http-equiv="refresh" content="'.$time.';URL=' . route('wallpapers.compare') . '?action=auto&time='.$time.'">';
-        }else{
-            echo 1;
         }
     }
 }
