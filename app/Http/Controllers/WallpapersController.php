@@ -38,7 +38,7 @@ class WallpapersController extends Controller
         }else{
             return view('wallpapers.index',[
                 'page_title' => $page_title,
-                'tags' => $tags
+                'tags' => $tags,
             ]);
         }
 
@@ -411,8 +411,6 @@ class WallpapersController extends Controller
         }
         echo '<META http-equiv="refresh" content="1;URL=' . route('wallpapers.optimization'). '?page='.$page.'">';
     }
-
-
 
     public function compare(){
         $wallpaper_check    = Wallpapers::with('tags')->where('wallpaper_status',0)->first(); // lấy ảnh cần so sánh trùng

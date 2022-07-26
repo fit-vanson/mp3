@@ -78,92 +78,106 @@
         </div>
     </div>
 
-    @if(isset($data))
+    <div class="row align-items-center" style="padding-bottom: 10px">
+        <div class="col-sm-12">
+            <div class="float-right" >
+                <a href="{{route('wallpapers.index')}}" class="btn btn-outline-primary waves-effect waves-light" type="button">
+                    <i class="ti-list"></i>
+                </a>
+                <a href="{{route('wallpapers.index')}}?view=grid" class="btn btn-outline-primary waves-effect waves-light" type="button">
+                    <i class="ti-layout-grid2"></i>
+                </a>
 
-        <div class="infinite-scroll">
-            <div class="row">
-                @foreach($data as $item)
-                    <div class="col-md-6 col-lg-6 col-xl-2">
-                        <!-- Simple card -->
-                        <div class="card">
-                            <a class="image-popup-no-margins" href="{{url('/storage/wallpapers').'/'.$item->wallpaper_image}}">
-                                <img class="img-fluid" alt="{{$item->wallpaper_name}}" src="{{url('/storage/wallpapers/thumbnails').'/'.$item->wallpaper_image}}">
-                            </a>
-
-                            <div class="card-body">
-                                <p>
-                                    <span class="card-title" style="font-size: larger; font-weight: bold">{{$item->wallpaper_name}}</span>
-                                    @if($item->wallpaper_status == 1)
-                                    <i class="fas fa-check-circle" style="color: green"></i>
-                                    @elseif($item->wallpaper_status == 0)
-                                    <i class="fas fa-times-circle" style="color: red"></i>
-                                    @endif
-                                </p>
-
-                                <?php
-                                $tags = [];
-                                foreach ($item->tags as $tag){
-                                ?>
-                                    <span class="badge badge-pill badge-success">{{$tag->tag_name}}</span>
-                                <?php
-                                }
-                                ?>
-
-                            </div>
-                        </div>
-
-                    </div><!-- end col -->
-                @endforeach
-                    {{ $data->appends(['view' => 'grid'])->links() }}
             </div>
         </div>
+    </div>
 
+    <div class="load_ajax">
+        @if(isset($data))
 
-    @else
+            <div class="infinite-scroll">
+                <div class="row">
+                    @foreach($data as $item)
+                        <div class="col-md-6 col-lg-6 col-xl-2">
+                            <!-- Simple card -->
+                            <div class="card">
+                                <a class="image-popup-no-margins" href="{{url('/storage/wallpapers').'/'.$item->wallpaper_image}}">
+                                    <img class="img-fluid" alt="{{$item->wallpaper_name}}" src="{{url('/storage/wallpapers/thumbnails').'/'.$item->wallpaper_image}}">
+                                </a>
 
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-body">
-                    <div class="table-rep-plugin">
-                        <div class="table-responsive mb-1">
-                            <form id="checkForm" name="checkForm">
-                                <table id="table{{preg_replace('/\s+/','',$page_title)}}"
-                                       class="table table-bordered dt-responsive"
-                                       style="width: 100%;">
-                                    <thead>
-                                    <tr>
-                                        <th>
-                                            <div class="custom-control custom-checkbox">
-                                                <input class="custom-control-input" type="checkbox" name="select_all" value="1" id="select_all" />
-                                                <label class="custom-control-label" for="select_all"></label>
-                                            </div>
-                                        </th>
-                                        <th style="width: 20%">Image</th>
-                                        <th style="width: 20%">Name</th>
-                                        <th style="width: 10%">View Count</th>
-                                        <th style="width: 10%">Like Count</th>
-                                        <th style="width: 10%">Extension</th>
-                                        <th style="width: 15%">Tags</th>
-                                        <th style="width: 10%">Action</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
+                                <div class="card-body">
+                                    <p>
+                                        <span class="card-title" style="font-size: larger; font-weight: bold">{{$item->wallpaper_name}}</span>
+                                        @if($item->wallpaper_status == 1)
+                                            <i class="fas fa-check-circle" style="color: green"></i>
+                                        @elseif($item->wallpaper_status == 0)
+                                            <i class="fas fa-times-circle" style="color: red"></i>
+                                        @endif
+                                    </p>
 
-                                    </tbody>
-                                </table>
-                            </form>
-                        </div>
-                    </div>
+                                    <?php
+                                    $tags = [];
+                                    foreach ($item->tags as $tag){
+                                    ?>
+                                    <span class="badge badge-pill badge-success">{{$tag->tag_name}}</span>
+                                    <?php
+                                    }
+                                    ?>
+
+                                </div>
+                            </div>
+
+                        </div><!-- end col -->
+                    @endforeach
+                    {{ $data->appends(['view' => 'grid'])->links() }}
                 </div>
             </div>
 
-        </div> <!-- end col -->
-    </div> <!-- end row -->
 
-    @endif
+        @else
 
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="table-rep-plugin">
+                                <div class="table-responsive mb-1">
+                                    <form id="checkForm" name="checkForm">
+                                        <table id="table{{preg_replace('/\s+/','',$page_title)}}"
+                                               class="table table-bordered dt-responsive"
+                                               style="width: 100%;">
+                                            <thead>
+                                            <tr>
+                                                <th>
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input class="custom-control-input" type="checkbox" name="select_all" value="1" id="select_all" />
+                                                        <label class="custom-control-label" for="select_all"></label>
+                                                    </div>
+                                                </th>
+                                                <th style="width: 20%">Image</th>
+                                                <th style="width: 20%">Name</th>
+                                                <th style="width: 10%">View Count</th>
+                                                <th style="width: 10%">Like Count</th>
+                                                <th style="width: 10%">Extension</th>
+                                                <th style="width: 15%">Tags</th>
+                                                <th style="width: 10%">Action</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
 
+                                            </tbody>
+                                        </table>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div> <!-- end col -->
+            </div> <!-- end row -->
+
+        @endif
+    </div>
 
 @endsection
 
@@ -186,42 +200,42 @@
 
     <script>
         Dropzone.autoDiscover = false;
-
-        $(".select2").select2({
-            // closeOnSelect: false,
-            tags: true,
-            tokenSeparators: [',', ';'],
-            createTag: function (params) {
-                var term = $.trim(params.term);
-
-                if (term === '') {
-                    return null;
-                }
-                return {
-                    id: term,
-                    text: term,
-                    newTag: true // add additional parameters
-                }
-            }
-        }).on("change", function(e) {
-            var isNew = $(this).find('[data-select2-tag="true"]');
-            if(isNew.length && $.inArray(isNew.val(), $(this).val()) !== -1){
-                $.ajax({
-                    url: '/admin/tags/create',
-                    type: 'post',
-                    dataType: 'json',
-                    data: {tag_name: isNew.val()},
-                    success: function (data) {
-                        if (data.success) {
-                            isNew.replaceWith('<option selected value="'+data.tag.id+'">'+data.tag.tag_name+'</option>');
-                        }
-                        if (data.errors) {
-                            console.log(data.errors)
-                        }
-                    }
-                });
-            }
-        });
+        $(".select2").select2({});
+        // $(".select2").select2({
+        //     // closeOnSelect: false,
+        //     tags: true,
+        //     tokenSeparators: [',', ';'],
+        //     createTag: function (params) {
+        //         var term = $.trim(params.term);
+        //
+        //         if (term === '') {
+        //             return null;
+        //         }
+        //         return {
+        //             id: term,
+        //             text: term,
+        //             newTag: true // add additional parameters
+        //         }
+        //     }
+        // }).on("change", function(e) {
+        //     var isNew = $(this).find('[data-select2-tag="true"]');
+        //     if(isNew.length && $.inArray(isNew.val(), $(this).val()) !== -1){
+        //         $.ajax({
+        //             url: '/admin/tags/create',
+        //             type: 'post',
+        //             dataType: 'json',
+        //             data: {tag_name: isNew.val()},
+        //             success: function (data) {
+        //                 if (data.success) {
+        //                     isNew.replaceWith('<option selected value="'+data.tag.id+'">'+data.tag.tag_name+'</option>');
+        //                 }
+        //                 if (data.errors) {
+        //                     console.log(data.errors)
+        //                 }
+        //             }
+        //         });
+        //     }
+        // });
 
         $(function () {
             $.ajaxSetup({
@@ -229,7 +243,6 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-
             var dtTable = $('#table{{preg_replace('/\s+/','',$page_title)}}').DataTable({
                 processing: true,
                 serverSide: true,
