@@ -25,7 +25,7 @@ class WallpapersController extends Controller
     public function index()
     {
         $page_title =  'Wallpapers';
-        $tags = Tags::all();
+        $tags = Tags::latest()->get();
 
         if (isset($_GET['view']) && $_GET['view'] == 'grid' ){
             $data = Wallpapers::latest()->paginate(12);

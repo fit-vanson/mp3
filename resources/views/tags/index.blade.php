@@ -67,32 +67,10 @@
                 <div class="modal-body">
                     <form id="form{{preg_replace('/\s+/','',$page_title)}}">
                         <input type="hidden" name="id" id="id">
-                        <input  id="image" type="file" name="image" class="form-control" hidden accept="image/*" onchange="changeImg(this)">
-                        <img id="avatar" width="200px" src="{{asset('assets/images/1.png')}}">
                         <div class="form-group">
-                            <label>Category name</label>
-                            <input type="text" class="form-control" id="category_name" name="category_name" required>
+                            <label>Tag name</label>
+                            <input type="text" class="form-control" id="tag_name" name="tag_name" required>
                         </div>
-
-                        <div class="form-group">
-                            <label>Order</label>
-                            <input type="text" class="form-control" id="category_order" name="category_order"  value="{{rand(0,1)}}" >
-                        </div>
-
-                        <div class="form-group">
-                            <label>View Count</label>
-                            <input type="text" class="form-control" id="category_view_count" name="category_view_count"  value="{{rand(500,3000)}}" >
-                        </div>
-
-
-                        <div class="form-group">
-                            <input type="checkbox" id="category_checked_ip" name="category_checked_ip"  switch="none" checked="">
-                            <label for="category_checked_ip" data-on-label="Real" data-off-label="Fake"></label>
-                        </div>
-
-
-
-
                         <div class="form-group mb-0">
                             <div>
                                 <button type="submit" id="saveBtn{{preg_replace('/\s+/','',$page_title)}}" class="btn btn-primary waves-effect waves-light mr-1">
@@ -131,7 +109,6 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-            $('.createTags').hide()
 
             var dtTable = $('#table{{preg_replace('/\s+/','',$page_title)}}').DataTable({
                 processing: true,
@@ -164,6 +141,69 @@
                     }
                     return;
                 });
+
+
+
+            $('.create{{preg_replace('/\s+/','',$page_title)}}').click(function () {
+                $('#modal{{preg_replace('/\s+/','',$page_title)}}').modal('show');
+                $('#{{preg_replace('/\s+/','',$page_title)}}ModalLabel').html("Add {{$page_title}}");
+                $('#saveBtn{{preg_replace('/\s+/','',$page_title)}}').val("create");
+                $('#id').val('');
+                $('#form{{preg_replace('/\s+/','',$page_title)}}').trigger("reset");
+            });
+
+
+            $('#form{{preg_replace('/\s+/','',$page_title)}}').on('submit', function (event) {
+                event.preventDefault();
+                var formData = new FormData($("#form{{preg_replace('/\s+/','',$page_title)}}")[0]);
+                if ($('#saveBtn{{preg_replace('/\s+/','',$page_title)}}').val() == 'create') {
+                    $.ajax({
+                        data: formData,
+                        url: '{{route('tags.create')}}',
+                        type: "POST",
+                        dataType: 'json',
+                        processData: false,
+                        contentType: false,
+                        success: function (data) {
+                            if (data.success) {
+                                $('#form{{preg_replace('/\s+/','',$page_title)}}').trigger("reset");
+                                toastr['success'](data.success, 'Success!');
+                                $('#modal{{preg_replace('/\s+/','',$page_title)}}').modal('hide');
+                                dtTable.draw();
+                            }
+                            if (data.errors) {
+                                for (var count = 0; count < data.errors.length; count++) {
+                                    toastr['error'](data.errors[count], 'Error!',);
+                                }
+                            }
+                        }
+                    });
+                }
+                if ($('#saveBtn{{preg_replace('/\s+/','',$page_title)}}').val() == 'update') {
+                    $.ajax({
+                        data: formData,
+                        url: '{{route('tags.update')}}',
+                        type: "POST",
+                        dataType: 'json',
+                        processData: false,
+                        contentType: false,
+                        success: function (data) {
+                            if (data.success) {
+                                $('#form{{preg_replace('/\s+/','',$page_title)}}').trigger("reset");
+                                toastr['success'](data.success, 'Success!');
+                                $('#modal{{preg_replace('/\s+/','',$page_title)}}').modal('hide');
+                                dtTable.draw();
+                            }
+                            if (data.errors) {
+                                for (var count = 0; count < data.errors.length; count++) {
+                                    toastr['error'](data.errors[count], 'Error!',);
+                                }
+                            }
+                        }
+                    });
+                }
+
+            });
 
 
             $(document).on('click','.delete{{preg_replace('/\s+/','',$page_title)}}', function (data){

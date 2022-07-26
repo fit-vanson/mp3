@@ -351,6 +351,8 @@
             const urlParams = new URLSearchParams(queryString);
             const search = urlParams.get('search')
             if(search !== null){
+                console.log(search)
+                $(".select2").select2().select2('val',search);
                 dtTable.search(search).draw();
             }
 
