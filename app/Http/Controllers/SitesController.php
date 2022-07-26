@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Categories;
 use App\CategoriesHasSites;
 use App\ListIP;
-use App\Models\SiteManage;
 use App\Sites;
 use App\Tags;
 use DateTime;

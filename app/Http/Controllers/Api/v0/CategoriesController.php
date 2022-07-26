@@ -8,19 +8,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\v0\CategoriesResource;
 use App\Http\Resources\v0\WallpapersResource;
 use App\Sites;
-use Illuminate\Http\Request;
-
-define('domain',$_SERVER['SERVER_NAME']);
 
 class CategoriesController extends Controller
 {
-
-
-
-
     public function index()
     {
-        $site = Sites::where('site_web',domain)->first();
+        $domain = $_SERVER['SERVER_NAME'];
+        $site = Sites::where('site_web',$domain)->first();
         $load_categories = $site->load_categories;
 
         if(checkBlockIp()){
@@ -73,7 +67,8 @@ class CategoriesController extends Controller
     }
     public function getWallpapers($id)
     {
-        $site = Sites::where('site_web',domain)->first();
+        $domain = $_SERVER['SERVER_NAME'];
+        $site = Sites::where('site_web',$domain)->first();
         $load_wallpapers_category = $site->load_wallpapers_category;
         $page_limit = 12;
         $page = isset($_GET['page']) ? $_GET['page'] : 1;

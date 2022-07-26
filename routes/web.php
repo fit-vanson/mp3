@@ -9,7 +9,7 @@ use App\Http\Controllers\SitesController;
 use App\Http\Controllers\TagsController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\WallpapersController;
-use App\User;
+
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -24,25 +24,22 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+Auth::routes();
 
 Route::get('/clear', function () {
     echo  Artisan::call('optimize');
-//    echo  Artisan::call('config:cache');
-//    echo  Artisan::call('route:cache');
+    echo  Artisan::call('config:cache');
+    echo  Artisan::call('route:cache');
 
 });
 
-Auth::routes();
+
 
 Route::get('/link',function (){
     Artisan::call('storage:link');
     echo 1;
 });
-Route::get('/',function (){
-    Artisan::call('storage:link');
-    echo 1;
-});
+
 
 Route::get('/', [HomeController::class, 'show'])->name('show');
 Route::get('/policy', [HomeController::class, 'policy'])->name('policy');

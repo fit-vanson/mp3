@@ -33,6 +33,7 @@ class HomeController extends Controller
     }
 
     public function show(){
+
         $domain=$_SERVER['SERVER_NAME'];
         $site = Sites::where('site_web',$domain)->first();
         if($site){
@@ -41,6 +42,9 @@ class HomeController extends Controller
         else{
             return 1;
         }
+
+
+
     }
 
     public function policy(){
