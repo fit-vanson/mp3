@@ -190,7 +190,7 @@
         $(".select2").select2({
             // closeOnSelect: false,
             tags: true,
-            tokenSeparators: [',', ' '],
+            tokenSeparators: [',', ';'],
             createTag: function (params) {
                 var term = $.trim(params.term);
 
