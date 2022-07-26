@@ -430,7 +430,8 @@ class WallpapersController extends Controller
             echo 'compare:'.count($wallpapers_compare).'<br>';
             foreach ($wallpapers_compare as $wallpaper_compare){
                 try {
-                    $hash_compare = $wallpaper_compare->wallpaper_hash ?  $wallpaper_compare->wallpaper_hash : $hasher->hash(storage_path('app/public/wallpapers/thumbnails/').$wallpaper_compare->wallpaper_image)->toBits();
+//                    $hash_compare = $wallpaper_compare->wallpaper_hash ?  $wallpaper_compare->wallpaper_hash : $hasher->hash(storage_path('app/public/wallpapers/thumbnails/').$wallpaper_compare->wallpaper_image)->toBits();
+                    $hash_compare = $wallpaper_compare->wallpaper_hash;
 
 
                     $bits1 = $hash_check;
