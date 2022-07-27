@@ -434,68 +434,74 @@ class WallpapersController extends Controller
         $wallpaper_check    = Wallpapers::with('tags')->where('wallpaper_status',0)->first(); // lấy ảnh cần so sánh trùng
         $wallpapers_compare = Wallpapers::with('tags')->where('wallpaper_status',1)->get(); // đã so sánh trùng
 
-        $hasher = new ImageHash(new DifferenceHash());
-        try {
-            $hash_check = $hasher->hash(storage_path('app/public/wallpapers/thumbnails/').$wallpaper_check->wallpaper_image);
-        }catch (\Exception $exception) {
-            Log::error('Message:' . $exception->getMessage() .'--: '.$wallpaper_check->wallpaper_name. ' error ----'.$wallpaper_check->wallpaper_image.'---' . $exception->getLine());
-            $wallpaper_check->wallpaper_status = 2;
-            $wallpaper_check->save();
-        }
+        if (isset($wallpaper_check)){
+            $hasher = new ImageHash(new DifferenceHash());
+            try {
+                $hash_check = $hasher->hash(storage_path('app/public/wallpapers/thumbnails/').$wallpaper_check->wallpaper_image);
+            }catch (\Exception $exception) {
+                Log::error('Message:' . $exception->getMessage() .'--: '.$wallpaper_check->wallpaper_name. ' error ----'.$wallpaper_check->wallpaper_image.'---' . $exception->getLine());
+                $wallpaper_check->wallpaper_status = 2;
+                $wallpaper_check->save();
+            }
 
-        if (isset($wallpaper_check) && isset($hash_check)){
-            echo 'check: '.$wallpaper_check->id. '--' .$wallpaper_check->wallpaper_name.'<br>';
-            echo 'compare:'.count($wallpapers_compare).'<br>';
-            foreach ($wallpapers_compare as $wallpaper_compare){
-                try {
+            if (isset($hash_check)){
+                echo 'check: '.$wallpaper_check->id. '--' .$wallpaper_check->wallpaper_name.'<br>';
+                echo 'compare:'.count($wallpapers_compare).'<br>';
+                foreach ($wallpapers_compare as $wallpaper_compare){
+                    try {
 //                    $hash_compare = $wallpaper_compare->wallpaper_hash ?  $wallpaper_compare->wallpaper_hash : $hasher->hash(storage_path('app/public/wallpapers/thumbnails/').$wallpaper_compare->wallpaper_image)->toBits();
-                    $hash_compare = $wallpaper_compare->wallpaper_hash;
-                    $bits1 = $hash_check;
-                    $bits2 = $hash_compare;
-                    $length = max(strlen($bits1), strlen($bits2));
-                    // Add leading zeros so the bit strings are the same length.
-                    $bits1 = str_pad($bits1, $length, '0', STR_PAD_LEFT);
-                    $bits2 = str_pad($bits2, $length, '0', STR_PAD_LEFT);
+                        $hash_compare = $wallpaper_compare->wallpaper_hash;
+                        $bits1 = $hash_check;
+                        $bits2 = $hash_compare;
+                        $length = max(strlen($bits1), strlen($bits2));
+                        // Add leading zeros so the bit strings are the same length.
+                        $bits1 = str_pad($bits1, $length, '0', STR_PAD_LEFT);
+                        $bits2 = str_pad($bits2, $length, '0', STR_PAD_LEFT);
 
-                    $distance = count(array_diff_assoc(str_split($bits1), str_split($bits2)));
+                        $distance = count(array_diff_assoc(str_split($bits1), str_split($bits2)));
 
-                    /* Nếu ảnh trùng
-                     * Lấy tags ảnh cần so sánh bổ sung vào tags ảnh đã so sánh
-                     * Xoá ảnh cần so sánh
-                    */
-                    if($distance <= 5){
-                        $tags_check = $wallpaper_check->tags->pluck('id')->toArray(); // tags ảnh cần so sánh
-                        $tags_compare = $wallpaper_compare->tags->pluck('id')->toArray(); //tags ảnh đã so sánh
-                        $tags = array_unique(array_merge($tags_check,$tags_compare));
-                        $wallpaper_compare->tags()->sync($tags);
-                        $wallpaper_compare->touch();
-                        $pathImage    =   storage_path('app/public/wallpapers/').$wallpaper_check->wallpaper_image;
-                        $pathThumbnail    =   storage_path('app/public/wallpapers/thumbnails/').$wallpaper_check->wallpaper_image;
-                        try {
-                            if(file_exists($pathImage)){
-                                unlink($pathImage);
+                        /* Nếu ảnh trùng
+                         * Lấy tags ảnh cần so sánh bổ sung vào tags ảnh đã so sánh
+                         * Xoá ảnh cần so sánh
+                        */
+                        if($distance <= 5){
+                            $tags_check = $wallpaper_check->tags->pluck('id')->toArray(); // tags ảnh cần so sánh
+                            $tags_compare = $wallpaper_compare->tags->pluck('id')->toArray(); //tags ảnh đã so sánh
+                            $tags = array_unique(array_merge($tags_check,$tags_compare));
+                            $wallpaper_compare->tags()->sync($tags);
+                            $wallpaper_compare->touch();
+                            $pathImage    =   storage_path('app/public/wallpapers/').$wallpaper_check->wallpaper_image;
+                            $pathThumbnail    =   storage_path('app/public/wallpapers/thumbnails/').$wallpaper_check->wallpaper_image;
+                            try {
+                                if(file_exists($pathImage)){
+                                    unlink($pathImage);
+                                }
+                                if(file_exists($pathThumbnail)){
+                                    unlink($pathThumbnail);
+                                }
+                            }catch (\Exception $ex) {
+                                Log::error($ex->getMessage());
                             }
-                            if(file_exists($pathThumbnail)){
-                                unlink($pathThumbnail);
-                            }
-                        }catch (\Exception $ex) {
-                            Log::error($ex->getMessage());
+                            $wallpaper_check->tags()->detach();
+                            $wallpaper_check->delete();
+                            break;
+                        }else{
+                            $wallpaper_check->wallpaper_status = 1;
+                            $wallpaper_check->wallpaper_hash = $hash_check;
+                            $wallpaper_check->save();
                         }
-                        $wallpaper_check->tags()->detach();
-                        $wallpaper_check->delete();
-                        break;
-                    }else{
-                        $wallpaper_check->wallpaper_status = 1;
-                        $wallpaper_check->wallpaper_hash = $hash_check;
-                        $wallpaper_check->save();
+                    }catch (\Exception $exception) {
+                        Log::error('Message:' . $exception->getMessage() .'--: '.$wallpaper_check->wallpaper_name. ' -- '.$wallpaper_compare->wallpaper_name .'---' . $exception->getLine());
                     }
-                }catch (\Exception $exception) {
-                    Log::error('Message:' . $exception->getMessage() .'--: '.$wallpaper_check->wallpaper_name. ' -- '.$wallpaper_compare->wallpaper_name .'---' . $exception->getLine());
                 }
+            }else{
+                return 1;
             }
         }else{
             return 1;
         }
+
+
         $time = isset($_GET['time']) ? $_GET['time'] : 2;
         if(isset($_GET['action']) && $_GET['action']== 'auto'){
             echo '<META http-equiv="refresh" content="'.$time.';URL=' . route('wallpapers.compare') . '?action=auto&time='.$time.'">';
