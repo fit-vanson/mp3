@@ -83,6 +83,10 @@ class WallpapersController extends Controller
             ->get();
 
         if ($request->get('null_tag') == 1){
+            $totalRecordswithFilter = Wallpapers::select('count(*) as allcount')
+                ->doesntHave('tags')
+                ->where('wallpaper_name', 'like', '%' . $searchValue . '%')
+                ->count();
             $records = Wallpapers::doesntHave('tags')
                 ->where('wallpaper_name', 'like', '%' . $searchValue . '%')
                 ->select('*')
