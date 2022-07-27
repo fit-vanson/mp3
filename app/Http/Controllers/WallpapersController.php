@@ -14,6 +14,7 @@ use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
 use Jenssegers\ImageHash\ImageHash;
 use Jenssegers\ImageHash\Implementations\DifferenceHash;
+use function GuzzleHttp\Promise\all;
 
 
 class WallpapersController extends Controller
@@ -50,6 +51,8 @@ class WallpapersController extends Controller
         $start = $request->get("start");
         $rowperpage = $request->get("length"); // total number of rows per page
 
+
+
         $columnIndex_arr = $request->get('order');
         $columnName_arr = $request->get('columns');
         $order_arr = $request->get('order');
@@ -78,6 +81,17 @@ class WallpapersController extends Controller
             ->skip($start)
             ->take($rowperpage)
             ->get();
+
+        if ($request->get('null_tag') == 1){
+            $records = Wallpapers::doesntHave('tags')
+                ->where('wallpaper_name', 'like', '%' . $searchValue . '%')
+                ->select('*')
+                ->orderBy($columnName, $columnSortOrder)
+                ->skip($start)
+                ->take($rowperpage)
+                ->get();
+        }
+
         $data_arr = array();
         foreach ($records as $record) {
 //            $btn  = ' <a href="javascript:void(0)" onclick="editRolesPermissions('.$record->id.')" class="btn btn-warning"><i class="ti-pencil-alt"></i></a>';

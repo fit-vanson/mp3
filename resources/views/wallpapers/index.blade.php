@@ -159,7 +159,12 @@
                                                 <th style="width: 10%">View Count</th>
                                                 <th style="width: 10%">Like Count</th>
                                                 <th style="width: 10%">Extension</th>
-                                                <th style="width: 15%">Tags</th>
+                                                <th style="width: 15%">
+                                                    <div class="custom-control custom-checkbox">
+                                                    <input class="custom-control-input" type="checkbox" name="null_tag" value="0"  id="null_tag" />
+                                                    <label class="custom-control-label" for="null_tag">Tags</label>
+                                                    </div>
+                                                </th>
                                                 <th style="width: 10%">Action</th>
                                             </tr>
                                             </thead>
@@ -250,7 +255,11 @@
                 displayLength: 50,
                 ajax: {
                     url: "{{route('wallpapers.getIndex')}}",
-                    type: "post"
+                    type: "post",
+                    data: function(data){
+                        var active = $('#null_tag').prop("checked") ? 1 : 0 ;
+                        data.null_tag = $('#null_tag').val();
+                    },
                 },
                 columns: [
                     // columns according to JSON
@@ -377,6 +386,15 @@
                 var rows = dtTable.rows({ 'search': 'applied' }).nodes();
                 $('input[type="checkbox"]', rows).prop('checked', this.checked);
             });
+
+
+
+            $('#null_tag').on('change', function(){
+                var active = $('#null_tag').prop("checked") ? 1 : 0 ;
+                $('#null_tag').val(active);
+                $('#table{{preg_replace('/\s+/','',$page_title)}}').DataTable().ajax.reload();
+            });
+
 
             // Handle click on checkbox to set state of "Select all" control
             $('#table{{preg_replace('/\s+/','',$page_title)}} tbody').on('change', 'input[type="checkbox"]', function(){
