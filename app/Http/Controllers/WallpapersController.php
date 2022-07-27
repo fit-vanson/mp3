@@ -503,10 +503,10 @@ class WallpapersController extends Controller
                     }
                 }
             }else{
-                return 1;
+                echo 1;
             }
         }else{
-            return 1;
+            echo 1;
         }
 
 
