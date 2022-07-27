@@ -445,7 +445,7 @@ class WallpapersController extends Controller
         if (isset($wallpaper_check)){
             $hasher = new ImageHash(new DifferenceHash());
             try {
-                $hash_check = $hasher->hash(storage_path('app/public/wallpapers/thumbnails/').$wallpaper_check->wallpaper_image);
+                $hash_check = $hasher->hash(storage_path('app/public/wallpapers/thumbnails/').$wallpaper_check->wallpaper_image)->toBits();
             }catch (\Exception $exception) {
                 Log::error('Message:' . $exception->getMessage() .'--: '.$wallpaper_check->wallpaper_name. ' error ----'.$wallpaper_check->wallpaper_image.'---' . $exception->getLine());
                 $wallpaper_check->wallpaper_status = 2;
