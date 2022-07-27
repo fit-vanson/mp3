@@ -57,12 +57,12 @@ class SitesController extends Controller
             ->count();
 
         // Get records, also we have included search filter as well
-        $records = Sites::with('categories')
+        $records = Sites::orderBy($columnName, $columnSortOrder)
             ->where('site_name', 'like', '%' . $searchValue . '%')
             ->orwhere('site_web', 'like', '%' . $searchValue . '%')
             ->orwhere('site_project', 'like', '%' . $searchValue . '%')
             ->select('*')
-            ->orderBy($columnName, $columnSortOrder)
+            ->withCount('categories')
             ->skip($start)
             ->take($rowperpage)
             ->get();
@@ -81,6 +81,7 @@ class SitesController extends Controller
                 "site_project" =>'<span class="badge badge-success" style="font-size: 100%">' . $record->site_project. '</span>',
                 "site_ads" => $record->ad_switch == 1 ? '<a href="javascript:void(0)" data-id="'.$record->id.'" class="changeAds"><span class="badge badge-success">Active</span></a>': '<a href="javascript:void(0)" data-id="'.$record->id.'" class="changeAds"><span class="badge badge-danger">Deactivated</span></a>',
 
+                "categories_count" => $record->categories_count,
                 "action" => $btn,
             );
         }

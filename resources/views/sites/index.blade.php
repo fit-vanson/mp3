@@ -39,10 +39,11 @@
                                    style="width: 100%;">
                                 <thead>
                                 <tr>
-                                    <th style="width: 40%">Image</th>
+                                    <th style="width: 30%">Image</th>
                                     <th style="width: 30%">Name</th>
                                     <th style="width: 10%">Ads</th>
                                     <th style="width: 10%">Project</th>
+                                    <th style="width: 5%"> Count Categories</th>
                                     <th style="width: 10%">Action</th>
                                 </tr>
                                 </thead>
@@ -157,6 +158,7 @@
                     { data: 'site_name',  className: "align-middle", },
                     { data: 'site_ads',className: "align-middle",},
                     { data: 'site_project',className: "align-middle",},
+                    { data: 'categories_count',className: "align-middle",},
                     { data: 'action',className: "align-middle text-center ", }
                 ],
                 order: [1, 'asc'],
