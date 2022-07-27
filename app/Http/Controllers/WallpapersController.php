@@ -164,6 +164,14 @@ class WallpapersController extends Controller
             $fileNameToStore = $nameImage.'_'.time().'.'.$extension;
             $img = Image::make($file);
 
+            if($img->width() > $img->height() ){
+                $type = 'Landscape';
+            }elseif ($img->width() < $img->height()){
+                $type = 'Portrait';
+            }else{
+                $type = 'Square';
+            }
+
             if($img->mime() == "image/gif"){
                 copy($file->getRealPath(), $path_origin.$fileNameToStore);
                 copy($file->getRealPath(), $path_thumbnails.$fileNameToStore);
@@ -188,9 +196,9 @@ class WallpapersController extends Controller
                 'wallpaper_download_count' => rand(500,2000),
                 'wallpaper_feature' => rand(0,1),
                 'image_extension' => $img->mime(),
-                'wallpaper_status' => 0
+                'wallpaper_status' => 0,
+                'wallpaper_type' => $type
             ]);
-
 
             $wallpaper->tags()->attach($request->select_tags);
             }

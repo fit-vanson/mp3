@@ -20,7 +20,8 @@ class Wallpapers extends Model
         'wallpaper_feature',
         'image_extension',
         'wallpaper_status',
-        'wallpaper_hash'
+        'wallpaper_hash',
+        'wallpaper_type',
     ];
 
 //    public function categories()
