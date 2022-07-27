@@ -443,7 +443,7 @@ class ApiController extends Controller
             $data_arr['type'] = $item['image_extension'];
             $data_arr['extension'] = $item['image_extension'];
 
-            $data_arr['thumbnail'] = asset('storage/wallpapers/' . $item['wallpaper_image']);
+            $data_arr['thumbnail'] = asset('storage/wallpapers/thumbnails/' . $item['wallpaper_image']);
             $data_arr['image'] = asset('storage/wallpapers/' . $item['wallpaper_image']);
             $data_arr['original'] = asset('storage/wallpapers/' . $item['wallpaper_image']);
             $data_arr['created'] = Carbon::parse($item['created_at'])->format('Y-m-d');

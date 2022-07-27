@@ -12,6 +12,7 @@ use App\Http\Controllers\WallpapersController;
 
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -27,10 +28,13 @@ use Illuminate\Support\Facades\Route;
 Auth::routes();
 
 Route::get('/clear', function () {
-    echo  Artisan::call('optimize');
-    echo  Artisan::call('config:cache');
-    echo  Artisan::call('route:cache');
-
+    try {
+        echo  Artisan::call('optimize');
+        echo  Artisan::call('config:cache');
+        echo  Artisan::call('route:cache');
+    }catch (\Exception $e){
+        Log::error($e->getMessage());
+    }
 });
 
 
