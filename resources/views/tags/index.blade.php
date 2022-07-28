@@ -232,6 +232,30 @@
                 });
             });
 
+            $(document).on('click','.edit{{preg_replace('/\s+/','',$page_title)}}', function (data) {
+                $('#form{{preg_replace('/\s+/','',$page_title)}}').trigger("reset");
+                var id = $(this).data("id");
+                $.ajax({
+                    type: "get",
+                    url: "{{ asset("admin/tags/edit") }}/"+id,
+                    success: function (data) {
+
+                        console.log(data)
+                        $('#modal{{preg_replace('/\s+/','',$page_title)}}').modal('show');
+                        $('#{{preg_replace('/\s+/','',$page_title)}}ModalLabel').html("Edit {{$page_title}}");
+                        $('#saveBtn{{preg_replace('/\s+/','',$page_title)}}').val("update");
+
+                        $('#id').val(data.tag.id);
+                        $('#tag_name').val(data.tag.tag_name);
+
+
+                    },
+                    error: function (data) {
+                        console.log('Error:', data);
+                    }
+                });
+            });
+
         })
     </script>
 
