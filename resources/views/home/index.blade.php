@@ -100,7 +100,7 @@
                     @foreach(json_decode($site->site_feature_images,true) as $image)
                         <div class="flip-item text-center text-md-left">
                             <div class="item-inner shadow-lg rounded">
-                                <img src="{{asset('storage/featureimages/'.Str::slug($site->id).'/'.$image)}}"/>
+                                <img src="{{asset('storage/featureimages/'.$site->id.'/'.$image)}}"/>
                             </div><!--//item-inner-->
                         </div><!--//flip-item-->
                     @endforeach
