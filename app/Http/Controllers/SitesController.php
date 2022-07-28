@@ -343,55 +343,53 @@ class SitesController extends Controller
         $site = Sites::find($id);
         $tags = Tags::all();
 
-        $cates = Sites::findOrFail($id)
-            ->categories()
-            ->select('*')
-            ->with('tags')
-            ->get();
-
-
-
-        $path_image    =  storage_path('app/public/categories/'.$id.'/');
-        if (!file_exists($path_image)) {
-            mkdir($path_image, 0777, true);
-        }
-
-        foreach ($cates as $cate){
-
-            if ($cate->category_image != 'default.png'){
-
-                $image_path = $cate->category_image;
-                $name = explode('/',$image_path);
-                $change_path = str_replace($name[0],$cate->site_id,$image_path);
-
-
-
-                echo $image_path;
-                $path_move =   public_path('storage/categories/').$cate->category_image;
-
-                $path =   public_path('storage/categories/').$change_path;
-
-
-                if($path_move <> $path){
-
-                    File::copy($path_move, $path);
-                }
-
-                Categories::updateOrCreate(
-                    [
-                        'id'=> $cate->id,
-                        'site_id'=>$cate->site_id
-                    ],
-                    [
-                        'category_image'=>$change_path
-                    ]
-                );
-
-
-            }
-
-
-        }
+//        $cates = Sites::findOrFail($id)
+//            ->categories()
+//            ->select('*')
+//            ->with('tags')
+//            ->get();
+//
+//        $path_image    =  storage_path('app/public/categories/'.$id.'/');
+//        if (!file_exists($path_image)) {
+//            mkdir($path_image, 0777, true);
+//        }
+//
+//        foreach ($cates as $cate){
+//
+//            if ($cate->category_image != 'default.png'){
+//
+//                $image_path = $cate->category_image;
+//                $name = explode('/',$image_path);
+//                $change_path = str_replace($name[0],$cate->site_id,$image_path);
+//
+//
+//
+//                echo $image_path;
+//                $path_move =   public_path('storage/categories/').$cate->category_image;
+//
+//                $path =   public_path('storage/categories/').$change_path;
+//
+//
+//                if($path_move <> $path){
+//
+//                    File::copy($path_move, $path);
+//                }
+//
+//                Categories::updateOrCreate(
+//                    [
+//                        'id'=> $cate->id,
+//                        'site_id'=>$cate->site_id
+//                    ],
+//                    [
+//                        'category_image'=>$change_path
+//                    ]
+//                );
+//
+//
+//            }
+//
+//
+//        }
 
 
 
