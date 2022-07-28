@@ -489,7 +489,7 @@ class WallpapersController extends Controller
                                 break;
                             }else{
                                 $wallpaper_check->wallpaper_status = 1;
-                                $wallpaper_check->wallpaper_hash = $hash_check;
+                                $wallpaper_check->wallpaper_hash = $bits1;
                                 $wallpaper_check->save();
                             }
                         }catch (\Exception $exception) {
