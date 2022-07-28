@@ -117,6 +117,7 @@ Route::group(['prefix'=>env('ADMIN_PAGE','admin')], function (){
         Route::post('/create',[SitesController::class,'create'])->name('sites.create');
         Route::get('/edit/{id}',[SitesController::class,'edit'])->name('sites.edit');
         Route::post('/update',[SitesController::class,'update'])->name('sites.update');
+        Route::post('/clone',[SitesController::class,'clone'])->name('sites.clone');
         Route::get('/delete/{id}',[SitesController::class,'delete'])->name('sites.delete');
         Route::get('/change-ads/{id}', [SitesController::class, 'changeAds'])->name('sites.changeAds');
 

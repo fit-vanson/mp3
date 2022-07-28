@@ -108,9 +108,12 @@ class CategoriesController extends Controller
 //        }
 
 
+
+
+
         $data = new Categories();
         $data['site_id'] = $request->site_id;
-        $data['category_name'] = $request->category_name;
+        $data['category_name'] = trim($request->category_name);
         $data['category_order'] = $request->category_order;
         $data['category_view_count'] = $request->category_view_count;
         $data['category_checked_ip'] = $request->category_checked_ip ? 0 : 1 ;
@@ -120,19 +123,20 @@ class CategoriesController extends Controller
             $filename = Str::slug($request->category_name);
             $extension = $file->getClientOriginalExtension();
             $fileNameToStore = $filename.'_'.time().'.'.$extension;
-            $now = new \DateTime('now'); //Datetime
-            $monthNum = $now->format('m');
-            $dateObj   = DateTime::createFromFormat('!m', $monthNum);
-            $monthName = $dateObj->format('F'); // Month
-            $year = $now->format('Y'); // Year
-            $monthYear = $monthName.$year;
-            $path_image    =  storage_path('app/public/categories/'.$monthYear.'/');
+
+//            $now = new \DateTime('now'); //Datetime
+//            $monthNum = $now->format('m');
+//            $dateObj   = DateTime::createFromFormat('!m', $monthNum);
+//            $monthName = $dateObj->format('F'); // Month
+//            $year = $now->format('Y'); // Year
+//            $monthYear = $monthName.$year;
+            $path_image    =  storage_path('app/public/categories/'.$request->site_id.'/');
             if (!file_exists($path_image)) {
                 mkdir($path_image, 0777, true);
             }
             $img = Image::make($file);
             $img->save($path_image.$fileNameToStore);
-            $path_image =  $monthYear.'/'.$fileNameToStore;
+            $path_image =  $request->site_id.'/'.$fileNameToStore;
             $data['category_image'] = $path_image;
         }else{
             $data['category_image'] = 'default.png';
@@ -164,7 +168,7 @@ class CategoriesController extends Controller
 //            return response()->json(['errors'=> $error->errors()->all()]);
 //        }
         $data= Categories::find($id);
-        $data->category_name = $request->category_name;
+        $data->category_name = trim($request->category_name);
         $data->category_order = $request->category_order;
         $data->category_view_count = $request->category_view_count;
         $data->category_checked_ip = $request->category_checked_ip ? 0 : 1 ;

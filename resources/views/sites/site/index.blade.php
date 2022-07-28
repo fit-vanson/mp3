@@ -411,7 +411,7 @@
                             <label class="control-label">Tags Select</label>
                             <select class="select2 form-control select2-multiple" id="select_tags"
                                     name="select_tags[]" multiple="multiple"
-                                    data-placeholder="Choose ..." style="width: 100%" required>
+                                    data-placeholder="Choose ..." style="width: 100%">
                                 @foreach($tags as $tag)
                                     <option value="{{$tag->id}}">{{$tag->tag_name}}</option>
                                 @endforeach

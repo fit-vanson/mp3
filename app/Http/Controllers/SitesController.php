@@ -58,6 +58,7 @@ class SitesController extends Controller
 
         // Get records, also we have included search filter as well
         $records = Sites::orderBy($columnName, $columnSortOrder)
+            ->with('categories')
             ->where('site_name', 'like', '%' . $searchValue . '%')
             ->orwhere('site_web', 'like', '%' . $searchValue . '%')
             ->orwhere('site_project', 'like', '%' . $searchValue . '%')
@@ -69,10 +70,51 @@ class SitesController extends Controller
 
         $data_arr = array();
         foreach ($records as $record) {
+
+//            dd($record);
 //            $btn  = ' <a href="javascript:void(0)" onclick="editRolesPermissions('.$record->id.')" class="btn btn-warning"><i class="ti-pencil-alt"></i></a>';
             $btn = ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-warning editSites"><i class="ti-pencil-alt"></i></a>';
             $btn .= ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-danger deleteSites"><i class="ti-trash"></i></a>';
+            $btn .= '<br><br> <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-secondary copySites"><i class="ti-layers"></i></a>';
             $btn .= ' <a href="'.route('sites.view',$record->id).'" class="btn btn-info"><i class="ti-info-alt"></i></a>';
+
+
+            $Load_Feature = 'Load Feature: ';
+            $Categories = 'Categories: ';
+            $Wallpaper = 'Wallpaper: ';
+
+            if ($record->load_view_by == 0 ){
+                $Load_Feature .= '<p class="badge badge-secondary" style="font-size: 100%">Random</p>';
+            }elseif ($record->load_view_by == 1){
+                $Load_Feature .= '<p class="badge badge-info" style="font-size: 100%">Manual</p>';
+            }elseif ($record->load_view_by == 2){
+                $Load_Feature .= '<p class="badge badge-warning" style="font-size: 100%">Most View</p>';
+            }elseif ($record->load_view_by == 3){
+                $Load_Feature .= '<p class="badge badge-primary" style="font-size: 100%">Feature Wallpaper</p>';
+            }
+
+            if ($record->load_categories == 0 ){
+                $Categories .= '<p class="badge badge-secondary" style="font-size: 100%">Random</p>';
+            }elseif ($record->load_categories == 1){
+                $Categories .= '<p class="badge badge-info" style="font-size: 100%">Manual</p>';
+            }elseif ($record->load_categories == 2){
+                $Categories .= '<p class="badge badge-warning" style="font-size: 100%">Update New</p>';
+            }
+
+            if ($record->load_wallpapers_category == 0 ){
+                $Wallpaper .= '<p class="badge badge-secondary" style="font-size: 100%">Random</p>';
+            }elseif ($record->load_wallpapers_category == 1){
+                $Wallpaper .= '<p class="badge badge-info" style="font-size: 100%">Manual</p>';
+            }elseif ($record->load_wallpapers_category == 2){
+                $Wallpaper .= '<p class="badge badge-warning" style="font-size: 100%">Most View</p>';
+            }
+
+            $sort = $Load_Feature.'<br>'.$Categories.'<br>'.$Wallpaper;
+
+
+
+
+
 
             $data_arr[] = array(
                 "id" => $record->id,
@@ -81,7 +123,9 @@ class SitesController extends Controller
                 "site_project" =>'<span class="badge badge-success" style="font-size: 100%">' . $record->site_project. '</span>',
                 "site_ads" => $record->ad_switch == 1 ? '<a href="javascript:void(0)" data-id="'.$record->id.'" class="changeAds"><span class="badge badge-success">Active</span></a>': '<a href="javascript:void(0)" data-id="'.$record->id.'" class="changeAds"><span class="badge badge-danger">Deactivated</span></a>',
 
+                "site_sort" => $sort,
                 "categories_count" => $record->categories_count,
+                "wallpapers_count" => $record->categories_count,
                 "action" => $btn,
             );
         }
@@ -200,6 +244,67 @@ class SitesController extends Controller
         $data->save();
         return response()->json(['success'=>'Cập nhật thành công']);
     }
+
+    public function clone(Request $request)
+    {
+        $site = Sites::with('categories')->find($request->id)->toArray();
+
+
+        $data = new Sites();
+        $data['site_name'] = trim($request->site_name);
+        $data['site_web'] = trim($request->site_web);
+        $data['site_project'] = trim($request->site_project);
+
+        dd($site, $data);
+        $id = $request->id;
+        $rules = [
+            'site_web' =>'unique:sites,site_web,'.$id.',id',
+
+        ];
+        $message = [
+            'site_web.unique'=>'Web đã tồn tại',
+        ];
+        $error = Validator::make($request->all(),$rules, $message );
+        if($error->fails()){
+            return response()->json(['errors'=> $error->errors()->all()]);
+        }
+        $data= Sites::find($id);
+        $data->site_web = $request->site_web;
+        $data->site_name = $request->site_name;
+        $data->site_project = $request->site_project;
+
+
+        if($request->image){
+            if ($data->site_image != 'default.png'){
+                $path_Remove =   storage_path('app/public/sites/').$data->site_image;
+                if(file_exists($path_Remove)){
+                    unlink($path_Remove);
+                }
+            }
+
+            $file = $request->image;
+            $filename = Str::slug($request->category_name);
+            $extension = $file->getClientOriginalExtension();
+            $fileNameToStore = $filename.'_'.time().'.'.$extension;
+            $now = new \DateTime('now'); //Datetime
+            $monthNum = $now->format('m');
+            $dateObj   = DateTime::createFromFormat('!m', $monthNum);
+            $monthName = $dateObj->format('F'); // Month
+            $year = $now->format('Y'); // Year
+            $monthYear = $monthName.$year;
+            $path_image    =  storage_path('app/public/sites/'.$monthYear.'/');
+            if (!file_exists($path_image)) {
+                mkdir($path_image, 0777, true);
+            }
+            $img = Image::make($file);
+            $img->save($path_image.$fileNameToStore);
+            $path_image =  $monthYear.'/'.$fileNameToStore;
+            $data->site_image = $path_image;
+        }
+        $data->save();
+        return response()->json(['success'=>'Cập nhật thành công']);
+    }
+
     public function delete($id)
     {
         $site = Sites::find($id);

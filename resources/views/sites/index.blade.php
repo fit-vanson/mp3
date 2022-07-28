@@ -39,11 +39,13 @@
                                    style="width: 100%;">
                                 <thead>
                                 <tr>
-                                    <th style="width: 30%">Image</th>
+                                    <th style="width: 10%">Project</th>
+                                    <th style="width: 10%">Image</th>
                                     <th style="width: 30%">Name</th>
                                     <th style="width: 10%">Ads</th>
-                                    <th style="width: 10%">Project</th>
-                                    <th style="width: 5%"> Count Categories</th>
+                                    <th style="width: 15%">Sort</th>
+                                    <th style="width: 8%"> Count Categories</th>
+                                    <th style="width: 7%"> Count Wallpapers</th>
                                     <th style="width: 10%">Action</th>
                                 </tr>
                                 </thead>
@@ -154,12 +156,14 @@
                 },
                 columns: [
                     // columns according to JSON
+                    { data: 'site_project',className: "align-middle"},
                     { data: 'site_image',className: "align-middle text-center " },
                     { data: 'site_name',  className: "align-middle", },
-                    { data: 'site_ads',className: "align-middle",},
-                    { data: 'site_project',className: "align-middle",},
+                    { data: 'site_ads',className: "align-middle"},
+                    { data: 'site_sort',className: "align-middle",orderable: false},
                     { data: 'categories_count',className: "align-middle",},
-                    { data: 'action',className: "align-middle text-center ", }
+                    { data: 'wallpapers_count',className: "align-middle",},
+                    { data: 'action',className: "align-middle text-center ",orderable: false }
                 ],
                 order: [1, 'asc'],
 
@@ -261,6 +265,30 @@
                     });
                 }
 
+                if ($('#saveBtn{{preg_replace('/\s+/','',$page_title)}}').val() == 'copy') {
+                    $.ajax({
+                        data: formData,
+                        url: '{{route('sites.clone')}}',
+                        type: "POST",
+                        dataType: 'json',
+                        processData: false,
+                        contentType: false,
+                        success: function (data) {
+                            if (data.success) {
+                                $('#form{{preg_replace('/\s+/','',$page_title)}}').trigger("reset");
+                                toastr['success'](data.success, 'Success!');
+                                $('#modal{{preg_replace('/\s+/','',$page_title)}}').modal('hide');
+                                dtTable.draw();
+                            }
+                            if (data.errors) {
+                                for (var count = 0; count < data.errors.length; count++) {
+                                    toastr['error'](data.errors[count], 'Error!',);
+                                }
+                            }
+                        }
+                    });
+                }
+
             });
 
 
@@ -300,6 +328,30 @@
                         $('#modal{{preg_replace('/\s+/','',$page_title)}}').modal('show');
                         $('#{{preg_replace('/\s+/','',$page_title)}}ModalLabel').html("Edit {{$page_title}}");
                         $('#saveBtn{{preg_replace('/\s+/','',$page_title)}}').val("update");
+
+                        $('#id').val(data.site.id);
+                        $('#site_name').val(data.site.site_name);
+                        $('#site_web').val(data.site.site_web);
+                        $('#site_project').val(data.site.site_project);
+                        $('#avatar').attr('src','../storage/sites/'+data.site.site_image);
+
+                    },
+                    error: function (data) {
+                        console.log('Error:', data);
+                    }
+                });
+            });
+
+            $(document).on('click','.copy{{preg_replace('/\s+/','',$page_title)}}', function (data) {
+                $('#form{{preg_replace('/\s+/','',$page_title)}}').trigger("reset");
+                var id = $(this).data("id");
+                $.ajax({
+                    type: "get",
+                    url: "{{ asset("admin/sites/edit") }}/"+id,
+                    success: function (data) {
+                        $('#modal{{preg_replace('/\s+/','',$page_title)}}').modal('show');
+                        $('#{{preg_replace('/\s+/','',$page_title)}}ModalLabel').html("Copy {{$page_title}}");
+                        $('#saveBtn{{preg_replace('/\s+/','',$page_title)}}').val("copy");
 
                         $('#id').val(data.site.id);
                         $('#site_name').val(data.site.site_name);
