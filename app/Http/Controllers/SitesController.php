@@ -337,7 +337,7 @@ class SitesController extends Controller
                 Log::error($ex->getMessage());
             }
         }
-        $site->categories()->detach();
+//        $site->categories()->detach();
         $site->delete();
         return response()->json(['success'=>'Xoá thành công']);
     }
