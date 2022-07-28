@@ -185,19 +185,21 @@ class CategoriesController extends Controller
             $filename = Str::slug($request->category_name);
             $extension = $file->getClientOriginalExtension();
             $fileNameToStore = $filename.'_'.time().'.'.$extension;
-            $now = new \DateTime('now'); //Datetime
-            $monthNum = $now->format('m');
-            $dateObj   = DateTime::createFromFormat('!m', $monthNum);
-            $monthName = $dateObj->format('F'); // Month
-            $year = $now->format('Y'); // Year
-            $monthYear = $monthName.$year;
-            $path_image    =  storage_path('app/public/categories/'.$monthYear.'/');
+
+//            $now = new \DateTime('now'); //Datetime
+//            $monthNum = $now->format('m');
+//            $dateObj   = DateTime::createFromFormat('!m', $monthNum);
+//            $monthName = $dateObj->format('F'); // Month
+//            $year = $now->format('Y'); // Year
+//            $monthYear = $monthName.$year;
+
+            $path_image    =  storage_path('app/public/categories/'.$request->site_id.'/');
             if (!file_exists($path_image)) {
                 mkdir($path_image, 0777, true);
             }
             $img = Image::make($file);
             $img->save($path_image.$fileNameToStore);
-            $path_image =  $monthYear.'/'.$fileNameToStore;
+            $path_image =  $request->site_id.'/'.$fileNameToStore;
             $data->category_image = $path_image;
         }
         $data->save();
