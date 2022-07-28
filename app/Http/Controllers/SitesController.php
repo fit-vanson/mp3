@@ -343,13 +343,23 @@ class SitesController extends Controller
         $site = Sites::find($id);
         $tags = Tags::all();
 
+
+
+
+
+
 //        $cates = Sites::findOrFail($id)
 //            ->categories()
 //            ->select('*')
 //            ->with('tags')
 //            ->get();
-//
-//        $path_image    =  storage_path('app/public/categories/'.$id.'/');
+
+        $path_featureimages   =  storage_path('app/public/featureimages/'.Str::slug($site->site_web).'/');
+        $path   =  storage_path('app/public/featureimages/'.$id.'/');
+        if(file_exists($path_featureimages)){
+            rename($path_featureimages, $path);
+        }
+
 //        if (!file_exists($path_image)) {
 //            mkdir($path_image, 0777, true);
 //        }
@@ -437,7 +447,6 @@ class SitesController extends Controller
     public function update_FeatureImages(Request $request)
     {
         $site = Sites::find($request->id);
-
         $path    =  storage_path('app/public/featureimages/'.$request->id.'/');
         $this->deleteDirectory($path);
         if (!file_exists($path)) {
