@@ -10,10 +10,13 @@ use App\Tags;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
+
+use Illuminate\Support\Facades\File;
 
 class SitesController extends Controller
 {
@@ -111,11 +114,6 @@ class SitesController extends Controller
 
             $sort = $Load_Feature.'<br>'.$Categories.'<br>'.$Wallpaper;
 
-
-
-
-
-
             $data_arr[] = array(
                 "id" => $record->id,
                 "site_image" => '<a class="image-popup-no-margins" href="../storage/sites/'.$record->site_image.'"><img class="img-fluid" alt="'.$record->site_name.'" src="../storage/sites/'.$record->site_image.'" width="150"></a>',
@@ -187,6 +185,7 @@ class SitesController extends Controller
 
         return response()->json(['success'=>'Thêm mới thành công']);
     }
+
     public function edit($id){
 
         $site = Sites::with('categories')->find($id);
@@ -194,6 +193,7 @@ class SitesController extends Controller
             'site' =>$site,
         ]);
     }
+
     public function update(Request $request)
     {
         $id = $request->id;
@@ -342,6 +342,59 @@ class SitesController extends Controller
         $page_title =  'Site';
         $site = Sites::find($id);
         $tags = Tags::all();
+
+        $cates = Sites::findOrFail($id)
+            ->categories()
+            ->select('*')
+            ->with('tags')
+            ->get();
+
+
+
+        $path_image    =  storage_path('app/public/categories/'.$id.'/');
+        if (!file_exists($path_image)) {
+            mkdir($path_image, 0777, true);
+        }
+
+        foreach ($cates as $cate){
+
+            if ($cate->category_image != 'default.png'){
+
+                $image_path = $cate->category_image;
+                $name = explode('/',$image_path);
+                $change_path = str_replace($name[0],$cate->site_id,$image_path);
+
+
+
+                echo $image_path;
+                $path_move =   public_path('storage/categories/').$cate->category_image;
+
+                $path =   public_path('storage/categories/').$change_path;
+
+
+                if($path_move <> $path){
+
+                    File::copy($path_move, $path);
+                }
+
+                Categories::updateOrCreate(
+                    [
+                        'id'=> $cate->id,
+                        'site_id'=>$cate->site_id
+                    ],
+                    [
+                        'category_image'=>$change_path
+                    ]
+                );
+
+
+            }
+
+
+        }
+
+
+
         return view('sites.site.index',[
             'page_title' => $page_title,
             'site' => $site,
@@ -407,7 +460,6 @@ class SitesController extends Controller
         $site->update(['site_feature_images'=>json_encode($data)]);
         return response()->json(['success'=>'Cập nhật thành công']);
     }
-
 
     public function getIndexCategories(Request $request){
         $draw = $request->get('draw');
@@ -585,6 +637,7 @@ class SitesController extends Controller
     public function import(){
         return view('sites.import');
     }
+
     public function postImport(Request $request){
         $file = file($request->file->getRealPath());
         $data = array_slice($file,1);
