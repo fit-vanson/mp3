@@ -166,19 +166,19 @@ class SitesController extends Controller
             $filename = Str::slug($request->site_web);
             $extension = $file->getClientOriginalExtension();
             $fileNameToStore = $filename.'_'.time().'.'.$extension;
-            $now = new \DateTime('now'); //Datetime
-            $monthNum = $now->format('m');
-            $dateObj   = DateTime::createFromFormat('!m', $monthNum);
-            $monthName = $dateObj->format('F'); // Month
-            $year = $now->format('Y'); // Year
-            $monthYear = $monthName.$year;
-            $path_image    =  storage_path('app/public/sites/'.$monthYear.'/');
+//            $now = new \DateTime('now'); //Datetime
+//            $monthNum = $now->format('m');
+//            $dateObj   = DateTime::createFromFormat('!m', $monthNum);
+//            $monthName = $dateObj->format('F'); // Month
+//            $year = $now->format('Y'); // Year
+//            $monthYear = $monthName.$year;
+            $path_image    =  storage_path('app/public/sites/');
             if (!file_exists($path_image)) {
                 mkdir($path_image, 0777, true);
             }
             $img = Image::make($file);
             $img->save($path_image.$fileNameToStore);
-            $path_image =  $monthYear.'/'.$fileNameToStore;
+            $path_image =  $fileNameToStore;
             $data['site_image'] = $path_image;
         }else{
             $data['site_image'] = 'default.png';
@@ -223,22 +223,24 @@ class SitesController extends Controller
             }
 
             $file = $request->image;
-            $filename = Str::slug($request->category_name);
+            $filename = Str::slug($request->site_web);
             $extension = $file->getClientOriginalExtension();
             $fileNameToStore = $filename.'_'.time().'.'.$extension;
-            $now = new \DateTime('now'); //Datetime
-            $monthNum = $now->format('m');
-            $dateObj   = DateTime::createFromFormat('!m', $monthNum);
-            $monthName = $dateObj->format('F'); // Month
-            $year = $now->format('Y'); // Year
-            $monthYear = $monthName.$year;
-            $path_image    =  storage_path('app/public/sites/'.$monthYear.'/');
+
+//            $now = new \DateTime('now'); //Datetime
+//            $monthNum = $now->format('m');
+//            $dateObj   = DateTime::createFromFormat('!m', $monthNum);
+//            $monthName = $dateObj->format('F'); // Month
+//            $year = $now->format('Y'); // Year
+//            $monthYear = $monthName.$year;
+
+            $path_image    =  storage_path('app/public/sites/');
             if (!file_exists($path_image)) {
                 mkdir($path_image, 0777, true);
             }
             $img = Image::make($file);
             $img->save($path_image.$fileNameToStore);
-            $path_image =  $monthYear.'/'.$fileNameToStore;
+            $path_image =  $fileNameToStore;
             $data->site_image = $path_image;
         }
         $data->save();
