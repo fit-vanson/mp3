@@ -11,6 +11,7 @@ use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -164,12 +165,6 @@ class SitesController extends Controller
             $filename = Str::slug($request->site_web);
             $extension = $file->getClientOriginalExtension();
             $fileNameToStore = $filename.'_'.time().'.'.$extension;
-//            $now = new \DateTime('now'); //Datetime
-//            $monthNum = $now->format('m');
-//            $dateObj   = DateTime::createFromFormat('!m', $monthNum);
-//            $monthName = $dateObj->format('F'); // Month
-//            $year = $now->format('Y'); // Year
-//            $monthYear = $monthName.$year;
             $path_image    =  storage_path('app/public/sites/');
             if (!file_exists($path_image)) {
                 mkdir($path_image, 0777, true);
@@ -227,13 +222,6 @@ class SitesController extends Controller
             $extension = $file->getClientOriginalExtension();
             $fileNameToStore = $filename.'_'.time().'.'.$extension;
 
-//            $now = new \DateTime('now'); //Datetime
-//            $monthNum = $now->format('m');
-//            $dateObj   = DateTime::createFromFormat('!m', $monthNum);
-//            $monthName = $dateObj->format('F'); // Month
-//            $year = $now->format('Y'); // Year
-//            $monthYear = $monthName.$year;
-
             $path_image    =  storage_path('app/public/sites/');
             if (!file_exists($path_image)) {
                 mkdir($path_image, 0777, true);
@@ -249,62 +237,91 @@ class SitesController extends Controller
 
     public function clone(Request $request)
     {
-        $site = Sites::with('categories')->find($request->id)->toArray();
 
-
-        $data = new Sites();
-        $data['site_name'] = trim($request->site_name);
-        $data['site_web'] = trim($request->site_web);
-        $data['site_project'] = trim($request->site_project);
-
-        dd($site, $data);
-        $id = $request->id;
         $rules = [
-            'site_web' =>'unique:sites,site_web,'.$id.',id',
+            'site_web' =>'unique:sites,site_web',
 
         ];
         $message = [
             'site_web.unique'=>'Web đã tồn tại',
+
         ];
         $error = Validator::make($request->all(),$rules, $message );
         if($error->fails()){
             return response()->json(['errors'=> $error->errors()->all()]);
         }
-        $data= Sites::find($id);
-        $data->site_web = $request->site_web;
-        $data->site_name = $request->site_name;
-        $data->site_project = $request->site_project;
 
+        $site = Sites::with('categories')->find($request->id);
+        $categories = $site->categories()->get();
+        $data_site = new Sites();
+        $data_site['site_name'] = trim($request->site_name);
+        $data_site['site_web'] = trim($request->site_web);
+        $data_site['site_project'] = trim($request->site_project);
+        $data_site['site_feature_images'] = $site->site_feature_images;
+        $data_site['site_header_title'] = $site->site_header_title;
+        $data_site['site_header_content'] = $site->site_header_content;
+        $data_site['site_body_title'] = $site->site_body_title;
+        $data_site['site_body_content'] = $site->site_body_content;
+        $data_site['site_footer_title'] = $site->site_footer_title;
+        $data_site['site_footer_content'] = $site->site_footer_content;
+        $data_site['site_policy'] = $site->site_policy;
+        $data_site['site_ads'] = $site->site_ads;
+        $data_site['site_direct_link'] = $site->site_direct_link;
+        $data_site['site_view_page'] = 0;
+        $data_site['load_view_by'] = $site->load_view_by;
+        $data_site['load_categories'] = $site->load_categories;
+        $data_site['load_wallpapers_category'] = $site->load_wallpapers_category;
+        $data_site['ad_switch'] = $site->ad_switch;
+        $data_site['site_chplay_link'] = $site->site_chplay_link;
 
         if($request->image){
-            if ($data->site_image != 'default.png'){
-                $path_Remove =   storage_path('app/public/sites/').$data->site_image;
-                if(file_exists($path_Remove)){
-                    unlink($path_Remove);
-                }
-            }
-
             $file = $request->image;
-            $filename = Str::slug($request->category_name);
+            $filename = Str::slug($request->site_web);
             $extension = $file->getClientOriginalExtension();
             $fileNameToStore = $filename.'_'.time().'.'.$extension;
-            $now = new \DateTime('now'); //Datetime
-            $monthNum = $now->format('m');
-            $dateObj   = DateTime::createFromFormat('!m', $monthNum);
-            $monthName = $dateObj->format('F'); // Month
-            $year = $now->format('Y'); // Year
-            $monthYear = $monthName.$year;
-            $path_image    =  storage_path('app/public/sites/'.$monthYear.'/');
+            $path_image    =  storage_path('app/public/sites/');
             if (!file_exists($path_image)) {
                 mkdir($path_image, 0777, true);
             }
             $img = Image::make($file);
             $img->save($path_image.$fileNameToStore);
-            $path_image =  $monthYear.'/'.$fileNameToStore;
-            $data->site_image = $path_image;
+            $path_image =  $fileNameToStore;
+            $data['site_image'] = $path_image;
+        }else{
+            $data_site['site_image'] = 'default.png';
         }
-        $data->save();
-        return response()->json(['success'=>'Cập nhật thành công']);
+        $data_site->save();
+
+        foreach ($categories as $category){
+            $tags = $category->tags()->get()->pluck('id')->toArray();
+
+            if ($category->category_image != 'default.png'){
+                $image_path_name = explode('/',$category->category_image);
+                $image_path = str_replace($image_path_name[0],$data_site->id,$category->category_image);
+            }else{
+                $image_path = 'default.png';
+            }
+
+
+            $data_categories =  new Categories();
+            $data_categories['site_id'] = $data_site->id;
+            $data_categories['category_name'] = $category->category_name;
+            $data_categories['category_order'] = $category->category_order;
+            $data_categories['category_image'] = $image_path;
+            $data_categories['category_view_count'] = $category->category_view_count;
+            $data_categories['category_checked_ip'] = $category->category_checked_ip;
+            $data_categories->save();
+            $data_categories->tags()->attach($tags);
+        }
+
+
+        $path_featureimages   =  storage_path('app/public/featureimages/'.$data_site->id.'/');
+        $path_categories   =  storage_path('app/public/categories/'.$data_site->id.'/');
+
+        File::copyDirectory(storage_path('app/public/categories/'.$site->id),$path_categories);
+        File::copyDirectory(storage_path('app/public/featureimages/'.$site->id),$path_featureimages);
+
+        return response()->json(['success'=>'Clone thành công']);
     }
 
     public function delete($id)
@@ -320,6 +337,7 @@ class SitesController extends Controller
                 Log::error($ex->getMessage());
             }
         }
+        $site->categories()->detach();
         $site->delete();
         return response()->json(['success'=>'Xoá thành công']);
     }
