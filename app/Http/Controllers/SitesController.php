@@ -342,24 +342,16 @@ class SitesController extends Controller
         $page_title =  'Site';
         $site = Sites::find($id);
         $tags = Tags::all();
-
-
-
-
-
-
 //        $cates = Sites::findOrFail($id)
 //            ->categories()
 //            ->select('*')
 //            ->with('tags')
 //            ->get();
-
-        $path_featureimages   =  storage_path('app/public/featureimages/'.Str::slug($site->site_web).'/');
-        $path   =  storage_path('app/public/featureimages/'.$id.'/');
-        if(file_exists($path_featureimages)){
-            rename($path_featureimages, $path);
-        }
-
+//        $path_featureimages   =  storage_path('app/public/featureimages/'.Str::slug($site->site_web).'/');
+//        $path   =  storage_path('app/public/featureimages/'.$id.'/');
+//        if(file_exists($path_featureimages)){
+//            rename($path_featureimages, $path);
+//        }
 //        if (!file_exists($path_image)) {
 //            mkdir($path_image, 0777, true);
 //        }
@@ -400,9 +392,6 @@ class SitesController extends Controller
 //
 //
 //        }
-
-
-
         return view('sites.site.index',[
             'page_title' => $page_title,
             'site' => $site,
