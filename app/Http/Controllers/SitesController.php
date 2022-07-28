@@ -76,7 +76,7 @@ class SitesController extends Controller
             $btn = ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-warning editSites"><i class="ti-pencil-alt"></i></a>';
             $btn .= ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-danger deleteSites"><i class="ti-trash"></i></a>';
             $btn .= '<br><br> <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-secondary copySites"><i class="ti-layers"></i></a>';
-            $btn .= ' <a href="'.route('sites.view',$record->id).'" class="btn btn-info"><i class="ti-info-alt"></i></a>';
+//            $btn .= ' <a href="'.route('sites.view',$record->id).'" class="btn btn-info"><i class="ti-info-alt"></i></a>';
 
 
             $Load_Feature = 'Load Feature: ';
@@ -119,7 +119,7 @@ class SitesController extends Controller
             $data_arr[] = array(
                 "id" => $record->id,
                 "site_image" => '<a class="image-popup-no-margins" href="../storage/sites/'.$record->site_image.'"><img class="img-fluid" alt="'.$record->site_name.'" src="../storage/sites/'.$record->site_image.'" width="150"></a>',
-                "site_name" => '<h2>'.$record->site_name.'</h2><a target="_blank" href="//'.$record->site_web.'"><h4>'.$record->site_web.'</h4></a>',
+                "site_name" => '<a href="'.route('sites.view',$record->id).'" style="color:#000000;"><h2>'.$record->site_name.'</h2></a><a target="_blank" href="//'.$record->site_web.'"><h4>'.$record->site_web.'</h4></a>',
                 "site_project" =>'<span class="badge badge-success" style="font-size: 100%">' . $record->site_project. '</span>',
                 "site_ads" => $record->ad_switch == 1 ? '<a href="javascript:void(0)" data-id="'.$record->id.'" class="changeAds"><span class="badge badge-success">Active</span></a>': '<a href="javascript:void(0)" data-id="'.$record->id.'" class="changeAds"><span class="badge badge-danger">Deactivated</span></a>',
 
