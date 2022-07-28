@@ -385,7 +385,7 @@ class SitesController extends Controller
     {
         $site = Sites::find($request->id);
 
-        $path    =  storage_path('app/public/featureimages/'.Str::slug($site->site_web).'/');
+        $path    =  storage_path('app/public/featureimages/'.$request->id.'/');
         $this->deleteDirectory($path);
         if (!file_exists($path)) {
             mkdir($path, 0777, true);

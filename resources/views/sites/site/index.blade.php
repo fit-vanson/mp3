@@ -197,8 +197,8 @@
                             <div class="zoom-gallery FeatureImages ">
                                 @if($site->site_feature_images)
                                     @foreach(json_decode($site->site_feature_images,true) as $feature_image)
-                                        <a class="float-left" href="{{asset('storage/featureimages/'.\Illuminate\Support\Str::slug($site->site_web).'/'.$feature_image.'')}}" title="{{$site->site_web}}">
-                                            <img src="{{asset('storage/featureimages/'.\Illuminate\Support\Str::slug($site->site_web).'/'.$feature_image.'')}}" alt="" width="150">
+                                        <a class="float-left" href="{{asset('storage/featureimages/'.\Illuminate\Support\Str::slug($site->id).'/'.$feature_image.'')}}" title="{{$site->site_web}}">
+                                            <img src="{{asset('storage/featureimages/'.\Illuminate\Support\Str::slug($site->id).'/'.$feature_image.'')}}" alt="" width="150">
                                         </a>
                                     @endforeach
                                 @endif
