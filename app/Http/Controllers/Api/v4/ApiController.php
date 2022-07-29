@@ -153,9 +153,9 @@ class ApiController extends Controller
         $domain = $_SERVER['SERVER_NAME'];
         $site =  Sites::where('site_web', $domain)->first();
         if (checkBlockIp()) {
-            $data = $this->getWallpaper('id',$site->id,1,'<>',limitPage);
+            $data = $this->getWallpaper('id',$site->id,1,'<>',10);
         } else {
-            $data = $this->getWallpaper('id',$site->id,0,'<>',limitPage);
+            $data = $this->getWallpaper('id',$site->id,0,'<>',10);
         }
         $dataResult['current_page'] = $data->currentPage();
         $dataResult['last_page'] = $data->lastPage();
@@ -169,9 +169,9 @@ class ApiController extends Controller
         $site =  Sites::where('site_web', $domain)->first();
 
         if (checkBlockIp()) {
-            $data = $this->getWallpaper('wallpaper_view_count',$site->id,1,'<>',limitPage);
+            $data = $this->getWallpaper('wallpaper_view_count',$site->id,1,'<>',10);
         } else {
-            $data = $this->getWallpaper('wallpaper_view_count',$site->id,0,'<>',limitPage);
+            $data = $this->getWallpaper('wallpaper_view_count',$site->id,0,'<>',10);
         }
         $dataResult['current_page'] = $data->currentPage();
         $dataResult['last_page'] = $data->lastPage();
@@ -186,9 +186,9 @@ class ApiController extends Controller
         $site =  Sites::where('site_web', $domain)->first();
 
         if (checkBlockIp()) {
-            $data = $this->getWallpaper('wallpaper_view_count',$site->id,1,'<>',limitPage);
+            $data = $this->getWallpaper('wallpaper_view_count',$site->id,1,'<>',10);
         } else {
-            $data = $this->getWallpaper('wallpaper_download_count',$site->id,0,'<>',limitPage);
+            $data = $this->getWallpaper('wallpaper_download_count',$site->id,0,'<>',10);
         }
         $dataResult['current_page'] = $data->currentPage();
         $dataResult['last_page'] = $data->lastPage();
@@ -201,9 +201,9 @@ class ApiController extends Controller
         $domain = $_SERVER['SERVER_NAME'];
         $site =  Sites::where('site_web', $domain)->first();
         if (checkBlockIp()) {
-            $data = $this->getWallpaper(null,$site->id,1,'<>',limitPage);
+            $data = $this->getWallpaper(null,$site->id,1,'<>',10);
         } else {
-            $data = $this->getWallpaper(null,$site->id,0,'<>',limitPage);
+            $data = $this->getWallpaper(null,$site->id,0,'<>',10);
         }
         $dataResult['current_page'] = $data->currentPage();
         $dataResult['last_page'] = $data->lastPage();
@@ -216,9 +216,9 @@ class ApiController extends Controller
         $domain = $_SERVER['SERVER_NAME'];
         $site =  Sites::where('site_web', $domain)->first();
         if (checkBlockIp()) {
-            $data = $this->getWallpaper(null,$site->id,1,'=',limitPage);
+            $data = $this->getWallpaper(null,$site->id,1,'=',10);
         } else {
-            $data = $this->getWallpaper(null,$site->id,0,'=',limitPage);
+            $data = $this->getWallpaper(null,$site->id,0,'=',10);
         }
         $dataResult['current_page'] = $data->currentPage();
         $dataResult['last_page'] = $data->lastPage();
