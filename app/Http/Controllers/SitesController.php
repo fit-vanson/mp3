@@ -816,13 +816,23 @@ class SitesController extends Controller
         $dataArr = [
             'Content-Type'=>'application/json',
         ];
+        $update = [];
         $endpoint = "https://aio.vietmmo.net/api/project-aio/".$data->site_project;
 
 //        try {
             $response = Http::withHeaders($dataArr)->get( $endpoint);
             if ($response->successful()){
                 $result = $response->json();
-                dd($result);
+                if($result['msg'] == 'success'){
+                    $update = [
+                        'site_name' => $result['data']['title_app'],
+                        'site_logo_url' => 'https://aio.vietmmo.net/uploads/project/'.$data->site_project.'/'.$result['data']['logo'],
+                    ];
+                }
+
+
+
+                dd($result,$update);
             }
 //        }catch (\Exception $exception) {
 //            Log::error('Message:' . $exception->getMessage() . '--- AppInfo: ' . $exception->getLine());

@@ -80,7 +80,7 @@
                         <img id="avatar" width="200px" src="{{asset('assets/images/1.png')}}">
                         <div class="form-group">
                             <label>Site name</label>
-                            <input type="text" class="form-control" id="site_name" name="site_name" placeholder="zxcv" required>
+                            <input type="text" class="form-control" id="site_name" name="site_name" placeholder="zxcv">
                         </div>
 
                         <div class="form-group">

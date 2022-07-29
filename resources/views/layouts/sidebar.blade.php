@@ -43,7 +43,7 @@
                         <i class="fas fa-tag"></i>
                         <span> Tags </span>
                     </a>
-                    <a href="{{route('wallpapers.index')}}" >
+                    <a href="{{route('wallpapers.index')}}?view=grid" >
                         <i class="ti-image"></i>
                         <span> Wallpaper </span>
                     </a>
