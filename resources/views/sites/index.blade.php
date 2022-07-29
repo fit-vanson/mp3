@@ -368,16 +368,53 @@
 
             $(document).on('click','.changeAds', function (data){
                 var id = $(this).data("id");
+                var ads = $(this);
                 $.ajax({
                     type: "get",
-                    url: "{{ asset("admin/sites/change-ads") }}/"+id,
+                    url: "{{ asset("admin/sites/change_ajax") }}/"+id+"?action=ads",
                     success: function (data) {
-                        dtTable.draw();
-                        toastr['success']('', data.success, {
-                            showMethod: 'fadeIn',
-                            hideMethod: 'fadeOut',
-                            timeOut: 1000,
-                        });
+                        ads.replaceWith(data.ads)
+                    },
+                    error: function (data) {
+                    }
+                });
+            });
+            $(document).on('click','.change_load_feature', function (data){
+                var id = $(this).data("id");
+                var btn = $(this);
+                $.ajax({
+                    type: "get",
+                    url: "{{ asset("admin/sites/change_ajax") }}/"+id+"?action=load_feature",
+                    success: function (data) {
+                        btn.replaceWith(data.btn)
+                    },
+                    error: function (data) {
+                    }
+                });
+            });
+
+            $(document).on('click','.change_load_categories', function (data){
+                var id = $(this).data("id");
+                var btn = $(this);
+                $.ajax({
+                    type: "get",
+                    url: "{{ asset("admin/sites/change_ajax") }}/"+id+"?action=categories",
+                    success: function (data) {
+                        btn.replaceWith(data.btn)
+                    },
+                    error: function (data) {
+                    }
+                });
+            });
+
+            $(document).on('click','.change_load_wallpapers', function (data){
+                var id = $(this).data("id");
+                var btn = $(this);
+                $.ajax({
+                    type: "get",
+                    url: "{{ asset("admin/sites/change_ajax") }}/"+id+"?action=wallpapers",
+                    success: function (data) {
+                        btn.replaceWith(data.btn)
                     },
                     error: function (data) {
                     }

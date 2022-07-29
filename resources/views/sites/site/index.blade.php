@@ -483,8 +483,7 @@
                 var id = $(this).data("id");
                 $.ajax({
                     type: "get",
-                    url: "{{ asset("admin/sites/change-ads") }}/" + id,
-
+                    url: "{{ asset("admin/sites/change_ajax") }}/"+id+"?action=ads",
                     success: function (data) {
                         $(".site_adss").load(" .site_adss");
                         toastr['success']('', data.success, {

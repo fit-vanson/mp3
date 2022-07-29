@@ -119,7 +119,7 @@ Route::group(['prefix'=>env('ADMIN_PAGE','admin')], function (){
         Route::post('/update',[SitesController::class,'update'])->name('sites.update');
         Route::post('/clone',[SitesController::class,'clone'])->name('sites.clone');
         Route::get('/delete/{id}',[SitesController::class,'delete'])->name('sites.delete');
-        Route::get('/change-ads/{id}', [SitesController::class, 'changeAds'])->name('sites.changeAds');
+        Route::get('/change_ajax/{id}', [SitesController::class, 'change_ajax'])->name('sites.change_ajax');
 
         Route::get('/view/{id}', [SitesController::class, 'viewSite'])->name('sites.view');
         Route::post('/view/update_site', [SitesController::class, 'update_site'])->name('sites.update_site');

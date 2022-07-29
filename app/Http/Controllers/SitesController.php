@@ -88,29 +88,31 @@ class SitesController extends Controller
             $Wallpaper = 'Wallpaper: ';
 
             if ($record->load_view_by == 0 ){
-                $Load_Feature .= '<p class="badge badge-secondary " style="font-size: 100%">Random</p>';
+                $Load_Feature .= '<p data-id="'.$record->id.'" class="badge badge-secondary change_load_feature " style="font-size: 100%">Random</p>';
             }elseif ($record->load_view_by == 1){
-                $Load_Feature .= '<p class="badge badge-info" style="font-size: 100%">Manual</p>';
+                $Load_Feature .= '<p data-id="'.$record->id.'" class="badge badge-info change_load_feature" style="font-size: 100%">Manual</p>';
             }elseif ($record->load_view_by == 2){
-                $Load_Feature .= '<p class="badge badge-warning" style="font-size: 100%">Most View</p>';
+                $Load_Feature .= '<p  data-id="'.$record->id.'"class="badge badge-warning change_load_feature" style="font-size: 100%">Most View</p>';
             }elseif ($record->load_view_by == 3){
-                $Load_Feature .= '<p class="badge badge-primary" style="font-size: 100%">Feature Wallpaper</p>';
+                $Load_Feature .= '<p data-id="'.$record->id.'" class="badge badge-primary change_load_feature" style="font-size: 100%">Feature Wallpaper</p>';
             }
 
             if ($record->load_categories == 0 ){
-                $Categories .= '<p class="badge badge-secondary" style="font-size: 100%">Random</p>';
+                $Categories .= '<p data-id="'.$record->id.'" class="badge badge-secondary change_load_categories" style="font-size: 100%">Random</p>';
             }elseif ($record->load_categories == 1){
-                $Categories .= '<p class="badge badge-info" style="font-size: 100%">Manual</p>';
+                $Categories .= '<p data-id="'.$record->id.'" class="badge badge-info change_load_categories" style="font-size: 100%">Most View</p>';
             }elseif ($record->load_categories == 2){
-                $Categories .= '<p class="badge badge-warning" style="font-size: 100%">Update New</p>';
+                $Categories .= '<p data-id="'.$record->id.'" class="badge badge-warning change_load_categories" style="font-size: 100%">Update New</p>';
             }
 
             if ($record->load_wallpapers_category == 0 ){
-                $Wallpaper .= '<p class="badge badge-secondary" style="font-size: 100%">Random</p>';
+                $Wallpaper .= '<p data-id="'.$record->id.'" class="badge badge-secondary change_load_wallpapers" style="font-size: 100%">Random</p>';
             }elseif ($record->load_wallpapers_category == 1){
-                $Wallpaper .= '<p class="badge badge-info" style="font-size: 100%">Manual</p>';
+                $Wallpaper .= '<p data-id="'.$record->id.'" class="badge badge-info change_load_wallpapers" style="font-size: 100%">Most Like</p>';
             }elseif ($record->load_wallpapers_category == 2){
-                $Wallpaper .= '<p class="badge badge-warning" style="font-size: 100%">Most View</p>';
+                $Wallpaper .= '<p data-id="'.$record->id.'" class="badge badge-warning change_load_wallpapers" style="font-size: 100%">Most View</p>';
+            }elseif ($record->load_wallpapers_category == 3){
+                $Wallpaper .= '<p data-id="'.$record->id.'" class="badge badge-primary change_load_wallpapers" style="font-size: 100%">Update New</p>';
             }
 
             $sort = $Load_Feature.'<br>'.$Categories.'<br>'.$Wallpaper;
@@ -342,18 +344,109 @@ class SitesController extends Controller
         return response()->json(['success'=>'Xoá thành công']);
     }
 
-    public function changeAds($id)
+    public function change_ajax($id)
     {
         $data = Sites::find($id);
-        if($data->ad_switch == 1){
-            $data->ad_switch = 0;
+        if(\request()->action == 'ads'){
+            $ads = $data->ad_switch;
+            switch ($ads) {
+                case 0:
+                    $data->ad_switch = 1;
+                    $ads = '<a href="javascript:void(0)" data-id="'.$id.'" class="changeAds"><span class="badge badge-success">Active</span></a>';
+                    break;
+                case 1:
+                    $data->ad_switch = 0;
+                    $ads = '<a href="javascript:void(0)" data-id="'.$id.'" class="changeAds"><span class="badge badge-danger">Deactivated</span></a>';
+                    break;
+            }
             $data->save();
-            return response()->json(['success'=>'Tắt Ads.']);
-        }elseif ($data->ad_switch == 0){
-            $data->ad_switch = 1;
-            $data->save();
-            return response()->json(['success'=>'Kích hoạt ADs.']);
+            return response()->json(
+                [
+                    'success'=>'Success.',
+                    'ads'=>$ads
+                ]);
         }
+        if(\request()->action == 'load_feature'){
+            $load_feature = $data->load_view_by;
+            switch ($load_feature) {
+                case 0:
+                    $data->load_view_by = 1;
+                    $btn = '<p data-id="'.$id.'" class="badge badge-info change_load_feature" style="font-size: 100%">Manual</p>';
+                    break;
+                case 1:
+                    $data->load_view_by = 2;
+                    $btn = '<p  data-id="'.$id.'"class="badge badge-warning change_load_feature" style="font-size: 100%">Most View</p>';
+                    break;
+                case 2:
+                    $data->load_view_by = 3;
+                    $btn = '<p data-id="'.$id.'" class="badge badge-primary change_load_feature" style="font-size: 100%">Feature Wallpaper</p>';
+                    break;
+                case 3:
+                    $data->load_view_by = 0;
+                    $btn = '<p data-id="'.$id.'" class="badge badge-secondary change_load_feature " style="font-size: 100%">Random</p>';
+                    break;
+            }
+            $data->save();
+            return response()->json(
+                [
+                    'success'=>'Success.',
+                    'btn'=>$btn
+                ]);
+        }
+
+        if(\request()->action == 'categories'){
+            $load_categories = $data->load_categories;
+            switch ($load_categories) {
+                case 0:
+                    $data->load_categories = 1;
+                    $btn = '<p data-id="'.$id.'" class="badge badge-info change_load_categories" style="font-size: 100%">Most View</p>';
+                    break;
+                case 1:
+                    $data->load_categories = 2;
+                    $btn = '<p  data-id="'.$id.'"class="badge badge-warning change_load_categories" style="font-size: 100%">Update New</p>';
+                    break;
+                case 2:
+                    $data->load_categories = 0;
+                    $btn = '<p data-id="'.$id.'" class="badge badge-secondary change_load_categories" style="font-size: 100%">Random</p>';
+                    break;
+
+            }
+            $data->save();
+            return response()->json(
+                [
+                    'success'=>'Success.',
+                    'btn'=>$btn
+                ]);
+        }
+
+        if(\request()->action == 'wallpapers'){
+            $load_wallpapers_category = $data->load_wallpapers_category;
+            switch ($load_wallpapers_category) {
+                case 0:
+                    $data->load_wallpapers_category = 1;
+                    $btn = '<p data-id="'.$id.'" class="badge badge-info change_load_wallpapers" style="font-size: 100%">Most Like</p>';
+                    break;
+                case 1:
+                    $data->load_wallpapers_category = 2;
+                    $btn = '<p  data-id="'.$id.'"class="badge badge-warning change_load_wallpapers" style="font-size: 100%">Most View</p>';
+                    break;
+                case 2:
+                    $data->load_wallpapers_category = 3;
+                    $btn = '<p data-id="'.$id.'" class="badge badge-primary change_load_wallpapers" style="font-size: 100%">Update New</p>';
+                    break;
+                case 3:
+                    $data->load_wallpapers_category = 0;
+                    $btn = '<p data-id="'.$id.'" class="badge badge-secondary change_load_wallpapers " style="font-size: 100%">Random</p>';
+                    break;
+            }
+            $data->save();
+            return response()->json(
+                [
+                    'success'=>'Success.',
+                    'btn'=>$btn
+                ]);
+        }
+
 
     }
 
