@@ -11,6 +11,7 @@ class Sites extends Model
 
     protected $fillable = [
         'site_name',
+        'ad_switch',
         'site_web',
         'site_image',
         'site_feature_images',
