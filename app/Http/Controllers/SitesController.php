@@ -9,6 +9,7 @@ use App\Sites;
 use App\Tags;
 use DateTime;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 use Illuminate\Support\Facades\Storage;
@@ -755,6 +756,7 @@ class SitesController extends Controller
         }
         return route('sites.importToDb');
     }
+
     public function importToDb(){
         $path = resource_path('files/sites/*.json');
         $g = glob($path);
@@ -807,6 +809,26 @@ class SitesController extends Controller
         else{
             return redirect('/');
         }
+    }
+
+    public function getAIO($id){
+        $data = Sites::find($id);
+        $dataArr = [
+            'Content-Type'=>'application/json',
+        ];
+        $endpoint = "https://aio.vietmmo.net/api/project-aio/".$data->site_project;
+
+//        try {
+            $response = Http::withHeaders($dataArr)->get( $endpoint);
+            if ($response->successful()){
+                $result = $response->json();
+                dd($result);
+            }
+//        }catch (\Exception $exception) {
+//            Log::error('Message:' . $exception->getMessage() . '--- AppInfo: ' . $exception->getLine());
+//        }
+        return $data;
+
     }
 
 

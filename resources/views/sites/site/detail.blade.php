@@ -3,9 +3,11 @@
     <div class="card">
         <div class="card-body">
 
+            <dl class="row mb-0">
+                <dt class="col-sm-9"><h4 class="card-title">{{$site->site_name}}</h4></dt>
+                <dt class="col-sm-3"><button type="button" data-id="{{$site->id}}" class="btn btn-info waves-effect waves-light getAIO">Get AIO</button></dt>
+            </dl>
 
-
-            <h4 class="card-title">{{$site->site_name}}</h4>
             <a target="_blank" href="//{{$site->site_web}}"><p class="card-title-desc">{{$site->site_web}}</p></a>
             <p style="text-align: center">
                 <a class="image-popup-no-margins" href="{{ URL::asset('/storage/sites/'.$site->site_image) }}">

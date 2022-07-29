@@ -479,11 +479,30 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
+
             $(document).on('click', '.changeAds', function (data) {
                 var id = $(this).data("id");
                 $.ajax({
                     type: "get",
                     url: "{{ asset("admin/sites/change_ajax") }}/"+id+"?action=ads",
+                    success: function (data) {
+                        $(".site_adss").load(" .site_adss");
+                        toastr['success']('', data.success, {
+                            showMethod: 'fadeIn',
+                            hideMethod: 'fadeOut',
+                            timeOut: 1000,
+                        });
+                    },
+                    error: function (data) {
+                    }
+                });
+            });
+
+            $(document).on('click', '.getAIO', function (data) {
+                var id = $(this).data("id");
+                $.ajax({
+                    type: "get",
+                    url: "{{ asset("admin/sites/get-aio") }}/"+id,
                     success: function (data) {
                         $(".site_adss").load(" .site_adss");
                         toastr['success']('', data.success, {
