@@ -211,7 +211,7 @@ class SitesController extends Controller
 
         if($request->image){
             if ($data->site_image != 'default.png'){
-                $path_Remove =   storage_path('app/public/sites/').$data->site_image;
+                $path_Remove =   storage_path('app/public/sites/'.$data->site_image);
                 if(file_exists($path_Remove)){
                     unlink($path_Remove);
                 }
@@ -286,7 +286,6 @@ class SitesController extends Controller
             }
             $img = Image::make($file);
             $img->save($path_image.$fileNameToStore);
-
             $data_site['site_image'] = $fileNameToStore;
         }else{
             $fileNameToStore = str_replace(Str::slug($site->site_web),Str::slug($request->site_web),$site->site_image);
@@ -317,13 +316,11 @@ class SitesController extends Controller
             $data_categories->tags()->attach($tags);
         }
 
-
         $path_featureimages   =  storage_path('app/public/featureimages/'.$data_site->id.'/');
         $path_categories   =  storage_path('app/public/categories/'.$data_site->id.'/');
 
         File::copyDirectory(storage_path('app/public/categories/'.$site->id),$path_categories);
         File::copyDirectory(storage_path('app/public/featureimages/'.$site->id),$path_featureimages);
-
         return response()->json(['success'=>'Clone thành công']);
     }
 
