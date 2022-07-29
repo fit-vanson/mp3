@@ -83,57 +83,57 @@ class ApiController extends Controller
         $data = array();
         if (checkBlockIp()) {
             array_push($data, [
-                'name' => 'latest', 'data' => $this->getWallpaper('id',$site,1,'<>',10)
+                'name' => 'latest', 'data' => $this->getWallpaper('id',$site->id,1,'<>',10)
             ]);
             array_push($data, [
-                'name' => 'popular', 'data' => $this->getWallpaper('wallpaper_view_count',$site,1,'<>',10)
+                'name' => 'popular', 'data' => $this->getWallpaper('wallpaper_view_count',$site->id,1,'<>',10)
             ]);
             array_push($data, [
-                'name' => 'random', 'data' => $this->getWallpaper(null,$site,1,'<>',10)
+                'name' => 'random', 'data' => $this->getWallpaper(null,$site->id,1,'<>',10)
             ]);
             array_push($data, [
-                'name' => 'downloaded', 'data' => $this->getWallpaper('wallpaper_like_count',$site,1,'<>',10)
+                'name' => 'downloaded', 'data' => $this->getWallpaper('wallpaper_like_count',$site->id,1,'<>',10)
             ]);
             array_push($data, [
-                'name' => 'live', 'data' => $this->getWallpaper('id',$site,1,'=',10)
+                'name' => 'live', 'data' => $this->getWallpaper('id',$site->id,1,'=',10)
             ]);
         } else {
             array_push($data, [
-                'name' => 'latest', 'data' => $this->getWallpaper('id',$site,0,'<>',10)
+                'name' => 'latest', 'data' => $this->getWallpaper('id',$site->id,0,'<>',10)
             ]);
             array_push($data, [
-                'name' => 'popular', 'data' => $this->getWallpaper('wallpaper_view_count',$site,0,'<>',10)
+                'name' => 'popular', 'data' => $this->getWallpaper('wallpaper_view_count',$site->id,0,'<>',10)
             ]);
             array_push($data, [
-                'name' => 'random', 'data' => $this->getWallpaper(null,$site,0,'<>',10)
+                'name' => 'random', 'data' => $this->getWallpaper(null,$site->id,0,'<>',10)
             ]);
             array_push($data, [
-                'name' => 'downloaded', 'data' => $this->getWallpaper('wallpaper_like_count',$site,0,'<>',10)
+                'name' => 'downloaded', 'data' => $this->getWallpaper('wallpaper_like_count',$site->id,0,'<>',10)
             ]);
             array_push($data, [
-                'name' => 'live', 'data' => $this->getWallpaper('id',$site,0,'=',10)
+                'name' => 'live', 'data' => $this->getWallpaper('id',$site->id,0,'=',10)
             ]);
         }
         return $data;
     }
 
 
-    private  function getWallpaper($order, $site, $checkBlock, $gif, $limit){
+    private  function getWallpaper($order, $siteID, $checkBlock, $gif, $limit){
         if(isset($order)){
             $data = Wallpapers::with('tags')
                 ->where('image_extension', $gif,'image/gif')
-                ->whereHas('categories', function ($query) use ($site, $checkBlock) {
+                ->whereHas('categories', function ($query) use ($siteID, $checkBlock) {
                     $query->where('category_checked_ip', $checkBlock)
-                        ->where('site_id',$site);
+                        ->where('site_id',$siteID);
                 })
                 ->orderBy($order, 'desc')
                 ->paginate($limit);
         }else{
             $data = Wallpapers::with('tags')
                 ->where('image_extension', $gif,'image/gif')
-                ->whereHas('categories', function ($query) use ($site, $checkBlock) {
+                ->whereHas('categories', function ($query) use ($siteID, $checkBlock) {
                     $query->where('category_checked_ip', $checkBlock)
-                        ->where('site_id',$site);
+                        ->where('site_id',$siteID);
                 })
                 ->inRandomOrder()
                 ->paginate($limit);
@@ -153,9 +153,9 @@ class ApiController extends Controller
         $domain = $_SERVER['SERVER_NAME'];
         $site =  Sites::where('site_web', $domain)->first();
         if (checkBlockIp()) {
-            $data = $this->getWallpaper('id',$site,1,'<>',limitPage);
+            $data = $this->getWallpaper('id',$site->id,1,'<>',limitPage);
         } else {
-            $data = $this->getWallpaper('id',$site,0,'<>',limitPage);
+            $data = $this->getWallpaper('id',$site->id,0,'<>',limitPage);
         }
         $dataResult['current_page'] = $data->currentPage();
         $dataResult['last_page'] = $data->lastPage();
@@ -169,9 +169,9 @@ class ApiController extends Controller
         $site =  Sites::where('site_web', $domain)->first();
 
         if (checkBlockIp()) {
-            $data = $this->getWallpaper('wallpaper_view_count',$site,1,'<>',limitPage);
+            $data = $this->getWallpaper('wallpaper_view_count',$site->id,1,'<>',limitPage);
         } else {
-            $data = $this->getWallpaper('wallpaper_view_count',$site,0,'<>',limitPage);
+            $data = $this->getWallpaper('wallpaper_view_count',$site->id,0,'<>',limitPage);
         }
         $dataResult['current_page'] = $data->currentPage();
         $dataResult['last_page'] = $data->lastPage();
@@ -186,9 +186,9 @@ class ApiController extends Controller
         $site =  Sites::where('site_web', $domain)->first();
 
         if (checkBlockIp()) {
-            $data = $this->getWallpaper('wallpaper_view_count',$site,1,'<>',limitPage);
+            $data = $this->getWallpaper('wallpaper_view_count',$site->id,1,'<>',limitPage);
         } else {
-            $data = $this->getWallpaper('wallpaper_download_count',$site,0,'<>',limitPage);
+            $data = $this->getWallpaper('wallpaper_download_count',$site->id,0,'<>',limitPage);
         }
         $dataResult['current_page'] = $data->currentPage();
         $dataResult['last_page'] = $data->lastPage();
@@ -201,9 +201,9 @@ class ApiController extends Controller
         $domain = $_SERVER['SERVER_NAME'];
         $site =  Sites::where('site_web', $domain)->first();
         if (checkBlockIp()) {
-            $data = $this->getWallpaper(null,$site,1,'<>',limitPage);
+            $data = $this->getWallpaper(null,$site->id,1,'<>',limitPage);
         } else {
-            $data = $this->getWallpaper(null,$site,0,'<>',limitPage);
+            $data = $this->getWallpaper(null,$site->id,0,'<>',limitPage);
         }
         $dataResult['current_page'] = $data->currentPage();
         $dataResult['last_page'] = $data->lastPage();
@@ -216,9 +216,9 @@ class ApiController extends Controller
         $domain = $_SERVER['SERVER_NAME'];
         $site =  Sites::where('site_web', $domain)->first();
         if (checkBlockIp()) {
-            $data = $this->getWallpaper(null,$site,1,'=',limitPage);
+            $data = $this->getWallpaper(null,$site->id,1,'=',limitPage);
         } else {
-            $data = $this->getWallpaper(null,$site,0,'=',limitPage);
+            $data = $this->getWallpaper(null,$site->id,0,'=',limitPage);
         }
         $dataResult['current_page'] = $data->currentPage();
         $dataResult['last_page'] = $data->lastPage();
