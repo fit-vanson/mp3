@@ -83,35 +83,35 @@ class ApiController extends Controller
         $data = array();
         if (checkBlockIp()) {
             array_push($data, [
-                'name' => 'latest', 'data' => $this->getWallpaper('id',$site,1,'<>',limitHome)
+                'name' => 'latest', 'data' => $this->getWallpaper('id',$site,1,'<>',10)
             ]);
             array_push($data, [
-                'name' => 'popular', 'data' => $this->getWallpaper('wallpaper_view_count',$site,1,'<>',limitHome)
+                'name' => 'popular', 'data' => $this->getWallpaper('wallpaper_view_count',$site,1,'<>',10)
             ]);
             array_push($data, [
-                'name' => 'random', 'data' => $this->getWallpaper(null,$site,1,'<>',limitHome)
+                'name' => 'random', 'data' => $this->getWallpaper(null,$site,1,'<>',10)
             ]);
             array_push($data, [
-                'name' => 'downloaded', 'data' => $this->getWallpaper('wallpaper_like_count',$site,1,'<>',limitHome)
+                'name' => 'downloaded', 'data' => $this->getWallpaper('wallpaper_like_count',$site,1,'<>',10)
             ]);
             array_push($data, [
-                'name' => 'live', 'data' => $this->getWallpaper('id',$site,1,'=',limitHome)
+                'name' => 'live', 'data' => $this->getWallpaper('id',$site,1,'=',10)
             ]);
         } else {
             array_push($data, [
-                'name' => 'latest', 'data' => $this->getWallpaper('id',$site,0,'<>',limitHome)
+                'name' => 'latest', 'data' => $this->getWallpaper('id',$site,0,'<>',10)
             ]);
             array_push($data, [
-                'name' => 'popular', 'data' => $this->getWallpaper('wallpaper_view_count',$site,0,'<>',limitHome)
+                'name' => 'popular', 'data' => $this->getWallpaper('wallpaper_view_count',$site,0,'<>',10)
             ]);
             array_push($data, [
-                'name' => 'random', 'data' => $this->getWallpaper(null,$site,0,'<>',limitHome)
+                'name' => 'random', 'data' => $this->getWallpaper(null,$site,0,'<>',10)
             ]);
             array_push($data, [
-                'name' => 'downloaded', 'data' => $this->getWallpaper('wallpaper_like_count',$site,0,'<>',limitHome)
+                'name' => 'downloaded', 'data' => $this->getWallpaper('wallpaper_like_count',$site,0,'<>',10)
             ]);
             array_push($data, [
-                'name' => 'live', 'data' => $this->getWallpaper('id',$site,0,'=',limitHome)
+                'name' => 'live', 'data' => $this->getWallpaper('id',$site,0,'=',10)
             ]);
         }
         return $data;
