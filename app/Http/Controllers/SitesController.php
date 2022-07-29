@@ -162,6 +162,7 @@ class SitesController extends Controller
         $data['site_name'] = trim($request->site_name);
         $data['site_web'] = trim($request->site_web);
         $data['site_project'] = trim($request->site_project);
+        $data['site_type_ads'] = trim($request->site_type_ads);
         if($request->image){
             $file = $request->image;
             $filename = Str::slug($request->site_web);
@@ -209,6 +210,7 @@ class SitesController extends Controller
         $data->site_web = $request->site_web;
         $data->site_name = $request->site_name;
         $data->site_project = $request->site_project;
+        $data->site_type_ads = $request->site_type_ads;
 
 
         if($request->image){
@@ -270,6 +272,7 @@ class SitesController extends Controller
         $data_site['site_ads'] = $site->site_ads;
         $data_site['site_direct_link'] = $site->site_direct_link;
         $data_site['site_view_page'] = 0;
+        $data_site['site_type_ads'] = $request->site_type_ads;
         $data_site['load_view_by'] = $site->load_view_by;
         $data_site['load_categories'] = $site->load_categories;
         $data_site['load_wallpapers_category'] = $site->load_wallpapers_category;

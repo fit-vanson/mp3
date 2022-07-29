@@ -93,6 +93,30 @@
                             <input type="text" class="form-control" id="site_project" name="site_project" placeholder="DAxxx-yy" required>
                         </div>
 
+                        <div class="form-group">
+                            <label class="d-block mb-3">Ads :</label>
+                            <div class="custom-control custom-radio custom-control-inline">
+                                <input type="radio" id="site_ads_chplay" name="site_type_ads" class="custom-control-input" checked value="0">
+                                <label class="custom-control-label" for="site_ads_chplay">CHPlay</label>
+                            </div>
+                            <div class="custom-control custom-radio custom-control-inline">
+                                <input type="radio" id="site_ads_oppo" name="site_type_ads" class="custom-control-input" value="1">
+                                <label class="custom-control-label" for="site_ads_oppo">Oppo</label>
+                            </div>
+                            <div class="custom-control custom-radio custom-control-inline">
+                                <input type="radio" id="site_ads_vivo" name="site_type_ads" class="custom-control-input" value="2">
+                                <label class="custom-control-label" for="site_ads_vivo">Vivo</label>
+                            </div>
+                            <div class="custom-control custom-radio custom-control-inline">
+                                <input type="radio" id="site_ads_xiaomi" name="site_type_ads" class="custom-control-input" value="3">
+                                <label class="custom-control-label" for="site_ads_xiaomi">Xiaomi</label>
+                            </div>
+                            <div class="custom-control custom-radio custom-control-inline">
+                                <input type="radio" id="site_ads_huawei" name="site_type_ads" class="custom-control-input" value="4">
+                                <label class="custom-control-label" for="site_ads_huawei">Huawei</label>
+                            </div>
+                        </div>
+
                         <div class="form-group mb-0">
                             <div>
                                 <button type="submit" id="saveBtn{{preg_replace('/\s+/','',$page_title)}}" class="btn btn-primary waves-effect waves-light mr-1">
@@ -325,6 +349,8 @@
                     type: "get",
                     url: "{{ asset("admin/sites/edit") }}/"+id,
                     success: function (data) {
+
+                        console.log(data)
                         $('#modal{{preg_replace('/\s+/','',$page_title)}}').modal('show');
                         $('#{{preg_replace('/\s+/','',$page_title)}}ModalLabel').html("Edit {{$page_title}}");
                         $('#saveBtn{{preg_replace('/\s+/','',$page_title)}}').val("update");
@@ -333,6 +359,20 @@
                         $('#site_name').val(data.site.site_name);
                         $('#site_web').val(data.site.site_web);
                         $('#site_project').val(data.site.site_project);
+
+
+                        if(data.site.site_type_ads == 0){
+                            $('#site_ads_chplay').prop('checked', true);
+                        }else if(data.site.site_type_ads == 1) {
+                            $('#site_ads_oppo').prop('checked', true);
+                        }else if(data.site.site_type_ads == 2) {
+                            $('#site_ads_vivo').prop('checked', true);
+                        }else if(data.site.site_type_ads == 3) {
+                            $('#site_ads_xiaomi').prop('checked', true);
+                        }else if(data.site.site_type_ads == 4) {
+                            $('#site_ads_huawei').prop('checked', true);
+                        }
+
                         $('#avatar').attr('src','../storage/sites/'+data.site.site_image);
 
                     },
@@ -365,7 +405,6 @@
                     }
                 });
             });
-
             $(document).on('click','.changeAds', function (data){
                 var id = $(this).data("id");
                 var ads = $(this);
@@ -392,7 +431,6 @@
                     }
                 });
             });
-
             $(document).on('click','.change_load_categories', function (data){
                 var id = $(this).data("id");
                 var btn = $(this);
@@ -406,7 +444,6 @@
                     }
                 });
             });
-
             $(document).on('click','.change_load_wallpapers', function (data){
                 var id = $(this).data("id");
                 var btn = $(this);
