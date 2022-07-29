@@ -88,7 +88,7 @@ class SitesController extends Controller
             $Wallpaper = 'Wallpaper: ';
 
             if ($record->load_view_by == 0 ){
-                $Load_Feature .= '<p class="badge badge-secondary" style="font-size: 100%">Random</p>';
+                $Load_Feature .= '<p class="badge badge-secondary " style="font-size: 100%">Random</p>';
             }elseif ($record->load_view_by == 1){
                 $Load_Feature .= '<p class="badge badge-info" style="font-size: 100%">Manual</p>';
             }elseif ($record->load_view_by == 2){
@@ -252,7 +252,6 @@ class SitesController extends Controller
         }
 
         $site = Sites::with('categories')->find($request->id);
-//        dd($site);
         $categories = $site->categories()->get();
         $data_site = new Sites();
         $data_site['site_name'] = trim($request->site_name);
@@ -296,15 +295,14 @@ class SitesController extends Controller
 
         foreach ($categories as $category){
             $tags = $category->tags()->get()->pluck('id')->toArray();
-
             if ($category->category_image != 'default.png'){
-                $image_path_name = explode('/',$category->category_image);
-                $image_path = str_replace($image_path_name[0],$data_site->id,$category->category_image);
+                $pos = strpos( $category->category_image,$site->id);
+                if ($pos !== false) {
+                    $image_path = substr_replace($category->category_image, $data_site->id, $pos, strlen($site->id));
+                }
             }else{
                 $image_path = 'default.png';
             }
-
-
             $data_categories =  new Categories();
             $data_categories['site_id'] = $data_site->id;
             $data_categories['category_name'] = $category->category_name;
