@@ -252,6 +252,7 @@ class SitesController extends Controller
         }
 
         $site = Sites::with('categories')->find($request->id);
+//        dd($site);
         $categories = $site->categories()->get();
         $data_site = new Sites();
         $data_site['site_name'] = trim($request->site_name);
@@ -285,10 +286,12 @@ class SitesController extends Controller
             }
             $img = Image::make($file);
             $img->save($path_image.$fileNameToStore);
-            $path_image =  $fileNameToStore;
-            $data['site_image'] = $path_image;
+
+            $data_site['site_image'] = $fileNameToStore;
         }else{
-            $data_site['site_image'] = 'default.png';
+            $fileNameToStore = str_replace(Str::slug($site->site_web),Str::slug($request->site_web),$site->site_image);
+            File::copy(storage_path('app/public/sites/'.$site->site_image),storage_path('app/public/sites/'.$fileNameToStore));
+            $data_site['site_image'] = $fileNameToStore;
         }
         $data_site->save();
 
@@ -330,6 +333,8 @@ class SitesController extends Controller
         if ($site->site_image != 'default.png') {
             $path = storage_path('app/public/sites/') . $site->site_image;
             try {
+                $this->deleteDirectory(storage_path('app/public/categories/' . $site->id));
+                $this->deleteDirectory(storage_path('app/public/featureimages/' . $site->id));
                 if (file_exists($path)) {
                     unlink($path);
                 }
@@ -341,6 +346,7 @@ class SitesController extends Controller
         $site->delete();
         return response()->json(['success'=>'Xoá thành công']);
     }
+
     public function changeAds($id)
     {
         $data = Sites::find($id);
@@ -423,11 +429,7 @@ class SitesController extends Controller
         Sites::find($request->id)->update($request->all());
         return response()->json(['success'=>'Cập nhật thành công']);
     }
-//    public function update_load_view_by(Request $request)
-//    {
-//        Sites::find($request->id)->update($request->all());
-//        return response()->json(['success'=>'Cập nhật thành công']);
-//    }
+
     public function update_ads(Request $request)
     {
 
