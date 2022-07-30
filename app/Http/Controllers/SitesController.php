@@ -458,6 +458,7 @@ class SitesController extends Controller
         $page_title =  'Site';
         $site = Sites::find($id);
         $tags = Tags::all();
+
 //        $cates = Sites::findOrFail($id)
 //            ->categories()
 //            ->select('*')
@@ -872,6 +873,7 @@ class SitesController extends Controller
                     'site_ads' => json_encode($ads)
                 ];
                 $site->update($update);
+                dd($site);
                 return response()->json(['success'=>'Get thành công']);
 
             }else{

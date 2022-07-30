@@ -223,6 +223,10 @@
                                     <div class="form-group col-lg-12">
                                         <h4 class="font-size-18">ADMOB</h4>
                                     </div>
+
+                                    <?php $ads = json_decode($site->site_ads,true);?>
+
+
                                     <div class="form-group col-lg-6">
                                         <label>Publisher ID</label>
                                         <input type="text" class="form-control" id="AdMob_Publisher_ID" name="AdMob_Publisher_ID" value="{{@$ads['AdMob_Publisher_ID']}}" >
