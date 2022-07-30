@@ -116,3 +116,28 @@ Route::group([
 });
 
 
+Route::group([
+    "prefix" => "v6",
+//    'middleware' => 'auth.apikey'
+], function() {
+    Route::get('auth/login',[App\Http\Controllers\Api\v6\ApiController::class, 'login']);
+    Route::get('categories',[App\Http\Controllers\Api\v6\ApiController::class, 'categories']);
+
+    Route::get('wallpaper',[App\Http\Controllers\Api\v6\ApiController::class, 'wallpaper']);
+    Route::get('wallpaper/popular',[App\Http\Controllers\Api\v6\ApiController::class, 'popular']);
+    Route::get('wallpaper/download',[App\Http\Controllers\Api\v6\ApiController::class, 'download']);
+    Route::get('wallpaper/random',[App\Http\Controllers\Api\v6\ApiController::class, 'random']);
+    Route::get('wallpaper/cid',[App\Http\Controllers\Api\v6\ApiController::class, 'cid']);
+    Route::get('wallpaper/live',[App\Http\Controllers\Api\v6\ApiController::class, 'live']);
+
+    Route::get('wallpaper/hashtag',[App\Http\Controllers\Api\v6\ApiController::class, 'hashtag']);
+
+
+
+    Route::get('add/show/wallpaper',[App\Http\Controllers\Api\v6\ApiController::class, 'viewWallpaper']);
+
+
+
+});
+
+
