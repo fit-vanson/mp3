@@ -876,7 +876,7 @@ class SitesController extends Controller
                 return response()->json(['success'=>'Get thành công']);
 
             }else{
-                dd(1);
+                return response()->json(['error'=>'Get error']);
             }
 
         }catch (\Exception $exception) {

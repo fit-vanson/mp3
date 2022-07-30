@@ -508,13 +508,22 @@
                     type: "get",
                     url: "{{ asset("admin/sites/get-aio") }}/"+id,
                     success: function (data) {
-                        location.reload();
+                        if(data.success){
+                            location.reload();
+                            toastr['success']('', data.success, {
+                                showMethod: 'fadeIn',
+                                hideMethod: 'fadeOut',
+                                timeOut: 1000,
+                            });
+                        }
+                        if(data.error){
+                            toastr['error']('', data.error, {
+                                showMethod: 'fadeIn',
+                                hideMethod: 'fadeOut',
+                                timeOut: 1000,
+                            });
+                        }
 
-                        toastr['success']('', data.success, {
-                            showMethod: 'fadeIn',
-                            hideMethod: 'fadeOut',
-                            timeOut: 1000,
-                        });
                     },
                     error: function (data) {
                     }
