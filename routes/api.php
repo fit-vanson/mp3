@@ -120,7 +120,7 @@ Route::group([
     "prefix" => "v6",
 //    'middleware' => 'auth.apikey'
 ], function() {
-    Route::put('auth/login',[App\Http\Controllers\Api\v6\ApiController::class, 'login']);
+    Route::post('auth/login',[App\Http\Controllers\Api\v6\ApiController::class, 'login']);
     Route::get('categories',[App\Http\Controllers\Api\v6\ApiController::class, 'categories']);
 
     Route::get('wallpaper',[App\Http\Controllers\Api\v6\ApiController::class, 'wallpaper']);
