@@ -121,7 +121,14 @@ Route::group([
 //    'middleware' => 'auth.apikey'
 ], function() {
     Route::post('auth/login',[App\Http\Controllers\Api\v6\ApiController::class, 'login']);
+
     Route::get('categories',[App\Http\Controllers\Api\v6\ApiController::class, 'categories']);
+    Route::get('wallpapers/newest',[App\Http\Controllers\Api\v6\ApiController::class, 'newest']);
+
+
+
+
+
 
     Route::get('wallpaper',[App\Http\Controllers\Api\v6\ApiController::class, 'wallpaper']);
     Route::get('wallpaper/popular',[App\Http\Controllers\Api\v6\ApiController::class, 'popular']);

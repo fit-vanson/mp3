@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Api\v6;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\v6\WallpaperResource;
 use App\Http\Resources\v6\CategoriesResource;
 use App\Sites;
+use App\Wallpapers;
 use Illuminate\Http\Request;
 
 class ApiController extends Controller
@@ -85,10 +87,55 @@ class ApiController extends Controller
         }
 
 
-        $result['current_page'] = $data->currentPage();
+        $result['page'] = $data->currentPage();
         $result['last_page'] = $data->lastPage();
         $result['total'] = $data->total();
         $result['data'] = CategoriesResource::collection($data);
         return $result;
     }
+
+    public function newest(){
+
+        $domain = $_SERVER['SERVER_NAME'];
+        $site =  Sites::where('site_web', $domain)->first();
+        $limit = isset($_GET['per_page']) ? $_GET['per_page'] : 10;
+
+        if (checkBlockIp()) {
+            $data = $this->getWallpaper('id',$site->id,1,'<>',$limit);
+        } else {
+            $data = $this->getWallpaper('id',$site->id,0,'<>',$limit);
+        }
+        $dataResult['page'] = $data->currentPage();
+        $dataResult['per_page'] = $limit;
+        $dataResult['last_page'] = $data->lastPage();
+        $dataResult['total'] = $data->total();
+        $dataResult['data'] = $data;
+        return $dataResult;
+    }
+
+
+    private  function getWallpaper($order, $siteID, $checkBlock, $gif, $limit){
+        if(isset($order)){
+            $data = Wallpapers::with(['tags'])
+                ->where('image_extension', $gif,'image/gif')
+                ->whereHas('categories', function ($query) use ($siteID, $checkBlock) {
+                     $query->where('category_checked_ip', $checkBlock)
+                        ->where('site_id',$siteID)->select('category_name');
+                })
+                ->orderBy($order, 'desc')
+                ->paginate($limit);
+        }else{
+            $data = Wallpapers::with('tags')
+                ->where('image_extension', $gif,'image/gif')
+                ->whereHas('categories', function ($query) use ($siteID, $checkBlock) {
+                    $query->where('category_checked_ip', $checkBlock)
+                        ->where('site_id',$siteID);
+                })
+                ->inRandomOrder()
+                ->paginate($limit);
+        }
+        $dataResult = WallpaperResource::collection($data);
+        return $dataResult;
+    }
+
 }
