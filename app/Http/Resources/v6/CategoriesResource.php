@@ -29,7 +29,7 @@ class CategoriesResource extends JsonResource
                 'size' => $size,
                 'mimetype' => $image['mime'],
                 'file_name' => $this->category_image,
-                'path' => '../../storage/categories/'.$this->category_image,
+                'path' => '/../../storage/categories/'.$this->category_image,
             ]
 
 
