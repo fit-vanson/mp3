@@ -873,7 +873,6 @@ class SitesController extends Controller
                     'site_ads' => json_encode($ads)
                 ];
                 $site->update($update);
-                dd($site);
                 return response()->json(['success'=>'Get thành công']);
 
             }else{
