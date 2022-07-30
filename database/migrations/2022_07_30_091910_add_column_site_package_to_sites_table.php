@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddColumnTypeAdsToSitesTable extends Migration
+class AddColumnSitePackageToSitesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class AddColumnTypeAdsToSitesTable extends Migration
     public function up()
     {
         Schema::table('sites', function (Blueprint $table) {
-            $table->tinyInteger('site_type_ads')->default(0)->after('site_ads');
+            $table->string('site_package')->after('site_app_name')->nullable();
         });
     }
 

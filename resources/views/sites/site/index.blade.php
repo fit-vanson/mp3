@@ -504,7 +504,8 @@
                     type: "get",
                     url: "{{ asset("admin/sites/get-aio") }}/"+id,
                     success: function (data) {
-                        $(".site_adss").load(" .site_adss");
+                        location.reload();
+
                         toastr['success']('', data.success, {
                             showMethod: 'fadeIn',
                             hideMethod: 'fadeOut',

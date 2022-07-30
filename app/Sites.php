@@ -11,9 +11,12 @@ class Sites extends Model
 
     protected $fillable = [
         'site_name',
+        'site_app_name',
         'ad_switch',
         'site_web',
+        'site_package',
         'site_image',
+        'site_logo_url',
         'site_feature_images',
         'site_header_title',
         'site_header_content',
@@ -29,6 +32,11 @@ class Sites extends Model
         'load_categories',
         'load_wallpapers_category',
         'site_type_ads',
+        'site_chplay_link',
+        'site_oppo_link',
+        'site_vivo_link',
+        'site_xiaomi_link',
+        'site_huawei_link',
     ];
 
 //    public function categories()

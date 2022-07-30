@@ -120,7 +120,7 @@ class SitesController extends Controller
 
             $data_arr[] = array(
                 "id" => $record->id,
-                "site_image" => '<a class="image-popup-no-margins" href="../storage/sites/'.$record->site_image.'"><img class="img-fluid" alt="'.$record->site_name.'" src="../storage/sites/'.$record->site_image.'" width="150"></a>',
+                "site_image" => $record->site_logo_url ? '<a class="image-popup-no-margins" href="'.$record->site_logo_url.'"><img class="img-fluid" alt="'.$record->site_name.'" src="'.$record->site_logo_url.'" width="150"></a>':'<a class="image-popup-no-margins" href="../storage/sites/'.$record->site_image.'"><img class="img-fluid" alt="'.$record->site_name.'" src="../storage/sites/'.$record->site_image.'" width="150"></a>',
                 "site_name" => '<a href="'.route('sites.view',$record->id).'" style="color:#5b626b;"><h2>'.$record->site_name.'</h2></a><a target="_blank" href="//'.$record->site_web.'"><h4>'.$record->site_web.'</h4></a>',
                 "site_project" =>'<span class="badge badge-success" style="font-size: 100%">' . $record->site_project. '</span>',
                 "site_ads" => $record->ad_switch == 1 ? '<a href="javascript:void(0)" data-id="'.$record->id.'" class="changeAds"><span class="badge badge-success">Active</span></a>': '<a href="javascript:void(0)" data-id="'.$record->id.'" class="changeAds"><span class="badge badge-danger">Deactivated</span></a>',
@@ -812,33 +812,87 @@ class SitesController extends Controller
     }
 
     public function getAIO($id){
-        $data = Sites::find($id);
+        try {
+            $site = Sites::find($id);
+            $url = "https://aio.vietmmo.net/api/project-aio/".$site->site_project;
+            $dataGet = $this->CURL($url);
+
+
+            if($dataGet['msg'] == 'success'){
+                $data = $dataGet['data'];
+                $ads_type = $site->site_type_ads;
+                switch ($ads_type) {
+                    case 0:
+                        $ads_get = json_decode($data['Chplay_ads'],true);
+                        $package = $data['Chplay_package'];
+                        break;
+                    case 1:
+                        $ads_get = json_decode($data['Oppo_ads'],true);
+                        $package = $data['Oppo_package'];
+                        break;
+                    case 2:
+                        $ads_get = json_decode($data['Vivo_ads'],true);
+                        $package = $data['Vivo_package'];
+                        break;
+                    case 3:
+                        $ads_get = json_decode($data['Xiaomi_ads'],true);
+                        $package = $data['Xiaomi_package'];
+                        break;
+                    case 4:
+                        $ads_get = json_decode($data['Huawei_ads'],true);
+                        $package = $data['Huawei_package'];
+                        break;
+                }
+                $ads = [
+                    "ads_provider" => "ADMOB",
+                    "AdMob_Publisher_ID" => $ads_get['ads_id'],
+                    "AdMob_App_ID" => $ads_get['ads_id'],
+                    "AdMob_Banner_Ad_Unit_ID" => $ads_get['ads_banner'],
+                    "AdMob_Interstitial_Ad_Unit_ID" => $ads_get['ads_inter'],
+                    "AdMob_App_Reward_Ad_Unit_ID" => $ads_get['ads_reward'],
+                    "AdMob_Native_Ad_Unit_ID" => $ads_get['ads_native'],
+                    "AdMob_App_Open_Ad_Unit_ID" => $ads_get['ads_open'],
+                    "applovin_banner" => '',
+                    "applovin_interstitial" => '',
+                    "applovin_reward" => '',
+                    "ironsource_id" => '',
+                    "startapp_id" => $ads_get['ads_start'],
+                ];
+
+                $update = [
+                    'site_name' => $data['title_app'],
+                    'site_app_name' => $data['buildinfo_app_name_x'],
+                    'site_chplay_link' => $data['Chplay_buildinfo_link_app'],
+                    'site_oppo_link' => $data['Oppo_buildinfo_link_app'],
+                    'site_vivo_link' => $data['Vivo_buildinfo_link_app'],
+                    'site_xiaomi_link' => $data['Xiaomi_buildinfo_link_app'],
+                    'site_huawei_link' => $data['Huawei_buildinfo_link_app'],
+                    'site_logo_url' => 'https://aio.vietmmo.net/uploads/project/'.$site->site_project.'/'.$data['logo'],
+                    'site_package' => $package,
+                    'site_ads' => json_encode($ads)
+                ];
+                $site->update($update);
+                return response()->json(['success'=>'Get thành công']);
+
+            }else{
+                dd(1);
+            }
+
+        }catch (\Exception $exception) {
+            Log::error('Message:' . $exception->getMessage() . '---getAIO--' . $exception->getLine());
+        }
+
+    }
+
+    public function CURL($url){
         $dataArr = [
             'Content-Type'=>'application/json',
         ];
-        $update = [];
-        $endpoint = "https://aio.vietmmo.net/api/project-aio/".$data->site_project;
-
-//        try {
-            $response = Http::withHeaders($dataArr)->get( $endpoint);
-            if ($response->successful()){
-                $result = $response->json();
-                if($result['msg'] == 'success'){
-                    $update = [
-                        'site_name' => $result['data']['title_app'],
-                        'site_logo_url' => 'https://aio.vietmmo.net/uploads/project/'.$data->site_project.'/'.$result['data']['logo'],
-                    ];
-                }
-
-
-
-                dd($result,$update);
-            }
-//        }catch (\Exception $exception) {
-//            Log::error('Message:' . $exception->getMessage() . '--- AppInfo: ' . $exception->getLine());
-//        }
+        $response = Http::withHeaders($dataArr)->get($url);
+        if ($response->successful()) {
+            $data = $response->json();
+        }
         return $data;
-
     }
 
 
