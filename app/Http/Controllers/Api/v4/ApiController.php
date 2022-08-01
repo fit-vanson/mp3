@@ -52,8 +52,8 @@ class ApiController extends Controller
         $settings = [
             "onesignal_id"=> "01f96de5-e775-43a8-b9d0-91a720d65912",
             "onesignal_rest"=> "NmMyOGNmNzQtNWM4MC00MjgxLWJiOTEtNTljNjA0YmI3YjA4",
-            "packagename"=> "https=>//play.google.com/store/apps/dev?id=5703447331110116266",
-            "privacy"=> "https=>//google.com",
+            "packagename"=> "https://play.google.com/store/apps/dev?id=5703447331110116266",
+            "privacy"=> "https://google.com",
             "layout"=> "dark-layout",
             "server_key"=> "XjjXvKKAxjYmJjjOdFSKdAOlZwTkvlQrXRShNQlIzRedUzPifp",
             "wallpaper_columns"=> "3",
