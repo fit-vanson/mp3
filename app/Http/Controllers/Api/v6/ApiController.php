@@ -153,7 +153,35 @@ class ApiController extends Controller
     }
 
     public function download(Request $request){
-        dd($request->all());
+        $wallpaper = Wallpapers::find($request->id);
+        if ($wallpaper){
+            $wallpaper->wallpaper_download_count = $wallpaper->wallpaper_download_count+1;
+            $wallpaper->save();
+
+            $dataResult['success'] = 'true';
+            $dataResult['download'] = $wallpaper->wallpaper_download_count;
+        }else{
+            $dataResult['success'] = 'false';
+            $dataResult['message'] = '"Not found';
+        }
+
+        return $dataResult;
+    }
+
+    public function use(Request $request){
+        $wallpaper = Wallpapers::find($request->id);
+        if ($wallpaper){
+            $wallpaper->wallpaper_like_count = $wallpaper->wallpaper_like_count+1;
+            $wallpaper->save();
+
+            $dataResult['success'] = 'true';
+            $dataResult['download'] = $wallpaper->wallpaper_like_count;
+        }else{
+            $dataResult['success'] = 'false';
+            $dataResult['message'] = '"Not found';
+        }
+
+        return $dataResult;
     }
 
     private  function getWallpaper($order, $siteID, $checkBlock, $limit,$category=null){

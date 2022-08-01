@@ -128,6 +128,7 @@ Route::group([
     Route::get('wallpapers/random',[App\Http\Controllers\Api\v6\ApiController::class, 'random']);
 
     Route::put('wallpapers/download',[App\Http\Controllers\Api\v6\ApiController::class, 'download']);
+    Route::put('wallpapers/use',[App\Http\Controllers\Api\v6\ApiController::class, 'use']);
 });
 
 
