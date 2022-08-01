@@ -24,11 +24,11 @@ class ApiController extends Controller
 
         $result = [
             'provider' => $ads ? $ads['ads_provider'] : ''  ,
-            'admob_banner' => $ads ? $ads['AdMob_Banner_Ad_Unit_ID']: 'ca-app-pub-3940256099942544/6300978111'  ,
-            'admob_reward' => $ads ? $ads['AdMob_App_Reward_Ad_Unit_ID']: 'ca-app-pub-3940256099942544/5224354917'  ,
-            'admob_open' => $ads ? $ads['AdMob_App_Open_Ad_Unit_ID']: 'ca-app-pub-3940256099942544/3419835294'  ,
-            'admob_native' => $ads ? $ads['AdMob_Native_Ad_Unit_ID']: 'ca-app-pub-3940256099942544/2247696110'  ,
-            'admob_interstitial' => $ads ? $ads['AdMob_Interstitial_Ad_Unit_ID']: 'ca-app-pub-3940256099942544/1033173712'  ,
+            'admob_banner' => $ads ? ( $ads['AdMob_Banner_Ad_Unit_ID'] ? $ads['AdMob_Banner_Ad_Unit_ID'] : 'ca-app-pub-3940256099942544/6300978111') : 'ca-app-pub-3940256099942544/6300978111' ,
+            'admob_reward' => $ads ?  ($ads['AdMob_App_Reward_Ad_Unit_ID'] ?  $ads['AdMob_App_Reward_Ad_Unit_ID']: 'ca-app-pub-3940256099942544/5224354917' ): 'ca-app-pub-3940256099942544/5224354917',
+            'admob_open' => $ads ? ( $ads['AdMob_App_Open_Ad_Unit_ID'] ? $ads['AdMob_App_Open_Ad_Unit_ID']: 'ca-app-pub-3940256099942544/3419835294' ) :'ca-app-pub-3940256099942544/3419835294',
+            'admob_native' => $ads ? ( $ads['AdMob_Native_Ad_Unit_ID'] ? $ads['AdMob_Native_Ad_Unit_ID'] : 'ca-app-pub-3940256099942544/2247696110' ): 'ca-app-pub-3940256099942544/2247696110'  ,
+            'admob_interstitial' => $ads ? ($ads['AdMob_Interstitial_Ad_Unit_ID'] ?  $ads['AdMob_Interstitial_Ad_Unit_ID']: 'ca-app-pub-3940256099942544/1033173712' ): 'ca-app-pub-3940256099942544/1033173712' ,
 
             'applovin_banner' => $ads ? $ads['applovin_banner']: ''  ,
             'applovin_interstitial' => $ads ? $ads['applovin_interstitial']: ''  ,
