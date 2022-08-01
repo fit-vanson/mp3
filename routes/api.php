@@ -121,30 +121,8 @@ Route::group([
 //    'middleware' => 'auth.apikey'
 ], function() {
     Route::post('auth/login',[App\Http\Controllers\Api\v6\ApiController::class, 'login']);
-
     Route::get('categories',[App\Http\Controllers\Api\v6\ApiController::class, 'categories']);
-    Route::get('wallpapers/newest',[App\Http\Controllers\Api\v6\ApiController::class, 'newest']);
-
-
-
-
-
-
-    Route::get('wallpaper',[App\Http\Controllers\Api\v6\ApiController::class, 'wallpaper']);
-    Route::get('wallpaper/popular',[App\Http\Controllers\Api\v6\ApiController::class, 'popular']);
-    Route::get('wallpaper/download',[App\Http\Controllers\Api\v6\ApiController::class, 'download']);
-    Route::get('wallpaper/random',[App\Http\Controllers\Api\v6\ApiController::class, 'random']);
-    Route::get('wallpaper/cid',[App\Http\Controllers\Api\v6\ApiController::class, 'cid']);
-    Route::get('wallpaper/live',[App\Http\Controllers\Api\v6\ApiController::class, 'live']);
-
-    Route::get('wallpaper/hashtag',[App\Http\Controllers\Api\v6\ApiController::class, 'hashtag']);
-
-
-
-    Route::get('add/show/wallpaper',[App\Http\Controllers\Api\v6\ApiController::class, 'viewWallpaper']);
-
-
-
+    Route::get('wallpapers/{order}',[App\Http\Controllers\Api\v6\ApiController::class, 'viewWallpapers']);
 });
 
 

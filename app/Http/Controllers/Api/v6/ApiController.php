@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\v6;
 
+use App\Categories;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\v6\WallpaperResource;
 use App\Http\Resources\v6\CategoriesResource;
@@ -94,17 +95,37 @@ class ApiController extends Controller
         return $result;
     }
 
-    public function newest(){
 
+    public function viewWallpapers($order){
         $domain = $_SERVER['SERVER_NAME'];
         $site =  Sites::where('site_web', $domain)->first();
         $limit = isset($_GET['per_page']) ? $_GET['per_page'] : 10;
 
-        if (checkBlockIp()) {
-            $data = $this->getWallpaper('id',$site->id,1,'<>',$limit);
-        } else {
-            $data = $this->getWallpaper('id',$site->id,0,'<>',$limit);
+        $category = isset($_GET['category_id']) ? $_GET['category_id'] : null;
+
+
+
+        if ($order == 'newest'){
+            if (checkBlockIp()) {
+                $data = $this->getWallpaper('id',$site->id,1,$limit,$category);
+            } else {
+                $data = $this->getWallpaper('id',$site->id,0,$limit,$category);
+            }
+        }elseif ($order == 'trending'){
+            if (checkBlockIp()) {
+                $data = $this->getWallpaper('wallpaper_like_count',$site->id,1,$limit,$category);
+            } else {
+                $data = $this->getWallpaper('wallpaper_like_count',$site->id,0,$limit,$category);
+            }
+        }else{
+            if (checkBlockIp()) {
+                $data = $this->getWallpaper(null,$site->id,1,$limit,$category);
+            } else {
+                $data = $this->getWallpaper(null,$site->id,0,$limit,$category);
+            }
         }
+
+
         $dataResult['page'] = $data->currentPage();
         $dataResult['per_page'] = $limit;
         $dataResult['last_page'] = $data->lastPage();
@@ -113,11 +134,51 @@ class ApiController extends Controller
         return $dataResult;
     }
 
-
-    private  function getWallpaper($order, $siteID, $checkBlock, $gif, $limit){
+//    public function newest(){
+//        $domain = $_SERVER['SERVER_NAME'];
+//        $site =  Sites::where('site_web', $domain)->first();
+//        $limit = isset($_GET['per_page']) ? $_GET['per_page'] : 10;
+//
+//        if (checkBlockIp()) {
+//            $data = $this->getWallpaper('id',$site->id,1,$limit);
+//        } else {
+//            $data = $this->getWallpaper('id',$site->id,0,$limit);
+//        }
+//        $dataResult['page'] = $data->currentPage();
+//        $dataResult['per_page'] = $limit;
+//        $dataResult['last_page'] = $data->lastPage();
+//        $dataResult['total'] = $data->total();
+//        $dataResult['data'] = $data;
+//        return $dataResult;
+//    }
+//
+//    public function trending(){
+//        $domain = $_SERVER['SERVER_NAME'];
+//        $site =  Sites::where('site_web', $domain)->first();
+//        $limit = isset($_GET['per_page']) ? $_GET['per_page'] : 10;
+//
+//        if (checkBlockIp()) {
+//            $data = $this->getWallpaper('wallpaper_like_count',$site->id,1,$limit);
+//        } else {
+//            $data = $this->getWallpaper('wallpaper_like_count',$site->id,0,$limit);
+//        }
+//        $dataResult['page'] = $data->currentPage();
+//        $dataResult['per_page'] = $limit;
+//        $dataResult['last_page'] = $data->lastPage();
+//        $dataResult['total'] = $data->total();
+//        $dataResult['data'] = $data;
+//        return $dataResult;
+//    }
+    private  function getWallpaper($order, $siteID, $checkBlock, $limit,$category){
         if(isset($order)){
-            $data = Wallpapers::with(['tags'])
-//                ->where('image_extension', $gif,'image/gif')
+            $data = Wallpapers::with(['tags',
+                'categories'=> function ($query) use ($siteID, $checkBlock) {
+                    $query->where('category_checked_ip', $checkBlock)
+                        ->where('site_id',$siteID)->select('category_name')
+                        ->select('categories.id as category_id', 'category_name')
+                    ;
+                }
+            ])
                 ->whereHas('categories', function ($query) use ($siteID, $checkBlock) {
                      $query->where('category_checked_ip', $checkBlock)
                         ->where('site_id',$siteID)->select('category_name');
@@ -125,14 +186,38 @@ class ApiController extends Controller
                 ->orderBy($order, 'desc')
                 ->paginate($limit);
         }else{
-            $data = Wallpapers::with('tags')
-//                ->where('image_extension', $gif,'image/gif')
-                ->whereHas('categories', function ($query) use ($siteID, $checkBlock) {
-                    $query->where('category_checked_ip', $checkBlock)
-                        ->where('site_id',$siteID);
-                })
-                ->inRandomOrder()
-                ->paginate($limit);
+            if ($category){
+                $data = Categories::where('id',$category)
+                    ->where('site_id',$siteID)
+                    ->first()
+                    ->wallpaper()
+                    ->with(['categories'=> function ($query) use ($category, $siteID, $checkBlock) {
+                        $query->where('category_checked_ip', $checkBlock)
+                            ->where('site_id',$siteID)->select('category_name')
+                            ->select('categories.id as category_id', 'category_name')
+                        ;
+                    }
+                    ])
+                    ->inRandomOrder()
+                    ->paginate($limit);
+            }else{
+                $data = Wallpapers::with(['tags',
+                    'categories'=> function ($query) use ($category, $siteID, $checkBlock) {
+                        $query->where('category_checked_ip', $checkBlock)
+                            ->where('site_id',$siteID)->select('category_name')
+                            ->select('categories.id as category_id', 'category_name')
+                        ;
+                    }
+                ])
+                    ->whereHas('categories', function ($query) use ($category, $siteID, $checkBlock) {
+                        $query
+                            ->where('category_checked_ip', $checkBlock)
+                            ->where('site_id',$siteID);
+                    })
+                    ->inRandomOrder()
+                    ->paginate($limit);
+            }
+
         }
         $dataResult = WallpaperResource::collection($data);
         return $dataResult;
