@@ -95,37 +95,16 @@ class ApiController extends Controller
         return $result;
     }
 
-
-    public function viewWallpapers($order){
+    public function newest(){
         $domain = $_SERVER['SERVER_NAME'];
         $site =  Sites::where('site_web', $domain)->first();
         $limit = isset($_GET['per_page']) ? $_GET['per_page'] : 10;
 
-        $category = isset($_GET['category_id']) ? $_GET['category_id'] : null;
-
-
-
-        if ($order == 'newest'){
-            if (checkBlockIp()) {
-                $data = $this->getWallpaper('id',$site->id,1,$limit,$category);
-            } else {
-                $data = $this->getWallpaper('id',$site->id,0,$limit,$category);
-            }
-        }elseif ($order == 'trending'){
-            if (checkBlockIp()) {
-                $data = $this->getWallpaper('wallpaper_like_count',$site->id,1,$limit,$category);
-            } else {
-                $data = $this->getWallpaper('wallpaper_like_count',$site->id,0,$limit,$category);
-            }
-        }else{
-            if (checkBlockIp()) {
-                $data = $this->getWallpaper(null,$site->id,1,$limit,$category);
-            } else {
-                $data = $this->getWallpaper(null,$site->id,0,$limit,$category);
-            }
+        if (checkBlockIp()) {
+            $data = $this->getWallpaper('id',$site->id,1,$limit);
+        } else {
+            $data = $this->getWallpaper('id',$site->id,0,$limit);
         }
-
-
         $dataResult['page'] = $data->currentPage();
         $dataResult['per_page'] = $limit;
         $dataResult['last_page'] = $data->lastPage();
@@ -134,42 +113,50 @@ class ApiController extends Controller
         return $dataResult;
     }
 
-//    public function newest(){
-//        $domain = $_SERVER['SERVER_NAME'];
-//        $site =  Sites::where('site_web', $domain)->first();
-//        $limit = isset($_GET['per_page']) ? $_GET['per_page'] : 10;
-//
-//        if (checkBlockIp()) {
-//            $data = $this->getWallpaper('id',$site->id,1,$limit);
-//        } else {
-//            $data = $this->getWallpaper('id',$site->id,0,$limit);
-//        }
-//        $dataResult['page'] = $data->currentPage();
-//        $dataResult['per_page'] = $limit;
-//        $dataResult['last_page'] = $data->lastPage();
-//        $dataResult['total'] = $data->total();
-//        $dataResult['data'] = $data;
-//        return $dataResult;
-//    }
-//
-//    public function trending(){
-//        $domain = $_SERVER['SERVER_NAME'];
-//        $site =  Sites::where('site_web', $domain)->first();
-//        $limit = isset($_GET['per_page']) ? $_GET['per_page'] : 10;
-//
-//        if (checkBlockIp()) {
-//            $data = $this->getWallpaper('wallpaper_like_count',$site->id,1,$limit);
-//        } else {
-//            $data = $this->getWallpaper('wallpaper_like_count',$site->id,0,$limit);
-//        }
-//        $dataResult['page'] = $data->currentPage();
-//        $dataResult['per_page'] = $limit;
-//        $dataResult['last_page'] = $data->lastPage();
-//        $dataResult['total'] = $data->total();
-//        $dataResult['data'] = $data;
-//        return $dataResult;
-//    }
-    private  function getWallpaper($order, $siteID, $checkBlock, $limit,$category){
+
+    public function trending(){
+        $domain = $_SERVER['SERVER_NAME'];
+        $site =  Sites::where('site_web', $domain)->first();
+        $limit = isset($_GET['per_page']) ? $_GET['per_page'] : 10;
+
+        if (checkBlockIp()) {
+            $data = $this->getWallpaper('wallpaper_like_count',$site->id,1,$limit);
+        } else {
+            $data = $this->getWallpaper('wallpaper_like_count',$site->id,0,$limit);
+        }
+        $dataResult['page'] = $data->currentPage();
+        $dataResult['per_page'] = $limit;
+        $dataResult['last_page'] = $data->lastPage();
+        $dataResult['total'] = $data->total();
+        $dataResult['data'] = $data;
+        return $dataResult;
+    }
+
+    public function random(){
+        $domain = $_SERVER['SERVER_NAME'];
+        $site =  Sites::where('site_web', $domain)->first();
+        $limit = isset($_GET['per_page']) ? $_GET['per_page'] : 10;
+
+        $category = isset($_GET['category_id']) ? $_GET['category_id'] : null;
+
+        if (checkBlockIp()) {
+            $data = $this->getWallpaper('wallpaper_like_count',$site->id,1,$limit,$category);
+        } else {
+            $data = $this->getWallpaper('wallpaper_like_count',$site->id,0,$limit,$category);
+        }
+        $dataResult['page'] = $data->currentPage();
+        $dataResult['per_page'] = $limit;
+        $dataResult['last_page'] = $data->lastPage();
+        $dataResult['total'] = $data->total();
+        $dataResult['data'] = $data;
+        return $dataResult;
+    }
+
+    public function download(Request $request){
+        dd($request->all());
+    }
+
+    private  function getWallpaper($order, $siteID, $checkBlock, $limit,$category=null){
         if(isset($order)){
             $data = Wallpapers::with(['tags',
                 'categories'=> function ($query) use ($siteID, $checkBlock) {

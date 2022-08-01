@@ -122,7 +122,12 @@ Route::group([
 ], function() {
     Route::post('auth/login',[App\Http\Controllers\Api\v6\ApiController::class, 'login']);
     Route::get('categories',[App\Http\Controllers\Api\v6\ApiController::class, 'categories']);
-    Route::get('wallpapers/{order}',[App\Http\Controllers\Api\v6\ApiController::class, 'viewWallpapers']);
+
+    Route::get('wallpapers/newest',[App\Http\Controllers\Api\v6\ApiController::class, 'newest']);
+    Route::get('wallpapers/trending',[App\Http\Controllers\Api\v6\ApiController::class, 'trending']);
+    Route::get('wallpapers/random',[App\Http\Controllers\Api\v6\ApiController::class, 'random']);
+
+    Route::put('wallpapers/download',[App\Http\Controllers\Api\v6\ApiController::class, 'download']);
 });
 
 
