@@ -117,7 +117,7 @@ class ApiController extends Controller
     private  function getWallpaper($order, $siteID, $checkBlock, $gif, $limit){
         if(isset($order)){
             $data = Wallpapers::with(['tags'])
-                ->where('image_extension', $gif,'image/gif')
+//                ->where('image_extension', $gif,'image/gif')
                 ->whereHas('categories', function ($query) use ($siteID, $checkBlock) {
                      $query->where('category_checked_ip', $checkBlock)
                         ->where('site_id',$siteID)->select('category_name');
@@ -126,7 +126,7 @@ class ApiController extends Controller
                 ->paginate($limit);
         }else{
             $data = Wallpapers::with('tags')
-                ->where('image_extension', $gif,'image/gif')
+//                ->where('image_extension', $gif,'image/gif')
                 ->whereHas('categories', function ($query) use ($siteID, $checkBlock) {
                     $query->where('category_checked_ip', $checkBlock)
                         ->where('site_id',$siteID);
