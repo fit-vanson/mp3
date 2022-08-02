@@ -94,10 +94,10 @@ class ApiController extends Controller
 
             'default_server' => [
                 'adres' => $domain,
-                'images_big' => url('/api/wallpaperThumb') . '/[ID].jpg',
-                'images_set_wallpapers' => url('/api/wallpaper') . '/[ID].jpg',
-                "images_pobierz" => url('/api/wallpaper') . '/[ID].jpg',
-                'img_share' => url('/api/wallpaperThumb') . '/[ID].jpg',
+                'images_big' => 	"http://walluhd.ovh/images/1080/[ID].jpg",
+                'images_set_wallpapers' => 	"http://walluhd.ovh/images/1080/[ID].jpg",
+                "images_pobierz" => 	"http://walluhd.ovh/images/1080/[ID].jpg",
+                'img_share' => 	"http://walluhd.ovh/images/1080/[ID].jpg",
                 "if_less_than" =>0,
                 "ping_add" =>0,
 
@@ -106,10 +106,10 @@ class ApiController extends Controller
                 [
                     "adres" => $domain,
                     "server_status" => route('v8.status'),
-                    'images_big' => url('/api/wallpaperThumb') . '/[ID].jpg',
-                    'images_set_wallpapers' => url('/api/wallpaper') . '/[ID].jpg',
-                    "images_pobierz" => url('/api/wallpaper') . '/[ID].jpg',
-                    'img_share' => url('/api/wallpaperThumb') . '/[ID].jpg',
+                    'images_big' => 	"http://walluhd.ovh/images/1080/[ID].jpg",
+                    'images_set_wallpapers' => 	"http://walluhd.ovh/images/1080/[ID].jpg",
+                    "images_pobierz" => 	"http://walluhd.ovh/images/1080/[ID].jpg",
+                    'img_share' => 	"http://walluhd.ovh/images/1080/[ID].jpg",
                     'if_less_than' => 90,
                     'ping_add' => 0,
 
