@@ -57,22 +57,28 @@ class ApiController extends Controller
                     "ping+" => 0
                 ],
             ],
-
-//            "Lista_new" => "dd",
             "Lista_new" => $this->getWallpaper($site->id,'id','id'),
             "Lista_like" => $this->getWallpaper($site->id,'wallpaper_like_count','id'),
             "Lista_download" => $this->getWallpaper($site->id,'wallpaper_download_count','id'),
             "kadr_new" => $this->getWallpaper($site->id,'id','wallpaper_view_count'),
             "kadr_like" => $this->getWallpaper($site->id,'wallpaper_like_count','wallpaper_view_count'),
             "kadr_download" => $this->getWallpaper($site->id,'wallpaper_download_count','wallpaper_view_count'),
-//            "kadr_like" => "43,49,51,57,49,50,60,68,75,41,50,72,51,56,44,53,41,28,56,51,37,46,56,50,64,51,50,37,54,50,44,32,59,50,34,54,51,48,48,49,34,51,47,51,42,51,45,47,47,51,48,45,46,54,57,32,56,51,68,31,48,39,51,48,52,51,48,51,53,34,45,47,49,57,48,50,56,50,56,45,45,57,49,57,36,49,25,46,48,48,32,49,59,53,56,53,59,51,52,65,53,49,28,50,56,54,47,50,35,54,70,27,76,56,51,35,45,48,34,67,46,56,51,49,30,51,49,57,62,50,28,43,43,50,56,49,49,52,52,49,40,57,53,39",
-//            "kadr_download" => "43,49,51,57,49,50,60,68,75,41,50,72,51,56,44,53,41,28,56,51,37,46,56,50,64,51,50,37,54,50,44,32,59,50,34,54,51,48,48,49,34,51,47,51,42,51,45,47,47,51,48,45,46,54,57,32,56,51,68,31,48,39,51,48,52,51,48,51,53,34,45,47,49,57,48,50,56,50,56,45,45,57,49,57,36,49,25,46,48,48,32,49,59,53,56,53,59,51,52,65,53,49,28,50,56,54,47,50,35,54,70,27,76,56,51,35,45,48,34,67,46,56,51,49,30,51,49,57,62,50,28,43,43,50,56,49,49,52,52,49,40,57,53,39"
         ];
-
         return $data;
-
     }
 
+    public function action(Request $request){
+        $wallpaper = Wallpapers::find($request->id);
+        if (isset($request->lubi)){
+            $wallpaper->wallpaper_like_count = $wallpaper->wallpaper_like_count + 1;
+        }
+        if (isset($request->pobierz)){
+            $wallpaper->wallpaper_download_count = $wallpaper->wallpaper_download_count + 1;
+        }
+        $wallpaper->save();
+        return response()->json(['mgs'=>'success']);
+
+    }
 
     private  function getWallpaper($siteID, $order, $pluck){
 
@@ -98,10 +104,14 @@ class ApiController extends Controller
         $dataResult = implode(',',$data);
         return $dataResult;
     }
+
     public function showWallpaper($id){
         $wallpaper = Wallpapers::find($id);
         if (isset($wallpaper)){
-                return response()->file(public_path('/storage/wallpapers/').$wallpaper->wallpaper_image);
+            $wallpaper->wallpaper_view_count = $wallpaper->wallpaper_view_count + 1;
+            $wallpaper->save();
+            return response()->file(public_path('/storage/wallpapers/').$wallpaper->wallpaper_image);
+
         }else{
             return response()->json(['mgs'=>'error']);
         }
