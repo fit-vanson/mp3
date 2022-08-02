@@ -74,7 +74,7 @@ class ApiController extends Controller
         $site = Sites::where('site_web', $domain)->first();
 
         $data = [
-            'data_gen' => time(),
+            'data_gen' =>(string) (time()),
             "disable_reports"=>false,
             "guzik_pobierz"=>true,
             "pokaz_wyjscie"=>true,
