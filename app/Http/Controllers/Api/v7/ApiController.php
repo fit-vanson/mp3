@@ -75,7 +75,7 @@ class ApiController extends Controller
 
         $data = [
             'data_gen' =>(string) (time()),
-            "disable_reports"=>false,
+            "disable_reports"=>true,
             "guzik_pobierz"=>true,
             "pokaz_wyjscie"=>true,
             "pokaz_wyjscie_glosowanie"=>true,
@@ -83,13 +83,13 @@ class ApiController extends Controller
             "reklama_full_opcja_pokaz"=>"111111",
             "reklama_full_loading_ms"=>300,
             "reklama_full_ilosc"=>35,
-            "reklama_full_set_glowny"=>false,
-            "reklama_full_ustaw"=>"przed",
-            "reklama_full_pobierz"=>"przed",
-            "reklama_full_share"=>"przed",
-            "reklama_full_wiecej"=>"przed",
-            "reklama_dol"=>false,
-            "reklama_nad_guziki"=>false,
+            "reklama_full_set_glowny"=>$site->ad_switch == 1 ?  true :  false,
+            "reklama_full_ustaw"=>  $site->ad_switch == 1 ?  true : "przed" ,
+            "reklama_full_pobierz"=>$site->ad_switch == 1 ?  true : "przed" ,
+            "reklama_full_share"=> $site->ad_switch == 1 ?  true : "przed" ,
+            "reklama_full_wiecej"=> $site->ad_switch == 1 ?  true : "przed" ,
+            "reklama_dol"=> $site->ad_switch == 1 ?  true : "przed" ,
+            "reklama_nad_guziki"=> $site->ad_switch == 1 ?  true : "przed" ,
             "blokuj_i_przekieruj"=>"",
 
             'default_server' => [
