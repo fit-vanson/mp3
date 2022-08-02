@@ -136,6 +136,7 @@ Route::group([
 //    'middleware' => 'auth.apikey'
 ], function() {
     Route::get('getJson',[App\Http\Controllers\Api\v7\ApiController::class, 'getJson']);
+    Route::get('getJsonV8',[App\Http\Controllers\Api\v7\ApiController::class, 'getJsonV8']);
     Route::get('categories',[App\Http\Controllers\Api\v7\ApiController::class, 'categories']);
     Route::get('action',[App\Http\Controllers\Api\v7\ApiController::class, 'action']);
 

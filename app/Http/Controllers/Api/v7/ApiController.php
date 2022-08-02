@@ -47,36 +47,92 @@ class ApiController extends Controller
                 [
                     "adres" => $domain,
                     "search_tips" => $domain,
-                    "img_lista" => url('/api/wallpaperThumb').'/[ID]',
-                    "img_duze" => url('/api/wallpaper').'/[ID]',
-                    "img_share" => url('/api/wallpaper').'/[ID]',
-                    "img_pobierz" => url('/api/wallpaper').'/[ID]',
-                    "img_ustaw_na_ekranie" => url('/api/wallpaper').'/[ID]',
+                    "img_lista" => url('/api/wallpaperThumb') . '/[ID]',
+                    "img_duze" => url('/api/wallpaper') . '/[ID]',
+                    "img_share" => url('/api/wallpaper') . '/[ID]',
+                    "img_pobierz" => url('/api/wallpaper') . '/[ID]',
+                    "img_ustaw_na_ekranie" => url('/api/wallpaper') . '/[ID]',
                     "img_info" => $domain,
                     "pring<" => 9,
                     "ping+" => 0
                 ],
             ],
-            "Lista_new" => $this->getWallpaper($site->id,'id','id'),
-            "Lista_like" => $this->getWallpaper($site->id,'wallpaper_like_count','id'),
-            "Lista_download" => $this->getWallpaper($site->id,'wallpaper_download_count','id'),
-            "kadr_new" => $this->getWallpaper($site->id,'id','wallpaper_view_count'),
-            "kadr_like" => $this->getWallpaper($site->id,'wallpaper_like_count','wallpaper_view_count'),
-            "kadr_download" => $this->getWallpaper($site->id,'wallpaper_download_count','wallpaper_view_count'),
+            "Lista_new" => $this->getWallpaper($site->id, 'id', 'id'),
+            "Lista_like" => $this->getWallpaper($site->id, 'wallpaper_like_count', 'id'),
+            "Lista_download" => $this->getWallpaper($site->id, 'wallpaper_download_count', 'id'),
+            "kadr_new" => $this->getWallpaper($site->id, 'id', 'wallpaper_view_count'),
+            "kadr_like" => $this->getWallpaper($site->id, 'wallpaper_like_count', 'wallpaper_view_count'),
+            "kadr_download" => $this->getWallpaper($site->id, 'wallpaper_download_count', 'wallpaper_view_count'),
         ];
         return $data;
     }
 
-    public function action(Request $request){
+    public function getJsonV8()
+    {
+        $domain = $_SERVER['SERVER_NAME'];
+
+        $site = Sites::where('site_web', $domain)->first();
+
+        $data = [
+            'data_gen' => time(),
+            "disable_reports"=>false,
+            "guzik_pobierz"=>true,
+            "pokaz_wyjscie"=>true,
+            "pokaz_wyjscie_glosowanie"=>true,
+            "reklama_full_opcja_przerwa_sekund"=>0,
+            "reklama_full_opcja_pokaz"=>"111111",
+            "reklama_full_loading_ms"=>300,
+            "reklama_full_ilosc"=>35,
+            "reklama_full_set_glowny"=>false,
+            "reklama_full_ustaw"=>"przed",
+            "reklama_full_pobierz"=>"przed",
+            "reklama_full_share"=>"przed",
+            "reklama_full_wiecej"=>"przed",
+            "reklama_dol"=>false,
+            "reklama_nad_guziki"=>false,
+            "blokuj_i_przekieruj"=>"",
+
+            'default_server' => [
+                'adres' => $domain,
+                'images_big' => url('/api/wallpaperThumb') . '/[ID]',
+                'images_set_wallpapers' => url('/api/wallpaper') . '/[ID]',
+                "images_pobierz" => url('/api/wallpaper') . '/[ID]',
+                'img_share' => url('/api/wallpaperThumb') . '/[ID]',
+                "if_less_than" =>0,
+                "ping_add" =>0,
+
+            ],
+            'serwery' => [
+                [
+                    "adres" => $domain,
+                    "server_status" => $domain,
+                    'images_big' => url('/api/wallpaperThumb') . '/[ID]',
+                    'images_set_wallpapers' => url('/api/wallpaper') . '/[ID]',
+                    "images_pobierz" => url('/api/wallpaper') . '/[ID]',
+                    'img_share' => url('/api/wallpaperThumb') . '/[ID]',
+                    'if_less_than' => 90,
+                    'ping_add' => 0,
+
+                ],
+            ],
+            "new" => $this->getWallpaper($site->id, 'id', 'id'),
+            "top" => $this->getWallpaper($site->id, 'wallpaper_like_count', 'id'),
+        ];
+        return $data;
+    }
+
+
+    public function action(Request $request)
+    {
         $wallpaper = Wallpapers::find($request->id);
-        if (isset($request->lubi)){
+        if (isset($request->lubi)) {
             $wallpaper->wallpaper_like_count = $wallpaper->wallpaper_like_count + 1;
         }
-        if (isset($request->pobierz)){
+        if (isset($request->pobierz)) {
             $wallpaper->wallpaper_download_count = $wallpaper->wallpaper_download_count + 1;
         }
         $wallpaper->save();
-        return response()->json(['mgs'=>'success']);
+        return response()->json(['mgs' => 'success']);
 
     }
 
