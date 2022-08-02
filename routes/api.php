@@ -131,4 +131,18 @@ Route::group([
     Route::put('wallpapers/use',[App\Http\Controllers\Api\v6\ApiController::class, 'use']);
 });
 
+Route::group([
+    "prefix" => "v7",
+//    'middleware' => 'auth.apikey'
+], function() {
+    Route::get('getJson',[App\Http\Controllers\Api\v7\ApiController::class, 'getJson']);
+    Route::get('categories',[App\Http\Controllers\Api\v7\ApiController::class, 'categories']);
+    Route::get('action',[App\Http\Controllers\Api\v7\ApiController::class, 'action']);
+
+});
+
+Route::get('wallpaper/{id}',[App\Http\Controllers\Api\v7\ApiController::class, 'showWallpaper']);
+Route::get('wallpaperThumb/{id}',[App\Http\Controllers\Api\v7\ApiController::class, 'showWallpaperThumb']);
+
+
 
