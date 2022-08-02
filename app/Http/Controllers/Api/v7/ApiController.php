@@ -84,12 +84,12 @@ class ApiController extends Controller
             "reklama_full_loading_ms"=>300,
             "reklama_full_ilosc"=>35,
             "reklama_full_set_glowny"=>$site->ad_switch == 1 ?  true :  false,
-            "reklama_full_ustaw"=>  $site->ad_switch == 1 ?  true : "przed" ,
-            "reklama_full_pobierz"=>$site->ad_switch == 1 ?  true : "przed" ,
-            "reklama_full_share"=> $site->ad_switch == 1 ?  true : "przed" ,
-            "reklama_full_wiecej"=> $site->ad_switch == 1 ?  true : "przed" ,
-            "reklama_dol"=> $site->ad_switch == 1 ?  true : "przed" ,
-            "reklama_nad_guziki"=> $site->ad_switch == 1 ?  true : "przed" ,
+            "reklama_full_ustaw"=>  $site->ad_switch == 0 ?  true : "przed" ,
+            "reklama_full_pobierz"=>$site->ad_switch == 0 ?  true : "przed" ,
+            "reklama_full_share"=> $site->ad_switch == 0 ?  true : "przed" ,
+            "reklama_full_wiecej"=> $site->ad_switch == 0 ?  true : "przed" ,
+            "reklama_dol"=> $site->ad_switch == 0 ?  true : "przed" ,
+            "reklama_nad_guziki"=> $site->ad_switch == 0 ?  true : "przed" ,
             "blokuj_i_przekieruj"=>"",
 
             'default_server' => [
