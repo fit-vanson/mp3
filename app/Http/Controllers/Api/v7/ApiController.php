@@ -75,10 +75,10 @@ class ApiController extends Controller
 
         $data = [
             'data_gen' =>(string) (time()),
-            "disable_reports"=>true,
+            "disable_reports"=>false,
             "guzik_pobierz"=>false,
-            "pokaz_wyjscie"=>true,
-            "pokaz_wyjscie_glosowanie"=>true,
+            "pokaz_wyjscie"=>false,
+            "pokaz_wyjscie_glosowanie"=>false,
             "reklama_full_opcja_przerwa_sekund"=>0,
             "reklama_full_opcja_pokaz"=>"111111",
             "reklama_full_loading_ms"=>300,
