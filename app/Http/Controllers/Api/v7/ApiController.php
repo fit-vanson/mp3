@@ -115,8 +115,8 @@ class ApiController extends Controller
 
                 ],
             ],
-            "new" => $this->getWallpaper($site->id, 'id', 'wallpaper_image'),
-            "top" => $this->getWallpaper($site->id, 'wallpaper_like_count', 'wallpaper_image'),
+            "new" => $this->getWallpaper($site->id, 'id', 'id'),
+            "top" => $this->getWallpaper($site->id, 'wallpaper_like_count', 'id'),
         ];
         return $data;
     }
