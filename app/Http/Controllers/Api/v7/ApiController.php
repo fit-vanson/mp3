@@ -105,7 +105,7 @@ class ApiController extends Controller
             'serwery' => [
                 [
                     "adres" => $domain,
-                    "server_status" => $domain,
+                    "server_status" => route('v8.status'),
                     'images_big' => url('/api/wallpaperThumb') . '/[ID]',
                     'images_set_wallpapers' => url('/api/wallpaper') . '/[ID]',
                     "images_pobierz" => url('/api/wallpaper') . '/[ID]',
@@ -119,6 +119,10 @@ class ApiController extends Controller
             "top" => $this->getWallpaper($site->id, 'wallpaper_like_count', 'id'),
         ];
         return $data;
+    }
+
+    public function status(){
+        return 'ok';
     }
 
 
