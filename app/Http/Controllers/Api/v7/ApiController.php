@@ -94,10 +94,10 @@ class ApiController extends Controller
 
             'default_server' => [
                 'adres' => $domain,
-                'images_big' => 	"http://walluhd.ovh/images/1080/[ID].jpg",
-                'images_set_wallpapers' => 	"http://walluhd.ovh/images/1080/[ID].jpg",
-                "images_pobierz" => 	"http://walluhd.ovh/images/1080/[ID].jpg",
-                'img_share' => 	"http://walluhd.ovh/images/1080/[ID].jpg",
+                'images_big' => 	url('/storage/wallpapers') . '/[ID]',
+                'images_set_wallpapers' => url('/storage/wallpapers') . '/[ID]',
+                "images_pobierz" => 	url('/storage/wallpapers') . '/[ID]',
+                'img_share' => 	url('/storage/wallpapers') . '/[ID]',
                 "if_less_than" =>0,
                 "ping_add" =>0,
 
@@ -106,17 +106,17 @@ class ApiController extends Controller
                 [
                     "adres" => $domain,
                     "server_status" => route('v8.status'),
-                    'images_big' => 	"http://walluhd.ovh/images/1080/[ID].jpg",
-                    'images_set_wallpapers' => 	"http://walluhd.ovh/images/1080/[ID].jpg",
-                    "images_pobierz" => 	"http://walluhd.ovh/images/1080/[ID].jpg",
-                    'img_share' => 	"http://walluhd.ovh/images/1080/[ID].jpg",
+                    'images_big' => url('/storage/wallpapers') . '/[ID]',
+                    'images_set_wallpapers' => url('/storage/wallpapers') . '/[ID]',
+                    "images_pobierz" => url('/storage/wallpapers') . '/[ID]',
+                    'img_share' => url('/storage/wallpapers') . '/[ID]',
                     'if_less_than' => 90,
                     'ping_add' => 0,
 
                 ],
             ],
-            "new" => $this->getWallpaper($site->id, 'id', 'id'),
-            "top" => $this->getWallpaper($site->id, 'wallpaper_like_count', 'id'),
+            "new" => $this->getWallpaper($site->id, 'id', 'wallpaper_image'),
+            "top" => $this->getWallpaper($site->id, 'wallpaper_like_count', 'wallpaper_image'),
         ];
         return $data;
     }
