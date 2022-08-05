@@ -240,7 +240,6 @@
                     url: "{{ asset("admin/tags/edit") }}/"+id,
                     success: function (data) {
 
-                        console.log(data)
                         $('#modal{{preg_replace('/\s+/','',$page_title)}}').modal('show');
                         $('#{{preg_replace('/\s+/','',$page_title)}}ModalLabel').html("Edit {{$page_title}}");
                         $('#saveBtn{{preg_replace('/\s+/','',$page_title)}}').val("update");

@@ -36,16 +36,13 @@ Route::get('/clear', function () {
         Log::error($e->getMessage());
     }
 });
-
-
-
 Route::get('/link',function (){
     Artisan::call('storage:link');
     echo 1;
 });
 
-
 Route::get('/', [HomeController::class, 'show'])->name('show');
+
 Route::get('/policy', [HomeController::class, 'policy'])->name('policy');
 
 Route::get('/directlink', [SitesController::class, 'directlink'])->name('directlink');

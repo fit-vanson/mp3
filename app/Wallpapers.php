@@ -24,11 +24,6 @@ class Wallpapers extends Model
         'wallpaper_type',
     ];
 
-//    public function categories()
-//    {
-//        return $this->belongsToMany(Categories::class, CategoriesHasWallpaper::class, 'wallpaper_id', 'category_id');
-//    }
-
     public function categories()
     {
         return $this->hasManyDeep(

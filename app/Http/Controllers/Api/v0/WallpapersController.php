@@ -174,6 +174,7 @@ class WallpapersController extends Controller
                 $getResource = WallpapersResource::collection($data);
             }
         }
+
         return response()->json([
             'message'=>'save ip successs',
             'ad_switch'=>$site->ad_switch,

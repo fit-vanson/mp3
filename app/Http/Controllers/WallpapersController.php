@@ -43,8 +43,6 @@ class WallpapersController extends Controller
                 'tags' => $tags,
             ]);
         }
-
-
     }
     public function getIndex(Request $request)
     {
