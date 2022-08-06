@@ -709,7 +709,8 @@
                             var states = ['success', 'danger', 'warning', 'info', 'dark', 'primary', 'secondary'];
                             var $state = states[stateNum];
                             $.each(tags, function(i, item) {
-                                $output += ' <span class="badge badge-'+$state+'" style="font-size: 100%">' + item.tag_name + '</span> ';
+                                $output += '<a href="{{route("wallpapers.index")}}?search='+item.tag_name+'"> <span class="badge badge-'+$state+'" style="font-size: 100%">' + item.tag_name + '</span> </a> ';
+                                // $output += '11111111 ';
                                 return i<2;
                             });
                             if(tags.length > 3){

@@ -621,6 +621,7 @@ class SitesController extends Controller
                 "category_checked_ip" => $record->category_checked_ip == 1 ? '<span class="badge badge-danger">FAKE</span>' : '<span class="badge badge-success">REAL</span>',
                 "wallpaper_count" => $record->wallpaper_count,
                 "tags" => $record->tags,
+//                "tags" => '<a href="'.route('wallpapers.index').'?search='.$record->tags.'"> <h5 class="font-size-16">'.$record->tags.'</h5></a>',
                 "action" => $btn,
             );
         }
