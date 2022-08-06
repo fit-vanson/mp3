@@ -186,7 +186,7 @@
                     { data: 'site_ads',className: "align-middle"},
                     { data: 'site_sort',className: "align-middle",orderable: false},
                     { data: 'categories_count',className: "align-middle",},
-                    { data: 'wallpapers_count',className: "align-middle",},
+                    { data: 'wallpapers_count',className: "align-middle",orderable: false},
                     { data: 'action',className: "align-middle text-center ",orderable: false }
                 ],
                 order: [1, 'asc'],

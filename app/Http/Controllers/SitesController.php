@@ -63,7 +63,9 @@ class SitesController extends Controller
 
         // Get records, also we have included search filter as well
         $records = Sites::orderBy($columnName, $columnSortOrder)
-            ->with('categories')
+            ->with(['categories'=>function ($q){
+                $q->withCount('wallpaper');
+            }])
             ->where('site_name', 'like', '%' . $searchValue . '%')
             ->orwhere('site_web', 'like', '%' . $searchValue . '%')
             ->orwhere('site_project', 'like', '%' . $searchValue . '%')
@@ -75,7 +77,10 @@ class SitesController extends Controller
 
         $data_arr = array();
         foreach ($records as $record) {
-
+            $count_wallpaper = 0;
+            foreach ($record->categories as $category){
+                $count_wallpaper += $category->wallpaper_count ;
+            }
 //            dd($record);
 //            $btn  = ' <a href="javascript:void(0)" onclick="editRolesPermissions('.$record->id.')" class="btn btn-warning"><i class="ti-pencil-alt"></i></a>';
             $btn = ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-warning editSites"><i class="ti-pencil-alt"></i></a>';
@@ -127,7 +132,7 @@ class SitesController extends Controller
 
                 "site_sort" => $sort,
                 "categories_count" => $record->categories_count,
-                "wallpapers_count" => $record->categories_count,
+                "wallpapers_count" => $count_wallpaper,
                 "action" => $btn,
             );
         }
