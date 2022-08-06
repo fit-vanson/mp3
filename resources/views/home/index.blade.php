@@ -10,7 +10,7 @@
     <meta name="description" content="Bootstrap 4 Mobile App Template">
     <meta name="author" content="Xiaoying Riley at 3rd Wave Media">
     <link rel="shortcut icon" href="{{asset('favicon.ico')}}">
-    <link rel="shortcut icon" href="{{asset('storage/sites/'. preg_replace('/[^A-Za-z0-9\-._]/',"/",$site->site_image))}}">
+    <link rel="shortcut icon" href="{{ $site->site_logo_url ? $site->site_logo_url :  asset('storage/sites/'. preg_replace('/[^A-Za-z0-9\-._]/',"/",$site->site_image))}}">
 
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css?family=Maven+Pro:400,500,700|Nunito:400,600,700" rel="stylesheet">
@@ -30,7 +30,7 @@
 <body>
 <style>
     .hero-section .figure-holder {
-        background: url({{asset('storage/sites/'. preg_replace('/[^A-Za-z0-9\-._]/',"/",$site->site_image))}}) no-repeat right top;
+        background: url({{ $site->site_logo_url ? $site->site_logo_url : asset('storage/sites/'. preg_replace('/[^A-Za-z0-9\-._]/',"/",$site->site_image))}}) no-repeat right top;
         background-size: 375px auto;
         min-height: 600px;
         display: block;
