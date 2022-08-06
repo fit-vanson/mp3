@@ -70,7 +70,6 @@ class WallpapersController extends Controller
 
     public function getFeatured()
     {
-
         $domain=$_SERVER['SERVER_NAME'];
         if (isset($_SERVER['HTTP_CLIENT_IP']))
             $ipaddress = $_SERVER['HTTP_CLIENT_IP'];
@@ -109,6 +108,7 @@ class WallpapersController extends Controller
                 $data = Sites::where('site_web',$domain)->first()
                     ->categories()
                     ->where('category_checked_ip',1)
+                    ->withCount('wallpaper')
                     ->inRandomOrder()
                     ->get();
                 $getResource= FeatureWallpaperResource::collection($data);
@@ -116,6 +116,7 @@ class WallpapersController extends Controller
                 $data = Sites::where('site_web',$domain)->first()
                     ->categories()
                     ->where('category_checked_ip',1)
+                    ->withCount('wallpaper')
                     ->orderBy('category_order', 'desc')
                     ->get();
                 $getResource= FeatureWallpaperResource::collection($data);
@@ -123,6 +124,7 @@ class WallpapersController extends Controller
                 $data = Sites::where('site_web',$domain)->first()
                     ->categories()
                     ->where('category_checked_ip',1)
+                    ->withCount('wallpaper')
                     ->orderBy('category_view_count', 'desc')
                     ->get();
                 $getResource= FeatureWallpaperResource::collection($data);
@@ -143,6 +145,7 @@ class WallpapersController extends Controller
                 $data = Sites::where('site_web',$domain)->first()
                     ->categories()
                     ->where('category_checked_ip',0)
+                    ->withCount('wallpaper')
                     ->inRandomOrder()
                     ->get();
                 $getResource= FeatureWallpaperResource::collection($data);
@@ -150,6 +153,7 @@ class WallpapersController extends Controller
                 $data = Sites::where('site_web',$domain)->first()
                     ->categories()
                     ->where('category_checked_ip',0)
+                    ->withCount('wallpaper')
                     ->orderBy('category_order', 'desc')
                     ->get();
                 $getResource= FeatureWallpaperResource::collection($data);
@@ -157,6 +161,7 @@ class WallpapersController extends Controller
                 $data = Sites::where('site_web',$domain)->first()
                     ->categories()
                     ->where('category_checked_ip',0)
+                    ->withCount('wallpaper')
                     ->orderBy('category_view_count', 'desc')
                     ->get();
                 $getResource= FeatureWallpaperResource::collection($data);

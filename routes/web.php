@@ -46,6 +46,10 @@ Route::get('/link',function (){
     echo 1;
 });
 
+Route::get('/phpinfo',function (){
+    echo phpinfo();
+});
+
 Route::get('/', [HomeController::class, 'show'])->name('show');
 
 Route::get('/policy', [HomeController::class, 'policy'])->name('policy');

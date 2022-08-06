@@ -22,6 +22,7 @@ class CategoriesController extends Controller
                 $data = $site
                     ->categories()
                     ->where('category_checked_ip', 1)
+                    ->withCount('wallpaper')
                     ->inRandomOrder()
                     ->get();
             }
@@ -29,6 +30,7 @@ class CategoriesController extends Controller
                 $data = $site
                     ->categories()
                     ->where('category_checked_ip', 1)
+                    ->withCount('wallpaper')
                     ->orderBy('category_view_count','desc')
                     ->get();
             }
@@ -36,6 +38,7 @@ class CategoriesController extends Controller
                 $data = $site
                     ->categories()
                     ->where('category_checked_ip', 1)
+                    ->withCount('wallpaper')
                     ->orderBy('updated_at','desc')
                     ->get();
             }
@@ -44,6 +47,7 @@ class CategoriesController extends Controller
                 $data = $site
                     ->categories()
                     ->where('category_checked_ip', 0)
+                    ->withCount('wallpaper')
                     ->inRandomOrder()
                     ->get();
             }
@@ -51,6 +55,7 @@ class CategoriesController extends Controller
                 $data = $site
                     ->categories()
                     ->where('category_checked_ip', 0)
+                    ->withCount('wallpaper')
                     ->orderBy('category_view_count','desc')
                     ->get();
             }
@@ -58,6 +63,7 @@ class CategoriesController extends Controller
                 $data = $site
                     ->categories()
                     ->where('category_checked_ip', 0)
+                    ->withCount('wallpaper')
                     ->orderBy('updated_at','desc')
                     ->get();
             }

@@ -28,8 +28,8 @@
             <ul class="metismenu list-unstyled" id="side-menu">
                 <li class="menu-title">@lang('translation.Main')</li>
                 <li>
-                    <a href="/" class="waves-effect">
-                        <i class="ti-home"></i><span class="badge badge-pill badge-primary float-right">2</span>
+                    <a href="{{route('admin.home')}}" class="waves-effect">
+                        <i class="ti-home"></i>
                         <span>@lang('translation.Dashboard')</span>
                     </a>
                 </li>
