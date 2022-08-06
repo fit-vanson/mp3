@@ -14,8 +14,8 @@ class CategoriesResource extends JsonResource
      */
     public function toArray($request)
     {
-        if($this->wallpaper_count > 0)
-        {
+//        if($this->wallpaper_count > 0)
+//        {
             return [
                 'id' => $this->id,
                 'name' => $this->category_name,
@@ -24,5 +24,5 @@ class CategoriesResource extends JsonResource
             ];
         }
 
-    }
+//    }
 }
