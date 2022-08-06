@@ -109,6 +109,7 @@ class WallpapersController extends Controller
                     ->categories()
                     ->where('category_checked_ip',1)
                     ->withCount('wallpaper')
+                    ->having('wallpaper_count', '>', 0)
                     ->inRandomOrder()
                     ->get();
                 $getResource= FeatureWallpaperResource::collection($data);
@@ -117,6 +118,7 @@ class WallpapersController extends Controller
                     ->categories()
                     ->where('category_checked_ip',1)
                     ->withCount('wallpaper')
+                    ->having('wallpaper_count', '>', 0)
                     ->orderBy('category_order', 'desc')
                     ->get();
                 $getResource= FeatureWallpaperResource::collection($data);
@@ -125,6 +127,7 @@ class WallpapersController extends Controller
                     ->categories()
                     ->where('category_checked_ip',1)
                     ->withCount('wallpaper')
+                    ->having('wallpaper_count', '>', 0)
                     ->orderBy('category_view_count', 'desc')
                     ->get();
                 $getResource= FeatureWallpaperResource::collection($data);
@@ -146,6 +149,7 @@ class WallpapersController extends Controller
                     ->categories()
                     ->where('category_checked_ip',0)
                     ->withCount('wallpaper')
+                    ->having('wallpaper_count', '>', 0)
                     ->inRandomOrder()
                     ->get();
                 $getResource= FeatureWallpaperResource::collection($data);
@@ -154,6 +158,7 @@ class WallpapersController extends Controller
                     ->categories()
                     ->where('category_checked_ip',0)
                     ->withCount('wallpaper')
+                    ->having('wallpaper_count', '>', 0)
                     ->orderBy('category_order', 'desc')
                     ->get();
                 $getResource= FeatureWallpaperResource::collection($data);
@@ -162,6 +167,7 @@ class WallpapersController extends Controller
                     ->categories()
                     ->where('category_checked_ip',0)
                     ->withCount('wallpaper')
+                    ->having('wallpaper_count', '>', 0)
                     ->orderBy('category_view_count', 'desc')
                     ->get();
                 $getResource= FeatureWallpaperResource::collection($data);

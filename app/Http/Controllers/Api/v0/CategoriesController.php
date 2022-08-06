@@ -23,6 +23,7 @@ class CategoriesController extends Controller
                     ->categories()
                     ->where('category_checked_ip', 1)
                     ->withCount('wallpaper')
+                    ->having('wallpaper_count', '>', 0)
                     ->inRandomOrder()
                     ->get();
             }
@@ -31,6 +32,7 @@ class CategoriesController extends Controller
                     ->categories()
                     ->where('category_checked_ip', 1)
                     ->withCount('wallpaper')
+                    ->having('wallpaper_count', '>', 0)
                     ->orderBy('category_view_count','desc')
                     ->get();
             }
@@ -39,6 +41,7 @@ class CategoriesController extends Controller
                     ->categories()
                     ->where('category_checked_ip', 1)
                     ->withCount('wallpaper')
+                    ->having('wallpaper_count', '>', 0)
                     ->orderBy('updated_at','desc')
                     ->get();
             }
@@ -48,14 +51,17 @@ class CategoriesController extends Controller
                     ->categories()
                     ->where('category_checked_ip', 0)
                     ->withCount('wallpaper')
+                    ->having('wallpaper_count', '>', 0)
                     ->inRandomOrder()
                     ->get();
             }
             elseif($load_categories == 1 ){
                 $data = $site
                     ->categories()
+
                     ->where('category_checked_ip', 0)
                     ->withCount('wallpaper')
+                    ->having('wallpaper_count', '>', 0)
                     ->orderBy('category_view_count','desc')
                     ->get();
             }
@@ -64,6 +70,7 @@ class CategoriesController extends Controller
                     ->categories()
                     ->where('category_checked_ip', 0)
                     ->withCount('wallpaper')
+                    ->having('wallpaper_count', '>', 0)
                     ->orderBy('updated_at','desc')
                     ->get();
             }

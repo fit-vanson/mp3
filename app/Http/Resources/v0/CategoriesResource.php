@@ -14,15 +14,12 @@ class CategoriesResource extends JsonResource
      */
     public function toArray($request)
     {
-//        if($this->wallpaper_count > 0)
-//        {
-            return [
-                'id' => $this->id,
-                'name' => $this->category_name,
-                'view_count' => $this->category_view_count,
-                'image' => asset('storage/categories/' . $this->category_image),
-            ];
-        }
+        return [
+            'id' => $this->id,
+            'name' => $this->category_name,
+            'view_count' => $this->category_view_count,
+            'image' => asset('storage/categories/' . $this->category_image),
+        ];
 
-//    }
+    }
 }
