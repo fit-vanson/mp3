@@ -66,4 +66,10 @@ return [
 
     ],
 
+    'links' => [
+        public_path('storage') => storage_path('app/public'),
+        public_path('storage/wallpapers/thumbnail') => storage_path('app/public/wallpapers/thumbnails'),
+        public_path('storage/wallpapers/download') => storage_path('app/public/wallpapers'),
+    ]
+
 ];

@@ -29,9 +29,14 @@ Auth::routes();
 
 Route::get('/clear', function () {
     try {
-        echo  Artisan::call('optimize');
-        echo  Artisan::call('config:cache');
-        echo  Artisan::call('route:cache');
+
+        echo Artisan::call('cache:clear');
+        echo Artisan::call('config:clear');
+        echo Artisan::call('config:cache');
+        echo Artisan::call('view:clear');
+        echo Artisan::call('optimize');
+        echo Artisan::call('route:cache');
+        echo Artisan::call('storage:link');
     }catch (\Exception $e){
         Log::error($e->getMessage());
     }
