@@ -78,6 +78,44 @@
         </div>
     </div>
 
+    <!--  Modal content for the above example -->
+    <div class="modal fade" id="modal{{preg_replace('/\s+/','',$page_title)}}" tabindex="-1" role="dialog"
+         aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title mt-0" id="{{preg_replace('/\s+/','',$page_title)}}ModalLabel"></h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-hidden="true">×</button>
+                </div>
+                <div class="card-body">
+                    <form id="form{{preg_replace('/\s+/','',$page_title)}}EditWallpaper">
+                        <input type="hidden" name="id" id="id">
+
+                        <div class="form-group">
+                            <label class="control-label">Tags Select</label>
+                            <select class="select2 form-control select2-multiple" id="select_tags_edit"
+                                    name="select_tags[]" multiple="multiple"
+                                    data-placeholder="Choose ..." style="width: 100%">
+                                @foreach($tags as $tag)
+                                    <option value="{{$tag->id}}">{{$tag->tag_name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="form-group mb-0">
+                            <div>
+                                <button type="submit" id="saveBtn{{preg_replace('/\s+/','',$page_title)}}" class="btn btn-primary waves-effect waves-light mr-1">
+                                    Submit
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
     <div class="row align-items-center" style="padding-bottom: 10px">
         <div class="col-sm-12">
             <div class="float-right" >
@@ -443,21 +481,22 @@
                     type: "get",
                     url: "{{ asset("admin/wallpapers/edit") }}/" + id,
                     success: function (data) {
+
+                        console.log(data)
                         $('#modal{{preg_replace('/\s+/','',$page_title)}}').modal('show');
                         $('#{{preg_replace('/\s+/','',$page_title)}}ModalLabel').html("Edit {{$page_title}}");
                         $('#saveBtn{{preg_replace('/\s+/','',$page_title)}}').val("update");
 
-                        $('#id').val(data.categories.id);
-                        $('#category_name').val(data.categories.category_name);
-                        $('#category_order').val(data.categories.category_order);
-                        $('#category_view_count').val(data.categories.category_view_count);
-                        if (data.categories.category_checked_ip == 0) {
-                            $('#category_checked_ip').prop('checked', true);
-                        } else {
-                            $('#category_checked_ip').prop('checked', false);
-                        }
+                        $('#id').val(data.wallpaper.id);
 
-                        $('#avatar').attr('src', '../storage/categories/' + data.categories.category_image);
+
+                        var id_tags =[];
+                        $.each(data.wallpaper.tags, function(i, item) {
+                            id_tags.push(item.id.toString())
+                        });
+                        $('#select_tags_edit').val(id_tags).trigger('change');
+                        $('#select_tags_edit').select2();
+
 
                     },
                     error: function (data) {
@@ -495,6 +534,37 @@
                     });
                 });
 
+
+            });
+
+
+            $('#form{{preg_replace('/\s+/','',$page_title)}}EditWallpaper').on('submit', function (event) {
+                event.preventDefault();
+                var formData = new FormData($("#form{{preg_replace('/\s+/','',$page_title)}}EditWallpaper")[0]);
+
+                if ($('#saveBtn{{preg_replace('/\s+/','',$page_title)}}').val() == 'update') {
+                    $.ajax({
+                        data: formData,
+                        url: '{{route('wallpapers.update')}}',
+                        type: "POST",
+                        dataType: 'json',
+                        processData: false,
+                        contentType: false,
+                        success: function (data) {
+                            if (data.success) {
+                                $('#form{{preg_replace('/\s+/','',$page_title)}}EditWallpaper').trigger("reset");
+                                toastr['success'](data.success, 'Success!');
+                                $('#modal{{preg_replace('/\s+/','',$page_title)}}').modal('hide');
+                                dtTable.draw();
+                            }
+                            if (data.errors) {
+                                for (var count = 0; count < data.errors.length; count++) {
+                                    toastr['error'](data.errors[count], 'Error!',);
+                                }
+                            }
+                        }
+                    });
+                }
 
             });
 

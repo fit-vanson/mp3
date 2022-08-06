@@ -63,6 +63,8 @@
         </div> <!-- end col -->
     </div> <!-- end row -->
 
+
+
     <!--  Modal content for the above example -->
     <div class="modal fade" id="modal{{preg_replace('/\s+/','',$page_title)}}" tabindex="-1" role="dialog"
          aria-labelledby="myLargeModalLabel" aria-hidden="true">
@@ -350,7 +352,6 @@
                     url: "{{ asset("admin/sites/edit") }}/"+id,
                     success: function (data) {
 
-                        console.log(data)
                         $('#modal{{preg_replace('/\s+/','',$page_title)}}').modal('show');
                         $('#{{preg_replace('/\s+/','',$page_title)}}ModalLabel').html("Edit {{$page_title}}");
                         $('#saveBtn{{preg_replace('/\s+/','',$page_title)}}').val("update");

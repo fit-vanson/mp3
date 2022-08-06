@@ -50,8 +50,6 @@ class WallpapersController extends Controller
         $start = $request->get("start");
         $rowperpage = $request->get("length"); // total number of rows per page
 
-
-
         $columnIndex_arr = $request->get('order');
         $columnName_arr = $request->get('columns');
         $order_arr = $request->get('order');
@@ -98,8 +96,8 @@ class WallpapersController extends Controller
         $data_arr = array();
         foreach ($records as $record) {
 //            $btn  = ' <a href="javascript:void(0)" onclick="editRolesPermissions('.$record->id.')" class="btn btn-warning"><i class="ti-pencil-alt"></i></a>';
-//            $btn = ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-warning editWallpapers"><i class="ti-pencil-alt"></i></a>';
-            $btn = ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-danger deleteWallpapers"><i class="ti-trash"></i></a>';
+            $btn = ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-warning editWallpapers"><i class="ti-pencil-alt"></i></a>';
+            $btn .= ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-danger deleteWallpapers"><i class="ti-trash"></i></a>';
             $data_arr[] = array(
                 "id" => $record->id,
                 "wallpaper_image" => '<a class="image-popup-no-margins" href="'.url('/storage/wallpapers').'/'.$record->wallpaper_image.'"><img class="img-fluid" alt="'.$record->wallpaper_name.'" src="'.url('/storage/wallpapers/thumbnails').'/'.$record->wallpaper_image.'" width="75"></a>',
@@ -123,6 +121,7 @@ class WallpapersController extends Controller
 
 
     }
+
     public function create(Request $request){
 
         $rules = [
@@ -204,62 +203,21 @@ class WallpapersController extends Controller
         return response()->json(['success'=>'Thành công','data'=>$wallpaper]);
 
     }
+
     public function edit($id){
 
-        $categories = Categories::find($id);
+        $wallpaper = Wallpapers::with('tags')->find($id);
         return response()->json([
-            'categories' =>$categories,
+            'wallpaper' => $wallpaper,
         ]);
     }
+
     public function update(Request $request)
     {
         $id = $request->id;
-        $rules = [
-            'category_name' =>'unique:categories,category_name,'.$id.',id',
-
-        ];
-        $message = [
-            'category_name.unique'=>'Category đã tồn tại',
-
-        ];
-        $error = Validator::make($request->all(),$rules, $message );
-        if($error->fails()){
-            return response()->json(['errors'=> $error->errors()->all()]);
-        }
-        $data= Categories::find($id);
-        $data->category_name = $request->category_name;
-        $data->category_order = $request->category_order;
-        $data->category_view_count = $request->category_view_count;
-        $data->category_checked_ip = $request->category_checked_ip ? 0 : 1 ;
-
-        if($request->image){
-            if ($data->category_image != 'default.png'){
-                $path_Remove =   storage_path('app/public/categories/').$data->category_image;
-                if(file_exists($path_Remove)){
-                    unlink($path_Remove);
-                }
-            }
-
-            $file = $request->image;
-            $filename = Str::slug($request->category_name);
-            $extension = $file->getClientOriginalExtension();
-            $fileNameToStore = $filename.'_'.time().'.'.$extension;
-            $now = new \DateTime('now'); //Datetime
-            $monthNum = $now->format('m');
-            $dateObj   = DateTime::createFromFormat('!m', $monthNum);
-            $monthName = $dateObj->format('F'); // Month
-            $year = $now->format('Y'); // Year
-            $monthYear = $monthName.$year;
-            $path_image    =  storage_path('app/public/categories/'.$monthYear.'/');
-            if (!file_exists($path_image)) {
-                mkdir($path_image, 0777, true);
-            }
-            $img = Image::make($file);
-            $img->save($path_image.$fileNameToStore);
-            $path_image =  $monthYear.'/'.$fileNameToStore;
-            $data->category_image = $path_image;
-        }
+        $data= Wallpapers::find($id);
         $data->save();
+        $data->tags()->sync($request->select_tags);
         return response()->json(['success'=>'Cập nhật thành công']);
     }
     public function delete($id)
