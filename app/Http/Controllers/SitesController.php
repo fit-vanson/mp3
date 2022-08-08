@@ -636,6 +636,11 @@ class SitesController extends Controller
 
     }
 
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+
     public function update_category(Request $request)
     {
         $category = CategoriesHasSites::
@@ -673,7 +678,7 @@ class SitesController extends Controller
 
         return response()->json(['success'=>'Cập nhật thành công']);
     }
-
+     * */
     public function getIndexListIPs(Request $request){
         $draw = $request->get('draw');
         $start = $request->get("start");

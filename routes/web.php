@@ -131,7 +131,7 @@ Route::group(['prefix'=>env('ADMIN_PAGE','admin')], function (){
         Route::get('/view/{id}', [SitesController::class, 'viewSite'])->name('sites.view');
         Route::post('/view/update_site', [SitesController::class, 'update_site'])->name('sites.update_site');
         Route::post('/view/update_ads', [SitesController::class, 'update_ads'])->name('sites.update_ads');
-        Route::post('/view/update_category', [SitesController::class, 'update_category'])->name('sites.update_category');
+//        Route::post('/view/update_category', [SitesController::class, 'update_category'])->name('sites.update_category');
         Route::post('/view/update_load_view_by', [SitesController::class, 'update_load_view_by'])->name('sites.update_load_view_by');
         Route::post('/view/update_FeatureImages', [SitesController::class, 'update_FeatureImages'])->name('sites.update_FeatureImages');
         Route::post('/view/getIndexCategories',[SitesController::class,'getIndexCategories'])->name('sites.getIndexCategories');

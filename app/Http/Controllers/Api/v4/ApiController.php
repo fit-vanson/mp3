@@ -6,6 +6,7 @@ use App\Categories;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\v4\CategoriesResource;
 use App\Http\Resources\v4\WallpaperResource;
+use App\ListIP;
 use App\Sites;
 use App\Wallpapers;
 use Illuminate\Http\Request;
@@ -16,9 +17,39 @@ class ApiController extends Controller
 
 
     public function admob(){
+
+        if (isset($_SERVER['HTTP_CLIENT_IP']))
+            $ipaddress = $_SERVER['HTTP_CLIENT_IP'];
+        else if (isset($_SERVER['HTTP_X_FORWARDED_FOR']))
+            $ipaddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
+        else if (isset($_SERVER['HTTP_X_FORWARDED']))
+            $ipaddress = $_SERVER['HTTP_X_FORWARDED'];
+        else if (isset($_SERVER['HTTP_FORWARDED_FOR']))
+            $ipaddress = $_SERVER['HTTP_FORWARDED_FOR'];
+        else if (isset($_SERVER['HTTP_FORWARDED']))
+            $ipaddress = $_SERVER['HTTP_FORWARDED'];
+        else if (isset($_SERVER['REMOTE_ADDR']))
+            $ipaddress = $_SERVER['REMOTE_ADDR'];
+        else if (isset($_SERVER["HTTP_CF_CONNECTING_IP"]))
+            $ipaddress = $_SERVER["HTTP_CF_CONNECTING_IP"];
+        else
+            $ipaddress = 'UNKNOWN';
+
+
         $domain = $_SERVER['SERVER_NAME'];
         $site =  Sites::where('site_web', $domain)->first();
         $ads = json_decode($site->site_ads,true);
+        $listIp = ListIP::where('ip_address', $ipaddress)->where('id_site', $site->id)->first();
+
+        if (!$listIp) {
+            ListIP::create([
+                'ip_address' => $ipaddress,
+                'id_site' => $site->id,
+                'count' => 1
+            ]);
+        } else {
+            $listIp->update(['count' => $listIp->count + 1]);
+        }
 
 
 
