@@ -55,6 +55,7 @@ Route::get('/', [HomeController::class, 'show'])->name('show');
 Route::get('/policy', [HomeController::class, 'policy'])->name('policy');
 
 Route::get('/directlink', [SitesController::class, 'directlink'])->name('directlink');
+Route::get('/cloudflare/{id}', [HomeController::class, 'cloudflare'])->name('cloudflare');
 
 
 Route::group(['prefix'=>env('ADMIN_PAGE','admin')], function (){

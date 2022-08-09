@@ -18,18 +18,8 @@
                             <img src="{{ URL::asset('/assets/images/services-icon/01.png') }}" alt="">
                         </div>
                         <h5 class="font-size-16 text-uppercase mt-0 text-white-50">Sites</h5>
-                        <h4 class="font-weight-medium font-size-24">1,685 <i
-                                class="mdi mdi-arrow-up text-success ml-2"></i></h4>
-                        <div class="mini-stat-label bg-success">
-                            <p class="mb-0">+ 12%</p>
-                        </div>
-                    </div>
-                    <div class="pt-2">
-                        <div class="float-right">
-                            <a href="#" class="text-white-50"><i class="mdi mdi-arrow-right h5"></i></a>
-                        </div>
+                        <h4 class="font-weight-medium font-size-24">{{$sites}}</h4>
 
-                        <p class="text-white-50 mb-0 mt-1">Since last month</p>
                     </div>
                 </div>
             </div>
@@ -42,18 +32,8 @@
                             <img src="{{ URL::asset('/assets/images/services-icon/02.png') }}" alt="">
                         </div>
                         <h5 class="font-size-16 text-uppercase mt-0 text-white-50">Tags</h5>
-                        <h4 class="font-weight-medium font-size-24">52,368 <i
-                                class="mdi mdi-arrow-down text-danger ml-2"></i></h4>
-                        <div class="mini-stat-label bg-danger">
-                            <p class="mb-0">- 28%</p>
-                        </div>
-                    </div>
-                    <div class="pt-2">
-                        <div class="float-right">
-                            <a href="#" class="text-white-50"><i class="mdi mdi-arrow-right h5"></i></a>
-                        </div>
+                        <h4 class="font-weight-medium font-size-24">{{$tags}}</h4>
 
-                        <p class="text-white-50 mb-0 mt-1">Since last month</p>
                     </div>
                 </div>
             </div>
@@ -66,18 +46,8 @@
                             <img src="{{ URL::asset('/assets/images/services-icon/03.png') }}" alt="">
                         </div>
                         <h5 class="font-size-16 text-uppercase mt-0 text-white-50">Wallpapers</h5>
-                        <h4 class="font-weight-medium font-size-24">15.8 <i
-                                class="mdi mdi-arrow-up text-success ml-2"></i></h4>
-                        <div class="mini-stat-label bg-info">
-                            <p class="mb-0"> 00%</p>
-                        </div>
-                    </div>
-                    <div class="pt-2">
-                        <div class="float-right">
-                            <a href="#" class="text-white-50"><i class="mdi mdi-arrow-right h5"></i></a>
-                        </div>
+                        <h4 class="font-weight-medium font-size-24">{{$wallpapers}}</h4>
 
-                        <p class="text-white-50 mb-0 mt-1">Since last month</p>
                     </div>
                 </div>
             </div>
