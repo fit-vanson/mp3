@@ -122,6 +122,7 @@ class HomeController extends Controller
                     $result[$number['dimensions']] += $number['metrics'];
             }
         }
+        $num = 0;
         foreach ($result as $web=>$res){
             $site =  Sites::where('site_web',$web)->first();
             if ($site){
@@ -137,10 +138,11 @@ class HomeController extends Controller
                 $site->site_cron = $site_cron;
                 $site->save();
                 echo $site->site_web.'<br>';
+                $num ++;
             }
         }
 
-        return 1;
+        return $num;
     }
 
 
