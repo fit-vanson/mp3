@@ -32,7 +32,6 @@ class HomeController extends Controller
         $sites = Sites::count();
         $tags = Tags::count();
         $wallpapers = Wallpapers::count();
-//        dd($site);
 
        return view('dashboard.index')->with(compact('sites','tags','wallpapers'));
     }
@@ -137,6 +136,7 @@ class HomeController extends Controller
 
                 $site->site_cron = $site_cron;
                 $site->save();
+                echo $site->site_web.'<br>';
             }
         }
 
