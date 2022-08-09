@@ -174,7 +174,13 @@
 
                         </div><!-- end col -->
                     @endforeach
-                    {{ $data->appends(['view' => 'grid'])->links() }}
+                    <?php
+                        $search = '';
+                        if (isset($_GET['search'])){
+                            $search = $_GET['search'];
+                        }
+                    ?>
+                    {{$data->appends(['view' => 'grid','search'=>$search])->links()}}
                 </div>
             </div>
 
