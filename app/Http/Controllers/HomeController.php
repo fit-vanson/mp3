@@ -63,13 +63,13 @@ class HomeController extends Controller
     }
 
     public function cloudflare($zoneID){
-        $date1 = Carbon::today();
+        $date1 = Carbon::today()->subDays(1);
         $time0H     = $date1->toIso8601String();
         $time6H     = $date1->addHours(6)->toIso8601String();
         $time12H    = $date1->addHours(6)->toIso8601String();
         $time18H    = $date1->addHours(6)->toIso8601String();
         $time24H    = $date1->addHours(6)->toIso8601String();
-        $date = Carbon::today()->format('Y-m-d');
+        $date = Carbon::today()->subDays(1)->format('Y-m-d');
 
 //        dd($date,$time0H,$time6H,$time12H,$time18H,$time24H);
 
