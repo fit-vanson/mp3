@@ -36,7 +36,7 @@ class WallpapersController extends Controller
         }
         if (isset($_GET['view']) && $_GET['view'] == 'grid' ){
             $data = Wallpapers::latest('wallpaper_name')
-                ->orwhereRelation('tags','tag_name','like', '%' . $search . '%')
+                ->orwhereRelation('tags','tag_name', $search)
                 ->paginate(12);
             $data->load('tags');
             return view('wallpapers.index',[
