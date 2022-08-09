@@ -26,11 +26,18 @@ class WallpapersController extends Controller
     }
     public function index()
     {
+
         $page_title =  'Wallpapers';
         $tags = Tags::latest()->get();
 
+        $search ='';
+        if (isset($_GET['search'])){
+            $search = $_GET['search'];
+        }
         if (isset($_GET['view']) && $_GET['view'] == 'grid' ){
-            $data = Wallpapers::latest('wallpaper_name')->paginate(12);
+            $data = Wallpapers::latest('wallpaper_name')
+                ->orwhereRelation('tags','tag_name','like', '%' . $search . '%')
+                ->paginate(12);
             $data->load('tags');
             return view('wallpapers.index',[
                 'page_title' => $page_title,
@@ -46,6 +53,7 @@ class WallpapersController extends Controller
     }
     public function getIndex(Request $request)
     {
+
         $draw = $request->get('draw');
         $start = $request->get("start");
         $rowperpage = $request->get("length"); // total number of rows per page
@@ -61,9 +69,13 @@ class WallpapersController extends Controller
         $columnSortOrder = $order_arr[0]['dir']; // asc or desc
         $searchValue = $search_arr['value']; // Search value
 
+//        $searchTags = $columnName_arr[6]['search']['value'];
+
+
 
         // Total records
         $totalRecords = Wallpapers::select('count(*) as allcount')->count();
+
         $totalRecordswithFilter = Wallpapers::select('count(*) as allcount')
             ->where('wallpaper_name', 'like', '%' . $searchValue . '%')
             ->orwhereRelation('tags','tag_name','like', '%' . $searchValue . '%')
@@ -78,6 +90,22 @@ class WallpapersController extends Controller
             ->skip($start)
             ->take($rowperpage)
             ->get();
+
+//        if($searchTags){
+//            $totalRecordswithFilter = Wallpapers::select('count(*) as allcount')
+//                ->whereRelation('tags','tag_name', $searchTags)
+//                ->count();
+//
+//            // Get records, also we have included search filter as well
+//            $records = Wallpapers::with('tags')
+//                ->whereRelation('tags','tag_name', $searchTags)
+//                ->select('*')
+//                ->orderBy($columnName, $columnSortOrder)
+//                ->skip($start)
+//                ->take($rowperpage)
+//                ->get();
+//        }
+
 
         if ($request->get('null_tag') == 1){
             $totalRecordswithFilter = Wallpapers::select('count(*) as allcount')

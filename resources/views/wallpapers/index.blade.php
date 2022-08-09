@@ -138,29 +138,36 @@
                     @foreach($data as $item)
                         <div class="col-md-6 col-lg-6 col-xl-2">
                             <!-- Simple card -->
-                            <div class="card">
+                            <div class="card" id="card_image_{{$item->id}}">
                                 <a class="image-popup-no-margins" href="{{url('/storage/wallpapers').'/'.$item->wallpaper_image}}">
                                     <img class="img-fluid" alt="{{$item->wallpaper_name}}" src="{{url('/storage/wallpapers/thumbnails').'/'.$item->wallpaper_image}}">
                                 </a>
 
                                 <div class="card-body">
+
+                                    <span class="card-title" style="font-size: larger; font-weight: bold">{{$item->wallpaper_name}}</span>
+                                    @if($item->wallpaper_status == 1)
+                                        <i class="fas fa-check-circle" style="color: green"></i>
+                                    @elseif($item->wallpaper_status == 0)
+                                        <i class="fas fa-times-circle" style="color: red"></i>
+                                    @endif
+
+                                    <a href="javascript:void(0)" onclick="deleteWallpaper('{{$item->id}}')" class="btn btn-danger float-right"><i class="ti-trash"></i></a>
+
                                     <p>
-                                        <span class="card-title" style="font-size: larger; font-weight: bold">{{$item->wallpaper_name}}</span>
-                                        @if($item->wallpaper_status == 1)
-                                            <i class="fas fa-check-circle" style="color: green"></i>
-                                        @elseif($item->wallpaper_status == 0)
-                                            <i class="fas fa-times-circle" style="color: red"></i>
-                                        @endif
+                                        <?php
+                                        $tags = [];
+                                        foreach ($item->tags as $tag){
+                                        ?>
+                                        <span class="badge badge-pill badge-success">{{$tag->tag_name}}</span>
+                                        <?php
+                                        }
+                                        ?>
                                     </p>
 
-                                    <?php
-                                    $tags = [];
-                                    foreach ($item->tags as $tag){
-                                    ?>
-                                    <span class="badge badge-pill badge-success">{{$tag->tag_name}}</span>
-                                    <?php
-                                    }
-                                    ?>
+
+
+
 
                                 </div>
                             </div>
@@ -398,6 +405,7 @@
             const queryString = window.location.search;
             const urlParams = new URLSearchParams(queryString);
             const search = urlParams.get('search')
+
             if(search !== null){
                 dtTable.search(search).draw();
             }
@@ -447,8 +455,6 @@
                     }
                 }
             });
-
-
             $(document).on('click', '.delete{{preg_replace('/\s+/','',$page_title)}}', function (data) {
                 var id = $(this).data("id");
                 Swal.fire({
@@ -633,7 +639,25 @@
                     });
                 }
             });
+
+
         })
+
+        function deleteWallpaper(id){
+            var $target = $('#card_image_'+id);
+
+            $.ajax({
+                type: "get",
+                url: "{{ asset("admin/wallpapers/delete") }}/" + id,
+                success: function (data) {
+                    $target.hide('slow', function(){ $target.remove(); });
+                    toastr['success'](data.success, 'Success!');
+                },
+                error: function (data) {
+                    console.log('Error:', data);
+                }
+            });
+        }
     </script>
 
 @endsection

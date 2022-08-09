@@ -61,7 +61,7 @@ class TagsController extends Controller
 
             $data_arr[] = array(
                 "id" => $record->id,
-                "tag_name" => '<a href="'.route('wallpapers.index').'?search='.$record->tag_name.'"> <h5 class="font-size-16">'.$record->tag_name.'</h5></a>',
+                "tag_name" => '<a href="'.route('wallpapers.index').'?view=grid&search='.$record->tag_name.'"> <h5 class="font-size-16">'.$record->tag_name.'</h5></a>',
 //                $record->tag_name,
                 "wallpaper_count" => $record->wallpaper_count,
                 "action" => $btn,
