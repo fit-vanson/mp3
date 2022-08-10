@@ -62,6 +62,38 @@ class HomeController extends Controller
         }
     }
 
+    public function load_data(){
+
+        $sites = Sites::select('site_cron')->get();
+
+        $dataArray = [];
+        foreach ($sites as $site){
+            $dataArray[] = json_decode($site->site_cron,true);
+
+        }
+
+        $sumArray = array();
+
+        foreach (array_values(array_filter($dataArray)) as $k=>$subArray) {
+            foreach ($subArray as $id=>$value) {
+                (!isset($sumArray[$id])) ?
+                    $sumArray[$id]=$value :
+                    $sumArray[$id]+=$value;
+            }
+
+        }
+        ksort($sumArray);
+
+        $result = [];
+        foreach ($sumArray as $key=>$val){
+            $result['date'][] = $key;
+            $result['data'][] = $val;
+
+        }
+
+        return response()->json( $result);
+    }
+
     public function cloudflare($zoneID){
         $date1 = Carbon::today()->subDays(10);
         $time0H     = $date1->toIso8601String();

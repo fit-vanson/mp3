@@ -60,7 +60,13 @@ Route::get('/cloudflare/{id}', [HomeController::class, 'cloudflare'])->name('clo
 
 Route::group(['prefix'=>env('ADMIN_PAGE','admin')], function (){
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    Route::get('/load_data', [App\Http\Controllers\HomeController::class, 'load_data'])->name('home.load_data');
     Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('admin.home');
+
+
+
+
+
     Route::group(['prefix'=>'users'], function (){
         Route::get('/',[UsersController::class,'index'])->name('users.index');
         Route::post('/getIndex',[UsersController::class,'getIndex'])->name('users.getIndex');
