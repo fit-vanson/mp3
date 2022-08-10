@@ -58,7 +58,7 @@
 
     <div class="row">
 
-        <div class="col-lg-6">
+        <div class="col-xl-12">
             <div class="card">
                 <div class="card-body">
 
@@ -75,28 +75,28 @@
                         </select>
                     </div>
 
-                    <div class="row justify-content-center">
-                        <div class="col-sm-4">
-                            <div class="text-center">
-                                <h5 class="mb-0 font-size-20">86541</h5>
-                                <p class="text-muted">Activated</p>
-                            </div>
-                        </div>
-                        <div class="col-sm-4">
-                            <div class="text-center">
-                                <h5 class="mb-0 font-size-20">2541</h5>
-                                <p class="text-muted">Pending</p>
-                            </div>
-                        </div>
-                        <div class="col-sm-4">
-                            <div class="text-center">
-                                <h5 class="mb-0 font-size-20">102030</h5>
-                                <p class="text-muted">Deactivated</p>
-                            </div>
-                        </div>
-                    </div>
+{{--                    <div class="row justify-content-center">--}}
+{{--                        <div class="col-sm-4">--}}
+{{--                            <div class="text-center">--}}
+{{--                                <h5 class="mb-0 font-size-20">86541</h5>--}}
+{{--                                <p class="text-muted">Activated</p>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                        <div class="col-sm-4">--}}
+{{--                            <div class="text-center">--}}
+{{--                                <h5 class="mb-0 font-size-20">2541</h5>--}}
+{{--                                <p class="text-muted">Pending</p>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                        <div class="col-sm-4">--}}
+{{--                            <div class="text-center">--}}
+{{--                                <h5 class="mb-0 font-size-20">102030</h5>--}}
+{{--                                <p class="text-muted">Deactivated</p>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
 
-                    <canvas id="lineChart" height="300"></canvas>
+                    <canvas id="lineChart" height="500"></canvas>
 
                 </div>
             </div>
