@@ -75,6 +75,8 @@ class HomeController extends Controller
             $data = json_decode($site->site_cron,true);
             $key = array_keys($data);
             $val = array_values($data);
+            sort($key);
+
 
             $color =  str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT);
             $dataArray['datasets'][] = [
@@ -84,7 +86,7 @@ class HomeController extends Controller
                 'backgroundColor' => "#$color",
                 'data' => $val,
             ];
-            $dataArray['labels'] = $key;
+            $dataArray['labels'] = ($key);
         }
 
         return response()->json( $dataArray);
