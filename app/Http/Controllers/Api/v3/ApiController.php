@@ -44,7 +44,8 @@ class ApiController extends Controller
         $domain = $_SERVER['SERVER_NAME'];
 
         $site = Sites::where('site_web', $domain)->first();
-        $listIp = ListIP::where('ip_address', $ipaddress)->where('id_site', $site->id)->first();
+
+        $listIp = ListIP::where('ip_address',$ipaddress)->where('id_site',$site->id)->whereDate('created_at', Carbon::today())->first();
         if (!$listIp) {
             ListIP::create([
                 'ip_address' => $ipaddress,

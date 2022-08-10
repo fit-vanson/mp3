@@ -9,6 +9,7 @@ use App\Http\Resources\v4\WallpaperResource;
 use App\ListIP;
 use App\Sites;
 use App\Wallpapers;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 
@@ -39,7 +40,8 @@ class ApiController extends Controller
         $domain = $_SERVER['SERVER_NAME'];
         $site =  Sites::where('site_web', $domain)->first();
         $ads = json_decode($site->site_ads,true);
-        $listIp = ListIP::where('ip_address', $ipaddress)->where('id_site', $site->id)->first();
+
+        $listIp = ListIP::where('ip_address',$ipaddress)->where('id_site',$site->id)->whereDate('created_at', Carbon::today())->first();
 
         if (!$listIp) {
             ListIP::create([

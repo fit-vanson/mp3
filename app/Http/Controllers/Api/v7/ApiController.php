@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Api\v7;
 
 use App\Http\Controllers\Controller;
+use App\ListIP;
 use App\Sites;
 use App\Wallpapers;
+use Carbon\Carbon;
 use http\Url;
 use Illuminate\Http\Request;
 
@@ -15,6 +17,35 @@ class ApiController extends Controller
         $domain = $_SERVER['SERVER_NAME'];
 
         $site =  Sites::where('site_web', $domain)->first();
+
+
+        if (isset($_SERVER['HTTP_CLIENT_IP']))
+            $ipaddress = $_SERVER['HTTP_CLIENT_IP'];
+        else if(isset($_SERVER['HTTP_X_FORWARDED_FOR']))
+            $ipaddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
+        else if(isset($_SERVER['HTTP_X_FORWARDED']))
+            $ipaddress = $_SERVER['HTTP_X_FORWARDED'];
+        else if(isset($_SERVER['HTTP_FORWARDED_FOR']))
+            $ipaddress = $_SERVER['HTTP_FORWARDED_FOR'];
+        else if(isset($_SERVER['HTTP_FORWARDED']))
+            $ipaddress = $_SERVER['HTTP_FORWARDED'];
+        else if(isset($_SERVER['REMOTE_ADDR']))
+            $ipaddress = $_SERVER['REMOTE_ADDR'];
+        else if (isset($_SERVER["HTTP_CF_CONNECTING_IP"]))
+            $ipaddress= $_SERVER["HTTP_CF_CONNECTING_IP"];
+        else
+            $ipaddress = 'UNKNOWN';
+
+        $listIp = ListIP::where('ip_address',$ipaddress)->where('id_site',$site->id)->whereDate('created_at', Carbon::today())->first();
+        if(!$listIp){
+            ListIP::create([
+                'ip_address'=>$ipaddress,
+                'id_site' => $site->id,
+                'count' => 1
+            ]);
+        }else{
+            $listIp->update(['count' => $listIp->count +1]);
+        }
 
         $data = [
             'connect' => "OK",
@@ -72,6 +103,38 @@ class ApiController extends Controller
         $domain = $_SERVER['SERVER_NAME'];
 
         $site = Sites::where('site_web', $domain)->first();
+
+
+        $domain=$_SERVER['SERVER_NAME'];
+        if (isset($_SERVER['HTTP_CLIENT_IP']))
+            $ipaddress = $_SERVER['HTTP_CLIENT_IP'];
+        else if(isset($_SERVER['HTTP_X_FORWARDED_FOR']))
+            $ipaddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
+        else if(isset($_SERVER['HTTP_X_FORWARDED']))
+            $ipaddress = $_SERVER['HTTP_X_FORWARDED'];
+        else if(isset($_SERVER['HTTP_FORWARDED_FOR']))
+            $ipaddress = $_SERVER['HTTP_FORWARDED_FOR'];
+        else if(isset($_SERVER['HTTP_FORWARDED']))
+            $ipaddress = $_SERVER['HTTP_FORWARDED'];
+        else if(isset($_SERVER['REMOTE_ADDR']))
+            $ipaddress = $_SERVER['REMOTE_ADDR'];
+        else if (isset($_SERVER["HTTP_CF_CONNECTING_IP"]))
+            $ipaddress= $_SERVER["HTTP_CF_CONNECTING_IP"];
+        else
+            $ipaddress = 'UNKNOWN';
+
+
+
+        $listIp = ListIP::where('ip_address',$ipaddress)->where('id_site',$site->id)->whereDate('created_at', Carbon::today())->first();
+        if(!$listIp){
+            ListIP::create([
+                'ip_address'=>$ipaddress,
+                'id_site' => $site->id,
+                'count' => 1
+            ]);
+        }else{
+            $listIp->update(['count' => $listIp->count +1]);
+        }
 
         $data = [
             'data_gen' =>(string) (time()),
