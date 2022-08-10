@@ -29,7 +29,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $sites = Sites::count();
+        $sites = Sites::all();
         $tags = Tags::count();
         $wallpapers = Wallpapers::count();
 
@@ -62,36 +62,51 @@ class HomeController extends Controller
         }
     }
 
-    public function load_data(){
-
-        $sites = Sites::select('site_cron')->get();
+    public function load_data(Request $request){
+        if($request->id != 'undefined' || $request->id != null){
+            $id = explode(',',$request->id);
+            $sites = Sites::select('site_web','site_cron')->whereIn('id',$id)->get();
+        }else{
+            $sites = Sites::select('site_cron')->get();
+        }
 
         $dataArray = [];
         foreach ($sites as $site){
-            $dataArray[] = json_decode($site->site_cron,true);
+            $data = json_decode($site->site_cron,true);
+            $key = array_keys($data);
+            $val = array_values($data);
 
+            $color =  str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT);
+            $dataArray['datasets'][] = [
+                'label' => $site->site_web,
+                'fill' => false,
+                'borderColor' => "#$color",
+                'backgroundColor' => "#$color",
+                'data' => $val,
+            ];
+            $dataArray['labels'] = $key;
         }
 
-        $sumArray = array();
-
-        foreach (array_values(array_filter($dataArray)) as $k=>$subArray) {
-            foreach ($subArray as $id=>$value) {
-                (!isset($sumArray[$id])) ?
-                    $sumArray[$id]=$value :
-                    $sumArray[$id]+=$value;
-            }
-
-        }
-        ksort($sumArray);
-
-        $result = [];
-        foreach ($sumArray as $key=>$val){
-            $result['date'][] = $key;
-            $result['data'][] = $val;
-
-        }
-
-        return response()->json( $result);
+        return response()->json( $dataArray);
+//        dd($dataArray);
+//
+//        $sumArray = array();
+//        foreach (array_values(array_filter($dataArray)) as $k=>$subArray) {
+//            foreach ($subArray as $id=>$value) {
+//                (!isset($sumArray[$id])) ?
+//                    $sumArray[$id]=$value :
+//                    $sumArray[$id]+=$value;
+//            }
+//        }
+//        ksort($sumArray);
+//
+//        $result = [];
+//        foreach ($sumArray as $key=>$val){
+//            $result['date'][] = $key;
+//            $result['data'][] = $val;
+//
+//        }
+//        return response()->json( $result);
     }
 
     public function cloudflare($zoneID){
