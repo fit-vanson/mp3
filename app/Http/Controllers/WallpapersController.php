@@ -30,13 +30,13 @@ class WallpapersController extends Controller
         $page_title =  'Wallpapers';
         $tags = Tags::latest()->get();
 
-        $search ='';
+        $search = null;
         if (isset($_GET['search'])){
             $search = $_GET['search'];
         }
         if (isset($_GET['view']) && $_GET['view'] == 'grid' ){
             $data = Wallpapers::latest('wallpaper_name')
-                ->orwhereRelation('tags','tag_name', $search)
+                ->orwhereRelation('tags','tag_name', 'like', '%' . $search . '%')
                 ->paginate(12);
             $data->load('tags');
             return view('wallpapers.index',[

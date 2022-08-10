@@ -175,7 +175,7 @@
                         </div><!-- end col -->
                     @endforeach
                     <?php
-                        $search = '';
+                        $search = null;
                         if (isset($_GET['search'])){
                             $search = $_GET['search'];
                         }
