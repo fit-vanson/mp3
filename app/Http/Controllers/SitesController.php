@@ -704,7 +704,8 @@ class SitesController extends Controller
 
 
         // Get records, also we have included search filter as well
-        $records = ListIP::where('id_site',$request->id)
+        $records = ListIP::orderBy($columnName, $columnSortOrder)
+            ->where('id_site',$request->id)
             ->where('ip_address', 'like', '%' . $searchValue . '%')
             ->select('*')
             ->skip($start)
