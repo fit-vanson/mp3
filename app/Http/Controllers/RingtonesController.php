@@ -6,6 +6,7 @@ use App\Ringtones;
 use App\Tags;
 use DateTime;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -203,62 +204,58 @@ class RingtonesController extends Controller
 
     public function edit($id){
 
-        $wallpaper = Wallpapers::with('tags')->find($id);
+        $ringtone = Ringtones::with('tags')->find($id);
         return response()->json([
-            'wallpaper' => $wallpaper,
+            'ringtone' => $ringtone,
         ]);
     }
 
     public function update(Request $request)
     {
         $id = $request->id;
-        $data= Wallpapers::find($id);
+        $data= Ringtones::find($id);
         $data->save();
         $data->tags()->sync($request->select_tags);
         return response()->json(['success'=>'Cập nhật thành công']);
     }
     public function delete($id)
     {
-        $wallpaper = Wallpapers::find($id);
-        $path    =   storage_path('app/public/wallpapers/').$wallpaper->wallpaper_image;
-        $pathThumbnail    =   storage_path('app/public/wallpapers/thumbnails/').$wallpaper->wallpaper_image;
+        $ringtone = Ringtones::find($id);
+        $path    =   storage_path('app/public/ringtones/').$ringtone->ringtone_file;
+
         try {
             if(file_exists($path)){
                 unlink($path);
             }
-            if(file_exists($pathThumbnail)){
-                unlink($pathThumbnail);
-            }
+
         }catch (\Exception $ex) {
             Log::error($ex->getMessage());
         }
-        $wallpaper->tags()->detach();
-        $wallpaper->visitor_favorites()->delete();
-        $wallpaper->delete();
+        $ringtone->tags()->detach();
+//        $ringtone->visitor_favorites()->delete();
+        $ringtone->delete();
         return response()->json(['success'=>'Xoá thành công']);
     }
 
     public function deleteSelect(Request $request)
     {
         $id= $request->id;
-        $wallpapers = Wallpapers::whereIn('id',$id)->get();
+        $ringtones = Ringtones::whereIn('id',$id)->get();
 
-        foreach ( $wallpapers as $wallpaper){
-            $path    =   storage_path('app/public/wallpapers/').$wallpaper->wallpaper_image;
-            $pathThumbnail    =   storage_path('app/public/wallpapers/thumbnails/').$wallpaper->wallpaper_image;
+        foreach ( $ringtones as $ringtone){
+            $path    =   storage_path('app/public/ringtones/').$ringtone->ringtone_file;
+
             try {
                 if(file_exists($path)){
                     unlink($path);
                 }
-                if(file_exists($pathThumbnail)){
-                    unlink($pathThumbnail);
-                }
+
             }catch (\Exception $ex) {
                 Log::error($ex->getMessage());
             }
-            $wallpaper->tags()->detach();
-            $wallpaper->visitor_favorites()->delete();
-            $wallpaper->delete();
+            $ringtone->tags()->detach();
+//            $wallpaper->visitor_favorites()->delete();
+            $ringtone->delete();
         }
         return response()->json(['success'=>'Xóa thành công.']);
     }
