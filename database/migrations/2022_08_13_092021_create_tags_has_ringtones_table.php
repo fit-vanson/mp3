@@ -17,7 +17,7 @@ class CreateTagsHasRingtonesTable extends Migration
             $table->id();
             $table->integer('tag_id');
             $table->integer('ringtone_id');
-            $table->timestamps();
+//            $table->timestamps();
         });
     }
 

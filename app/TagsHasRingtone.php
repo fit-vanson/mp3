@@ -9,6 +9,8 @@ class TagsHasRingtone extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     protected $fillable = [
         'tag_id',
         'ringtone_id'
