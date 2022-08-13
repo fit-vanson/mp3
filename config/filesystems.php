@@ -55,6 +55,16 @@ return [
             'visibility' => 'public',
         ],
 
+        'ringtones_file' => [
+            'driver' => 'local',
+            'root' => public_path('storage/ringtones/'),
+            'url' => env('APP_URL').'ringtones',
+            'visibility' => 'public',
+        ],
+
+
+
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),

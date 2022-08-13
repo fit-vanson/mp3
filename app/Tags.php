@@ -17,6 +17,11 @@ class Tags extends Model
         return $this->belongsToMany(Wallpapers::class, TagsHasWallpaper::class, 'tag_id', 'wallpaper_id');
     }
 
+    public function ringtone()
+    {
+        return $this->belongsToMany(Ringtones::class, TagsHasRingtone::class, 'tag_id', 'ringtone_id');
+    }
+
     public function categories()
     {
         return $this->belongsToMany(Categories::class, TagsHasCategories::class, 'tag_id', 'category_id');

@@ -47,6 +47,10 @@
                         <i class="ti-image"></i>
                         <span> Wallpaper </span>
                     </a>
+                    <a href="{{route('ringtones.index')}}" >
+                        <i class="ti-music-alt"></i>
+                        <span> Ringtones </span>
+                    </a>
 
                     <a href="{{route('sites.index')}}" >
                         <i class="ti-world"></i>

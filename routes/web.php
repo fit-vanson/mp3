@@ -4,6 +4,7 @@ use App\Http\Controllers\ApiKeysController;
 use App\Http\Controllers\BlockIPsController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\RingtonesController;
 use App\Http\Controllers\RolesPermissionsController;
 use App\Http\Controllers\SitesController;
 use App\Http\Controllers\TagsController;
@@ -118,10 +119,24 @@ Route::group(['prefix'=>env('ADMIN_PAGE','admin')], function (){
         Route::post('/update',[WallpapersController::class,'update'])->name('wallpapers.update');
         Route::get('/delete/{id}',[WallpapersController::class,'delete'])->name('wallpapers.delete');
         Route::post('/deleteSelect', [WallpapersController::class, 'deleteSelect'])->name('wallpapers.deleteSelect');
-        Route::get('/import', [WallpapersController::class, 'import'])->name('wallpapers.import');
-        Route::post('/postImport', [WallpapersController::class, 'postImport'])->name('wallpapers.postImport');
-        Route::get('/importToDb', [WallpapersController::class, 'importToDb'])->name('wallpapers.importToDb');
+//        Route::get('/import', [WallpapersController::class, 'import'])->name('wallpapers.import');
+//        Route::post('/postImport', [WallpapersController::class, 'postImport'])->name('wallpapers.postImport');
+//        Route::get('/importToDb', [WallpapersController::class, 'importToDb'])->name('wallpapers.importToDb');
         Route::get('/compare', [WallpapersController::class, 'compare'])->name('wallpapers.compare');
+    });
+
+    Route::group(['prefix'=>'ringtones'], function (){
+        Route::get('/',[RingtonesController::class,'index'])->name('ringtones.index');
+        Route::post('/getIndex',[RingtonesController::class,'getIndex'])->name('ringtones.getIndex');
+        Route::post('/create',[RingtonesController::class,'create'])->name('ringtones.create');
+        Route::get('/edit/{id}',[RingtonesController::class,'edit'])->name('ringtones.edit');
+        Route::post('/update',[RingtonesController::class,'update'])->name('ringtones.update');
+        Route::get('/delete/{id}',[RingtonesController::class,'delete'])->name('ringtones.delete');
+        Route::post('/deleteSelect', [RingtonesController::class, 'deleteSelect'])->name('ringtones.deleteSelect');
+//        Route::get('/import', [RingtonesController::class, 'import'])->name('wallpapers.import');
+//        Route::post('/postImport', [RingtonesController::class, 'postImport'])->name('wallpapers.postImport');
+//        Route::get('/importToDb', [RingtonesController::class, 'importToDb'])->name('wallpapers.importToDb');
+        Route::get('/compare', [RingtonesController::class, 'compare'])->name('ringtones.compare');
     });
 
     Route::group(['prefix'=>'sites'], function (){
