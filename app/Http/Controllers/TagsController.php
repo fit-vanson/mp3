@@ -48,7 +48,7 @@ class TagsController extends Controller
         $records = Tags::orderBy($columnName, $columnSortOrder)
             ->where('tag_name', 'like', '%' . $searchValue . '%')
             ->select('*')
-            ->withCount('wallpaper')
+            ->withCount('wallpaper','ringtone')
             ->skip($start)
             ->take($rowperpage)
             ->get();
@@ -61,9 +61,9 @@ class TagsController extends Controller
 
             $data_arr[] = array(
                 "id" => $record->id,
-                "tag_name" => '<a href="'.route('wallpapers.index').'?view=grid&search='.$record->tag_name.'"> <h5 class="font-size-16">'.$record->tag_name.'</h5></a>',
-//                $record->tag_name,
-                "wallpaper_count" => $record->wallpaper_count,
+                "tag_name" => '<h5 class="font-size-16">'.$record->tag_name.'</h5>',
+                "wallpaper_count" => '<a href="'.route('wallpapers.index').'?view=grid&search='.$record->tag_name.'"> <h5 class="font-size-16">'.$record->wallpaper_count.'</h5></a>',
+                "ringtone_count" => '<a href="'.route('ringtones.index').'?search='.$record->tag_name.'"> <h5 class="font-size-16">'.$record->ringtone_count.'</h5></a>',
                 "action" => $btn,
             );
         }

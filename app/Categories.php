@@ -44,6 +44,24 @@ class Categories extends Model
     }
 
 
+    public function ringtone()
+    {
+        return $this->hasManyDeep(
+            Ringtones::class,
+            [TagsHasCategories::class,TagsHasRingtone::class], // Intermediate models and tables, beginning at the far parent (User).
+            [
+                'category_id', // Foreign key on the "role_user" table.
+                'tag_id',      // Foreign key on the "permission_role" table
+                'id'  // Foreign key on the "permissions" table. (local key)
+            ],
+            [
+                'id',         // Local key on the "users" table.
+                'tag_id', // Local key on the "role_user" table (foreign key).
+                'ringtone_id'   // Local key on the "permission_role" table.
+            ]
+        );
+    }
+
     public function tags()
     {
         return $this->belongsToMany(Tags::class, TagsHasCategories::class, 'category_id', 'tag_id');

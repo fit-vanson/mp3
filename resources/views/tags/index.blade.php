@@ -37,6 +37,7 @@
                                 <tr>
                                     <th style="width: 30%">Name</th>
                                     <th style="width: 10%">Image Count</th>
+                                    <th style="width: 10%">Ringtones Count</th>
                                     <th style="width: 10%">Action</th>
                                 </tr>
                                 </thead>
@@ -122,6 +123,7 @@
                     // columns according to JSON
                     { data: 'tag_name',  className: "align-middle", },
                     { data: 'wallpaper_count',className: "align-middle",},
+                    { data: 'ringtone_count',className: "align-middle",},
                     { data: 'action',className: "align-middle text-center ", }
                 ],
                 order: [1, 'asc'],
