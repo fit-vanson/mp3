@@ -93,9 +93,6 @@ class RingtonesController extends Controller
         }
 
         $load_feature=$site->load_view_by;
-
-
-
         if (checkBlockIp()) {
             if($load_feature ==0){
                 $data = Sites::where('site_web',$domain)->first()
@@ -105,7 +102,7 @@ class RingtonesController extends Controller
                     ->having('ringtone_count', '>', 0)
                     ->inRandomOrder()
                     ->get();
-                $getResource= FeatureRingtoneResource::collection($data);
+//                $getResource= FeatureRingtoneResource::collection($data);
             }elseif($load_feature ==1){
                 $data = Sites::where('site_web',$domain)->first()
                     ->categories()
@@ -114,7 +111,7 @@ class RingtonesController extends Controller
                     ->having('ringtone_count', '>', 0)
                     ->orderBy('category_order', 'desc')
                     ->get();
-                $getResource= FeatureRingtoneResource::collection($data);
+//                $getResource= FeatureRingtoneResource::collection($data);
 
             }elseif($load_feature ==2){
                 $data = Sites::where('site_web',$domain)->first()
@@ -124,7 +121,7 @@ class RingtonesController extends Controller
                     ->having('ringtone_count', '>', 0)
                     ->orderBy('category_view_count', 'desc')
                     ->get();
-                $getResource= FeatureRingtoneResource::collection($data);
+//                $getResource= FeatureRingtoneResource::collection($data);
             }elseif($load_feature ==3){
                 $data = Ringtones::with('tags')
                     ->whereHas('categories', function ($query) use ($site) {
@@ -134,11 +131,9 @@ class RingtonesController extends Controller
                     ->inRandomOrder()
                     ->take(12)
                     ->get();
-                $getResource= RingtonesResource::collection($data);
+//                $getResource= RingtonesResource::collection($data);
 
             }
-
-
         } else {
             if($load_feature ==0){
                 $data = Sites::where('site_web',$domain)->first()
@@ -148,7 +143,7 @@ class RingtonesController extends Controller
                     ->having('ringtone_count', '>', 0)
                     ->inRandomOrder()
                     ->get();
-                $getResource= FeatureRingtoneResource::collection($data);
+//                $getResource= FeatureRingtoneResource::collection($data);
             }elseif($load_feature ==1){
                 $data = Sites::where('site_web',$domain)->first()
                     ->categories()
@@ -157,7 +152,7 @@ class RingtonesController extends Controller
                     ->having('ringtone_count', '>', 0)
                     ->orderBy('category_order', 'desc')
                     ->get();
-                $getResource= FeatureRingtoneResource::collection($data);
+//                $getResource= FeatureRingtoneResource::collection($data);
 
             }elseif($load_feature ==2){
                 $data = Sites::where('site_web',$domain)->first()
@@ -167,7 +162,7 @@ class RingtonesController extends Controller
                     ->having('ringtone_count', '>', 0)
                     ->orderBy('category_view_count', 'desc')
                     ->get();
-                $getResource= FeatureRingtoneResource::collection($data);
+//                $getResource= FeatureRingtoneResource::collection($data);
             }elseif($load_feature ==3){
                 $data = Ringtones::with('tags')
                     ->whereHas('categories', function ($query) use ($site) {
@@ -177,13 +172,16 @@ class RingtonesController extends Controller
                     ->inRandomOrder()
                     ->take(12)
                     ->get();
-                $getResource= RingtonesResource::collection($data);
+//                $getResource= RingtonesResource::collection($data);
 
             }
         }
 
+        $getResource= CategoriesResource::collection($data);
 
 
+
+//        dd($getResource);
         return response()->json([
             'message'=>'save ip successs',
             'ip_address'=>$ipaddress,
