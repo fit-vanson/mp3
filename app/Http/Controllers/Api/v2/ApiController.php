@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api\v2;
 use App\Categories;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\v2\CategoriesResource;
-use App\Http\Resources\v2\WallpaperResource;
 use App\ListIP;
 use App\Sites;
 use App\VisitorFavorite;

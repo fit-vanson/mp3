@@ -8,11 +8,11 @@ use App\Http\Resources\v3\CategoriesResource;
 use App\ListIP;
 use App\Sites;
 use App\Wallpapers;
-use BaconQrCode\Renderer\Color\Rgb;
+
 use Carbon\Carbon;
 use ColorThief\ColorThief;
-use Dflydev\DotAccessData\Data;
-use League\ColorExtractor\Palette;
+
+
 use Symfony\Component\HttpFoundation\Response;
 
 class ApiController extends Controller

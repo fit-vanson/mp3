@@ -5,9 +5,16 @@ use App\Http\Controllers\Api\v0\FavoriteController;
 use App\Http\Controllers\Api\v0\RingtonesController;
 use App\Http\Controllers\Api\v0\WallpapersController;
 use App\Http\Controllers\Api\v1\ApiController;
+use App\Http\Controllers\Api\v2\ApiController as v2;
+use App\Http\Controllers\Api\v3\ApiController as v3;
+use App\Http\Controllers\Api\v4\ApiController as v4;
+use App\Http\Controllers\Api\v6\ApiController as v6;
+use App\Http\Controllers\Api\v7\ApiController as v7;
+
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
+
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;
 
@@ -97,8 +104,8 @@ Route::group([
     "prefix" => "v2"
 //    'middleware' => 'auth.apikey'
 ], function() {
-    Route::get('/',[App\Http\Controllers\Api\v2\ApiController::class, 'index']);
-    Route::post('/getData',[App\Http\Controllers\Api\v2\ApiController::class, 'getData']);
+    Route::get('/',[v2::class, 'index']);
+    Route::post('/getData',[v2::class, 'getData']);
 });
 
 
@@ -106,18 +113,18 @@ Route::group([
     "prefix" => "v3",
 //    'middleware' => 'auth.apikey'
 ], function() {
-    Route::get('version/check/{id}',[App\Http\Controllers\Api\v3\ApiController::class, 'checkCode']);
-    Route::get('/',[App\Http\Controllers\Api\v3\ApiController::class, 'index']);
-    Route::get('first',[App\Http\Controllers\Api\v3\ApiController::class, 'first']);
+    Route::get('version/check/{id}',[v3::class, 'checkCode']);
+    Route::get('/',[v3::class, 'index']);
+    Route::get('first',[v3::class, 'first']);
 
-    Route::get('category/all',[App\Http\Controllers\Api\v3\ApiController::class, 'categoryAll']);
-    Route::get('wallpaper/all/{order}/{page}',[App\Http\Controllers\Api\v3\ApiController::class, 'wallpapersAll']);
-    Route::get('wallpaper/random/{page}',[App\Http\Controllers\Api\v3\ApiController::class, 'wallpapersRandom']);
-    Route::get('wallpaper/category/{page}/{category}',[App\Http\Controllers\Api\v3\ApiController::class, 'wallpapersByCategory']);
-    Route::get('wallpaper/query/{page}/{query}',[App\Http\Controllers\Api\v3\ApiController::class, 'wallpapersBysearch']);
-    Route::get('wallpaper/add/set/{id}',[App\Http\Controllers\Api\v3\ApiController::class, 'api_add_set']);
-    Route::get('wallpaper/add/view/{id}',[App\Http\Controllers\Api\v3\ApiController::class, 'api_add_view']);
-    Route::get('wallpaper/add/download/{id}',[App\Http\Controllers\Api\v3\ApiController::class, 'api_add_download']);
+    Route::get('category/all',[v3::class, 'categoryAll']);
+    Route::get('wallpaper/all/{order}/{page}',[v3::class, 'wallpapersAll']);
+    Route::get('wallpaper/random/{page}',[v3::class, 'wallpapersRandom']);
+    Route::get('wallpaper/category/{page}/{category}',[v3::class, 'wallpapersByCategory']);
+    Route::get('wallpaper/query/{page}/{query}',[v3::class, 'wallpapersBysearch']);
+    Route::get('wallpaper/add/set/{id}',[v3::class, 'api_add_set']);
+    Route::get('wallpaper/add/view/{id}',[v3::class, 'api_add_view']);
+    Route::get('wallpaper/add/download/{id}',[v3::class, 'api_add_download']);
 
 });
 
@@ -125,24 +132,24 @@ Route::group([
     "prefix" => "v4",
 //    'middleware' => 'auth.apikey'
 ], function() {
-    Route::get('admob',[App\Http\Controllers\Api\v4\ApiController::class, 'admob']);
-    Route::get('settings',[App\Http\Controllers\Api\v4\ApiController::class, 'settings']);
-    Route::get('home',[App\Http\Controllers\Api\v4\ApiController::class, 'home']);
+    Route::get('admob',[v4::class, 'admob']);
+    Route::get('settings',[v4::class, 'settings']);
+    Route::get('home',[v4::class, 'home']);
 
-    Route::get('categories',[App\Http\Controllers\Api\v4\ApiController::class, 'categories']);
+    Route::get('categories',[v4::class, 'categories']);
 
-    Route::get('wallpaper',[App\Http\Controllers\Api\v4\ApiController::class, 'wallpaper']);
-    Route::get('wallpaper/popular',[App\Http\Controllers\Api\v4\ApiController::class, 'popular']);
-    Route::get('wallpaper/download',[App\Http\Controllers\Api\v4\ApiController::class, 'download']);
-    Route::get('wallpaper/random',[App\Http\Controllers\Api\v4\ApiController::class, 'random']);
-    Route::get('wallpaper/cid',[App\Http\Controllers\Api\v4\ApiController::class, 'cid']);
-    Route::get('wallpaper/live',[App\Http\Controllers\Api\v4\ApiController::class, 'live']);
+    Route::get('wallpaper',[v4::class, 'wallpaper']);
+    Route::get('wallpaper/popular',[v4::class, 'popular']);
+    Route::get('wallpaper/download',[v4::class, 'download']);
+    Route::get('wallpaper/random',[v4::class, 'random']);
+    Route::get('wallpaper/cid',[v4::class, 'cid']);
+    Route::get('wallpaper/live',[v4::class, 'live']);
 
-    Route::get('wallpaper/hashtag',[App\Http\Controllers\Api\v4\ApiController::class, 'hashtag']);
+    Route::get('wallpaper/hashtag',[v4::class, 'hashtag']);
 
 
 
-    Route::get('add/show/wallpaper',[App\Http\Controllers\Api\v4\ApiController::class, 'viewWallpaper']);
+    Route::get('add/show/wallpaper',[v4::class, 'viewWallpaper']);
 
 
 
@@ -153,31 +160,31 @@ Route::group([
     "prefix" => "v6",
 //    'middleware' => 'auth.apikey'
 ], function() {
-    Route::post('auth/login',[App\Http\Controllers\Api\v6\ApiController::class, 'login']);
-    Route::get('categories',[App\Http\Controllers\Api\v6\ApiController::class, 'categories']);
+    Route::post('auth/login',[v6::class, 'login']);
+    Route::get('categories',[v6::class, 'categories']);
 
-    Route::get('wallpapers/newest',[App\Http\Controllers\Api\v6\ApiController::class, 'newest']);
-    Route::get('wallpapers/trending',[App\Http\Controllers\Api\v6\ApiController::class, 'trending']);
-    Route::get('wallpapers/random',[App\Http\Controllers\Api\v6\ApiController::class, 'random']);
+    Route::get('wallpapers/newest',[v6::class, 'newest']);
+    Route::get('wallpapers/trending',[v6::class, 'trending']);
+    Route::get('wallpapers/random',[v6::class, 'random']);
 
-    Route::put('wallpapers/download',[App\Http\Controllers\Api\v6\ApiController::class, 'download']);
-    Route::put('wallpapers/use',[App\Http\Controllers\Api\v6\ApiController::class, 'use']);
+    Route::put('wallpapers/download',[v6::class, 'download']);
+    Route::put('wallpapers/use',[v6::class, 'use']);
 });
 
 Route::group([
     "prefix" => "v7",
 //    'middleware' => 'auth.apikey'
 ], function() {
-    Route::get('getJson',[App\Http\Controllers\Api\v7\ApiController::class, 'getJson']);
-    Route::get('getJsonV8',[App\Http\Controllers\Api\v7\ApiController::class, 'getJsonV8']);
-    Route::get('status',[App\Http\Controllers\Api\v7\ApiController::class, 'status'])->name('v8.status');
-    Route::get('categories',[App\Http\Controllers\Api\v7\ApiController::class, 'categories']);
-    Route::get('action',[App\Http\Controllers\Api\v7\ApiController::class, 'action']);
+    Route::get('getJson',[v7::class, 'getJson']);
+    Route::get('getJsonV8',[v7::class, 'getJsonV8']);
+    Route::get('status',[v7::class, 'status'])->name('v8.status');
+    Route::get('categories',[v7::class, 'categories']);
+    Route::get('action',[v7::class, 'action']);
 
 });
 
-Route::get('wallpaper/{id}',[App\Http\Controllers\Api\v7\ApiController::class, 'showWallpaper']);
-Route::get('wallpaperThumb/{id}',[App\Http\Controllers\Api\v7\ApiController::class, 'showWallpaperThumb']);
+Route::get('wallpaper/{id}',[v7::class, 'showWallpaper']);
+Route::get('wallpaperThumb/{id}',[v7::class, 'showWallpaperThumb']);
 
 
 
