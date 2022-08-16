@@ -55,7 +55,7 @@ class CategoriesController extends Controller
         $records = Categories::orderBy($columnName, $columnSortOrder)
             ->where('category_name', 'like', '%' . $searchValue . '%')
             ->select('*')
-            ->withCount('wallpaper','ringtone')
+            ->withCount('wallpaper')
             ->skip($start)
             ->take($rowperpage)
             ->get();
@@ -75,7 +75,6 @@ class CategoriesController extends Controller
                 "category_name" => $record->category_name,
                 "category_checked_ip" => $record->category_checked_ip == 1 ? '<span class="badge badge-danger">FAKE</span>' : '<span class="badge badge-success">REAL</span>',
                 "wallpaper_count" => $record->wallpaper_count,
-                "ringtone_count" => $record->ringtone_count,
                 "action" => $btn,
             );
         }
