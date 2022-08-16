@@ -55,7 +55,7 @@ class CategoriesController extends Controller
         $records = Categories::orderBy($columnName, $columnSortOrder)
             ->where('category_name', 'like', '%' . $searchValue . '%')
             ->select('*')
-            ->withCount('wallpaper')
+            ->withCount('wallpaper','ringtone')
             ->skip($start)
             ->take($rowperpage)
             ->get();
@@ -75,6 +75,7 @@ class CategoriesController extends Controller
                 "category_name" => $record->category_name,
                 "category_checked_ip" => $record->category_checked_ip == 1 ? '<span class="badge badge-danger">FAKE</span>' : '<span class="badge badge-success">REAL</span>',
                 "wallpaper_count" => $record->wallpaper_count,
+                "ringtone_count" => $record->ringtone_count,
                 "action" => $btn,
             );
         }
@@ -91,23 +92,6 @@ class CategoriesController extends Controller
 
     }
     public function create(Request $request){
-//
-//        $site_id = $request->site_id;
-//
-//        $rules = [
-//            'category_name' =>'unique:categories,category_name,'.$site_id.',site_id',
-//
-//        ];
-//        $message = [
-//            'category_name.unique'=>'Category đã tồn tại',
-//
-//        ];
-//        $error = Validator::make($request->all(),$rules, $message );
-//        if($error->fails()){
-//            return response()->json(['errors'=> $error->errors()->all()]);
-//        }
-
-
 
 
 
