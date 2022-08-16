@@ -2,11 +2,14 @@
 
 use App\Http\Controllers\Api\v0\CategoriesController;
 use App\Http\Controllers\Api\v0\FavoriteController;
+use App\Http\Controllers\Api\v0\RingtonesController;
 use App\Http\Controllers\Api\v0\WallpapersController;
 use App\Http\Controllers\Api\v1\ApiController;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\URL;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +21,12 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+
+if (App::environment('production', 'staging')) {
+    URL::forceScheme('https');
+}
+
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
@@ -31,7 +40,10 @@ Route::group([
 //    'middleware' => 'auth.apikey'
 ], function() {
     Route::get('/categories', [CategoriesController::class, 'index']);
+
     Route::get('/categories/{category_id}/wallpapers', [CategoriesController::class, 'getWallpapers']);
+
+
 
     Route::get('/wallpaper-detail/{id}/{device_id}', [WallpapersController::class, 'show']);
     Route::get('/wallpapers/featured', [WallpapersController::class, 'getFeatured']);
@@ -41,6 +53,27 @@ Route::group([
     Route::post('/wallpaper-favorite', [FavoriteController::class, 'likeWallpaper']);
     Route::post('/wallpaper-favorite-unsaved', [FavoriteController::class, 'disLikeWallpaper']);
     Route::get('/favorite/{device_id}', [FavoriteController::class, 'getSaved']);
+
+    //Ringtones
+
+    Route::get('/categories/popular', [CategoriesController::class, 'getPopulared']);
+    Route::get('categories/{category_id}/ringtones/{deviceId}', [RingtonesController::class, 'getRingtonesByCate']);
+
+    Route::get('ringtone-detail/{id}/{device_id}', [RingtonesController::class, 'show']);
+    Route::get('ringtones/featured', [RingtonesController::class, 'getFeatured']);
+    Route::get('ringtones/popular/{deviceId}', [RingtonesController::class, 'getPopulared']);
+    Route::get('ringtones/newest/{deviceId}', [RingtonesController::class, 'getNewest']);
+    Route::get('ringtones/premium', [RingtonesController::class, 'getPremium']);
+    Route::get('ringtones/most-download/{deviceId}', [RingtonesController::class, 'getMostDownload']);
+
+
+    Route::post('ringtone-favorite/', [FavoriteController::class, 'likeRingtone']);
+    Route::post('ringtone-favorite-unsaved/', [FavoriteController::class, 'disLikeRingtone']);
+    Route::get('favorite/{device_id}', [FavoriteController::class, 'getSaved']);
+
+//    Route::post('search', [SearchController::class, 'search']);
+
+
 });
 
 

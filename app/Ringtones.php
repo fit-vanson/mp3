@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Ringtones extends Model
 {
     use HasFactory;
+    use \Staudenmeir\EloquentHasManyDeep\HasRelationships;
 
     protected $fillable = [
         'ringtone_name',
@@ -34,7 +35,7 @@ class Ringtones extends Model
             [
                 'id',         // Local key on the "users" table.
                 'tag_id', // Local key on the "role_user" table (foreign key).
-                'ringtone_id'   // Local key on the "permission_role" table.
+                'category_id'   // Local key on the "permission_role" table.
             ]
         );
     }
