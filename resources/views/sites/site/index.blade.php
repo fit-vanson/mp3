@@ -310,7 +310,8 @@
                                                             <th style="width: 20%">Name</th>
                                                             <th style="width: 10%">Real</th>
                                                             <th style="width: 20%">Tags</th>
-                                                            <th style="width: 10%">Image Count</th>
+                                                            <th style="width: 5%">Image Count</th>
+                                                            <th style="width: 5%">Ringtone Count</th>
                                                             <th style="width: 10%">Action</th>
                                                         </tr>
                                                         </thead>
@@ -685,6 +686,7 @@
                     { data: 'category_checked_ip',className: "align-middle",},
                     { data: 'tags',className: "align-middle", orderable: false},
                     { data: 'wallpaper_count',className: "align-middle",},
+                    { data: 'ringtone_count',className: "align-middle",},
                     { data: 'action',className: "align-middle text-center ", orderable: false }
                 ],
                 dom:
