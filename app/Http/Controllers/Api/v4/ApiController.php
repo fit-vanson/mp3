@@ -183,7 +183,7 @@ class ApiController extends Controller
 
     public function getWallpaper1($data,$order = null){
         if ($order){
-            $dataResult = $data->sortBy('id');
+            $dataResult = $data->sortBy($order);
 
 //            usort($data, function($a, $b) {
 //                $dataResult =  $a['id'] <=> $b['id'];
