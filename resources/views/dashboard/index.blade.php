@@ -63,17 +63,6 @@
                 <div class="card-body">
 
                     <h4 class="card-title mb-4">Line Chart</h4>
-                    <div class="form-group col-3">
-                        <select  class="select2 form-control select2-multiple" id="select_sites"
-                                 name="select_sites[]" multiple="multiple"
-                                 data-placeholder="Choose ..."
-                                 onchange="myFunction()"
-                        >
-                            @foreach($sites as $site)
-                                <option value="{{$site->id}}">{{$site->site_web}}</option>
-                            @endforeach
-                        </select>
-                    </div>
                     <canvas id="lineChart"  width="400" height="100"></canvas>
                 </div>
             </div>
@@ -94,10 +83,10 @@
         $(".select2").select2({});
         const ctx = document.getElementById('lineChart').getContext('2d');
 
-        function loaddata(id){
+        function loaddata(){
             $.ajax({
                 type: "get",
-                url: "{{route('home.load_data')}}?id="+id,
+                url: "{{route('home.load_data')}}",
                 success: function(result) {
                     const myChart = new Chart(ctx, {
                         type: 'line',
@@ -105,14 +94,18 @@
                             labels: result.labels,
                             datasets: result.datasets
                         },
+
                         options: {
+                            legend: {
+                                display: false
+                            },
                             scales: {
                                 yAxes: [{
-                                    ticks: {
-                                        // max: 100,
-                                        // min: 20,
-                                        stepSize: 10
-                                    }
+                                    // ticks: {
+                                    //     // max: 100,
+                                    //     // min: 20,
+                                    //     stepSize: 10
+                                    // }
                                 }]
                             }
 
@@ -122,11 +115,11 @@
             });
         }
 
-        function myFunction() {
-            $("#first").val();
-            var id = $("#select_sites").val();
-            loaddata(id)
-        }
+        // function myFunction() {
+        //     $("#first").val();
+        //     var id = $("#select_sites").val();
+        //     loaddata(id)
+        // }
 
         loaddata(); // This will run on page load
     </script>

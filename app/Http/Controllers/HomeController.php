@@ -62,33 +62,35 @@ class HomeController extends Controller
         }
     }
 
-    public function load_data(Request $request){
-        if($request->id != 'undefined' || $request->id != null){
-            $id = explode(',',$request->id);
-            $sites = Sites::select('site_web','site_cron')->whereIn('id',$id)->get();
-        }else{
-            $sites = Sites::select('site_cron')->get();
-        }
+    public function load_data(){
+        $sites = Sites::select('site_cron')->get();
 
         $dataArray = [];
+        $sumArray = array();
+        $color =  str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT);
         foreach ($sites as $site){
             $data = json_decode($site->site_cron,true);
-            $key = array_keys($data);
-            $val = array_values($data);
-            sort($key);
-
-
-            $color =  str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT);
-            $dataArray['datasets'][] = [
-                'label' => $site->site_web,
-                'fill' => false,
-                'borderColor' => "#$color",
-                'backgroundColor' => "#$color",
-                'data' => $val,
-            ];
-            $dataArray['labels'] = ($key);
+            if(isset($data)){
+                foreach ($data as $key=>$value) {
+                    (!isset($sumArray[$key])) ?
+                        $sumArray[$key]=$value :
+                        $sumArray[$key]+=$value;
+                }
+            }
         }
 
+        $k = array_keys($sumArray);
+        $v = array_values($sumArray);
+        sort($k);
+
+        $dataArray['datasets'][] = [
+//            'label' => false,
+            'fill' => false,
+            'borderColor' => "#$color",
+            'backgroundColor' => "#$color",
+            'data' =>$v,
+        ];
+        $dataArray['labels'] = $k;
         return response()->json( $dataArray);
 //        dd($dataArray);
 //
