@@ -299,7 +299,6 @@ class WallpapersController extends Controller
 
     public function import(){
         return view('wallpapers.import');
-
     }
     public function postImport(Request $request){
         $file = file($request->file->getRealPath());
@@ -483,10 +482,12 @@ class WallpapersController extends Controller
                         }
                     }
                 }else{
-                    $wallpaper_check->wallpaper_status = 2;
-                    $wallpaper_check->save();
-                    echo $wallpaper_check->id.'---'.$wallpaper_check->wallpaper_name. ' error toBits null ----';
-                    Log::info('Message:'.$wallpaper_check->id.'---'.$wallpaper_check->wallpaper_name. ' error toBits null ----');
+                    $wallpaper_check->tags()->detach();
+                    $wallpaper_check->delete();
+//                    $wallpaper_check->wallpaper_status = 2;
+//                    $wallpaper_check->save();
+//                    echo $wallpaper_check->id.'---'.$wallpaper_check->wallpaper_name. ' error toBits null ----';
+//                    Log::info('Message:'.$wallpaper_check->id.'---'.$wallpaper_check->wallpaper_name. ' error toBits null ----');
                 }
             }catch (\Exception $exception) {
                 Log::error('Message:' . $exception->getMessage() .'--: '.$wallpaper_check->wallpaper_name. ' error ----'.$wallpaper_check->wallpaper_image.'---' . $exception->getLine());
@@ -500,6 +501,32 @@ class WallpapersController extends Controller
         $time = isset($_GET['time']) ? $_GET['time'] : 2;
         if(isset($_GET['action']) && $_GET['action']== 'auto'){
             echo '<META http-equiv="refresh" content="'.$time.';URL=' . route('wallpapers.compare') . '?action=auto&time='.$time.'">';
+        }
+    }
+
+    public function compareFile(){
+        return view('wallpapers.compareFile');
+    }
+
+
+    public function compareFilePost(Request $request){
+
+
+        $hasher = new ImageHash(new DifferenceHash());
+        $wallpaper_check    = $request->file('image_1'); // lấy ảnh cần so sánh trùng
+        $wallpapers_compare    = $request->file('image_2'); // lấy ảnh cần so sánh trùng
+        $hash_check = $hasher->hash($wallpaper_check);
+        $hash_compare = $hasher->hash($wallpapers_compare);
+
+        $distance = $hash_check->distance($hash_compare);
+
+
+        echo $distance.'<br>';
+        if($distance <= $request->distance){
+
+            return 'ảnh trùng nhau';
+        }else{
+            return 'ảnh không trùng nhau';
         }
     }
 }

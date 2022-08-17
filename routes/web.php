@@ -123,6 +123,8 @@ Route::group(['prefix'=>env('ADMIN_PAGE','admin')], function (){
 //        Route::post('/postImport', [WallpapersController::class, 'postImport'])->name('wallpapers.postImport');
 //        Route::get('/importToDb', [WallpapersController::class, 'importToDb'])->name('wallpapers.importToDb');
         Route::get('/compare', [WallpapersController::class, 'compare'])->name('wallpapers.compare');
+        Route::get('/compareFile', [WallpapersController::class, 'compareFile'])->name('wallpapers.compareFile');
+        Route::post('/compareFilePost', [WallpapersController::class, 'compareFilePost'])->name('wallpapers.compareFilePost');
     });
 
     Route::group(['prefix'=>'ringtones'], function (){
