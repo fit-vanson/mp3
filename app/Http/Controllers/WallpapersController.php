@@ -78,12 +78,14 @@ class WallpapersController extends Controller
 
         $totalRecordswithFilter = Wallpapers::select('count(*) as allcount')
             ->where('wallpaper_name', 'like', '%' . $searchValue . '%')
+            ->orwhere('wallpaper_image', 'like', '%' . $searchValue . '%')
             ->orwhereRelation('tags','tag_name','like', '%' . $searchValue . '%')
             ->count();
 
         // Get records, also we have included search filter as well
         $records = Wallpapers::with('tags')
             ->where('wallpaper_name', 'like', '%' . $searchValue . '%')
+            ->orwhere('wallpaper_image', 'like', '%' . $searchValue . '%')
             ->orwhereRelation('tags','tag_name','like', '%' . $searchValue . '%')
             ->select('*')
             ->orderBy($columnName, $columnSortOrder)
