@@ -113,41 +113,83 @@ class ApiController extends Controller
     public function home(){
         $domain = $_SERVER['SERVER_NAME'];
         $site =  Sites::where('site_web', $domain)->first();
-        $data = array();
+
+        $checkBlock = 0;
         if (checkBlockIp()) {
-            array_push($data, [
-                'name' => 'latest', 'data' => $this->getWallpaper('id',$site->id,1,'<>',10)
-            ]);
-            array_push($data, [
-                'name' => 'popular', 'data' => $this->getWallpaper('wallpaper_view_count',$site->id,1,'<>',10)
-            ]);
-            array_push($data, [
-                'name' => 'random', 'data' => $this->getWallpaper(null,$site->id,1,'<>',10)
-            ]);
-            array_push($data, [
-                'name' => 'downloaded', 'data' => $this->getWallpaper('wallpaper_like_count',$site->id,1,'<>',10)
-            ]);
-            array_push($data, [
-                'name' => 'live', 'data' => $this->getWallpaper('id',$site->id,1,'=',10)
-            ]);
-        } else {
-            array_push($data, [
-                'name' => 'latest', 'data' => $this->getWallpaper('id',$site->id,0,'<>',10)
-            ]);
-            array_push($data, [
-                'name' => 'popular', 'data' => $this->getWallpaper('wallpaper_view_count',$site->id,0,'<>',10)
-            ]);
-            array_push($data, [
-                'name' => 'random', 'data' => $this->getWallpaper(null,$site->id,0,'<>',10)
-            ]);
-            array_push($data, [
-                'name' => 'downloaded', 'data' => $this->getWallpaper('wallpaper_like_count',$site->id,0,'<>',10)
-            ]);
-            array_push($data, [
-                'name' => 'live', 'data' => $this->getWallpaper('id',$site->id,0,'=',10)
-            ]);
+            $checkBlock = 1;
         }
+
+
+
+//        dd( $this->getWallpaper('id',$site->id,0,'<>',10));
+
+
+
+        $dataArray = Wallpapers::with('tags')
+            ->whereHas('categories', function ($query) use ($checkBlock, $site) {
+                $query->where('category_checked_ip', $checkBlock)
+                    ->where('site_id',$site->id);
+            })
+                ->limit(10)
+                ->get()
+            ->toArray()
+        ;
+
+        $data = array();
+//        if (checkBlockIp()) {
+            array_push($data, [
+//                'name' => 'latest', 'data' => $this->getWallpaper('id',$site->id,$checkBlock,'<>',10)
+                'name' => 'latest', 'data' => $this->getWallpaper1($dataArray,'id')
+
+            ]);
+            array_push($data, [
+//                'name' => 'popular', 'data' => $this->getWallpaper('wallpaper_view_count',$site->id,$checkBlock,'<>',10)
+                'name' => 'popular', 'data' => $this->getWallpaper1($dataArray,'wallpaper_view_count')
+            ]);
+            array_push($data, [
+//                'name' => 'random', 'data' => $this->getWallpaper(null,$site->id,$checkBlock,'<>',10)
+                'name' => 'random', 'data' => $this->getWallpaper1($dataArray)
+            ]);
+            array_push($data, [
+//                'name' => 'downloaded', 'data' => $this->getWallpaper('wallpaper_like_count',$site->id,$checkBlock,'<>',10)
+                'name' => 'downloaded', 'data' => $this->getWallpaper1($dataArray,'wallpaper_download_count')
+            ]);
+            array_push($data, [
+//                'name' => 'live', 'data' => $this->getWallpaper('id',$site->id,$checkBlock,'=',10)
+                'name' => 'live', 'data' => $this->getWallpaper1($dataArray,'id')
+            ]);
+//        } else {
+//            array_push($data, [
+//                'name' => 'latest', 'data' => $this->getWallpaper('id',$site->id,0,'<>',10)
+//            ]);
+//            array_push($data, [
+//                'name' => 'popular', 'data' => $this->getWallpaper('wallpaper_view_count',$site->id,0,'<>',10)
+//            ]);
+//            array_push($data, [
+//                'name' => 'random', 'data' => $this->getWallpaper(null,$site->id,0,'<>',10)
+//            ]);
+//            array_push($data, [
+//                'name' => 'downloaded', 'data' => $this->getWallpaper('wallpaper_like_count',$site->id,0,'<>',10)
+//            ]);
+//            array_push($data, [
+//                'name' => 'live', 'data' => $this->getWallpaper('id',$site->id,0,'=',10)
+//            ]);
+//        }
+
         return $data;
+    }
+
+    public function getWallpaper1($data,$order = null){
+        if ($order){
+            usort($data, function($a, $b) {
+                $dataResult =  $a['id'] <=> $b['id'];
+            });
+        }else{
+            $dataResult = shuffle($data);
+        }
+        $dataResult = WallpaperResource::collection($data);
+        return $dataResult;
+
     }
 
 
