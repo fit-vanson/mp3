@@ -15,18 +15,18 @@ class WallpaperResource extends JsonResource
     public function toArray($request)
     {
         $tags = [];
-        foreach ($this['tags'] as $tag){
-            $tags[] = $tag['tag_name'];
+        foreach ($this->tags as $tag){
+            $tags[] = $tag->tag_name;
         }
         return [
-            'id' =>$this['id'],
-            'image' => asset('storage/wallpapers/'.$this['wallpaper_image']),
-            'type' =>$this['image_extension'] != 'image/gif' ? 'IMAGE' : 'GIF'  ,
+            'id' =>$this->id,
+            'image' => asset('storage/wallpapers/'.$this->wallpaper_image),
+            'type' =>$this->image_extension != 'image/gif' ? 'IMAGE' : 'GIF'  ,
             'premium' => 0,
             'tags' => implode(",", $tags),
-            'view' =>$this['wallpaper_view_count'],
-            'download' =>$this['wallpaper_download_count'],
-            'like' =>$this['wallpaper_like_count'],
+            'view' =>$this->wallpaper_view_count,
+            'download' =>$this->wallpaper_download_count,
+            'like' =>$this->wallpaper_like_count,
         ];
     }
 }

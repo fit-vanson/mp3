@@ -132,8 +132,10 @@ class ApiController extends Controller
             })
                 ->limit(10)
                 ->get()
-            ->toArray()
+//            ->toArray()
+
         ;
+//        dd($dataArray);
 
         $data = array();
 //        if (checkBlockIp()) {
@@ -181,12 +183,16 @@ class ApiController extends Controller
 
     public function getWallpaper1($data,$order = null){
         if ($order){
-            usort($data, function($a, $b) {
-                $dataResult =  $a['id'] <=> $b['id'];
-            });
+            $dataResult = $data->sortBy('id');
+
+//            usort($data, function($a, $b) {
+//                $dataResult =  $a['id'] <=> $b['id'];
+//            });
         }else{
-            $dataResult = shuffle($data);
+            $dataResult = $data->random();
+//            $dataResult = shuffle($data);
         }
+
         $dataResult = WallpaperResource::collection($data);
         return $dataResult;
 
@@ -202,7 +208,7 @@ class ApiController extends Controller
                         ->where('site_id',$siteID);
                 })
                 ->orderBy($order, 'desc')
-                ->paginate($limit)->toArray();
+                ->paginate($limit);
         }else{
             $data = Wallpapers::with('tags')
                 ->where('image_extension', $gif,'image/gif')
@@ -211,7 +217,7 @@ class ApiController extends Controller
                         ->where('site_id',$siteID);
                 })
                 ->inRandomOrder()
-                ->paginate($limit)->toArray();
+                ->paginate($limit);
         }
         $dataResult = WallpaperResource::collection($data);
         return $dataResult;
