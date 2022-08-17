@@ -202,7 +202,7 @@ class ApiController extends Controller
                         ->where('site_id',$siteID);
                 })
                 ->orderBy($order, 'desc')
-                ->paginate($limit);
+                ->paginate($limit)->toArray();
         }else{
             $data = Wallpapers::with('tags')
                 ->where('image_extension', $gif,'image/gif')
@@ -211,7 +211,7 @@ class ApiController extends Controller
                         ->where('site_id',$siteID);
                 })
                 ->inRandomOrder()
-                ->paginate($limit);
+                ->paginate($limit)->toArray();
         }
         $dataResult = WallpaperResource::collection($data);
         return $dataResult;
