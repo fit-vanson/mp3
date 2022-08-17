@@ -204,15 +204,22 @@ class WallpapersController extends Controller
                 copy($file->getRealPath(), $path_origin.$fileNameToStore);
                 copy($file->getRealPath(), $path_thumbnails.$fileNameToStore);
             }else{
+                $img->resize(1300, 2400
+//                    ,function ($constraint) {
+//                    $constraint->aspectRatio();
+//                }
 
-                $img->resize(1300, 2400,function ($constraint) {
-                    $constraint->aspectRatio();
-                })->save($path_origin.$fileNameToStore);
+                )
+                    ->save($path_origin.$fileNameToStore,70);
 
-                $img->resize(360, 640,function ($constraint) {
-                    $constraint->aspectRatio();
-                })->save($path_thumbnails.$fileNameToStore);
+                $img->resize(360, 640
+//                    ,function ($constraint) {
+//                    $constraint->aspectRatio();
+//                }
+                )->save($path_thumbnails.$fileNameToStore,70);
             }
+
+
 
             $origin =  $monthYear.'/'.$fileNameToStore;
 

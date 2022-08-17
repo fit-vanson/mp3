@@ -64,7 +64,6 @@ class HomeController extends Controller
 
     public function load_data(){
         $sites = Sites::select('site_cron')->get();
-
         $dataArray = [];
         $sumArray = array();
         $color =  str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT);
@@ -82,7 +81,6 @@ class HomeController extends Controller
         $k = array_keys($sumArray);
         $v = array_values($sumArray);
         sort($k);
-
         $dataArray['datasets'][] = [
 //            'label' => false,
             'fill' => false,
@@ -92,25 +90,6 @@ class HomeController extends Controller
         ];
         $dataArray['labels'] = $k;
         return response()->json( $dataArray);
-//        dd($dataArray);
-//
-//        $sumArray = array();
-//        foreach (array_values(array_filter($dataArray)) as $k=>$subArray) {
-//            foreach ($subArray as $id=>$value) {
-//                (!isset($sumArray[$id])) ?
-//                    $sumArray[$id]=$value :
-//                    $sumArray[$id]+=$value;
-//            }
-//        }
-//        ksort($sumArray);
-//
-//        $result = [];
-//        foreach ($sumArray as $key=>$val){
-//            $result['date'][] = $key;
-//            $result['data'][] = $val;
-//
-//        }
-//        return response()->json( $result);
     }
 
     public function cloudflare($zoneID){
