@@ -510,8 +510,6 @@ class WallpapersController extends Controller
 
 
     public function compareFilePost(Request $request){
-
-
         $hasher = new ImageHash(new DifferenceHash());
         $wallpaper_check    = $request->file('image_1'); // lấy ảnh cần so sánh trùng
         $wallpapers_compare    = $request->file('image_2'); // lấy ảnh cần so sánh trùng
@@ -519,8 +517,6 @@ class WallpapersController extends Controller
         $hash_compare = $hasher->hash($wallpapers_compare);
 
         $distance = $hash_check->distance($hash_compare);
-
-
         echo $distance.'<br>';
         if($distance <= $request->distance){
 
