@@ -104,7 +104,8 @@ Route::group(['prefix'=>env('ADMIN_PAGE','admin')], function (){
         Route::post('/create',[TagsController::class,'create'])->name('tags.create');
         Route::get('/edit/{id}',[TagsController::class,'edit'])->name('tags.edit');
         Route::post('/update',[TagsController::class,'update'])->name('tags.update');
-        Route::get('/delete/{id}',[TagsController::class,'delete'])->name('tags.delete');
+        Route::post('/delete',[TagsController::class,'delete'])->name('tags.delete');
+            Route::get('/change-tag/{id}',[TagsController::class,'changeTag'])->name('tags.changeTag');
         Route::get('/find',[TagsController::class,'find'])->name('tags.find');
 
 

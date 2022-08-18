@@ -11,6 +11,8 @@
     <link href="{{ URL::asset('assets/libs/toastr/toastr.min.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ URL::asset('assets/libs/toastr/ext-component-toastr.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ URL::asset('assets/libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet" type="text/css" />
+
+    <link href="{{ URL::asset('/assets/libs/select2/select2.min.css') }}" rel="stylesheet" type="text/css"/>
 @endsection
 
 @section('content')
@@ -88,6 +90,52 @@
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
 
+    <!--  Modal content for the above example -->
+    <div class="modal fade" id="modal{{preg_replace('/\s+/','',$page_title)}}ChangeTags" tabindex="-1" role="dialog"
+         aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title mt-0" id="{{preg_replace('/\s+/','',$page_title)}}ChangeTagsModalLabel"></h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-hidden="true">×</button>
+                </div>
+                <div class="modal-body">
+                    <form id="form{{preg_replace('/\s+/','',$page_title)}}ChangeTags">
+                        <input type="hidden" name="id" id="id_change_tags">
+                        <div class="form-group">
+                            <label class="control-label">Wallpaper Tags Select</label>
+                            <select class="select2 form-control select2-multiple" id="wallpaper_tags_change"
+                                    name="wallpaper_tags_change[]" multiple="multiple"
+                                    data-placeholder="Choose ..." style="width: 100%">
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label">Ringtone Tags Select</label>
+                            <select class="select2 form-control select2-multiple" id="ringtone_tags_change"
+                                    name="ringtone_tags_change[]" multiple="multiple"
+                                    data-placeholder="Choose ..." style="width: 100%">
+                            </select>
+                        </div>
+
+                        <div class="form-group mb-0">
+                            <div>
+                                <button type="submit" id="saveBtn{{preg_replace('/\s+/','',$page_title)}}ChangeTags" class="btn btn-danger waves-effect waves-light mr-1">
+                                    Delete
+                                </button>
+                                <button type="reset" class="btn btn-secondary waves-effect">
+                                    Cancel
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+
 @endsection
 
 @section('script')
@@ -97,7 +145,10 @@
     <script src="{{ URL::asset('/assets/libs/jszip/jszip.min.js') }}"></script>
     <script src="{{ URL::asset('/assets/libs/pdfmake/pdfmake.min.js') }}"></script>
     <script src="{{ URL::asset('/assets/libs/toastr/toastr.min.js') }}"></script>
-    <script src="{{ URL::asset('/assets/libs/sweetalert2/sweetalert2.min.js') }}"></script>
+{{--    <script src="{{ URL::asset('/assets/libs/sweetalert2/sweetalert2.min.js') }}"></script>--}}
+
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{{ URL::asset('/assets/libs/select2/select2.min.js') }}"></script>
 
     <script src="{{ URL::asset('/assets/js/table.init.js') }}"></script>
     <script src="{{ URL::asset('/assets/libs/magnific-popup/magnific-popup.min.js') }}"></script>
@@ -105,6 +156,8 @@
     <script>
 
         $(function () {
+            $(".select2").select2({});
+
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -209,30 +262,92 @@
 
 
             $(document).on('click','.delete{{preg_replace('/\s+/','',$page_title)}}', function (data){
-                var id = $(this).data("id");
-                Swal.fire({
-                    title: "Are you sure?",
-                    text: "You won't be able to revert this!",
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#34c38f",
-                    cancelButtonColor: "#f46a6a",
-                    confirmButtonText: "Yes, delete it!"
-                }).then(function (result) {
 
-                    $.ajax({
-                        type: "get",
-                        url: "{{ asset("admin/tags/delete") }}/"+id,
-                        success: function (data) {
-                            toastr['success'](data.success, 'Success!');
-                            dtTable.draw();
-                        },
-                        error: function (data) {
-                            console.log('Error:', data);
-                        }
-                    });
+
+                var id = $(this).data("id");
+                var name = $(this).data("name");
+
+                {{--Swal.fire({--}}
+                {{--    title: "Are you sure?",--}}
+                {{--    text: "You won't be able to revert this!",--}}
+                {{--    type: "warning",--}}
+                {{--    showCancelButton: true,--}}
+                {{--    confirmButtonColor: "#34c38f",--}}
+                {{--    cancelButtonColor: "#f46a6a",--}}
+                {{--    confirmButtonText: "Yes, delete it!"--}}
+                {{--}).then(function (result) {--}}
+
+                    {{--$.ajax({--}}
+                    {{--    type: "get",--}}
+                    {{--    url: "{{ asset("admin/tags/delete") }}/"+id,--}}
+                    {{--    success: function (data) {--}}
+                    {{--        toastr['success'](data.success, 'Success!');--}}
+                    {{--        dtTable.draw();--}}
+                    {{--    },--}}
+                    {{--    error: function (data) {--}}
+                    {{--        console.log('Error:', data);--}}
+                    {{--    }--}}
+                    {{--});--}}
+                {{--});--}}
+
+                $.ajax({
+                    type: "get",
+                    url: "{{ asset("admin/tags/change-tag") }}/"+id,
+                    success: function (data) {
+                        $('#modal{{preg_replace('/\s+/','',$page_title)}}ChangeTags').modal('show');
+                        $('#{{preg_replace('/\s+/','',$page_title)}}ChangeTagsModalLabel').html("Delete " + name) ;
+                        $(".select2").val('').trigger('change');
+
+                        var html = '';
+                        $.each(data.tags, function(i, item) {
+                            html += '<option value="'+i+'">'+item.tag_name+'</option>'
+                        });
+
+
+                        console.log(id)
+
+                        $('#id_change_tags').val(id);
+                        $('#ringtone_tags_change').append(html);
+                        $('#wallpaper_tags_change').append(html);
+
+
+                    },
+                    error: function (data) {
+                        console.log('Error:', data);
+                    }
                 });
             });
+
+            $('#form{{preg_replace('/\s+/','',$page_title)}}ChangeTags').on('submit', function (event) {
+                event.preventDefault();
+                var formData = new FormData($("#form{{preg_replace('/\s+/','',$page_title)}}ChangeTags")[0]);
+
+                    $.ajax({
+                        data: formData,
+                        url: '{{route('tags.delete')}}',
+                        type: "POST",
+                        dataType: 'json',
+                        processData: false,
+                        contentType: false,
+                        success: function (data) {
+                            if (data.success) {
+                                $('#form{{preg_replace('/\s+/','',$page_title)}}').trigger("reset");
+                                toastr['success'](data.success, 'Success!');
+                                $('#modal{{preg_replace('/\s+/','',$page_title)}}').modal('hide');
+                                dtTable.draw();
+                            }
+                            if (data.errors) {
+                                for (var count = 0; count < data.errors.length; count++) {
+                                    toastr['error'](data.errors[count], 'Error!',);
+                                }
+                            }
+                        }
+                    });
+
+
+            });
+
+
 
             $(document).on('click','.edit{{preg_replace('/\s+/','',$page_title)}}', function (data) {
                 $('#form{{preg_replace('/\s+/','',$page_title)}}').trigger("reset");

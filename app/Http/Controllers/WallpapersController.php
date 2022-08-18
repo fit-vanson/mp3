@@ -461,10 +461,11 @@ class WallpapersController extends Controller
                                 $tags_check = $wallpaper_check->tags->pluck('id')->toArray(); // tags ảnh cần so sánh
                                 $tags_compare = $wallpaper_compare->tags->pluck('id')->toArray(); //tags ảnh đã so sánh
                                 $tags = array_unique(array_merge($tags_check,$tags_compare));
-                                $wallpaper_compare->tags()->sync($tags);
-                                $wallpaper_compare->touch();
-                                $pathImage    =   storage_path('app/public/wallpapers/').$wallpaper_check->wallpaper_image;
-                                $pathThumbnail    =   storage_path('app/public/wallpapers/thumbnails/').$wallpaper_check->wallpaper_image;
+//                                $wallpaper_compare->tags()->sync($tags);
+                                $wallpaper_check->tags()->sync($tags);
+                                $wallpaper_check->touch();
+                                $pathImage    =   storage_path('app/public/wallpapers/').$wallpapers_compare->wallpaper_image;
+                                $pathThumbnail    =   storage_path('app/public/wallpapers/thumbnails/').$wallpapers_compare->wallpaper_image;
                                 try {
                                     if(file_exists($pathImage)){
                                         unlink($pathImage);
@@ -475,8 +476,10 @@ class WallpapersController extends Controller
                                 }catch (\Exception $ex) {
                                     Log::error($ex->getMessage());
                                 }
-                                $wallpaper_check->tags()->detach();
-                                $wallpaper_check->delete();
+                                $wallpapers_compare->tags()->detach();
+                                $wallpapers_compare->delete();
+                                $wallpaper_check->wallpaper_status = 1;
+                                $wallpaper_check->save();
                                 break;
                             }else{
                                 $wallpaper_check->wallpaper_status = 1;

@@ -57,7 +57,7 @@ class TagsController extends Controller
         $data_arr = array();
         foreach ($records as $record) {
             $btn = ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-warning editTags"><i class="ti-pencil-alt"></i></a>';
-            $btn .= ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-danger deleteTags"><i class="ti-trash"></i></a>';
+            $btn .= ' <a href="javascript:void(0)" data-name="'.$record->tag_name.'"  data-id="'.$record->id.'" class="btn btn-danger deleteTags"><i class="ti-trash"></i></a>';
 
             $data_arr[] = array(
                 "id" => $record->id,
@@ -123,13 +123,51 @@ class TagsController extends Controller
         $data->save();
         return response()->json(['success'=>'Cập nhật thành công']);
     }
-    public function delete($id)
+    public function delete(Request $request)
     {
-        $tag = Tags::find($id);
-        $tag->wallpaper()->detach();
+
+        $tag = Tags::find($request->id);
+
+        if(isset($request->wallpaper_tags_change)){
+            $walpapers = $tag->wallpaper()->get();
+            if ($walpapers->isNotEmpty()) {
+                $tag->wallpaper()->detach();
+
+                $changeTags = Tags::whereIN('id',$request->wallpaper_tags_change)->get();
+                foreach ($changeTags as $changeTag){
+                    $changeTag->wallpaper()->sync($walpapers->pluck('id')->toArray(),false);
+                }
+            }
+        }
+        if(isset($request->ringtone_tags_change)){
+            $ringtones = $tag->wallpaper()->get();
+            if ($ringtones->isNotEmpty()) {
+                $tag->ringtone()->detach();
+
+                $changeTags = Tags::whereIN('id',$request->ringtone_tags_change)->get();
+                foreach ($changeTags as $changeTag){
+                    $changeTag->wallpaper()->sync($ringtones->pluck('id')->toArray(),false);
+                }
+
+            }
+        }
+
         $tag->categories()->detach();
         $tag->delete();
         return response()->json(['success'=>'Xoá thành công']);
+    }
+
+    public function changeTag($id)
+    {
+        $tags = Tags::select('id','tag_name')->where('id','<>',$id)->get();
+        return response()->json([
+            'tags' =>$tags,
+        ]);
+//
+//        $tag->wallpaper()->detach();
+//        $tag->categories()->detach();
+//        $tag->delete();
+//        return response()->json(['success'=>'Xoá thành công']);
 
     }
 
