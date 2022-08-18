@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Ringtones;
 use App\Sites;
 use App\Tags;
 use App\Wallpapers;
@@ -31,9 +32,12 @@ class HomeController extends Controller
     {
         $sites = Sites::all();
         $tags = Tags::count();
-        $wallpapers = Wallpapers::count();
+        $wallpapers = Wallpapers::all();
+        $ringtones = Ringtones::all();
 
-       return view('dashboard.index')->with(compact('sites','tags','wallpapers'));
+//        dd($wallpapers->where('wallpaper_status',1));
+
+       return view('dashboard.index')->with(compact('sites','tags','wallpapers','ringtones'));
     }
 
     public function show(){

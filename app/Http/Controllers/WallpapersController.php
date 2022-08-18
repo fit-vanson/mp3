@@ -153,7 +153,6 @@ class WallpapersController extends Controller
     }
 
     public function create(Request $request){
-
         $rules = [
             'file.*' => 'max:20000|mimes:jpeg,jpg,png,gif',
             'select_tags' => 'required'
@@ -183,13 +182,13 @@ class WallpapersController extends Controller
         if (!file_exists($path_thumbnails)) {
             mkdir($path_thumbnails, 0777, true);
         }
-        $insert_data = [];
+//        $insert_data = [];
         foreach ($request->file as $file){
             $filenameWithExt=$file->getClientOriginalName();
             $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
-            $nameImage =  preg_replace('/[^A-Za-z0-9\-\']/', '_', $filename);
+//            $nameImage =  preg_replace('/[^A-Za-z0-9\-\']/', '_', $filename);
             $extension = $file->getClientOriginalExtension();
-            $fileNameToStore = $nameImage.'_'.time().'.'.$extension;
+            $fileNameToStore = time().'_'.Str::random(10).'.'.$extension;
             $img = Image::make($file);
 
             if($img->width() > $img->height() ){
