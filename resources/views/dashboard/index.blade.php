@@ -11,7 +11,7 @@
 
 
     <div class="row">
-        <div class="col-xl-3 col-md-6">
+        <div class="col-lg-3 col-md-6">
             <div class="card mini-stat bg-primary text-white">
                 <div class="card-body">
                     <div class="mb-4">
@@ -19,13 +19,13 @@
                             <img src="{{ URL::asset('/assets/images/services-icon/01.png') }}" alt="">
                         </div>
                         <h5 class="font-size-16 text-uppercase mt-0 text-white-50">Sites</h5>
-                        <span class="font-weight-medium font-size-24">{{count($sites)}}</span>
+                        <span class="font-weight-medium font-size-24">{{number_format(count($sites))}}</span>
 
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-xl-3 col-md-6">
+        <div class="col-lg-3 col-md-6">
             <div class="card mini-stat bg-primary text-white">
                 <div class="card-body">
                     <div class="mb-4">
@@ -33,13 +33,13 @@
                             <img src="{{ URL::asset('/assets/images/services-icon/02.png') }}" alt="">
                         </div>
                         <h5 class="font-size-16 text-uppercase mt-0 text-white-50">Tags</h5>
-                        <span class="font-weight-medium font-size-24">{{$tags}}</span>
+                        <span class="font-weight-medium font-size-24">{{number_format($tags)}}</span>
 
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-xl-3 col-md-6">
+        <div class="col-lg-3 col-md-6">
             <div class="card mini-stat bg-primary text-white">
                 <div class="card-body">
                     <div class="mb-4">
@@ -47,15 +47,15 @@
                             <img src="{{ URL::asset('/assets/images/services-icon/06.png') }}" alt="">
                         </div>
                         <h5 class="font-size-16 text-uppercase mt-0 text-white-50">Wallpapers</h5>
-                        <span class="font-weight-medium font-size-24">{{count($wallpapers)}} /  </span>
-                        ( <span class="font-weight-medium" style="color: red">{{count($wallpapers->where('wallpaper_status',0))}}</span> )
+                        <span class="font-weight-medium font-size-24">{{number_format(count($wallpapers))}} /  </span>
+                        ( <span class="font-weight-medium" style="color: red">{{number_format(count($wallpapers->where('wallpaper_status',0)))}}</span> )
 
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-xl-3 col-md-6">
+        <div class="col-lg-3 col-md-6">
             <div class="card mini-stat bg-primary text-white">
                 <div class="card-body">
                     <div class="mb-4">
@@ -63,7 +63,7 @@
                             <img src="{{ URL::asset('/assets/images/services-icon/05.png') }}" alt="">
                         </div>
                         <h5 class="font-size-16 text-uppercase mt-0 text-white-50">Ringtones</h5>
-                        <span class="font-weight-medium font-size-24">{{count($ringtones)}}  </span>
+                        <span class="font-weight-medium font-size-24">{{number_format(count($ringtones))}}  </span>
 {{--                        ( <span class="font-weight-medium" style="color: red">{{count($wallpapers->where('wallpaper_status',0))}}</span> )--}}
 
                     </div>
