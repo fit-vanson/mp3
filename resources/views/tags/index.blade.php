@@ -331,10 +331,7 @@
                         contentType: false,
                         success: function (data) {
                             if (data.success) {
-                                $('#form{{preg_replace('/\s+/','',$page_title)}}').trigger("reset");
-                                toastr['success'](data.success, 'Success!');
-                                $('#modal{{preg_replace('/\s+/','',$page_title)}}').modal('hide');
-                                dtTable.draw();
+                                $('#modal{{preg_replace('/\s+/','',$page_title)}}ChangeTags').modal('hide');
                             }
                             if (data.errors) {
                                 for (var count = 0; count < data.errors.length; count++) {
