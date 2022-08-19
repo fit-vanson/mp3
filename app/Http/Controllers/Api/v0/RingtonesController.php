@@ -33,12 +33,12 @@ class RingtonesController extends Controller
                 'categories' =>
                     CategoriesResource::collection($ringtone->categories),
                 'id' => $ringtone->id,
-                'name' => $ringtone->name,
+                'name' => $ringtone->ringtone_name,
                 'thumbnail_image' => asset('storage/ringtones/'.$ringtone->thumbnail_image),
                 'ringtone_file'=>asset('storage/ringtones/'.$ringtone->ringtone_file),
-                'like_count' => $ringtone->like_count,
-                'views' => $ringtone->view_count,
-                'feature' => $ringtone->feature,
+                'like_count' => $ringtone->ringtone_like_count,
+                'views' => $ringtone->ringtone_view_count,
+                'feature' => $ringtone->ringtone_feature,
                 'created_at' => $ringtone->created_at->format('d/m/Y'),
             ]);
         }else{
@@ -47,12 +47,12 @@ class RingtonesController extends Controller
                 'categories' =>
                     CategoriesResource::collection($ringtone->categories),
                 'id' => $ringtone->id,
-                'name' => $ringtone->name,
+                'name' => $ringtone->ringtone_name,
                 'thumbnail_image' => asset('storage/ringtones/'.$ringtone->thumbnail_image),
                 'ringtone_file'=>asset('storage/ringtones/'.$ringtone->ringtone_file),
-                'like_count' => $ringtone->like_count,
-                'views' => $ringtone->view_count,
-                'feature' => $ringtone->feature,
+                'like_count' => $ringtone->ringtone_view_count,
+                'views' => $ringtone->ringtone_view_count,
+                'feature' => $ringtone->ringtone_feature,
                 'created_at' => $ringtone->created_at->format('d/m/Y'),
             ]);
         }

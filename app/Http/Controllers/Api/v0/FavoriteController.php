@@ -40,7 +40,7 @@ class FavoriteController extends Controller
                 ])
                 ->first();
             $wallpaper = Wallpapers::where('id', $request->wallpaper_id)->first();
-            $wallpaper->increment('like_count');
+            $wallpaper->increment('wallpaper_like_count');
         }
         return response()->json($response, ResponseAlias::HTTP_OK);
     }
@@ -63,7 +63,7 @@ class FavoriteController extends Controller
                 ])
                 ->delete();
             $wallpaper = Wallpapers::where('id', $request->wallpaper_id)->first();
-            $wallpaper->decrement('like_count');
+            $wallpaper->decrement('wallpaper_like_count');
             return response()->json(['success' => ['Completely Delete this Wallpaper out of your List']], 200);
         } else {
             $response['warning'] = ['success' => 'This Wallpaper is not in your list'];
