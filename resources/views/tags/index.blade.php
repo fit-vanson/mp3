@@ -262,34 +262,8 @@
 
 
             $(document).on('click','.delete{{preg_replace('/\s+/','',$page_title)}}', function (data){
-
-
                 var id = $(this).data("id");
                 var name = $(this).data("name");
-
-                {{--Swal.fire({--}}
-                {{--    title: "Are you sure?",--}}
-                {{--    text: "You won't be able to revert this!",--}}
-                {{--    type: "warning",--}}
-                {{--    showCancelButton: true,--}}
-                {{--    confirmButtonColor: "#34c38f",--}}
-                {{--    cancelButtonColor: "#f46a6a",--}}
-                {{--    confirmButtonText: "Yes, delete it!"--}}
-                {{--}).then(function (result) {--}}
-
-                    {{--$.ajax({--}}
-                    {{--    type: "get",--}}
-                    {{--    url: "{{ asset("admin/tags/delete") }}/"+id,--}}
-                    {{--    success: function (data) {--}}
-                    {{--        toastr['success'](data.success, 'Success!');--}}
-                    {{--        dtTable.draw();--}}
-                    {{--    },--}}
-                    {{--    error: function (data) {--}}
-                    {{--        console.log('Error:', data);--}}
-                    {{--    }--}}
-                    {{--});--}}
-                {{--});--}}
-
                 $.ajax({
                     type: "get",
                     url: "{{ asset("admin/tags/change-tag") }}/"+id,
@@ -300,11 +274,8 @@
 
                         var html = '';
                         $.each(data.tags, function(i, item) {
-                            html += '<option value="'+i+'">'+item.tag_name+'</option>'
+                            html += '<option value="'+item.id+'">'+item.tag_name+'</option>'
                         });
-
-
-                        console.log(id)
 
                         $('#id_change_tags').val(id);
                         $('#ringtone_tags_change').append(html);
@@ -332,6 +303,7 @@
                         success: function (data) {
                             if (data.success) {
                                 $('#modal{{preg_replace('/\s+/','',$page_title)}}ChangeTags').modal('hide');
+                                dtTable.draw();
                             }
                             if (data.errors) {
                                 for (var count = 0; count < data.errors.length; count++) {

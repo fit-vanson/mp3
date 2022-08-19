@@ -330,7 +330,7 @@
                     '<"col-sm-12 col-lg-4 ps-xl-75 ps-0"<" d-flex align-items-center justify-content-center justify-content-lg-end flex-lg-nowrap flex-wrap"<"me-1"f>>>' +
                     '>t' +
                     '<"d-flex justify-content-between mx-2 row mb-1"' +
-                    // '<"col-sm-12 col-md-3"<"button-items"B>>' +
+                    '<"col-sm-12 col-md-3"<"button-items"B>>' +
                     '<"col-sm-12 col-md-3"i>' +
                     '<"col-sm-12 col-md-6"p>' +
                     '>',
@@ -375,18 +375,18 @@
                         }
                     },
                 ],
-                // buttons: [
-                //     {
-                //         text: 'Delete',
-                //         className: 'deleteSelect btn btn-danger',
-                //         attr: {
-                //             'type': 'submit'
-                //         },
-                //         init: function (api, node, config) {
-                //             $(node).removeClass('btn-secondary');
-                //         }
-                //     }
-                // ],
+                buttons: [
+                    {
+                        text: 'Delete',
+                        className: 'deleteSelect btn btn-danger',
+                        attr: {
+                            'type': 'submit'
+                        },
+                        init: function (api, node, config) {
+                            $(node).removeClass('btn-secondary');
+                        }
+                    }
+                ],
                 order: [2, 'desc'],
                 fnDrawCallback: function () {
                     $('.image-popup-no-margins').magnificPopup({
@@ -472,17 +472,20 @@
                     cancelButtonColor: "#f46a6a",
                     confirmButtonText: "Yes, delete it!"
                 }).then(function (result) {
-                    $.ajax({
-                        type: "get",
-                        url: "{{ asset("admin/wallpapers/delete") }}/" + id,
-                        success: function (data) {
-                            toastr['success'](data.success, 'Success!');
-                            dtTable.draw();
-                        },
-                        error: function (data) {
-                            console.log('Error:', data);
-                        }
-                    });
+                    if (result.value) {
+                        $.ajax({
+                            type: "get",
+                            url: "{{ asset("admin/wallpapers/delete") }}/" + id,
+                            success: function (data) {
+                                toastr['success'](data.success, 'Success!');
+                                dtTable.draw();
+                            },
+                            error: function (data) {
+                                console.log('Error:', data);
+                            }
+                        });
+                    }
+
                 });
             });
 
@@ -527,23 +530,25 @@
                     cancelButtonColor: "#f46a6a",
                     confirmButtonText: "Yes, delete it!"
                 }).then(function (result) {
-                    $.ajax({
-                        data: $('#checkForm').serialize(),
-                        url: "{{ route('wallpapers.deleteSelect') }}",
-                        type: "post",
-                        dataType: 'json',
-                        success: function (data) {
-                            dtTable.draw();
-                            toastr['success']('', data.success, {
-                                showMethod: 'fadeIn',
-                                hideMethod: 'fadeOut',
-                                timeOut: 2000,
-                            });
-                        },
-                        error: function (data) {
-                            console.log('Error:', data);
-                        }
-                    });
+                    if (result.value) {
+                        $.ajax({
+                            data: $('#checkForm').serialize(),
+                            url: "{{ route('wallpapers.deleteSelect') }}",
+                            type: "post",
+                            dataType: 'json',
+                            success: function (data) {
+                                dtTable.draw();
+                                toastr['success']('', data.success, {
+                                    showMethod: 'fadeIn',
+                                    hideMethod: 'fadeOut',
+                                    timeOut: 2000,
+                                });
+                            },
+                            error: function (data) {
+                                console.log('Error:', data);
+                            }
+                        });
+                    }
                 });
 
 

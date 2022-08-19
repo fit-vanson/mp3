@@ -472,17 +472,19 @@
                     cancelButtonColor: "#f46a6a",
                     confirmButtonText: "Yes, delete it!"
                 }).then(function (result) {
-                    $.ajax({
-                        type: "get",
-                        url: "{{ asset("admin/ringtones/delete") }}/" + id,
-                        success: function (data) {
-                            toastr['success'](data.success, 'Success!');
-                            dtTable.draw();
-                        },
-                        error: function (data) {
-                            console.log('Error:', data);
-                        }
-                    });
+                    if (result.value) {
+                        $.ajax({
+                            type: "get",
+                            url: "{{ asset("admin/ringtones/delete") }}/" + id,
+                            success: function (data) {
+                                toastr['success'](data.success, 'Success!');
+                                dtTable.draw();
+                            },
+                            error: function (data) {
+                                console.log('Error:', data);
+                            }
+                        });
+                    }
                 });
             });
 
@@ -527,23 +529,25 @@
                     cancelButtonColor: "#f46a6a",
                     confirmButtonText: "Yes, delete it!"
                 }).then(function (result) {
-                    $.ajax({
-                        data: $('#checkForm').serialize(),
-                        url: "{{ route('ringtones.deleteSelect') }}",
-                        type: "post",
-                        dataType: 'json',
-                        success: function (data) {
-                            dtTable.draw();
-                            toastr['success']('', data.success, {
-                                showMethod: 'fadeIn',
-                                hideMethod: 'fadeOut',
-                                timeOut: 2000,
-                            });
-                        },
-                        error: function (data) {
-                            console.log('Error:', data);
-                        }
-                    });
+                    if (result.value) {
+                        $.ajax({
+                            data: $('#checkForm').serialize(),
+                            url: "{{ route('ringtones.deleteSelect') }}",
+                            type: "post",
+                            dataType: 'json',
+                            success: function (data) {
+                                dtTable.draw();
+                                toastr['success']('', data.success, {
+                                    showMethod: 'fadeIn',
+                                    hideMethod: 'fadeOut',
+                                    timeOut: 2000,
+                                });
+                            },
+                            error: function (data) {
+                                console.log('Error:', data);
+                            }
+                        });
+                    }
                 });
 
 

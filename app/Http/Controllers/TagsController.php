@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Tags;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use function GuzzleHttp\Promise\all;
 
 
 class TagsController extends Controller
@@ -123,35 +124,33 @@ class TagsController extends Controller
         $data->save();
         return response()->json(['success'=>'Cập nhật thành công']);
     }
+
     public function delete(Request $request)
     {
-
         $tag = Tags::find($request->id);
-
         if(isset($request->wallpaper_tags_change)){
-            $walpapers = $tag->wallpaper()->get();
-            if ($walpapers->isNotEmpty()) {
-                $tag->wallpaper()->detach();
 
-                $changeTags = Tags::whereIN('id',$request->wallpaper_tags_change)->get();
-                foreach ($changeTags as $changeTag){
-                    $changeTag->wallpaper()->sync($walpapers->pluck('id')->toArray(),false);
+            $walpapers = $tag->wallpaper()->get();
+
+            if ($walpapers->isNotEmpty()) {
+                $changeTagsWallpaper = Tags::whereIN('id',$request->wallpaper_tags_change)->get();
+                foreach ($changeTagsWallpaper as $changeTagWallpaper){
+                    $changeTagWallpaper->wallpaper()->sync($walpapers->pluck('id')->toArray(),false);
                 }
             }
         }
         if(isset($request->ringtone_tags_change)){
             $ringtones = $tag->wallpaper()->get();
             if ($ringtones->isNotEmpty()) {
-                $tag->ringtone()->detach();
-
-                $changeTags = Tags::whereIN('id',$request->ringtone_tags_change)->get();
-                foreach ($changeTags as $changeTag){
-                    $changeTag->wallpaper()->sync($ringtones->pluck('id')->toArray(),false);
+                $changeTagsRingtone = Tags::whereIN('id',$request->ringtone_tags_change)->get();
+                foreach ($changeTagsRingtone as $changeTagRingtone){
+                    $changeTagRingtone->wallpaper()->sync($ringtones->pluck('id')->toArray(),false);
                 }
-
             }
         }
 
+        $tag->wallpaper()->detach();
+        $tag->ringtone()->detach();
         $tag->categories()->detach();
         $tag->delete();
         return response()->json(['success'=>'Xoá thành công']);
@@ -163,12 +162,6 @@ class TagsController extends Controller
         return response()->json([
             'tags' =>$tags,
         ]);
-//
-//        $tag->wallpaper()->detach();
-//        $tag->categories()->detach();
-//        $tag->delete();
-//        return response()->json(['success'=>'Xoá thành công']);
-
     }
 
 }

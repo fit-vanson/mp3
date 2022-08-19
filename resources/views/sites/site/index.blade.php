@@ -821,18 +821,19 @@
                     cancelButtonColor: "#f46a6a",
                     confirmButtonText: "Yes, delete it!"
                 }).then(function (result) {
-
-                    $.ajax({
-                        type: "get",
-                        url: "{{ asset("admin/categories/delete") }}/"+id,
-                        success: function (data) {
-                            toastr['success'](data.success, 'Success!');
-                            dtTable.draw();
-                        },
-                        error: function (data) {
-                            console.log('Error:', data);
-                        }
-                    });
+                    if (result.value) {
+                        $.ajax({
+                            type: "get",
+                            url: "{{ asset("admin/categories/delete") }}/" + id,
+                            success: function (data) {
+                                toastr['success'](data.success, 'Success!');
+                                dtTable.draw();
+                            },
+                            error: function (data) {
+                                console.log('Error:', data);
+                            }
+                        });
+                    }
                 });
             });
 

@@ -35,7 +35,6 @@ class HomeController extends Controller
         $wallpapers = Wallpapers::all();
         $ringtones = Ringtones::all();
 
-//        dd($wallpapers->where('wallpaper_status',1));
 
        return view('dashboard.index')->with(compact('sites','tags','wallpapers','ringtones'));
     }

@@ -229,18 +229,20 @@
                     cancelButtonColor: "#f46a6a",
                     confirmButtonText: "Yes, delete it!"
                 }).then(function (result) {
+                    if (result.value) {
 
-                    $.ajax({
-                        type: "get",
-                        url: "{{ asset("admin/block-ips/delete") }}/"+id,
-                        success: function (data) {
-                            toastr['success'](data.success, 'Success!');
-                            dtTable.draw();
-                        },
-                        error: function (data) {
-                            console.log('Error:', data);
-                        }
-                    });
+                        $.ajax({
+                            type: "get",
+                            url: "{{ asset("admin/block-ips/delete") }}/" + id,
+                            success: function (data) {
+                                toastr['success'](data.success, 'Success!');
+                                dtTable.draw();
+                            },
+                            error: function (data) {
+                                console.log('Error:', data);
+                            }
+                        });
+                    }
                 });
             });
 
