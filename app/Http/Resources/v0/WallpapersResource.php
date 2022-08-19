@@ -22,7 +22,7 @@ class WallpapersResource extends JsonResource
             'id' => $this->id,
             'name' => $this->wallpaper_name ,
             'thumbnail_image' => asset('storage/wallpapers/thumbnails/'.$this->wallpaper_image),
-            'detail_image' => asset('storage/wallpapers/thumbnails/'.$this->wallpaper_image),
+            'detail_image' => asset('storage/wallpapers/'.$this->wallpaper_image),
             'download_image' => asset('storage/wallpapers/'.$this->wallpaper_image),
             'like_count' => $this->wallpaper_like_count,
             'views' => $this->wallpaper_view_count,

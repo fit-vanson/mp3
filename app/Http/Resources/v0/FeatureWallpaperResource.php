@@ -22,7 +22,7 @@ class FeatureWallpaperResource extends JsonResource
                 'id' => $item->id,
                 'name' => $item->wallpaper_name ,
                 'thumbnail_image' => asset('storage/wallpapers/thumbnails/'.$item->wallpaper_image),
-                'detail_image' => asset('storage/wallpapers/thumbnails/'.$item->wallpaper_image),
+                'detail_image' => asset('storage/wallpapers/'.$item->wallpaper_image),
                 'download_image' => asset('storage/wallpapers/'.$item->wallpaper_image),
                 'like_count' => $item->wallpaper_like_count,
                 'views' => $item->wallpaper_view_count,
