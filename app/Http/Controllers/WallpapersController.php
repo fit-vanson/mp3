@@ -464,8 +464,8 @@ class WallpapersController extends Controller
 //                                $wallpaper_compare->tags()->sync($tags);
                                 $wallpaper_check->tags()->sync($tags);
                                 $wallpaper_check->touch();
-                                $pathImage    =   storage_path('app/public/wallpapers/').$wallpapers_compare->wallpaper_image;
-                                $pathThumbnail    =   storage_path('app/public/wallpapers/thumbnails/').$wallpapers_compare->wallpaper_image;
+                                $pathImage    =   storage_path('app/public/wallpapers/').$wallpaper_compare->wallpaper_image;
+                                $pathThumbnail    =   storage_path('app/public/wallpapers/thumbnails/').$wallpaper_compare->wallpaper_image;
                                 try {
                                     if(file_exists($pathImage)){
                                         unlink($pathImage);
@@ -487,7 +487,7 @@ class WallpapersController extends Controller
                                 $wallpaper_check->save();
                             }
                         }catch (\Exception $exception) {
-                            Log::error('Message:' . $exception->getMessage() .'--: '.$wallpaper_check->wallpaper_name. ' -- '.$wallpaper_compare->wallpaper_name .'---' . $exception->getLine());
+                            Log::error('Message -- :' . $exception->getMessage() .'--: '.$wallpaper_check->wallpaper_name. ' -- '.$wallpaper_compare->wallpaper_name .'---' . $exception->getLine());
                         }
                     }
                 }else{
