@@ -476,10 +476,12 @@ class WallpapersController extends Controller
                                 }catch (\Exception $ex) {
                                     Log::error($ex->getMessage());
                                 }
-                                $wallpapers_compare->tags()->detach();
-                                $wallpapers_compare->delete();
+
                                 $wallpaper_check->wallpaper_status = 1;
                                 $wallpaper_check->save();
+
+                                $wallpaper_compare->tags()->detach();
+                                $wallpaper_compare->delete();
                                 break;
                             }else{
                                 $wallpaper_check->wallpaper_status = 1;
