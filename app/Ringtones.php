@@ -20,6 +20,8 @@ class Ringtones extends Model
         'ringtone_extension',
         'ringtone_status',
         'ringtone_type',
+        'ringtone_hash',
+
     ];
 
     public function categories()

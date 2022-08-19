@@ -9,6 +9,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
+use Jenssegers\ImageHash\ImageHash;
+use Jenssegers\ImageHash\Implementations\DifferenceHash;
 
 class RingtonesController extends Controller
 {
@@ -149,20 +152,18 @@ class RingtonesController extends Controller
 
 
         $rules = [
-            'file.*' => 'max:20000|mimes:mp3',
-            'select_tags' => 'required'
+            'file.*' => 'max:20000|mimes:mp3,txt,jpg',
+
         ];
         $message = [
             'file.mimes'=>'Định dạng File',
             'file.max'=>'Dung lượng File',
-            'select_tags.required'=>'Tags',
+
         ];
         $error = Validator::make($request->all(),$rules, $message );
         if($error->fails()){
             return response()->json(['errors'=> $error->errors()->all()]);
         }
-
-
         $now = new \DateTime('now'); //Datetime
         $monthNum = $now->format('m');
         $dateObj   = DateTime::createFromFormat('!m', $monthNum);
@@ -174,31 +175,64 @@ class RingtonesController extends Controller
             mkdir($path_origin, 0777, true);
         }
 
+        $dataArray = [];
+
+        $hasher = new ImageHash(new DifferenceHash());
+
         foreach ($request->file as $file){
             $filenameWithExt=$file->getClientOriginalName();
             $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
-            $nameImage =  preg_replace('/[^A-Za-z0-9\-\']/', '_', $filename);
             $extension = $file->getClientOriginalExtension();
-            $fileNameToStore = $nameImage.'_'.time().'.'.$extension;
 
-
-            $path = Storage::disk('ringtones_file')->putFileAs($monthYear,$file, $fileNameToStore);
-
-            $wallpaper = Ringtones::create([
-                'ringtone_name' => $filename,
-                'ringtone_file'=> $path,
-                'ringtone_view_count' => rand(500,2000),
-                'ringtone_like_count' => rand(500,2000),
-                'ringtone_download_count' => rand(500,2000),
-                'ringtone_feature' => rand(0,1),
-                'ringtone_extension' => $file->getClientMimeType(),
-                'ringtone_status' => 0,
-                'ringtone_type' => 'mp3'
-            ]);
-
-            $wallpaper->tags()->attach($request->select_tags);
+            switch ($extension){
+                case 'txt':
+                    $file = file_get_contents($file);
+                    $tags = explode(',',$file);
+                    $tags = array_map('trim', $tags);
+                    $getTags = Tags::select('id')->whereIn('tag_name',$tags)->get()->pluck('id')->toArray();
+                    $dataArray[$filename]['tags']=  $getTags;
+                    break;
+                case 'jpg':
+                    $hash = $hasher->hash($file)->toBits();
+                    $dataArray[$filename]['hash'] =  $hash;
+                    break;
+                case 'mp3':
+                    $fileNameToStore = time().'_'.Str::random(10).'.'.$extension;
+                    $path = Storage::disk('ringtones_file')->putFileAs($monthYear,$file, $fileNameToStore);
+                    $dataArray[$filename]['ringtone_file'] = $path;
+                    break;
+            }
         }
-        return response()->json(['success'=>'Thành công','data'=>$wallpaper]);
+        foreach ($dataArray as $key=>$data){
+            if(isset($data['tags']) && !empty($data['tags']) ){
+                $wallpaper = Ringtones::updateOrCreate(
+                    [
+                        'ringtone_hash' => $data['hash']
+                    ],
+                    [
+                        'ringtone_name' => $key,
+                        'ringtone_file'=> $data['ringtone_file'],
+                        'ringtone_view_count' => rand(500,2000),
+                        'ringtone_like_count' => rand(500,2000),
+                        'ringtone_download_count' => rand(500,2000),
+                        'ringtone_feature' => rand(0,1),
+                        'ringtone_extension' => 'mp3',
+                        'ringtone_status' => 0,
+                        'ringtone_type' => 'mp3'
+                    ]);
+                $wallpaper->tags()->sync($data['tags']);
+            }else{
+                try {
+                    $path    =   storage_path('app/public/ringtones/').$data['ringtone_file'];
+                    if(file_exists($path)){
+                        unlink($path);
+                    }
+                }catch (\Exception $ex) {
+                    Log::error('Message:' . $ex->getMessage() .'--: '.$key. ' -----' . $ex->getLine());
+                }
+            }
+        }
+        return response()->json(['success'=>'Thành công']);
 
     }
 

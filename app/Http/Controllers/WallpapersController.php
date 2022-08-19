@@ -209,13 +209,13 @@ class WallpapersController extends Controller
 //                }
 
                 )
-                    ->save($path_origin.$fileNameToStore,70);
+                    ->save($path_origin.$fileNameToStore,75);
 
                 $img->resize(360, 640
 //                    ,function ($constraint) {
 //                    $constraint->aspectRatio();
 //                }
-                )->save($path_thumbnails.$fileNameToStore,70);
+                )->save($path_thumbnails.$fileNameToStore,75);
             }
 
 

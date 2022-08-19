@@ -57,17 +57,17 @@
                         <form method="post" action="{{route('ringtones.create')}}" enctype="multipart/form-data"
                               class="dropzone" id="form{{preg_replace('/\s+/','',$page_title)}}">
                             @csrf
-                            <div class="form-group mb-0">
-                                <label class="control-label">Tags Select</label>
-                                <select class="select2 form-control select2-multiple" id="select_tags"
-                                        name="select_tags[]" multiple="multiple"
-                                        data-placeholder="Choose ...">
-                                    @foreach($tags as $tag)
-                                        <option value="{{$tag->id}}">{{$tag->tag_name}}</option>
-                                    @endforeach
-                                </select>
+{{--                            <div class="form-group mb-0">--}}
+{{--                                <label class="control-label">Tags Select</label>--}}
+{{--                                <select class="select2 form-control select2-multiple" id="select_tags"--}}
+{{--                                        name="select_tags[]" multiple="multiple"--}}
+{{--                                        data-placeholder="Choose ...">--}}
+{{--                                    @foreach($tags as $tag)--}}
+{{--                                        <option value="{{$tag->id}}">{{$tag->tag_name}}</option>--}}
+{{--                                    @endforeach--}}
+{{--                                </select>--}}
 
-                            </div>
+{{--                            </div>--}}
                             <div class="fallback">
                                 <input name="file" type="file" multiple="multiple">
                             </div>
@@ -590,9 +590,9 @@
             $('#form{{preg_replace('/\s+/','',$page_title)}}').dropzone(
                 {
                     maxFilesize: 20,
-                    parallelUploads: 20,
+                    parallelUploads: 30 ,
                     uploadMultiple: true,
-                    acceptedFiles: ".mp3",
+                    acceptedFiles: ".mp3,.txt,.jpg",
                     addRemoveLinks: true,
                     timeout: 0,
                     dictRemoveFile: 'Xoá',
