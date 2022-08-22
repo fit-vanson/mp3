@@ -55,15 +55,18 @@ return [
             'visibility' => 'public',
         ],
 
-        'ringtones_file' => [
+        'music_files' => [
             'driver' => 'local',
-            'root' => public_path('storage/ringtones/'),
-            'url' => env('APP_URL').'ringtones',
+            'root' => public_path('storage/musics/files/'),
+            'url' => env('APP_URL').'/musics/files',
             'visibility' => 'public',
         ],
-
-
-
+       'music_images' => [
+                'driver' => 'local',
+                'root' => public_path('storage/musics/images/'),
+                'url' => env('APP_URL').'/musics/images',
+                'visibility' => 'public',
+            ],
 
         's3' => [
             'driver' => 's3',

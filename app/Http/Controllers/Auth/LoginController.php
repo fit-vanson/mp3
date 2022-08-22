@@ -46,7 +46,7 @@ class LoginController extends Controller
         $check = filter_var($input['email'], FILTER_VALIDATE_EMAIL) ? 'email' : 'name';
         $remember = $request->has('remember')? true:false;
         if(auth()->attempt(array($check=>$input['email'], 'password'=>$input['password']),$remember)){
-            return redirect()->route('admin.home');
+            return redirect()->route('home.index');
         }else{
             return redirect()->route('login')->with('error', 'Email and password are wrong');
         }

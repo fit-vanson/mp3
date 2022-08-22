@@ -8,13 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 class VisitorFavorite extends Model
 {
     use HasFactory;
+    public $timestamps = false;
     protected $fillable = [
-        'visitor_id', 'wallpaper_id','site_id'
+        'visitor_id', 'music_id','site_id'
     ];
 
-    public function wallpaper()
+
+    public function music()
     {
-        return $this->belongsTo(Wallpapers::class,  'wallpaper_id');
+        return $this->belongsTo(Musics::class,  'music_id');
     }
 
 

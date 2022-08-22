@@ -4,6 +4,7 @@ use App\Http\Controllers\ApiKeysController;
 use App\Http\Controllers\BlockIPsController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\MusicsController;
 use App\Http\Controllers\RingtonesController;
 use App\Http\Controllers\RolesPermissionsController;
 use App\Http\Controllers\SitesController;
@@ -60,12 +61,9 @@ Route::get('/cloudflare/{id}', [HomeController::class, 'cloudflare'])->name('clo
 
 
 Route::group(['prefix'=>env('ADMIN_PAGE','admin')], function (){
-    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-    Route::get('/load_data', [App\Http\Controllers\HomeController::class, 'load_data'])->name('home.load_data');
-    Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('admin.home');
-
-
-
+//    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    Route::get('/load_data', [HomeController::class, 'load_data'])->name('home.load_data');
+    Route::get('/', [HomeController::class, 'index'])->name('home.index');
 
 
     Route::group(['prefix'=>'users'], function (){
@@ -105,41 +103,54 @@ Route::group(['prefix'=>env('ADMIN_PAGE','admin')], function (){
         Route::get('/edit/{id}',[TagsController::class,'edit'])->name('tags.edit');
         Route::post('/update',[TagsController::class,'update'])->name('tags.update');
         Route::post('/delete',[TagsController::class,'delete'])->name('tags.delete');
-            Route::get('/change-tag/{id}',[TagsController::class,'changeTag'])->name('tags.changeTag');
+        Route::get('/change-tag/{id}',[TagsController::class,'changeTag'])->name('tags.changeTag');
         Route::get('/find',[TagsController::class,'find'])->name('tags.find');
 
-
-
     });
 
-    Route::group(['prefix'=>'wallpapers'], function (){
-        Route::get('/',[WallpapersController::class,'index'])->name('wallpapers.index');
-        Route::post('/getIndex',[WallpapersController::class,'getIndex'])->name('wallpapers.getIndex');
-        Route::post('/create',[WallpapersController::class,'create'])->name('wallpapers.create');
-        Route::get('/edit/{id}',[WallpapersController::class,'edit'])->name('wallpapers.edit');
-        Route::post('/update',[WallpapersController::class,'update'])->name('wallpapers.update');
-        Route::get('/delete/{id}',[WallpapersController::class,'delete'])->name('wallpapers.delete');
-        Route::post('/deleteSelect', [WallpapersController::class, 'deleteSelect'])->name('wallpapers.deleteSelect');
-//        Route::get('/import', [WallpapersController::class, 'import'])->name('wallpapers.import');
-//        Route::post('/postImport', [WallpapersController::class, 'postImport'])->name('wallpapers.postImport');
-//        Route::get('/importToDb', [WallpapersController::class, 'importToDb'])->name('wallpapers.importToDb');
-        Route::get('/compare', [WallpapersController::class, 'compare'])->name('wallpapers.compare');
-        Route::get('/compareFile', [WallpapersController::class, 'compareFile'])->name('wallpapers.compareFile');
-        Route::post('/compareFilePost', [WallpapersController::class, 'compareFilePost'])->name('wallpapers.compareFilePost');
-    });
+//    Route::group(['prefix'=>'wallpapers'], function (){
+//        Route::get('/',[WallpapersController::class,'index'])->name('wallpapers.index');
+//        Route::post('/getIndex',[WallpapersController::class,'getIndex'])->name('wallpapers.getIndex');
+//        Route::post('/create',[WallpapersController::class,'create'])->name('wallpapers.create');
+//        Route::get('/edit/{id}',[WallpapersController::class,'edit'])->name('wallpapers.edit');
+//        Route::post('/update',[WallpapersController::class,'update'])->name('wallpapers.update');
+//        Route::get('/delete/{id}',[WallpapersController::class,'delete'])->name('wallpapers.delete');
+//        Route::post('/deleteSelect', [WallpapersController::class, 'deleteSelect'])->name('wallpapers.deleteSelect');
+////        Route::get('/import', [WallpapersController::class, 'import'])->name('wallpapers.import');
+////        Route::post('/postImport', [WallpapersController::class, 'postImport'])->name('wallpapers.postImport');
+////        Route::get('/importToDb', [WallpapersController::class, 'importToDb'])->name('wallpapers.importToDb');
+//        Route::get('/compare', [WallpapersController::class, 'compare'])->name('wallpapers.compare');
+//        Route::get('/compareFile', [WallpapersController::class, 'compareFile'])->name('wallpapers.compareFile');
+//        Route::post('/compareFilePost', [WallpapersController::class, 'compareFilePost'])->name('wallpapers.compareFilePost');
+//    });
+//
+//    Route::group(['prefix'=>'ringtones'], function (){
+//        Route::get('/',[RingtonesController::class,'index'])->name('ringtones.index');
+//        Route::post('/getIndex',[RingtonesController::class,'getIndex'])->name('ringtones.getIndex');
+//        Route::post('/create',[RingtonesController::class,'create'])->name('ringtones.create');
+//        Route::get('/edit/{id}',[RingtonesController::class,'edit'])->name('ringtones.edit');
+//        Route::post('/update',[RingtonesController::class,'update'])->name('ringtones.update');
+//        Route::get('/delete/{id}',[RingtonesController::class,'delete'])->name('ringtones.delete');
+//        Route::post('/deleteSelect', [RingtonesController::class, 'deleteSelect'])->name('ringtones.deleteSelect');
+////        Route::get('/import', [RingtonesController::class, 'import'])->name('wallpapers.import');
+////        Route::post('/postImport', [RingtonesController::class, 'postImport'])->name('wallpapers.postImport');
+////        Route::get('/importToDb', [RingtonesController::class, 'importToDb'])->name('wallpapers.importToDb');
+//        Route::get('/compare', [RingtonesController::class, 'compare'])->name('ringtones.compare');
+//    });
 
-    Route::group(['prefix'=>'ringtones'], function (){
-        Route::get('/',[RingtonesController::class,'index'])->name('ringtones.index');
-        Route::post('/getIndex',[RingtonesController::class,'getIndex'])->name('ringtones.getIndex');
-        Route::post('/create',[RingtonesController::class,'create'])->name('ringtones.create');
-        Route::get('/edit/{id}',[RingtonesController::class,'edit'])->name('ringtones.edit');
-        Route::post('/update',[RingtonesController::class,'update'])->name('ringtones.update');
-        Route::get('/delete/{id}',[RingtonesController::class,'delete'])->name('ringtones.delete');
-        Route::post('/deleteSelect', [RingtonesController::class, 'deleteSelect'])->name('ringtones.deleteSelect');
+
+    Route::group(['prefix'=>'musics'], function (){
+        Route::get('/',[MusicsController::class,'index'])->name('musics.index');
+        Route::post('/getIndex',[MusicsController::class,'getIndex'])->name('musics.getIndex');
+        Route::post('/create',[MusicsController::class,'create'])->name('musics.create');
+        Route::get('/edit/{id}',[MusicsController::class,'edit'])->name('musics.edit');
+        Route::post('/update',[MusicsController::class,'update'])->name('musics.update');
+        Route::get('/delete/{id}',[MusicsController::class,'delete'])->name('musics.delete');
+        Route::post('/deleteSelect', [MusicsController::class, 'deleteSelect'])->name('musics.deleteSelect');
 //        Route::get('/import', [RingtonesController::class, 'import'])->name('wallpapers.import');
 //        Route::post('/postImport', [RingtonesController::class, 'postImport'])->name('wallpapers.postImport');
 //        Route::get('/importToDb', [RingtonesController::class, 'importToDb'])->name('wallpapers.importToDb');
-        Route::get('/compare', [RingtonesController::class, 'compare'])->name('ringtones.compare');
+        Route::get('/compare', [MusicsController::class, 'compare'])->name('musics.compare');
     });
 
     Route::group(['prefix'=>'sites'], function (){

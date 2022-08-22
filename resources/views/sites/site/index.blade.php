@@ -310,8 +310,7 @@
                                                             <th style="width: 20%">Name</th>
                                                             <th style="width: 10%">Real</th>
                                                             <th style="width: 20%">Tags</th>
-                                                            <th style="width: 5%">Image Count</th>
-                                                            <th style="width: 5%">Ringtone Count</th>
+                                                            <th style="width: 5%">Music Count</th>
                                                             <th style="width: 10%">Action</th>
                                                         </tr>
                                                         </thead>
@@ -685,8 +684,8 @@
                     { data: 'category_name',  className: "align-middle", },
                     { data: 'category_checked_ip',className: "align-middle",},
                     { data: 'tags',className: "align-middle", orderable: false},
-                    { data: 'wallpaper_count',className: "align-middle",},
-                    { data: 'ringtone_count',className: "align-middle",},
+                    { data: 'music_count',className: "align-middle"},
+
                     { data: 'action',className: "align-middle text-center ", orderable: false }
                 ],
                 dom:
@@ -711,7 +710,7 @@
                             var states = ['success', 'danger', 'warning', 'info', 'dark', 'primary', 'secondary'];
                             var $state = states[stateNum];
                             $.each(tags, function(i, item) {
-                                $output += '<a href="{{route("wallpapers.index")}}?search='+item.tag_name+'"> <span class="badge badge-'+$state+'" style="font-size: 100%">' + item.tag_name + '</span> </a> ';
+                                $output += '<a href="{{route("musics.index")}}?search='+item.tag_name+'"> <span class="badge badge-'+$state+'" style="font-size: 100%">' + item.tag_name + '</span> </a> ';
                                 // $output += '11111111 ';
                                 return i<2;
                             });

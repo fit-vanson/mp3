@@ -1,20 +1,21 @@
 <?php
 
-namespace App\Http\Controllers\Api\v0;
+namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\v0\WallpapersResource;
+use App\Http\Resources\v1\MusicsResource;
+use App\Musics;
 use App\Sites;
 use App\VisitorFavorite;
 use App\Visitors;
-use App\Wallpapers;
+
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class FavoriteController extends Controller
 {
-    public function likeWallpaper(Request $request)
+    public function like(Request $request)
     {
         $domain=$_SERVER['SERVER_NAME'];
         $visitor = Visitors::where('device_id', $request->device_id)->first();
@@ -24,7 +25,7 @@ class FavoriteController extends Controller
             ]);
         }
         $visitorFavorite = VisitorFavorite::where([
-            'wallpaper_id' => $request->wallpaper_id,
+            'music_id' => $request->music_id,
             'visitor_id' => Visitors::where('device_id', $request->device_id)->value('id'),
             'site_id' => Sites::where('site_web', $domain)->value('id'),
             ])->first();
@@ -32,24 +33,24 @@ class FavoriteController extends Controller
         if ($visitorFavorite) {
             return response()->json(['warning' => ['This Wallpaper has already in your List']], 200);
         } else {
-            $response['save_wallpaper'] = ['success' => 'Save Wallpaper Successfully'];
+            $response['save_music'] = ['success' => 'Save Successfully'];
             VisitorFavorite::create([
-                'wallpaper_id' => $request->wallpaper_id,
+                'music_id' => $request->wallpaper_id,
                 'visitor_id' => Visitors::where('device_id', $request->device_id)->value('id'),
                 'site_id' => Sites::where('site_web', $domain)->value('id'),
                 ])
                 ->first();
-            $wallpaper = Wallpapers::where('id', $request->wallpaper_id)->first();
-            $wallpaper->increment('wallpaper_like_count');
+            $music= Musics::where('id', $request->music_id)->first();
+            $music->increment('music_like_count');
         }
         return response()->json($response, ResponseAlias::HTTP_OK);
     }
 
-    public function disLikeWallpaper(Request $request)
+    public function disLike(Request $request)
     {
         $domain=$_SERVER['SERVER_NAME'];
         $visitorFavorite = VisitorFavorite::where([
-            'wallpaper_id' => $request->wallpaper_id,
+            'music_id' => $request->music_id,
             'visitor_id' => Visitors::where('device_id', $request->device_id)->value('id'),
             'site_id' => Sites::where('site_web', $domain)->value('id')
             ])
@@ -57,16 +58,16 @@ class FavoriteController extends Controller
         $response = array();
         if ($visitorFavorite) {
             VisitorFavorite::where([
-                'wallpaper_id' => $request->wallpaper_id,
+                'music_id' => $request->music_id,
                 'visitor_id' => Visitors::where('device_id', $request->device_id)->value('id'),
                 'site_id' => Sites::where('site_web', $domain)->value('id')
                 ])
                 ->delete();
-            $wallpaper = Wallpapers::where('id', $request->wallpaper_id)->first();
-            $wallpaper->decrement('wallpaper_like_count');
-            return response()->json(['success' => ['Completely Delete this Wallpaper out of your List']], 200);
+            $music = Musics::where('id', $request->music_id)->first();
+            $music->decrement('music_like_count');
+            return response()->json(['success' => ['Completely Delete this out of your List']], 200);
         } else {
-            $response['warning'] = ['success' => 'This Wallpaper is not in your list'];
+            $response['warning'] = ['success' => 'This is not in your list'];
         }
         return response()->json($response, Response::HTTP_OK);
     }
@@ -82,16 +83,16 @@ class FavoriteController extends Controller
                 'visitor_id' => Visitors::where('device_id', $device_id)->value('id'),
                 'site_id' => Sites::where('site_web', $domain)->value('id')
                 ])
-                ->with('wallpaper')
+                ->with('music')
                 ->skip($limit)
                 ->take($page_limit)
                 ->get();
 
-            $wallpaper = [];
+            $music = [];
             foreach ($data as $item){
-                $wallpaper[] = $item->wallpaper;
+                $music[] = $item->music;
             }
-            $getResource = WallpapersResource::collection($wallpaper);
+            $getResource = MusicsResource::collection($music);
             if ($data->isEmpty()) {
                 return response()->json([], 200);
             }

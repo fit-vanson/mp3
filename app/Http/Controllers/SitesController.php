@@ -606,7 +606,7 @@ class SitesController extends Controller
             ->orderBy($columnName, $columnSortOrder)
             ->select('*')
             ->with('tags')
-            ->withCount('wallpaper','ringtone')
+            ->withCount('music')
             ->skip($start)
             ->take($rowperpage)
             ->get();
@@ -619,8 +619,7 @@ class SitesController extends Controller
                 "category_image" => '<a class="image-popup-no-margins" href="'.URL::asset('../storage/categories').'/'.$record->category_image.'"><img class="img-fluid" alt="" src="'.URL::asset('../storage/categories/').'/'. $record->category_image.'" width="150"></a>',
                 "category_name" => $record->category_name,
                 "category_checked_ip" => $record->category_checked_ip == 1 ? '<span class="badge badge-danger">FAKE</span>' : '<span class="badge badge-success">REAL</span>',
-                "wallpaper_count" => $record->wallpaper_count,
-                "ringtone_count" => $record->ringtone_count,
+                "music_count" => $record->music_count,
                 "tags" => $record->tags,
 //                "tags" => '<a href="'.route('wallpapers.index').'?search='.$record->tags.'"> <h5 class="font-size-16">'.$record->tags.'</h5></a>',
                 "action" => $btn,

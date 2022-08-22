@@ -16,7 +16,7 @@ class CategoriesResource extends JsonResource
         return [
             'category_id' => $this->id,
             'category_name' => $this->category_name,
-            'total_wallpaper'=>$this->wallpaper_count,
+            'total_music'=>$this->music_count,
             'category_image' => $this->category_image,
         ];
     }

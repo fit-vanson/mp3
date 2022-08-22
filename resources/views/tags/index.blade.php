@@ -38,8 +38,7 @@
                                 <thead>
                                 <tr>
                                     <th style="width: 30%">Name</th>
-                                    <th style="width: 10%">Image Count</th>
-                                    <th style="width: 10%">Ringtones Count</th>
+                                    <th style="width: 10%">Music Count</th>
                                     <th style="width: 10%">Action</th>
                                 </tr>
                                 </thead>
@@ -174,12 +173,11 @@
                 },
                 columns: [
                     // columns according to JSON
-                    { data: 'tag_name',  className: "align-middle", },
-                    { data: 'wallpaper_count',className: "align-middle",},
-                    { data: 'ringtone_count',className: "align-middle",},
-                    { data: 'action',className: "align-middle text-center ", }
+                    { data: 'tag_name',  className: "align-middle"},
+                    { data: 'music_count',className: "align-middle"},
+                    { data: 'action',className: "align-middle text-center"}
                 ],
-                order: [1, 'asc'],
+                order: [0, 'asc'],
             });
 
             $(".dataTables_filter input")

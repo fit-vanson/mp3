@@ -5,12 +5,13 @@ namespace App;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class CategoriesHasSites extends Model
+class TagsHasMusic extends Model
 {
     use HasFactory;
+    public $timestamps = false;
+
     protected $fillable = [
-        'category_id',
-        'site_id',
-        'site_image',
+        'tag_id',
+        'music_id'
     ];
 }

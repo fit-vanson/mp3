@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddColumnLinkAppToSitesTable extends Migration
+class AddColumnsToSitesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,11 +14,8 @@ class AddColumnLinkAppToSitesTable extends Migration
     public function up()
     {
         Schema::table('sites', function (Blueprint $table) {
-//            $table->string('site_chplay_link')->after('site_direct_link')->nullable();
-//            $table->string('site_oppo_link')->after('site_direct_link')->nullable();
-//            $table->string('site_vivo_link')->after('site_direct_link')->nullable();
-//            $table->string('site_xiaomi_link')->after('site_direct_link')->nullable();
-//            $table->string('site_huawei_link')->after('site_direct_link')->nullable();
+            $table->tinyInteger('load_categories')->after('load_view_by')->default(0);
+            $table->tinyInteger('load_view_by_category')->after('load_categories')->default(0);
         });
     }
 

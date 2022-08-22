@@ -22,6 +22,11 @@ class Tags extends Model
         return $this->belongsToMany(Ringtones::class, TagsHasRingtone::class, 'tag_id', 'ringtone_id');
     }
 
+    public function music()
+    {
+        return $this->belongsToMany(Musics::class, TagsHasMusic::class, 'tag_id', 'music_id');
+    }
+
     public function categories()
     {
         return $this->belongsToMany(Categories::class, TagsHasCategories::class, 'tag_id', 'category_id');

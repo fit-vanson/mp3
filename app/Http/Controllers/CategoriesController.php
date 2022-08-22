@@ -107,12 +107,6 @@ class CategoriesController extends Controller
             $extension = $file->getClientOriginalExtension();
             $fileNameToStore = $filename.'_'.time().'.'.$extension;
 
-//            $now = new \DateTime('now'); //Datetime
-//            $monthNum = $now->format('m');
-//            $dateObj   = DateTime::createFromFormat('!m', $monthNum);
-//            $monthName = $dateObj->format('F'); // Month
-//            $year = $now->format('Y'); // Year
-//            $monthYear = $monthName.$year;
             $path_image    =  storage_path('app/public/categories/'.$request->site_id.'/');
             if (!file_exists($path_image)) {
                 mkdir($path_image, 0777, true);

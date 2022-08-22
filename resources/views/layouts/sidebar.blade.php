@@ -28,7 +28,7 @@
             <ul class="metismenu list-unstyled" id="side-menu">
                 <li class="menu-title">@lang('translation.Main')</li>
                 <li>
-                    <a href="{{route('admin.home')}}" class="waves-effect">
+                    <a href="{{route('home.index')}}" class="waves-effect">
                         <i class="ti-home"></i>
                         <span>@lang('translation.Dashboard')</span>
                     </a>
@@ -43,23 +43,25 @@
                         <i class="fas fa-tag"></i>
                         <span> Tags </span>
                     </a>
-                    <a href="{{route('wallpapers.index')}}?view=grid" >
-                        <i class="ti-image"></i>
-                        <span> Wallpaper </span>
-                    </a>
-                    <a href="{{route('ringtones.index')}}" >
+{{--                    <a href="{{route('wallpapers.index')}}?view=grid" >--}}
+{{--                        <i class="ti-image"></i>--}}
+{{--                        <span> Wallpaper </span>--}}
+{{--                    </a>--}}
+                    <a href="{{route('musics.index')}}" >
                         <i class="ti-music-alt"></i>
-                        <span> Ringtones </span>
+                        <span> Musics </span>
                     </a>
 
                     <a href="{{route('sites.index')}}" >
                         <i class="ti-world"></i>
                         <span> Sites </span>
                     </a>
+
                     <a href="{{route('apikeys.index')}}" >
                         <i class="ti-key"></i>
                         <span> Api Keys </span>
                     </a>
+
                     <a href="{{route('blockips.index')}}" >
                         <i class="ti-na"></i>
                         <span> Block IPs </span>

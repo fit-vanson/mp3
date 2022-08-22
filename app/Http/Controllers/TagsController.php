@@ -49,11 +49,10 @@ class TagsController extends Controller
         $records = Tags::orderBy($columnName, $columnSortOrder)
             ->where('tag_name', 'like', '%' . $searchValue . '%')
             ->select('*')
-            ->withCount('wallpaper','ringtone')
+            ->withCount('music')
             ->skip($start)
             ->take($rowperpage)
             ->get();
-
 
         $data_arr = array();
         foreach ($records as $record) {
@@ -63,8 +62,9 @@ class TagsController extends Controller
             $data_arr[] = array(
                 "id" => $record->id,
                 "tag_name" => '<h5 class="font-size-16">'.$record->tag_name.'</h5>',
-                "wallpaper_count" => '<a href="'.route('wallpapers.index').'?view=grid&search='.$record->tag_name.'"> <h5 class="font-size-16">'.$record->wallpaper_count.'</h5></a>',
-                "ringtone_count" => '<a href="'.route('ringtones.index').'?search='.$record->tag_name.'"> <h5 class="font-size-16">'.$record->ringtone_count.'</h5></a>',
+//                "wallpaper_count" => '<a href="'.route('wallpapers.index').'?view=grid&search='.$record->tag_name.'"> <h5 class="font-size-16">'.$record->wallpaper_count.'</h5></a>',
+//                "music_count" => '<a href="'.route('music.index').'?search='.$record->tag_name.'"> <h5 class="font-size-16">'.$record->ringtone_count.'</h5></a>',
+                "music_count" => $record->music_count,
                 "action" => $btn,
             );
         }
@@ -93,9 +93,14 @@ class TagsController extends Controller
         if($error->fails()){
             return response()->json(['errors'=> $error->errors()->all()]);
         }
+        $tags = preg_split("/[;,.|]+/", $request->tag_name);
+        foreach ($tags as $tag){
+            Tags::updateOrCreate(
+                ['tag_name'=> trim($tag)]
+            );
+        }
 
-        $data = Tags::updateOrCreate($request->all());
-        return response()->json(['success'=>'Thành công','tag'=>$data]);
+        return response()->json(['success'=>'Thành công']);
     }
     public function edit($id){
 

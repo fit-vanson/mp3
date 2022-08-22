@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Api\v0;
+namespace App\Http\Controllers\Api\v1;
 
 use App\Categories;
 use App\Http\Controllers\Controller;
 
-use App\Http\Resources\v0\CategoriesResource;
-use App\Http\Resources\v0\WallpapersResource;
+use App\Http\Resources\v1\CategoriesResource;
+
+use App\Http\Resources\v1\MusicsResource;
 use App\Sites;
 
 class CategoriesController extends Controller
@@ -17,16 +18,13 @@ class CategoriesController extends Controller
         $site = Sites::where('site_web',$domain)->first();
         $load_categories = $site->load_categories;
 
-
-
         if(checkBlockIp()){
             if($load_categories == 0 ){
                 $data = $site
                     ->categories()
                     ->where('category_checked_ip', 1)
-                    ->withCount('wallpaper','ringtone')
-                    ->having('wallpaper_count', '>', 0)
-                    ->orhaving('ringtone_count', '>', 0)
+                    ->withCount('music')
+                    ->having('music_count', '>', 0)
                     ->inRandomOrder()
                     ->get();
             }
@@ -34,9 +32,8 @@ class CategoriesController extends Controller
                 $data = $site
                     ->categories()
                     ->where('category_checked_ip', 1)
-                    ->withCount('wallpaper','ringtone')
-                    ->having('wallpaper_count', '>', 0)
-                    ->orhaving('ringtone_count', '>', 0)
+                    ->withCount('music')
+                    ->having('music_count', '>', 0)
                     ->orderBy('category_view_count','desc')
                     ->get();
             }
@@ -44,9 +41,8 @@ class CategoriesController extends Controller
                 $data = $site
                     ->categories()
                     ->where('category_checked_ip', 1)
-                    ->withCount('wallpaper','ringtone')
-                    ->having('wallpaper_count', '>', 0)
-                    ->orhaving('ringtone_count', '>', 0)
+                    ->withCount('music')
+                    ->having('music_count', '>', 0)
                     ->orderBy('updated_at','desc')
                     ->get();
             }
@@ -55,9 +51,8 @@ class CategoriesController extends Controller
                 $data = $site
                     ->categories()
                     ->where('category_checked_ip', 0)
-                    ->withCount('wallpaper','ringtone')
-                    ->having('wallpaper_count', '>', 0)
-                    ->orhaving('ringtone_count', '>', 0)
+                    ->withCount('music')
+                    ->having('music_count', '>', 0)
                     ->inRandomOrder()
                     ->get();
             }
@@ -65,9 +60,8 @@ class CategoriesController extends Controller
                 $data = $site
                     ->categories()
                     ->where('category_checked_ip', 0)
-                    ->withCount('wallpaper','ringtone')
-                    ->having('wallpaper_count', '>', 0)
-                    ->orhaving('ringtone_count', '>', 0)
+                    ->withCount('music')
+                    ->having('music_count', '>', 0)
                     ->orderBy('category_view_count','desc')
                     ->get();
             }
@@ -75,62 +69,68 @@ class CategoriesController extends Controller
                 $data = $site
                     ->categories()
                     ->where('category_checked_ip', 0)
-                    ->withCount('wallpaper','ringtone')
-                    ->having('wallpaper_count', '>', 0)
-                    ->orhaving('ringtone_count', '>', 0)
+                    ->withCount('music')
+                    ->having('music_count', '>', 0)
                     ->orderBy('updated_at','desc')
                     ->get();
             }
         }
         return CategoriesResource::collection($data);
     }
-    public function getWallpapers($id)
+
+    public function getMusics($id)
     {
         $domain = $_SERVER['SERVER_NAME'];
         $site = Sites::where('site_web',$domain)->first();
-        $load_wallpapers_category = $site->load_wallpapers_category;
+
+
+        $load_view_by_category = $site->load_view_by_category;
         $page_limit = 12;
         $page = isset($_GET['page']) ? $_GET['page'] : 1;
         $limit= ($page-1) * $page_limit ;
+
         try{
-            if($load_wallpapers_category==0){
-                $wallpapers = Categories::findOrFail($id)
-                    ->wallpaper()
+            if($load_view_by_category==0){
+                $data = Categories::findOrFail($id)
+                    ->music()
+                    ->with('tags')
                     ->distinct()
                     ->inRandomOrder()
                     ->skip($limit)
                     ->take($page_limit)
                     ->get();
             }
-            elseif($load_wallpapers_category==1){
-                $wallpapers = Categories::findOrFail($id)
-                    ->wallpaper()
+            elseif($load_view_by_category==1){
+                $data = Categories::findOrFail($id)
+                    ->music()
+                    ->with('tags')
                     ->distinct()
-                    ->orderBy('wallpaper_like_count','desc')
+                    ->orderBy('music_like_count','desc')
                     ->skip($limit)
                     ->take($page_limit)
                     ->get();
             }
-            elseif($load_wallpapers_category==2){
-                $wallpapers = Categories::findOrFail($id)
-                    ->wallpaper()
+            elseif($load_view_by_category==2){
+                $data = Categories::findOrFail($id)
+                    ->music()
+                    ->with('tags')
                     ->distinct()
-                    ->orderBy('wallpaper_view_count','desc')
+                    ->orderBy('music_view_count','desc')
                     ->skip($limit)
                     ->take($page_limit)
                     ->get();
             }
-            elseif($load_wallpapers_category==3){
-                $wallpapers = Categories::findOrFail($id)
-                    ->wallpaper()
+            elseif($load_view_by_category==3){
+                $data = Categories::findOrFail($id)
+                    ->music()
+                    ->with('tags')
                     ->distinct()
                     ->orderBy('created_at','desc')
                     ->skip($limit)
                     ->take($page_limit)
                     ->get();
             }
-
-            return WallpapersResource::collection($wallpapers);
+            return MusicsResource::collection($data);
         }catch (\Exception $e){
             return response()->json(['warning' => ['This Category is not exist']], 200);
         }
@@ -142,27 +142,22 @@ class CategoriesController extends Controller
         $domain=$_SERVER['SERVER_NAME'];
         $site = Sites::where('site_web',$domain)->first();
         if (checkBlockIp()){
-
             $data = $site
                 ->categories()
                 ->where('category_checked_ip', 1)
-                ->withCount('wallpaper','ringtone')
-                ->having('wallpaper_count', '>', 0)
-                ->orhaving('ringtone_count', '>', 0)
+                ->withCount('music')
+                ->having('music_count', '>', 0)
                 ->orderBy('category_view_count','desc')
                 ->get();
-
         }else{
             $data = $site
                 ->categories()
                 ->where('category_checked_ip', 0)
-                ->withCount('wallpaper','ringtone')
-                ->having('wallpaper_count', '>', 0)
-                ->orhaving('ringtone_count', '>', 0)
+                ->withCount('music')
+                ->having('music_count', '>', 0)
                 ->orderBy('category_view_count','desc')
                 ->get();
         }
-
         return CategoriesResource::collection($data);
     }
 }
