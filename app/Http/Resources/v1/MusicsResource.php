@@ -28,6 +28,7 @@ class MusicsResource extends JsonResource
             'like_count' => $this->music_like_count,
             'view_count' => $this->music_view_count,
             'feature' => $this->music_feature,
+            'link' => $this->music_link,
             'created_at' => $this->created_at->format('d/m/Y'),
         ];
     }

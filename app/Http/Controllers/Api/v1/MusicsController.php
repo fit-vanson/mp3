@@ -43,6 +43,7 @@ class MusicsController extends Controller
                 'like_count' => $music->music_like_count,
                 'view_count' => $music->music_view_count,
                 'feature' => $music->music_feature,
+                'link' => $music->music_link,
                 'created_at' => $music->created_at->format('d/m/Y'),
             ]);
         }else{
@@ -57,6 +58,7 @@ class MusicsController extends Controller
                 'like_count' => $music->music_like_count,
                 'view_count' => $music->music_view_count,
                 'feature' => $music->music_feature,
+                'link' => $music->music_link,
                 'created_at' => $music->created_at->format('d/m/Y'),
             ]);
         }
@@ -207,7 +209,7 @@ class MusicsController extends Controller
             ->paginate(70);
 
         $musics = $this->checkLikedToMusics($deviceId, $data);
-        $getResource=MusicsResource::collection($musics);
+        $getResource = MusicsResource::collection($musics);
         return $getResource;
     }
     public function getNewest($deviceId)
@@ -226,7 +228,7 @@ class MusicsController extends Controller
             ->paginate(70);
 
         $ringtones = $this->checkLikedToMusics($deviceId, $data);
-        $getResource=MusicsResource::collection($ringtones);
+        $getResource = MusicsResource::collection($ringtones);
         return $getResource;
     }
     public function getMostDownload($deviceId){

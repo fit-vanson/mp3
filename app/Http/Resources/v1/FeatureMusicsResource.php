@@ -30,6 +30,7 @@ class FeatureMusicsResource extends JsonResource
                 'like_count' => $item->music_like_count,
                 'view_count' => $item->music_view_count,
                 'feature' => $item->music_feature,
+                'link' => $item->music_link,
                 'created_at' => $item->created_at->format('d/m/Y'),
             ];
         }
