@@ -217,11 +217,7 @@ class WallpapersController extends Controller
 //                }
                 )->save($path_thumbnails.$fileNameToStore,75);
             }
-
-
-
             $origin =  $monthYear.'/'.$fileNameToStore;
-
             $wallpaper = Wallpapers::create([
                 'wallpaper_name' => $filename,
                 'wallpaper_image'=> $origin,
