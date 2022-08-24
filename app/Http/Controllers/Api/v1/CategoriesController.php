@@ -73,8 +73,6 @@ class CategoriesController extends Controller
                     ->get();
             }
         }
-
-        dd($data);
         return CategoriesResource::collection($data);
     }
 
