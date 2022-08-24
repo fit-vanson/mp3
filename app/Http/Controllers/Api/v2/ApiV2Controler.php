@@ -127,7 +127,7 @@ class ApiV2Controler extends Controller
                 'urlstream' => route('musics.stream',['id'=>$item->uuid]),
                 'urldownload' => route('musics.stream',['id'=>$item->uuid]),
                 'thumbnail' => $item->music_image ?  asset('storage/musics/images/'.$item->music_image) : asset('storage/default.png'),
-//                'duration' => new Mp3Info(route('musics.stream',['id'=>$item->uuid]), true),
+                'duration' => time(),
             ];
         }
         return json_encode($result);
