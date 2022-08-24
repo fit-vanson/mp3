@@ -188,6 +188,7 @@ class MusicsController extends Controller
             if(isset($data['tags']) && !empty($data['tags']) && isset($data['music_file']) && !empty($data['music_file']) ){
                 $music = Musics::updateOrCreate(
                     [
+                        'uuid' => uniqid(),
                         'music_name' => $key,
                         'music_image'=> isset($data['music_image']) ? $data['music_image'] : 'default.png' ,
                         'music_file'=> $data['music_file'],
@@ -198,6 +199,7 @@ class MusicsController extends Controller
                         'music_status' => 0,
                         'music_type' => 'mp3'
                     ]);
+
                 $music->tags()->sync($data['tags']);
             }else{
                 try {
@@ -287,6 +289,26 @@ class MusicsController extends Controller
             $music->delete();
         }
         return response()->json(['success'=>'Xóa thành công.']);
+    }
+
+
+    public function streamID($id){
+
+        $music = Musics::where('uuid',$id)->first();
+
+        $link = $music->music_link;
+        $check_link =  false;
+
+        if ($link){
+            $headers = get_headers($link);
+            $check_link = stripos($headers[0],"200 OK") ? true : false;
+        }
+        if ($check_link){
+            $direct_link = $link;
+        }else{
+            $direct_link = url('/storage/musics/files').'/'.$music->music_file ;
+        }
+        return redirect($direct_link);
     }
 
 }

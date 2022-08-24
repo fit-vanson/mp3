@@ -48,6 +48,9 @@ Route::get('/link',function (){
     echo 1;
 });
 
+
+Route::get('/stream/{id}',[MusicsController::class,'streamID'])->name('musics.stream');
+
 Route::get('/phpinfo',function (){
     echo phpinfo();
 });

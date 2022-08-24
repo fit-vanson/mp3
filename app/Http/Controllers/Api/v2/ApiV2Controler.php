@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers\Api\v2;
 
+use App\Categories;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\v2\MusicsResource;
+use App\Musics;
 use App\Sites;
 use Illuminate\Http\Request;
+use wapmorgan\Mp3Info\Mp3Info;
 
 class ApiV2Controler extends Controller
 {
     public function init(){
-
-
         $domain = $_SERVER['SERVER_NAME'];
         $site = Sites::where('site_web',$domain)->first();
         $load_categories = $site->load_categories;
@@ -68,9 +70,66 @@ class ApiV2Controler extends Controller
                 'thong_bao_thay_the' => 'com.pinterest',
             ];
         }
+        return json_encode($result);
+    }
+
+    public function view(){
+
+        $domain = $_SERVER['SERVER_NAME'];
+        $site = Sites::where('site_web',$domain)->first();
 
 
+        if (isset(\request()->cat) && \request()->cat == '-1' ){
+            $load_categories = $site->load_categories;
+            $isFake = checkBlockIp()?1:0;
+            $data = Musics::with('tags')
+                ->whereHas('categories', function ($query) use ($isFake, $site) {
+                    $query->where('category_checked_ip', $isFake)
+                        ->where('site_id',$site->id);
+                })
+                ->distinct()
+                ->orderBy('created_at','desc')
+                ->paginate(70);
+        }else{
+            $cate = request()->cat;
 
+            $data = Categories::findOrFail($cate)
+                ->music()
+                ->orderBy('created_at','desc')
+                ->paginate(70);
+
+        }
+
+        $result = [];
+
+        foreach ($data as $item ){
+//            $ffprobe    = \FFMpeg\FFProbe::create();
+//            $durationMp3   = $ffprobe->format('test.mp3')->get('duration');
+////            $link = route('musics.stream',['id'=>$item->uuid]);
+////            $durationMp3   = $ffprobe->format($link)->get('duration');
+//
+//            dd(123);
+//
+//
+//
+//
+//            $audio = new Mp3Info($link);
+//            dd($audio);
+
+//            dd(new Mp3Info(route('musics.stream',['id'=>$item->uuid])));
+
+
+            $result[] = [
+                'id' => $item->uuid,
+                'title' => $item->music_name,
+                'view' => $item->music_view_count,
+                'date' => $item->created_at->format('d/m/Y'),
+                'urlstream' => route('musics.stream',['id'=>$item->uuid]),
+                'urldownload' => route('musics.stream',['id'=>$item->uuid]),
+                'thumbnail' => $item->music_image ?  asset('storage/musics/images/'.$item->music_image) : asset('storage/default.png'),
+//                'duration' => new Mp3Info(route('musics.stream',['id'=>$item->uuid]), true),
+            ];
+        }
         return json_encode($result);
     }
 }

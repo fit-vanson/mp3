@@ -15,7 +15,8 @@ class CreateMusicsTable extends Migration
     {
         Schema::create('musics', function (Blueprint $table) {
             $table->id();
-            $table->string('music_name');
+            $table->uuid('uuid')->unique()->index();
+            $table->string('music_name')->index();
             $table->string('music_file');
             $table->longText('music_image');
             $table->integer('music_view_count');
@@ -24,7 +25,7 @@ class CreateMusicsTable extends Migration
             $table->integer('music_feature');
             $table->integer('music_status');
             $table->string('music_type');
-            $table->text('music_link');
+            $table->text('music_link')->nullable();
             $table->timestamps();
         });
     }

@@ -11,6 +11,7 @@ class Musics extends Model
     use \Staudenmeir\EloquentHasManyDeep\HasRelationships;
 
     protected $fillable = [
+        'uuid',
         'music_name',
         'music_image',
         'music_file',
@@ -23,6 +24,9 @@ class Musics extends Model
         'music_hash',
         'music_link',
     ];
+
+//
+
 
 
     public function categories()
