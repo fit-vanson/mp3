@@ -427,10 +427,10 @@
                             <input type="text" class="form-control" id="category_order" name="category_order" >
                         </div>
 
-                        <div class="form-group">
-                            <label>View Count</label>
-                            <input type="text" class="form-control" id="category_view_count" name="category_view_count" >
-                        </div>
+{{--                        <div class="form-group">--}}
+{{--                            <label>View Count</label>--}}
+{{--                            <input type="text" class="form-control" id="category_view_count" name="category_view_count" >--}}
+{{--                        </div>--}}
 
                         <div class="form-group">
                             <input type="checkbox" id="category_checked_ip" name="category_checked_ip"  switch="none" checked="">

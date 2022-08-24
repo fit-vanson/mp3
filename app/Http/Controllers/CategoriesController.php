@@ -96,7 +96,7 @@ class CategoriesController extends Controller
         $data['site_id'] = $request->site_id;
         $data['category_name'] = trim($request->category_name);
         $data['category_order'] = $request->category_order;
-        $data['category_view_count'] = $request->category_view_count;
+        $data['category_view_count'] = 1000;
         $data['category_checked_ip'] = $request->category_checked_ip ? 0 : 1 ;
 
         if($request->image){
@@ -131,7 +131,6 @@ class CategoriesController extends Controller
         $data= Categories::find($id);
         $data->category_name = trim($request->category_name);
         $data->category_order = $request->category_order;
-        $data->category_view_count = $request->category_view_count;
         $data->category_checked_ip = $request->category_checked_ip ? 0 : 1 ;
 
         if($request->image){

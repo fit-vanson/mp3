@@ -192,9 +192,9 @@ class MusicsController extends Controller
                         'music_name' => $key,
                         'music_image'=> isset($data['music_image']) ? $data['music_image'] : 'default.png' ,
                         'music_file'=> $data['music_file'],
-                        'music_view_count' => rand(500,2000),
-                        'music_like_count' => rand(500,2000),
-                        'music_download_count' => rand(500,2000),
+                        'music_view_count' => 1000,
+                        'music_like_count' => 1000,
+                        'music_download_count' => 1000,
                         'music_feature' => rand(0,1),
                         'music_status' => 0,
                         'music_type' => 'mp3'
