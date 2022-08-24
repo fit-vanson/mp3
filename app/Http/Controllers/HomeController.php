@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Ringtones;
+use App\Musics;
+
 use App\Sites;
 use App\Tags;
-use App\Wallpapers;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Session;
+
 
 class HomeController extends Controller
 {
@@ -32,11 +30,11 @@ class HomeController extends Controller
     {
         $sites = Sites::all();
         $tags = Tags::count();
-        $wallpapers = Wallpapers::all();
-        $ringtones = Ringtones::all();
+        $musics = Musics::all();
 
 
-       return view('dashboard.index')->with(compact('sites','tags','wallpapers','ringtones'));
+
+       return view('dashboard.index')->with(compact('sites','tags','musics'));
     }
 
     public function show(){

@@ -197,8 +197,8 @@
                             <div class="zoom-gallery FeatureImages ">
                                 @if($site->site_feature_images)
                                     @foreach(json_decode($site->site_feature_images,true) as $feature_image)
-                                        <a class="float-left" href="{{asset('storage/featureimages/'.$site->id.'/'.$feature_image.'')}}" title="{{$site->site_web}}">
-                                            <img src="{{asset('storage/featureimages/'.$site->id.'/'.$feature_image.'')}}" alt="" width="150">
+                                        <a class="float-left" href="{{asset('storage/sites/'.$site->id.'/featureimages/'.$feature_image.'')}}" title="{{$site->site_web}}">
+                                            <img src="{{asset('storage/sites/'.$site->id.'/featureimages/'.$feature_image.'')}}" alt="" width="150">
                                         </a>
                                     @endforeach
                                 @endif
@@ -801,7 +801,12 @@
                         });
                         $('#select_tags').val(id_cate).trigger('change');
                         $('#select_tags').select2();
-                        $('#avatar').attr('src','{{\Illuminate\Support\Facades\URL::asset('storage/categories')}}/'+data.categories.category_image);
+
+                        if(data.categories.category_image){
+                            $('#avatar').attr('src','{{\Illuminate\Support\Facades\URL::asset('storage/sites/'.request()->id.'/categories')}}/'+data.categories.category_image);
+                        }else {
+                            $('#avatar').attr('src','{{\Illuminate\Support\Facades\URL::asset('storage/defaultCate.png')}}');
+                        }
                     },
                     error: function (data) {
                         console.log('Error:', data);

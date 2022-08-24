@@ -44,32 +44,31 @@
                 <div class="card-body">
                     <div class="mb-4">
                         <div class="float-left mini-stat-img mr-4">
-                            <img src="{{ URL::asset('/assets/images/services-icon/06.png') }}" alt="">
-                        </div>
-                        <h5 class="font-size-16 text-uppercase mt-0 text-white-50">Wallpapers</h5>
-                        <span class="font-weight-medium font-size-24">{{number_format(count($wallpapers))}} /  </span>
-                        ( <span class="font-weight-medium" style="color: red">{{number_format(count($wallpapers->where('wallpaper_status',0)))}}</span> )
-
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-3 col-md-6">
-            <div class="card mini-stat bg-primary text-white">
-                <div class="card-body">
-                    <div class="mb-4">
-                        <div class="float-left mini-stat-img mr-4">
                             <img src="{{ URL::asset('/assets/images/services-icon/05.png') }}" alt="">
                         </div>
-                        <h5 class="font-size-16 text-uppercase mt-0 text-white-50">Ringtones</h5>
-                        <span class="font-weight-medium font-size-24">{{number_format(count($ringtones))}}  </span>
-{{--                        ( <span class="font-weight-medium" style="color: red">{{count($wallpapers->where('wallpaper_status',0))}}</span> )--}}
+                        <h5 class="font-size-16 text-uppercase mt-0 text-white-50">Music</h5>
+                        <span class="font-weight-medium font-size-24">{{number_format(count($musics))}}  </span>
 
                     </div>
                 </div>
             </div>
         </div>
+
+{{--        <div class="col-lg-3 col-md-6">--}}
+{{--            <div class="card mini-stat bg-primary text-white">--}}
+{{--                <div class="card-body">--}}
+{{--                    <div class="mb-4">--}}
+{{--                        <div class="float-left mini-stat-img mr-4">--}}
+{{--                            <img src="{{ URL::asset('/assets/images/services-icon/05.png') }}" alt="">--}}
+{{--                        </div>--}}
+{{--                        <h5 class="font-size-16 text-uppercase mt-0 text-white-50">Ringtones</h5>--}}
+{{--                        <span class="font-weight-medium font-size-24">{{number_format(count($ringtones))}}  </span>--}}
+{{--                        ( <span class="font-weight-medium" style="color: red">{{count($wallpapers->where('wallpaper_status',0))}}</span> )--}}
+
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--        </div>--}}
 
     </div>
     <!-- end row -->

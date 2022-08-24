@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Categories;
-use App\CategoriesHasSites;
+
 use App\ListIP;
 use App\Sites;
 use App\Tags;
-use DateTime;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -64,7 +64,7 @@ class SitesController extends Controller
         // Get records, also we have included search filter as well
         $records = Sites::orderBy($columnName, $columnSortOrder)
             ->with(['categories'=>function ($q){
-                $q->withCount('wallpaper');
+                $q->withCount('music');
             }])
             ->where('site_name', 'like', '%' . $searchValue . '%')
             ->orwhere('site_web', 'like', '%' . $searchValue . '%')
@@ -77,9 +77,10 @@ class SitesController extends Controller
 
         $data_arr = array();
         foreach ($records as $record) {
-            $count_wallpaper = 0;
+            $count_musics = 0;
+
             foreach ($record->categories as $category){
-                $count_wallpaper += $category->wallpaper_count ;
+                $count_musics += $category->music_count ;
             }
 //            dd($record);
 //            $btn  = ' <a href="javascript:void(0)" onclick="editRolesPermissions('.$record->id.')" class="btn btn-warning"><i class="ti-pencil-alt"></i></a>';
@@ -122,17 +123,18 @@ class SitesController extends Controller
             }
 
             $sort = $Load_Feature.'<br>'.$Categories.'<br>'.$Wallpaper;
+            $image = $record->site_image ? '../storage/sites/'.$record->id.'/'.$record->site_image : '../storage/default.png' ;
 
             $data_arr[] = array(
                 "id" => $record->id,
-                "site_image" => $record->site_logo_url ? '<a class="image-popup-no-margins" href="'.$record->site_logo_url.'"><img class="img-fluid" alt="'.$record->site_name.'" src="'.$record->site_logo_url.'" width="150"></a>':'<a class="image-popup-no-margins" href="../storage/sites/'.$record->site_image.'"><img class="img-fluid" alt="'.$record->site_name.'" src="../storage/sites/'.$record->site_image.'" width="150"></a>',
+                "site_image" => $record->site_logo_url ? '<a class="image-popup-no-margins" href="'.$record->site_logo_url.'"><img class="img-fluid" alt="'.$record->site_name.'" src="'.$record->site_logo_url.'" width="150"></a>':'<a class="image-popup-no-margins" href="'.$image.'"><img class="img-fluid" alt="'.$record->site_name.'" src="'.$image.'" width="150"></a>',
                 "site_name" => '<a href="'.route('sites.view',$record->id).'" style="color:#5b626b;"><h2>'.$record->site_name.'</h2></a><a target="_blank" href="//'.$record->site_web.'"><h4>'.$record->site_web.'</h4></a>',
                 "site_project" =>'<span class="badge badge-success" style="font-size: 100%">' . $record->site_project. '</span>',
                 "site_ads" => $record->ad_switch == 1 ? '<a href="javascript:void(0)" data-id="'.$record->id.'" class="changeAds"><span class="badge badge-success">Active</span></a>': '<a href="javascript:void(0)" data-id="'.$record->id.'" class="changeAds"><span class="badge badge-danger">Deactivated</span></a>',
 
                 "site_sort" => $sort,
                 "categories_count" => $record->categories_count,
-                "wallpapers_count" => $count_wallpaper,
+                "musics_count" => $count_musics,
                 "action" => $btn,
             );
         }
@@ -148,6 +150,7 @@ class SitesController extends Controller
 
 
     }
+
     public function create(Request $request){
 
         $rules = [
@@ -163,30 +166,30 @@ class SitesController extends Controller
             return response()->json(['errors'=> $error->errors()->all()]);
         }
 
-
         $data = new Sites();
         $data['site_name'] = trim($request->site_name);
         $data['site_web'] = trim($request->site_web);
         $data['site_project'] = trim($request->site_project);
         $data['site_type_ads'] = trim($request->site_type_ads);
-        if($request->image){
-            $file = $request->image;
-            $filename = Str::slug($request->site_web);
-            $extension = $file->getClientOriginalExtension();
-            $fileNameToStore = $filename.'_'.time().'.'.$extension;
-            $path_image    =  storage_path('app/public/sites/');
-            if (!file_exists($path_image)) {
-                mkdir($path_image, 0777, true);
-            }
-            $img = Image::make($file);
-            $img->save($path_image.$fileNameToStore);
-            $path_image =  $fileNameToStore;
-            $data['site_image'] = $path_image;
-        }else{
-            $data['site_image'] = 'default.png';
-        }
+
         $data->save();
 
+        $path    =  storage_path('app/public/sites/'.$data->id.'/');
+        if (!file_exists($path)) {
+            mkdir($path, 0777, true);
+        }
+        if($request->image){
+            $file = $request->image;
+            $filename = Str::slug($data->site_web);
+            $extension = $file->getClientOriginalExtension();
+            $fileNameToStore = $filename.'_'.time().'.'.$extension;
+
+            $img = Image::make($file);
+            $img->save($path.$fileNameToStore);
+
+            $path_image =  $fileNameToStore;
+            $data->update(['site_image' => $path_image]);
+        }
         return response()->json(['success'=>'Thêm mới thành công']);
     }
 
@@ -217,14 +220,14 @@ class SitesController extends Controller
         $data->site_name = $request->site_name;
         $data->site_project = $request->site_project;
         $data->site_type_ads = $request->site_type_ads;
-
-
         if($request->image){
-            if ($data->site_image != 'default.png'){
-                $path_Remove =   storage_path('app/public/sites/'.$data->site_image);
+            $path_Remove =   storage_path('app/public/sites/'.$data->id.'/'.$data->site_image);
+            try {
                 if(file_exists($path_Remove)){
                     unlink($path_Remove);
                 }
+            }catch (\Exception $ex) {
+                Log::error($ex->getMessage());
             }
 
             $file = $request->image;
@@ -232,12 +235,12 @@ class SitesController extends Controller
             $extension = $file->getClientOriginalExtension();
             $fileNameToStore = $filename.'_'.time().'.'.$extension;
 
-            $path_image    =  storage_path('app/public/sites/');
-            if (!file_exists($path_image)) {
-                mkdir($path_image, 0777, true);
+            $path    =  storage_path('app/public/sites/'.$data->id.'/');
+            if (!file_exists($path)) {
+                mkdir($path, 0777, true);
             }
             $img = Image::make($file);
-            $img->save($path_image.$fileNameToStore);
+            $img->save($path.$fileNameToStore);
             $path_image =  $fileNameToStore;
             $data->site_image = $path_image;
         }
@@ -247,6 +250,7 @@ class SitesController extends Controller
 
     public function clone(Request $request)
     {
+
 
         $rules = [
             'site_web' =>'unique:sites,site_web',
@@ -281,72 +285,56 @@ class SitesController extends Controller
         $data_site['site_type_ads'] = $request->site_type_ads;
         $data_site['load_view_by'] = $site->load_view_by;
         $data_site['load_categories'] = $site->load_categories;
-        $data_site['load_wallpapers_category'] = $site->load_wallpapers_category;
+        $data_site['load_view_by_category'] = $site->load_view_by_category;
         $data_site['ad_switch'] = $site->ad_switch;
         $data_site['site_chplay_link'] = $site->site_chplay_link;
+        $data_site['site_image'] = $site->site_image;
+
+        $data_site->save();
+
 
         if($request->image){
             $file = $request->image;
             $filename = Str::slug($request->site_web);
             $extension = $file->getClientOriginalExtension();
             $fileNameToStore = $filename.'_'.time().'.'.$extension;
-            $path_image    =  storage_path('app/public/sites/');
-            if (!file_exists($path_image)) {
-                mkdir($path_image, 0777, true);
+            $path    =  storage_path('app/public/sites/'.$data_site->id.'/');
+            if (!file_exists($path)) {
+                mkdir($path, 0777, true);
             }
             $img = Image::make($file);
-            $img->save($path_image.$fileNameToStore);
-            $data_site['site_image'] = $fileNameToStore;
-        }else{
-            $fileNameToStore = str_replace(Str::slug($site->site_web),Str::slug($request->site_web),$site->site_image);
-            File::copy(storage_path('app/public/sites/'.$site->site_image),storage_path('app/public/sites/'.$fileNameToStore));
-            $data_site['site_image'] = $fileNameToStore;
+            $img->save($path.$fileNameToStore);
+            $data_site->update(['site_image' => $fileNameToStore]);
         }
-        $data_site->save();
 
         foreach ($categories as $category){
             $tags = $category->tags()->get()->pluck('id')->toArray();
-            if ($category->category_image != 'default.png'){
-                $pos = strpos( $category->category_image,$site->id);
-                if ($pos !== false) {
-                    $image_path = substr_replace($category->category_image, $data_site->id, $pos, strlen($site->id));
-                }
-            }else{
-                $image_path = 'default.png';
-            }
             $data_categories =  new Categories();
             $data_categories['site_id'] = $data_site->id;
             $data_categories['category_name'] = $category->category_name;
             $data_categories['category_order'] = $category->category_order;
-            $data_categories['category_image'] = $image_path;
+            $data_categories['category_image'] = $category->category_image;
             $data_categories['category_view_count'] = $category->category_view_count;
             $data_categories['category_checked_ip'] = $category->category_checked_ip;
             $data_categories->save();
             $data_categories->tags()->attach($tags);
         }
-
-        $path_featureimages   =  storage_path('app/public/featureimages/'.$data_site->id.'/');
-        $path_categories   =  storage_path('app/public/categories/'.$data_site->id.'/');
-
-        File::copyDirectory(storage_path('app/public/categories/'.$site->id),$path_categories);
-        File::copyDirectory(storage_path('app/public/featureimages/'.$site->id),$path_featureimages);
+        File::copyDirectory(storage_path('app/public/sites/'.$site->id),storage_path('app/public/sites/'.$data_site->id.'/'));
         return response()->json(['success'=>'Clone thành công']);
     }
 
     public function delete($id)
     {
         $site = Sites::find($id);
-        if ($site->site_image != 'default.png') {
-            $path = storage_path('app/public/sites/') . $site->site_image;
-            try {
-                $this->deleteDirectory(storage_path('app/public/categories/' . $site->id));
-                $this->deleteDirectory(storage_path('app/public/featureimages/' . $site->id));
-                if (file_exists($path)) {
-                    unlink($path);
-                }
-            } catch (\Exception $ex) {
-                Log::error($ex->getMessage());
-            }
+        $path = storage_path('app/public/sites/') . $site->id;
+        try {
+            $this->deleteDirectory($path);
+
+        } catch (\Exception $ex) {
+            Log::error($ex->getMessage());
+        }
+        foreach ($site->categories()->get() as $cate){
+            $cate->tags()->detach();
         }
         $site->categories()->delete();
         $site->delete();
@@ -464,56 +452,6 @@ class SitesController extends Controller
         $site = Sites::find($id);
         $tags = Tags::all();
 
-//        $cates = Sites::findOrFail($id)
-//            ->categories()
-//            ->select('*')
-//            ->with('tags')
-//            ->get();
-//        $path_featureimages   =  storage_path('app/public/featureimages/'.Str::slug($site->site_web).'/');
-//        $path   =  storage_path('app/public/featureimages/'.$id.'/');
-//        if(file_exists($path_featureimages)){
-//            rename($path_featureimages, $path);
-//        }
-//        if (!file_exists($path_image)) {
-//            mkdir($path_image, 0777, true);
-//        }
-//
-//        foreach ($cates as $cate){
-//
-//            if ($cate->category_image != 'default.png'){
-//
-//                $image_path = $cate->category_image;
-//                $name = explode('/',$image_path);
-//                $change_path = str_replace($name[0],$cate->site_id,$image_path);
-//
-//
-//
-//                echo $image_path;
-//                $path_move =   public_path('storage/categories/').$cate->category_image;
-//
-//                $path =   public_path('storage/categories/').$change_path;
-//
-//
-//                if(file_exists($path_move) && $path_move <> $path){
-//
-//                    File::copy($path_move, $path);
-//                }
-//
-//                Categories::updateOrCreate(
-//                    [
-//                        'id'=> $cate->id,
-//                        'site_id'=>$cate->site_id
-//                    ],
-//                    [
-//                        'category_image'=>$change_path
-//                    ]
-//                );
-//
-//
-//            }
-//
-//
-//        }
         return view('sites.site.index',[
             'page_title' => $page_title,
             'site' => $site,
@@ -554,7 +492,7 @@ class SitesController extends Controller
     public function update_FeatureImages(Request $request)
     {
         $site = Sites::find($request->id);
-        $path    =  storage_path('app/public/featureimages/'.$request->id.'/');
+        $path    =  storage_path('app/public/sites/'.$request->id.'/featureimages/');
         $this->deleteDirectory($path);
         if (!file_exists($path)) {
             mkdir($path, 0777, true);
@@ -614,9 +552,14 @@ class SitesController extends Controller
         foreach ($records as $record) {
             $btn = ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-warning editSiteCategory"><i class="ti-pencil-alt"></i></a>';
             $btn .= ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-danger deleteSiteCategory"><i class="ti-trash"></i></a>';
+
+
+            $category_image = $record->category_image ? '../storage/sites/'.$record->site_id.'/categories/'.$record->category_image : '../storage/defaultCate.png' ;
+
+
             $data_arr[] = array(
                 "id" => $record->id,
-                "category_image" => '<a class="image-popup-no-margins" href="'.URL::asset('../storage/categories').'/'.$record->category_image.'"><img class="img-fluid" alt="" src="'.URL::asset('../storage/categories/').'/'. $record->category_image.'" width="150"></a>',
+                "category_image" => '<a class="image-popup-no-margins" href="'.URL::asset($category_image).'"><img class="img-fluid" alt="" src="'.URL::asset($category_image).'" width="150"></a>',
                 "category_name" => $record->category_name,
                 "category_checked_ip" => $record->category_checked_ip == 1 ? '<span class="badge badge-danger">FAKE</span>' : '<span class="badge badge-success">REAL</span>',
                 "music_count" => $record->music_count,

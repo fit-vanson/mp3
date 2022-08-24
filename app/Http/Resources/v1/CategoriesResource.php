@@ -13,11 +13,13 @@ class CategoriesResource extends JsonResource
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
     public function toArray($request)   {
+
+        dd($this);
         return [
             'category_id' => $this->id,
             'category_name' => $this->category_name,
             'total_music'=>$this->music_count,
-            'category_image' => $this->category_image,
+            'category_image' =>  asset('storage/musics/images/'.$this->category_image),
         ];
     }
 }

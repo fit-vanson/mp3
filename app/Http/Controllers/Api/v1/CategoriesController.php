@@ -6,7 +6,6 @@ use App\Categories;
 use App\Http\Controllers\Controller;
 
 use App\Http\Resources\v1\CategoriesResource;
-
 use App\Http\Resources\v1\MusicsResource;
 use App\Sites;
 
@@ -17,7 +16,6 @@ class CategoriesController extends Controller
         $domain = $_SERVER['SERVER_NAME'];
         $site = Sites::where('site_web',$domain)->first();
         $load_categories = $site->load_categories;
-
         if(checkBlockIp()){
             if($load_categories == 0 ){
                 $data = $site
@@ -75,6 +73,8 @@ class CategoriesController extends Controller
                     ->get();
             }
         }
+
+        dd($data);
         return CategoriesResource::collection($data);
     }
 

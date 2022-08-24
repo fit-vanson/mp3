@@ -45,7 +45,7 @@
                                     <th style="width: 10%">Ads</th>
                                     <th style="width: 15%">Sort</th>
                                     <th style="width: 8%"> Count Categories</th>
-                                    <th style="width: 7%"> Count Wallpapers</th>
+                                    <th style="width: 7%"> Count Musics</th>
                                     <th style="width: 10%">Action</th>
                                 </tr>
                                 </thead>
@@ -188,7 +188,7 @@
                     { data: 'site_ads',className: "align-middle"},
                     { data: 'site_sort',className: "align-middle",orderable: false},
                     { data: 'categories_count',className: "align-middle",},
-                    { data: 'wallpapers_count',className: "align-middle",orderable: false},
+                    { data: 'musics_count',className: "align-middle",orderable: false},
                     { data: 'action',className: "align-middle text-center ",orderable: false }
                 ],
                 order: [1, 'asc'],
@@ -375,7 +375,13 @@
                             $('#site_ads_huawei').prop('checked', true);
                         }
 
-                        $('#avatar').attr('src','../storage/sites/'+data.site.site_image);
+
+                        if(data.site.site_image){
+                            $('#avatar').attr('src','../storage/sites/'+data.site.id+'/'+data.site.site_image);
+                        }else {
+                            $('#avatar').attr('src','../storage/default.png');
+                        }
+
 
                     },
                     error: function (data) {
@@ -399,7 +405,7 @@
                         $('#site_name').val(data.site.site_name);
                         $('#site_web').val(data.site.site_web);
                         $('#site_project').val(data.site.site_project);
-                        $('#avatar').attr('src','../storage/sites/'+data.site.site_image);
+                        $('#avatar').attr('src','../storage/default.png');
 
                     },
                     error: function (data) {
