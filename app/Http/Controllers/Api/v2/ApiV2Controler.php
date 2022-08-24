@@ -107,12 +107,12 @@ class ApiV2Controler extends Controller
 //            $audio = new \wapmorgan\Mp3Info\Mp3Info($item, true);
 //
 //            dd($audio);
-            $ffprobe    = \FFMpeg\FFProbe::create([
-                'ffmpeg.binaries'  => 'C:/FFmpeg/bin/ffmpeg.exe',
-                'ffprobe.binaries' => 'C:/FFmpeg/bin/ffprobe.exe'
-            ]);
-
-            $durationMp3   = $ffprobe->format(storage_path('app/public/musics/files/'.$item->music_file))->get('duration');
+//            $ffprobe    = \FFMpeg\FFProbe::create([
+//                'ffmpeg.binaries'  => 'C:/FFmpeg/bin/ffmpeg.exe',
+//                'ffprobe.binaries' => 'C:/FFmpeg/bin/ffprobe.exe'
+//            ]);
+//
+//            $durationMp3   = $ffprobe->format(storage_path('app/public/musics/files/'.$item->music_file))->get('duration');
 
 
 
@@ -124,7 +124,7 @@ class ApiV2Controler extends Controller
                 'urlstream' => route('musics.stream',['id'=>$item->uuid]),
                 'urldownload' => route('musics.stream',['id'=>$item->uuid]),
                 'thumbnail' => $item->music_image ?  asset('storage/musics/images/'.$item->music_image) : asset('storage/default.png'),
-                'duration' => $durationMp3,
+                'duration' => time(),
             ];
         }
         return json_encode($result);
