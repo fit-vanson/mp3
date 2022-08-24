@@ -103,20 +103,17 @@ class ApiV2Controler extends Controller
         $result = [];
 
         foreach ($data as $item ){
-//            $ffprobe    = \FFMpeg\FFProbe::create();
-//            $durationMp3   = $ffprobe->format('test.mp3')->get('duration');
-////            $link = route('musics.stream',['id'=>$item->uuid]);
-////            $durationMp3   = $ffprobe->format($link)->get('duration');
+            $link = route('musics.stream',['id'=>$item->uuid]);
+//            $audio = new \wapmorgan\Mp3Info\Mp3Info($item, true);
 //
-//            dd(123);
-//
-//
-//
-//
-//            $audio = new Mp3Info($link);
 //            dd($audio);
+            $ffprobe    = \FFMpeg\FFProbe::create([
+                'ffmpeg.binaries'  => 'C:/FFmpeg/bin/ffmpeg.exe',
+                'ffprobe.binaries' => 'C:/FFmpeg/bin/ffprobe.exe'
+            ]);
 
-//            dd(new Mp3Info(route('musics.stream',['id'=>$item->uuid])));
+            $durationMp3   = $ffprobe->format(storage_path('app/public/musics/files/'.$item->music_file))->get('duration');
+
 
 
             $result[] = [
@@ -127,7 +124,7 @@ class ApiV2Controler extends Controller
                 'urlstream' => route('musics.stream',['id'=>$item->uuid]),
                 'urldownload' => route('musics.stream',['id'=>$item->uuid]),
                 'thumbnail' => $item->music_image ?  asset('storage/musics/images/'.$item->music_image) : asset('storage/default.png'),
-                'duration' => time(),
+                'duration' => $durationMp3,
             ];
         }
         return json_encode($result);

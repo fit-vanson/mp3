@@ -66,19 +66,6 @@ Route::group([
 ], function() {
     Route::get('/init.php', [\App\Http\Controllers\Api\v2\ApiV2Controler::class, 'init']);
     Route::get('/view.php', [\App\Http\Controllers\Api\v2\ApiV2Controler::class, 'view']);
-    Route::get('/categories/{category_id}/musics', [CategoriesController::class, 'getMusics']);
-    Route::get('categories/{category_id}/musics/{deviceId}', [MusicsController::class, 'getMusicsByCate']);
-    Route::get('music-detail/{id}/{device_id}', [MusicsController::class, 'show']);
-    Route::get('musics/popular/{deviceId}', [MusicsController::class, 'getPopulared']);
-    Route::get('musics/newest/{deviceId}', [MusicsController::class, 'getNewest']);
-    Route::get('musics/most-download/{deviceId}', [MusicsController::class, 'getMostDownload']);
-
-    Route::post('ringtone-favorite/', [FavoriteController::class, 'like']);
-    Route::post('ringtone-favorite-unsaved/', [FavoriteController::class, 'disLike']);
-    Route::get('favorite/{device_id}', [FavoriteController::class, 'getSaved']);
-
-    Route::post('search', [MusicsController::class, 'search']);
-
 
 });
 
