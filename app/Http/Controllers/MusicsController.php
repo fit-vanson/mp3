@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Musics;
-use App\Ringtones;
+
 use App\Tags;
 use DateTime;
 use Illuminate\Http\Request;
@@ -14,6 +14,8 @@ use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
 use Jenssegers\ImageHash\ImageHash;
 use Jenssegers\ImageHash\Implementations\DifferenceHash;
+use YoutubeDl\Options;
+use YoutubeDl\YoutubeDl;
 
 class MusicsController extends Controller
 {
@@ -24,6 +26,18 @@ class MusicsController extends Controller
     }
     public function index()
     {
+
+
+        $yt = new YoutubeDl();
+
+        $collection = $yt->download(
+            Options::create()
+                ->downloadPath('/path/to/downloads')
+                ->url('https://www.youtube.com/watch?v=oDAw7vW7H0c')
+        );
+
+        dd($collection);
+
 
         $page_title =  'Musics';
         $tags = Tags::latest()->get();
@@ -309,7 +323,7 @@ class MusicsController extends Controller
     public function streamID($id){
 
         $music = Musics::where('uuid',$id)->firstOrFail();
-        $link = $music->music_link;
+        $link = $music->music_link_1 ? $music->music_link_1 : $music->music_link_2 ;
         $check_link =  false;
         if ($link){
             $headers = get_headers($link);
