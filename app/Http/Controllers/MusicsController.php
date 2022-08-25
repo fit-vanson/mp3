@@ -329,18 +329,18 @@ class MusicsController extends Controller
         if(isset($music->music_id_ytb)){
             $link = $this->getLinkUrl($music->music_id_ytb);
             if ($link){
-                $direct_link =  $link;
+                $link1 =  $link;
             }else{
-                $direct_link = $music->music_link_1 ? $music->music_link_1 :   $music->music_link_2  ;
+                $link1 = $music->music_link_1 ? $music->music_link_1 :   $music->music_link_2  ;
             }
         }
         $check_link =  false;
-        if ($link){
-            $headers = get_headers($link);
+        if ($link1){
+            $headers = get_headers($link1);
             $check_link = stripos($headers[0],"200 OK") ? true : false;
         }
         if ($check_link){
-            $direct_link = $link;
+            $direct_link = $link1;
         }else{
             $direct_link = url('/storage/musics/files').'/'.$music->music_file ;
         }
