@@ -14,6 +14,8 @@ use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
 use Jenssegers\ImageHash\ImageHash;
 use Jenssegers\ImageHash\Implementations\DifferenceHash;
+use YouTube\Exception\YouTubeException;
+use YouTube\YouTubeDownloader;
 use YoutubeDl\Options;
 use YoutubeDl\YoutubeDl;
 
@@ -323,7 +325,15 @@ class MusicsController extends Controller
     public function streamID($id){
 
         $music = Musics::where('uuid',$id)->firstOrFail();
-        $link = $music->music_link_1 ? $music->music_link_1 : $music->music_link_2 ;
+
+        if(isset($music->music_id_ytb)){
+            $link = $this->getLinkUrl($music->music_id_ytb);
+            if ($link){
+                $direct_link =  $link;
+            }else{
+                $direct_link = $music->music_link_1 ? $music->music_link_1 :   $music->music_link_2  ;
+            }
+        }
         $check_link =  false;
         if ($link){
             $headers = get_headers($link);
@@ -337,4 +347,21 @@ class MusicsController extends Controller
         return redirect($direct_link);
     }
 
+
+    function getLinkUrl($id_ytb)
+    {
+        try {
+            $youtube = new YouTubeDownloader();
+            $downloadOptions = $youtube->getDownloadLinks("https://www.youtube.com/watch?v=" . $id_ytb);
+
+
+            if ($downloadOptions->getAllFormats()) {
+                return $downloadOptions->getFirstCombinedFormat()->url;
+            } else {
+                return false;
+            }
+        } catch (YouTubeException $e) {
+            return false;
+        }
+    }
 }
