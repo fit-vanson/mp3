@@ -14,6 +14,7 @@ class Musics extends Model
         'uuid',
         'music_name',
         'music_image',
+        'music_url_image',
         'music_file',
         'music_view_count',
         'music_like_count',
@@ -22,7 +23,9 @@ class Musics extends Model
         'music_status',
         'music_type',
         'music_hash',
-        'music_link',
+        'music_link_1',
+        'music_link_2',
+        'music_id_ytb',
     ];
 
 //

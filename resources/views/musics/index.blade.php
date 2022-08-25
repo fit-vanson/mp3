@@ -75,6 +75,31 @@
                         <input type="hidden" name="id" id="id">
 
                         <div class="form-group">
+                            <label>Name</label>
+                            <input type="text" class="form-control" id="music_name" name="music_name" >
+                        </div>
+
+                        <div class="form-group">
+                            <label>Link Url Image</label>
+                            <input type="text" class="form-control" id="music_url_image" name="music_url_image" >
+                        </div>
+
+                        <div class="form-group">
+                            <label>Link 1</label>
+                            <input type="text" class="form-control" id="music_link_1" name="music_link_1" >
+                        </div>
+
+                        <div class="form-group">
+                            <label>Link 2</label>
+                            <input type="text" class="form-control" id="music_link_2" name="music_link_2" >
+                        </div>
+
+                        <div class="form-group">
+                            <label>ID YouTuBe</label>
+                            <input type="text" class="form-control" id="music_id_ytb" name="music_id_ytb" >
+                        </div>
+
+                        <div class="form-group">
                             <label class="control-label">Tags Select</label>
                             <select class="select2 form-control select2-multiple" id="select_tags_edit"
                                     name="select_tags[]" multiple="multiple"
@@ -84,6 +109,8 @@
                                 @endforeach
                             </select>
                         </div>
+
+
 
                         <div class="form-group mb-0">
                             <div>
@@ -491,6 +518,11 @@
                         $('#saveBtn{{preg_replace('/\s+/','',$page_title)}}').val("update");
 
                         $('#id').val(data.music.id);
+                        $('#music_name').val(data.music.music_name);
+                        $('#music_link_1').val(data.music.music_link_1);
+                        $('#music_url_image').val(data.music.music_url_image);
+                        $('#music_link_2').val(data.music.music_link_2);
+                        $('#music_id_ytb').val(data.music.music_id_ytb);
 
 
                         var id_tags =[];

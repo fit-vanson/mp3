@@ -105,12 +105,23 @@ class MusicsController extends Controller
             $btn = ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-warning editMusics"><i class="ti-pencil-alt"></i></a>';
             $btn .= ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-danger deleteMusics"><i class="ti-trash"></i></a>';
 
-            $image = $record->music_image ? url('storage/musics/images/'.$record->music_image) : url('storage/default.png');
+            $image = $record->music_image ?  '<img class="rounded-circle" alt="'.$record->music_name.'"  src="'.url('storage/musics/images/'.$record->music_image) .'" width="150">'   : '<img class="rounded-circle" alt="'.$record->music_name.'"  src="'. url('storage/default.png') .'" width="150">' ;
+            $image_url = $record->music_url_image ? '<img class="rounded-circle" alt="'.$record->music_name.'"  src="'.$record->music_url_image .'" width="150" ">' : null;
+
+            $music_file     = $record->music_file ?     '<h5 class="mt-0 font-16">On Site</h5><audio class="audio-player" controls><source src="'.url('/storage/musics/files').'/'.$record->music_file.'" type="audio/mp3"/></audio>' :  null;
+            $music_link_1   = $record->music_link_1 ?   '<h5 class="mt-0 font-16">Link 1</h5><audio class="audio-player" controls><source src="'.$record->music_link_1.'" type="audio/mp3"/></audio>' : null ;
+            $music_link_2   = $record->music_link_2 ?   '<h5 class="mt-0 font-16">Link 2</h5><audio class="audio-player" controls><source src="'.$record->music_link_2.'" type="audio/mp3"/></audio>' : null ;
+            $music_ytb      = $record->music_id_ytb ?   '<h5 class="mt-0 font-16">YTB</h5><audio class="audio-player" controls><source src="'.$record->music_id_ytb.'" type="audio/mp3"/></audio>' : null ;
+
+
+
+            $check = '<audio class="audio-player" controls><source src="https://drive.google.com/file/d/15gEy4ujdQEjisRKzLj0R_BCyTikmQbb0/view?usp=sharing" type="audio/mp3"/><source src="" type="audio/mp3"/></audio>';
 
             $data_arr[] = array(
                 "id" => $record->id,
-                "music_file" => '<img class="rounded-circle" alt="'.$record->music_name.'"  src="'.$image .'" width="150" data-holder-rendered="true"><audio class="audio-player" controls><source src="'.url('/storage/musics/files').'/'.$record->music_file.'" type="audio/mp3"/></audio>',
-                "music_name" => $record->id . '  |  '.$record->music_name,
+                "music_file" => $music_file.$music_link_1.$music_link_2.$music_ytb,
+//                "music_file" => $check,
+                "music_name" => $image.$image_url.  '<h5 class="mt-0 font-16">'.$record->id.'</h5>'  .     '<span class="card-title-desc">'.$record->music_name.'</span>',
                 "music_view_count" => $record->music_view_count,
                 "music_like_count" => $record->music_like_count,
                 "music_link" => $record->music_link ? '<a target="_blank" href="'.$record->music_link.'" class="btn btn-outline-warning"><i class="ti-link"></i></a>': null,
@@ -239,10 +250,11 @@ class MusicsController extends Controller
     {
         $id = $request->id;
         $data= Musics::find($id);
-        $data->save();
+        $data->update($request->all());
         $data->tags()->sync($request->select_tags);
         return response()->json(['success'=>'Cập nhật thành công']);
     }
+
     public function delete($id)
     {
         $music = Musics::find($id);
