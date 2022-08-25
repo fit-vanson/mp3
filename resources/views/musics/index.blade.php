@@ -112,6 +112,9 @@
 {{--        </div>--}}
 {{--    </div>--}}
 
+
+
+
     <div class="load_ajax">
         @if(isset($data))
 
@@ -168,6 +171,9 @@
 
 
         @else
+
+
+
 
             <div class="row">
                 <div class="col-12">
@@ -233,6 +239,7 @@
     <script src="{{ URL::asset('/assets/libs/dropzone/dropzone.min.js') }}"></script>
 
     <script src="{{ URL::asset('/assets/libs/magnific-popup/magnific-popup.min.js') }}"></script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jscroll/2.4.1/jquery.jscroll.min.js"></script>
 
     <script>
@@ -649,5 +656,7 @@
             });
         }
     </script>
+
+
 
 @endsection

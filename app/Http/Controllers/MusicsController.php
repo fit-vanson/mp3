@@ -102,13 +102,14 @@ class MusicsController extends Controller
 
         $data_arr = array();
         foreach ($records as $record) {
-//            $btn  = ' <a href="javascript:void(0)" onclick="editRolesPermissions('.$record->id.')" class="btn btn-warning"><i class="ti-pencil-alt"></i></a>';
             $btn = ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-warning editMusics"><i class="ti-pencil-alt"></i></a>';
             $btn .= ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-danger deleteMusics"><i class="ti-trash"></i></a>';
+
+            $image = $record->music_image ? url('storage/musics/images/'.$record->music_image) : url('storage/default.png');
+
             $data_arr[] = array(
                 "id" => $record->id,
-//                "ringtone_file" => '<a class="image-popup-no-margins" href="'.url('/storage/ringtones').'/'.$record->ringtone_image.'"><img class="img-fluid" alt="'.$record->wallpaper_name.'" src="'.url('/storage/wallpapers/thumbnails').'/'.$record->wallpaper_image.'" width="75"></a>',
-                "music_file" => '<audio class="audio-player" controls><source src="'.url('/storage/musics/files').'/'.$record->music_file.'" type="audio/mp3"/></audio>',
+                "music_file" => '<img class="rounded-circle" alt="'.$record->music_name.'"  src="'.$image .'" width="150" data-holder-rendered="true"><audio class="audio-player" controls><source src="'.url('/storage/musics/files').'/'.$record->music_file.'" type="audio/mp3"/></audio>',
                 "music_name" => $record->music_name,
                 "music_view_count" => $record->music_view_count,
                 "music_like_count" => $record->music_like_count,
@@ -190,7 +191,7 @@ class MusicsController extends Controller
                     [
                         'uuid' => uniqid(),
                         'music_name' => $key,
-                        'music_image'=> isset($data['music_image']) ? $data['music_image'] : 'default.png' ,
+                        'music_image'=> isset($data['music_image']) ? $data['music_image'] : null ,
                         'music_file'=> $data['music_file'],
                         'music_view_count' => 1000,
                         'music_like_count' => 1000,
