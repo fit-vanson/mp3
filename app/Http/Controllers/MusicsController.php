@@ -20,7 +20,7 @@ class MusicsController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth')->except('streamID');
     }
     public function index()
     {
@@ -110,9 +110,10 @@ class MusicsController extends Controller
             $data_arr[] = array(
                 "id" => $record->id,
                 "music_file" => '<img class="rounded-circle" alt="'.$record->music_name.'"  src="'.$image .'" width="150" data-holder-rendered="true"><audio class="audio-player" controls><source src="'.url('/storage/musics/files').'/'.$record->music_file.'" type="audio/mp3"/></audio>',
-                "music_name" => $record->music_name,
+                "music_name" => $record->id . '  |  '.$record->music_name,
                 "music_view_count" => $record->music_view_count,
                 "music_like_count" => $record->music_like_count,
+                "music_link" => $record->music_link ? '<a target="_blank" href="'.$record->music_link.'" class="btn btn-outline-warning"><i class="ti-link"></i></a>': null,
                 "tags" => $record->tags,
                 "action" => $btn,
             );
@@ -295,11 +296,9 @@ class MusicsController extends Controller
 
     public function streamID($id){
 
-        $music = Musics::where('uuid',$id)->first();
-
+        $music = Musics::where('uuid',$id)->firstOrFail();
         $link = $music->music_link;
         $check_link =  false;
-
         if ($link){
             $headers = get_headers($link);
             $check_link = stripos($headers[0],"200 OK") ? true : false;

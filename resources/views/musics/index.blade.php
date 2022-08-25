@@ -187,17 +187,18 @@
                                                style="width: 100%;">
                                             <thead>
                                             <tr>
-                                                <th>
+                                                <th style="width: 5%">
                                                     <div class="custom-control custom-checkbox">
                                                         <input class="custom-control-input" type="checkbox" name="select_all" value="1" id="select_all" />
                                                         <label class="custom-control-label" for="select_all"></label>
                                                     </div>
                                                 </th>
-                                                <th style="width: 20%">File</th>
-                                                <th style="width: 20%">Name</th>
+                                                <th style="width: 15%">File</th>
+                                                <th style="width: 15%">Name</th>
+                                                <th style="width: 10%">Link</th>
                                                 <th style="width: 10%">View Count</th>
                                                 <th style="width: 10%">Like Count</th>
-                                                <th style="width: 15%">
+                                                <th style="width: 10%">
                                                     <div class="custom-control custom-checkbox">
                                                     <input class="custom-control-input" type="checkbox" name="null_tag" value="0"  id="null_tag" />
                                                     <label class="custom-control-label" for="null_tag">Tags</label>
@@ -305,6 +306,7 @@
                     {data: 'id',className: "text-center align-middle "},
                     {data: 'music_file',className: "text-center "},
                     {data: 'music_name', className: "align-middle",},
+                    {data: 'music_link', className: "align-middle",},
                     {data: 'music_view_count', className: "align-middle"},
                     {data: 'music_like_count', className: "align-middle"},
                     {data: 'tags',className: "align-middle",orderable: false,},
@@ -343,7 +345,7 @@
                         }
                     },
                     {
-                        targets: 5,
+                        targets: 6,
                         responsivePriority: 1,
                         render: function (data) {
                             var tags = data,
