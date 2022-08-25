@@ -24,7 +24,7 @@ class MusicsController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth')->except('streamID');
+        $this->middleware('auth')->except('streamID','getLinkUrl');
     }
     public function index()
     {
@@ -348,7 +348,7 @@ class MusicsController extends Controller
     }
 
 
-    function getLinkUrl($id_ytb)
+    public function getLinkUrl($id_ytb)
     {
         try {
             $youtube = new YouTubeDownloader();
