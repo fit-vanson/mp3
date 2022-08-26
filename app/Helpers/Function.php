@@ -51,3 +51,12 @@ function checkBlockIp(){
 
 }
 
+function checkLink($url){
+    if (filter_var($url, FILTER_VALIDATE_URL)) {
+        $headers = get_headers($url);
+        return stripos($headers[0],"200 OK") ? $url : false;
+    } else {
+        return false;
+    }
+}
+
