@@ -107,7 +107,7 @@ class ApiV2Controler extends Controller
                 'urlstream' => route('musics.stream',['id'=>$item->uuid,'action'=>'view']),
                 'urldownload' => route('musics.stream',['id'=>$item->uuid,'action'=>'download']),
                 'thumbnail' =>  $item->music_image ?  asset('storage/musics/images/'.$item->music_image) : asset('storage/default.png'),
-                'duration' =>  getLinkUrl($item->music_id_ytb,'lengthSeconds') ? getLinkUrl($item->music_id_ytb,'lengthSeconds') : null,
+                'duration' =>  $item->duration,
             ];
         }
 
@@ -141,7 +141,7 @@ class ApiV2Controler extends Controller
                 'urlstream' => route('musics.stream',['id'=>$item->uuid,'action'=>'view']),
                 'urldownload' => route('musics.stream',['id'=>$item->uuid,'action'=>'download']),
                 'thumbnail' =>  $item->music_image ?  asset('storage/musics/images/'.$item->music_image) : asset('storage/default.png'),
-                'duration' =>  getLinkUrl($item->music_id_ytb,'lengthSeconds') ? getLinkUrl($item->music_id_ytb,'lengthSeconds') : null,
+                'duration' =>  $item->duration,
             ];
         }
 
