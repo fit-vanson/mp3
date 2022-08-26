@@ -9,6 +9,7 @@
     "license": "MIT",
     "require": {
         "php": "^7.3|^8.0",
+        "ext-curl": "*",
         "ext-gd": "*",
         "athlon1600/youtube-downloader": "^3.1",
         "barryvdh/laravel-debugbar": "^3.7",
@@ -24,6 +25,7 @@
         "laravel/framework": "^8.0",
         "laravel/tinker": "^2.0",
         "laravel/ui": "^3.4",
+        "mavinoo/laravel-batch": "^2.3",
         "spatie/laravel-permission": "^5.5",
         "staudenmeir/eloquent-eager-limit": "*",
         "staudenmeir/eloquent-has-many-deep": "*",

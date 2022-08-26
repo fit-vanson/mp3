@@ -15,8 +15,10 @@ class BlockIPsController extends Controller
     public function index()
     {
         $page_title =  'Block IPs';
+        $action = ['create'];
         return view('blockips.index',[
-            'page_title' => $page_title
+            'page_title' => $page_title,
+            'action' => $action,
         ]);
     }
 

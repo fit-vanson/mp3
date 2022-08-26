@@ -20,8 +20,10 @@ class ApiKeysController extends Controller
     public function index()
     {
         $page_title =  'Api Keys';
+        $action = ['create'];
         return view('apikeys.index',[
-            'page_title' => $page_title
+            'page_title' => $page_title,
+            'action' => $action,
         ]);
     }
 

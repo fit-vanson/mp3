@@ -149,6 +149,7 @@ Route::group(['prefix'=>env('ADMIN_PAGE','admin')], function (){
         Route::post('/create',[MusicsController::class,'create'])->name('musics.create');
         Route::get('/edit/{id}',[MusicsController::class,'edit'])->name('musics.edit');
         Route::post('/update',[MusicsController::class,'update'])->name('musics.update');
+        Route::post('/update_multiple',[MusicsController::class,'update_multiple'])->name('musics.update_multiple');
         Route::get('/delete/{id}',[MusicsController::class,'delete'])->name('musics.delete');
         Route::post('/deleteSelect', [MusicsController::class, 'deleteSelect'])->name('musics.deleteSelect');
 //        Route::get('/import', [RingtonesController::class, 'import'])->name('wallpapers.import');

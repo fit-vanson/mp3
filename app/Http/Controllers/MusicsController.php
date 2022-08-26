@@ -12,12 +12,10 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
-use Jenssegers\ImageHash\ImageHash;
-use Jenssegers\ImageHash\Implementations\DifferenceHash;
-use YouTube\Exception\YouTubeException;
+
+use Mavinoo\Batch\Batch;
 use YouTube\YouTubeDownloader;
-use YoutubeDl\Options;
-use YoutubeDl\YoutubeDl;
+
 
 class MusicsController extends Controller
 {
@@ -30,6 +28,7 @@ class MusicsController extends Controller
     {
 
         $page_title =  'Musics';
+        $action = ['update_multiple','delete_multiple',];
         $tags = Tags::latest()->get();
 
         $search = null;
@@ -49,6 +48,7 @@ class MusicsController extends Controller
         }else{
             return view('musics.index',[
                 'page_title' => $page_title,
+                'action' => $action,
                 'tags' => $tags,
             ]);
         }
@@ -112,10 +112,10 @@ class MusicsController extends Controller
             $image = $record->music_image ?  '<img class="rounded-circle" alt="'.$record->music_name.'"  src="'.url('storage/musics/images/'.$record->music_image) .'" width="150">'   : '<img class="rounded-circle" alt="'.$record->music_name.'"  src="'. url('storage/default.png') .'" width="150">' ;
             $image_url = $record->music_url_image ? '<img class="rounded-circle" alt="'.$record->music_name.'"  src="'.$record->music_url_image .'" width="150" ">' : null;
 
-            $music_file     = $record->music_file ?     '<h5 class="mt-0 font-16">On Site</h5><audio class="audio-player" controls><source src="'.url('/storage/musics/files').'/'.$record->music_file.'" type="audio/mp3"/></audio>' :  null;
-            $music_link_1   = $record->music_link_1 ?   '<h5 class="mt-0 font-16">Link 1</h5><audio class="audio-player" controls><source src="'.$record->music_link_1.'" type="audio/mp3"/></audio>' : null ;
-            $music_link_2   = $record->music_link_2 ?   '<h5 class="mt-0 font-16">Link 2</h5><audio class="audio-player" controls><source src="'.$record->music_link_2.'" type="audio/mp3"/></audio>' : null ;
-            $music_ytb      = $record->music_id_ytb ?   '<h5 class="mt-0 font-16">YTB</h5><audio class="audio-player" controls><source src="'.$this->getLinkUrl($record->music_id_ytb)->getOriginalContent()['url'].'" type="audio/mp3"/></audio>' : null ;
+            $music_file     = $record->music_file    ?   '<h5 class="mt-0 font-16">On Site</h5><audio class="audio-player" controls><source src="'.url('/storage/musics/files').'/'.$record->music_file.'" type="audio/mp3"/></audio>' :  null;
+            $music_link_1   = checkLink($record->music_link_1)  ?   '<h5 class="mt-0 font-16">Link 1</h5><audio class="audio-player" controls><source src="'.$record->music_link_1.'" type="audio/mp3"/></audio>' : null ;
+            $music_link_2   = checkLink($record->music_link_2)  ?   '<h5 class="mt-0 font-16">Link 2</h5><audio class="audio-player" controls><source src="'.$record->music_link_2.'" type="audio/mp3"/></audio>' : null ;
+            $music_ytb      = $this->getLinkUrl($record->music_id_ytb,'url') ?   '<h5 class="mt-0 font-16">YTB</h5><audio class="audio-player" controls><source src="'.$this->getLinkUrl($record->music_id_ytb,'url').'" type="audio/mp3"/></audio>' : null ;
 
 
 
@@ -256,6 +256,34 @@ class MusicsController extends Controller
         $data= Musics::find($id);
         $data->update($request->all());
         $data->tags()->sync($request->select_tags);
+        return response()->json(['success'=>'Cập nhật thành công']);
+    }
+
+    public function update_multiple(Request $request)
+    {
+        $data_multiple = array_filter(explode("\r\n",$request->update_multiple));
+
+        $music = new Musics();
+
+        $data_arr = [];
+
+        foreach ($data_multiple as $item){
+            try {
+                [$id, $link_1, $link_2, $id_ytb] = explode("|",$item);
+
+                $data_arr [] = [
+                    'id' =>(int)$id,
+                    'music_link_1' =>trim($link_1),
+                    'music_link_2' =>trim($link_2),
+                    'music_id_ytb' =>trim($id_ytb),
+                ];
+            }catch (\Exception $exception) {
+                Log::error('Message: Update multiple music ' . $exception->getMessage() . ' ---- '.$item .'------'. $exception->getLine());
+            }
+
+        }
+        $index = 'id';
+        batch()->update($music, $data_arr, $index);
         return response()->json(['success'=>'Cập nhật thành công']);
     }
 

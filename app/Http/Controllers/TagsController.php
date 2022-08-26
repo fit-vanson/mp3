@@ -17,8 +17,10 @@ class TagsController extends Controller
     public function index()
     {
         $page_title =  'Tags';
+        $action = ['create'];
         return view('tags.index',[
-            'page_title' => $page_title
+            'page_title' => $page_title,
+            'action' => $action
         ]);
     }
     public function getIndex(Request $request)

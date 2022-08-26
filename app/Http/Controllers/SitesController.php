@@ -29,9 +29,11 @@ class SitesController extends Controller
     public function index()
     {
         $page_title =  'Sites';
+        $action = ['create'];
 //        $categories = Categories::get();
         return view('sites.index',[
             'page_title' => $page_title,
+            'action' => $action,
 //            'categories' => $categories
         ]);
     }

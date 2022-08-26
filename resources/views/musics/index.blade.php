@@ -125,6 +125,38 @@
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
 
+    <!--  Modal content for the above example -->
+    <div class="modal fade" id="modal{{preg_replace('/\s+/','',$page_title)}}update_multiple" tabindex="-1" role="dialog"
+         aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title mt-0"> Update Multiple </h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-hidden="true">×</button>
+                </div>
+                <div class="card-body">
+                    <form id="form{{preg_replace('/\s+/','',$page_title)}}update_multiple">
+                        <div class="form-group">
+                            <p class="text-muted"> <code>{id} | {link1} | {link2} | {id Ytb}</code>
+                            </p>
+                            <textarea id="update_multiple" name="update_multiple" class="form-control" rows="20" ></textarea>
+                        </div>
+
+
+                        <div class="form-group mb-0">
+                            <div>
+                                <button type="submit" id="saveBtn{{preg_replace('/\s+/','',$page_title)}}update_multiple" class="btn btn-success waves-effect waves-light mr-1">
+                                    Update
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
 {{--    <div class="row align-items-center" style="padding-bottom: 10px">--}}
 {{--        <div class="col-sm-12">--}}
 {{--            <div class="float-right" >--}}
@@ -477,6 +509,7 @@
                     }
                 }
             });
+
             $(document).on('click', '.delete{{preg_replace('/\s+/','',$page_title)}}', function (data) {
                 var id = $(this).data("id");
                 Swal.fire({
@@ -504,6 +537,39 @@
                 });
             });
 
+
+            $(document).on('click', '.update_multiple{{preg_replace('/\s+/','',$page_title)}}', function () {
+                $('#modal{{preg_replace('/\s+/','',$page_title)}}update_multiple').modal('show');
+            });
+
+            $('#form{{preg_replace('/\s+/','',$page_title)}}update_multiple').on('submit', function (event) {
+                event.preventDefault();
+                var formData = new FormData($("#form{{preg_replace('/\s+/','',$page_title)}}update_multiple")[0]);
+                    $.ajax({
+                        data: formData,
+                        url: '{{route('musics.update_multiple')}}',
+                        type: "POST",
+                        dataType: 'json',
+                        processData: false,
+                        contentType: false,
+                        success: function (data) {
+                            if (data.success) {
+                                $('#form{{preg_replace('/\s+/','',$page_title)}}update_multiple').trigger("reset");
+                                toastr['success'](data.success, 'Success!');
+                                $('#modal{{preg_replace('/\s+/','',$page_title)}}update_multiple').modal('hide');
+                                dtTable.draw();
+                            }
+                            if (data.errors) {
+                                for (var count = 0; count < data.errors.length; count++) {
+                                    toastr['error'](data.errors[count], 'Error!',);
+                                }
+                            }
+                        }
+                    });
+
+
+            });
+
             $(document).on('click', '.edit{{preg_replace('/\s+/','',$page_title)}}', function (data) {
                 $('#form{{preg_replace('/\s+/','',$page_title)}}').trigger("reset");
                 var id = $(this).data("id");
@@ -511,8 +577,6 @@
                     type: "get",
                     url: "{{ asset("admin/musics/edit") }}/" + id,
                     success: function (data) {
-
-                        console.log(data)
                         $('#modal{{preg_replace('/\s+/','',$page_title)}}').modal('show');
                         $('#{{preg_replace('/\s+/','',$page_title)}}ModalLabel').html("Edit {{$page_title}}");
                         $('#saveBtn{{preg_replace('/\s+/','',$page_title)}}').val("update");
@@ -604,9 +668,6 @@
                 }
 
             });
-
-            $('.createMusics').hide()
-
 
             $('#form{{preg_replace('/\s+/','',$page_title)}}').dropzone(
                 {

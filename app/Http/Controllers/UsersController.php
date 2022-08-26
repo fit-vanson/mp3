@@ -18,9 +18,11 @@ class UsersController extends Controller
     public function index()
     {
         $page_title =  'Users';
+        $action = ['create'];
         $roles = Role::with('users')->get();
         return view('users.index',[
             'roles'=> $roles,
+            'action'=> $action,
             'page_title' => $page_title
         ]);
     }

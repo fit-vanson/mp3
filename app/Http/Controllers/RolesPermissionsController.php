@@ -17,10 +17,12 @@ class RolesPermissionsController extends Controller
     public function index()
     {
         $page_title =  'Roles Permissions';
+        $action = ['create'];
 //        $roles = Role::with('users')->get();
         return view('roles-permissions.index',[
 //            'roles'=> $roles,
-            'page_title' => $page_title
+            'page_title' => $page_title,
+            'action' => $action
         ]);
     }
     public function getIndex(Request $request)
