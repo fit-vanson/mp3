@@ -367,21 +367,26 @@ class MusicsController extends Controller
 
     public function getLinkUrl($id_ytb, $option=null)
     {
+
         try {
             $youtube = new YouTubeDownloader();
             $downloadOptions = $youtube->getDownloadLinks("https://www.youtube.com/watch?v=" . $id_ytb);
                 if ( $downloadOptions->getAllFormats() && $downloadOptions->getInfo()) {
-                    if ($option == 'url'){
-                        return $downloadOptions->getFirstCombinedFormat()->url;
-                    }else{
-                        $result = [
-                            'url' => $downloadOptions->getFirstCombinedFormat()->url,
-                            'videoId' =>  $downloadOptions->getInfo()->getId(),
-                            'title' =>  $downloadOptions->getInfo()->getTitle(),
-                            'lengthSeconds' =>  $downloadOptions->getInfo()->getLengthSeconds(),
-//                        'keywords' =>  $downloadOptions->getInfo()->getKeywords(),
-                        ];
-                        return response()->json($result);
+
+                    switch ($option){
+                        case 'url':
+                            return $downloadOptions->getFirstCombinedFormat()->url;
+                            break;
+                        case 'lengthSeconds':
+                            return  $downloadOptions->getInfo()->getLengthSeconds();
+
+                        default :
+                            $result = [
+                                'url' => $downloadOptions->getFirstCombinedFormat()->url,
+                                'title' =>  $downloadOptions->getInfo()->getTitle(),
+                                'lengthSeconds' =>  $downloadOptions->getInfo()->getLengthSeconds(),
+                            ];
+                            return response()->json($result);
                     }
 
                 } else {

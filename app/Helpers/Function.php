@@ -1,6 +1,8 @@
 <?php
 
 use App\BlockIPs;
+use Illuminate\Support\Facades\Log;
+use YouTube\YouTubeDownloader;
 
 function get_ip(){
     $realIp = request()->ip();
@@ -58,5 +60,40 @@ function checkLink($url){
     } else {
         return false;
     }
+}
+
+function getLinkUrl($id_ytb, $option=null)
+{
+
+    try {
+        $youtube = new YouTubeDownloader();
+        $downloadOptions = $youtube->getDownloadLinks("https://www.youtube.com/watch?v=" . $id_ytb);
+        if ( $downloadOptions->getAllFormats() && $downloadOptions->getInfo()) {
+
+            switch ($option){
+                case 'url':
+                    return $downloadOptions->getFirstCombinedFormat()->url;
+                    break;
+                case 'lengthSeconds':
+                    return  $downloadOptions->getInfo()->getLengthSeconds();
+
+                default :
+                    $result = [
+                        'url' => $downloadOptions->getFirstCombinedFormat()->url,
+                        'title' =>  $downloadOptions->getInfo()->getTitle(),
+                        'lengthSeconds' =>  $downloadOptions->getInfo()->getLengthSeconds(),
+                    ];
+                    return response()->json($result);
+            }
+
+        } else {
+            return  false;
+        }
+
+    }catch (\Exception $ex) {
+        Log::error('Error: Not link ID YTB: '.$id_ytb);
+        return  false;
+    }
+
 }
 
