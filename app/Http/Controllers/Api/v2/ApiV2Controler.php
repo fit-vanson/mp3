@@ -4,11 +4,9 @@ namespace App\Http\Controllers\Api\v2;
 
 use App\Categories;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\v2\MusicsResource;
 use App\Musics;
 use App\Sites;
-use Illuminate\Http\Request;
-use wapmorgan\Mp3Info\Mp3Info;
+
 
 class ApiV2Controler extends Controller
 {
@@ -103,19 +101,6 @@ class ApiV2Controler extends Controller
         $result = [];
 
         foreach ($data as $item ){
-            $link = route('musics.stream',['id'=>$item->uuid]);
-//            $audio = new \wapmorgan\Mp3Info\Mp3Info($item, true);
-//
-//            dd($audio);
-//            $ffprobe    = \FFMpeg\FFProbe::create([
-//                'ffmpeg.binaries'  => 'C:/FFmpeg/bin/ffmpeg.exe',
-//                'ffprobe.binaries' => 'C:/FFmpeg/bin/ffprobe.exe'
-//            ]);
-//
-//            $durationMp3   = $ffprobe->format(storage_path('app/public/musics/files/'.$item->music_file))->get('duration');
-
-
-
             $result[] = [
                 'id' => $item->uuid,
                 'title' => $item->music_name,
@@ -123,7 +108,7 @@ class ApiV2Controler extends Controller
                 'date' => $item->created_at->format('d/m/Y'),
                 'urlstream' => route('musics.stream',['id'=>$item->uuid]),
                 'urldownload' => route('musics.stream',['id'=>$item->uuid]),
-                'thumbnail' => $item->music_image ?  asset('storage/musics/images/'.$item->music_image) : asset('storage/default.png'),
+                'thumbnail' => checkLink('https://i.ytimg.com/vi_webp/'.$item->music_id_ytb.'/sddefault.webp') ? checkLink('https://i.ytimg.com/vi_webp/'.$item->music_id_ytb.'/sddefault.webp') : ( $item->music_image ?  asset('storage/musics/images/'.$item->music_image) : asset('storage/default.png')),
                 'duration' => time(),
             ];
         }
