@@ -117,4 +117,38 @@ class ApiV2Controler extends Controller
 
         return json_encode($result);
     }
+
+    public function search(){
+
+        $domain = $_SERVER['SERVER_NAME'];
+        $site = Sites::where('site_web',$domain)->first();
+
+
+        $isFake = checkBlockIp()?1:0;
+        $data = Musics::with('tags')
+            ->whereHas('categories', function ($query) use ($isFake, $site) {
+                $query->where('category_checked_ip', $isFake)
+                    ->where('site_id',$site->id);
+            })
+            ->where('music_name', 'like', '%' . \request()->key . '%')
+            ->distinct()
+            ->orderBy('created_at','desc')
+            ->paginate(70);
+        $result = [];
+
+        foreach ($data as $item ){
+            $result[] = [
+                'id' => $item->uuid,
+                'title' => $item->music_name,
+                'view' => $item->music_view_count,
+                'date' => $item->created_at->format('d/m/Y'),
+                'urlstream' => route('musics.stream',['id'=>$item->uuid,'action'=>'view']),
+                'urldownload' => route('musics.stream',['id'=>$item->uuid,'action'=>'download']),
+                'thumbnail' =>  $item->music_image ?  asset('storage/musics/images/'.$item->music_image) : asset('storage/default.png'),
+                'duration' => 123,
+            ];
+        }
+
+        return json_encode($result);
+    }
 }

@@ -66,6 +66,7 @@ Route::group([
 ], function() {
     Route::get('/init.php', [\App\Http\Controllers\Api\v2\ApiV2Controler::class, 'init']);
     Route::get('/view.php', [\App\Http\Controllers\Api\v2\ApiV2Controler::class, 'view']);
+    Route::get('/search.php', [\App\Http\Controllers\Api\v2\ApiV2Controler::class, 'search']);
 
 });
 
