@@ -29,18 +29,6 @@ class MusicsController extends Controller
     public function index()
     {
 
-
-        $yt = new YoutubeDl();
-
-        $collection = $yt->download(
-            Options::create()
-                ->downloadPath('/path/to/downloads')
-                ->url('https://www.youtube.com/watch?v=oDAw7vW7H0c')
-        );
-
-        dd($collection);
-
-
         $page_title =  'Musics';
         $tags = Tags::latest()->get();
 
@@ -131,7 +119,7 @@ class MusicsController extends Controller
 
 
 
-            $check = '<audio class="audio-player" controls><source src="https://drive.google.com/file/d/15gEy4ujdQEjisRKzLj0R_BCyTikmQbb0/view?usp=sharing" type="audio/mp3"/><source src="" type="audio/mp3"/></audio>';
+//            $check = '<audio class="audio-player" controls><source src="https://drive.google.com/file/d/15gEy4ujdQEjisRKzLj0R_BCyTikmQbb0/view?usp=sharing" type="audio/mp3"/><source src="" type="audio/mp3"/></audio>';
 
             $data_arr[] = array(
                 "id" => $record->id,
