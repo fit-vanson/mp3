@@ -117,9 +117,6 @@ class MusicsController extends Controller
             $music_ytb      = $record->music_id_ytb ? '<h5 class="mt-0 font-16">YTB</h5><audio class="audio-player" controls><source src="'.$this->getLinkUrl($record->music_id_ytb,'url').'" type="audio/mp3"/></audio>' : null ;
 
 
-
-//            $check = '<audio class="audio-player" controls><source src="https://drive.google.com/file/d/15gEy4ujdQEjisRKzLj0R_BCyTikmQbb0/view?usp=sharing" type="audio/mp3"/><source src="" type="audio/mp3"/></audio>';
-
             $data_arr[] = array(
                 "id" => $record->id,
                 "music_file" => $music_file.$music_link_1.$music_link_2.$music_ytb,
