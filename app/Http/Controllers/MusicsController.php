@@ -336,19 +336,23 @@ class MusicsController extends Controller
 
     public function streamID($id){
         $music = Musics::where('uuid',$id)->firstOrFail();
-//        $link = [
-//            $this->getLinkUrl($music->music_id_ytb,'url'),
-//            $music->music_link_1,
-//            $music->music_link_2,
-//            url('/storage/musics/files').'/'.$music->music_file
-//        ];
-//        $this->checkLink1(array_filter($link));
-//        dd($link);
-
         $link = $this->getLinkUrl($music->music_id_ytb) ? $this->getLinkUrl($music->music_id_ytb,'url') :
             ( $this->checkLink($music->music_link_1) ? $this->checkLink($music->music_link_1) :
                 ( $this->checkLink($music->music_link_2) ? $this->checkLink($music->music_link_2) : url('/storage/musics/files').'/'.$music->music_file)) ;
-//        dd($link);
+
+        if (isset(\request()->action)){
+            $action = \request()->action;
+            switch ($action){
+                case 'view':
+//                    dd($music);
+                    $music->increment('music_like_count');
+                    break;
+                case 'download':
+                    $music->increment('music_download_count');
+                    break;
+            }
+        }
+
         return redirect($link);
     }
 

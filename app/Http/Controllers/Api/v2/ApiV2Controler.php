@@ -100,18 +100,21 @@ class ApiV2Controler extends Controller
 
         $result = [];
 
+
+
         foreach ($data as $item ){
             $result[] = [
                 'id' => $item->uuid,
                 'title' => $item->music_name,
                 'view' => $item->music_view_count,
                 'date' => $item->created_at->format('d/m/Y'),
-                'urlstream' => route('musics.stream',['id'=>$item->uuid]),
-                'urldownload' => route('musics.stream',['id'=>$item->uuid]),
+                'urlstream' => route('musics.stream',['id'=>$item->uuid,'action'=>'view']),
+                'urldownload' => route('musics.stream',['id'=>$item->uuid,'action'=>'download']),
                 'thumbnail' =>  $item->music_image ?  asset('storage/musics/images/'.$item->music_image) : asset('storage/default.png'),
                 'duration' => 123,
             ];
         }
+
         return json_encode($result);
     }
 }
