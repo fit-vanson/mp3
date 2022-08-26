@@ -311,16 +311,22 @@ class MusicsController extends Controller
 
 
     public function streamID($id){
-
         $music = Musics::where('uuid',$id)->firstOrFail();
-        $link = $this->getLinkUrl($music->music_id_ytb) ? $this->getLinkUrl($music->music_id_ytb)->getOriginalContent()['url'] :
+//        $link = [
+//            $this->getLinkUrl($music->music_id_ytb,'url'),
+//            $music->music_link_1,
+//            $music->music_link_2,
+//            url('/storage/musics/files').'/'.$music->music_file
+//        ];
+//        $this->checkLink1(array_filter($link));
+//        dd($link);
+
+        $link = $this->getLinkUrl($music->music_id_ytb) ? $this->getLinkUrl($music->music_id_ytb,'url') :
             ( $this->checkLink($music->music_link_1) ? $this->checkLink($music->music_link_1) :
                 ( $this->checkLink($music->music_link_2) ? $this->checkLink($music->music_link_2) : url('/storage/musics/files').'/'.$music->music_file)) ;
-
+//        dd($link);
         return redirect($link);
     }
-
-
 
     function checkLink($url){
         if (filter_var($url, FILTER_VALIDATE_URL)) {
@@ -331,21 +337,25 @@ class MusicsController extends Controller
         }
     }
 
-
-    public function getLinkUrl($id_ytb)
+    public function getLinkUrl($id_ytb, $option=null)
     {
         try {
             $youtube = new YouTubeDownloader();
             $downloadOptions = $youtube->getDownloadLinks("https://www.youtube.com/watch?v=" . $id_ytb);
                 if ( $downloadOptions->getAllFormats() && $downloadOptions->getInfo()) {
-                    $result = [
-                        'url' => $downloadOptions->getFirstCombinedFormat()->url,
-                        'videoId' =>  $downloadOptions->getInfo()->getId(),
-                        'title' =>  $downloadOptions->getInfo()->getTitle(),
-                        'lengthSeconds' =>  $downloadOptions->getInfo()->getLengthSeconds(),
+                    if ($option == 'url'){
+                        return $downloadOptions->getFirstCombinedFormat()->url;
+                    }else{
+                        $result = [
+                            'url' => $downloadOptions->getFirstCombinedFormat()->url,
+                            'videoId' =>  $downloadOptions->getInfo()->getId(),
+                            'title' =>  $downloadOptions->getInfo()->getTitle(),
+                            'lengthSeconds' =>  $downloadOptions->getInfo()->getLengthSeconds(),
 //                        'keywords' =>  $downloadOptions->getInfo()->getKeywords(),
-                    ];
-                    return response()->json($result);
+                        ];
+                        return response()->json($result);
+                    }
+
                 } else {
                     return  false;
                 }
