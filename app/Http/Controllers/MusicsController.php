@@ -325,26 +325,22 @@ class MusicsController extends Controller
     public function streamID($id){
 
         $music = Musics::where('uuid',$id)->firstOrFail();
+        $link = $this->getLinkUrl($music->music_id_ytb) ? $this->getLinkUrl($music->music_id_ytb)->getOriginalContent()['url'] :
+            ( $this->checkLink($music->music_link_1) ? $this->checkLink($music->music_link_1) :
+                ( $this->checkLink($music->music_link_2) ? $this->checkLink($music->music_link_2) : url('/storage/musics/files').'/'.$music->music_file)) ;
 
-        if(isset($music->music_id_ytb)){
-            $link = $this->getLinkUrl($music->music_id_ytb);
-            if ($link){
-                $link1 =  $link;
-            }else{
-                $link1 = $music->music_link_1 ? $music->music_link_1 :   $music->music_link_2  ;
-            }
+        return redirect($link);
+    }
+
+
+
+    function checkLink($url){
+        if (filter_var($url, FILTER_VALIDATE_URL)) {
+            $headers = get_headers($url);
+            return stripos($headers[0],"200 OK") ? $url : false;
+        } else {
+            return false;
         }
-        $check_link =  false;
-        if ($link1){
-            $headers = get_headers($link1);
-            $check_link = stripos($headers[0],"200 OK") ? true : false;
-        }
-        if ($check_link){
-            $direct_link = $link1;
-        }else{
-            $direct_link = url('/storage/musics/files').'/'.$music->music_file ;
-        }
-        return redirect($direct_link);
     }
 
 
@@ -353,15 +349,23 @@ class MusicsController extends Controller
         try {
             $youtube = new YouTubeDownloader();
             $downloadOptions = $youtube->getDownloadLinks("https://www.youtube.com/watch?v=" . $id_ytb);
+                if ( $downloadOptions->getAllFormats() && $downloadOptions->getInfo()) {
+                    $result = [
+                        'url' => $downloadOptions->getFirstCombinedFormat()->url,
+                        'videoId' =>  $downloadOptions->getInfo()->getId(),
+                        'title' =>  $downloadOptions->getInfo()->getTitle(),
+                        'lengthSeconds' =>  $downloadOptions->getInfo()->getLengthSeconds(),
+//                        'keywords' =>  $downloadOptions->getInfo()->getKeywords(),
+                    ];
+                    return response()->json($result);
+                } else {
+                    return  false;
+                }
 
-
-            if ($downloadOptions->getAllFormats()) {
-                return $downloadOptions->getFirstCombinedFormat()->url;
-            } else {
-                return false;
-            }
-        } catch (YouTubeException $e) {
-            return false;
+        }catch (\Exception $ex) {
+            Log::error('Error: Not link ID YTB: '.$id_ytb);
+            return  false;
         }
+
     }
 }
