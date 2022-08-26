@@ -108,8 +108,8 @@ class ApiV2Controler extends Controller
                 'date' => $item->created_at->format('d/m/Y'),
                 'urlstream' => route('musics.stream',['id'=>$item->uuid]),
                 'urldownload' => route('musics.stream',['id'=>$item->uuid]),
-                'thumbnail' => checkLink('https://i.ytimg.com/vi_webp/'.$item->music_id_ytb.'/sddefault.webp') ? checkLink('https://i.ytimg.com/vi_webp/'.$item->music_id_ytb.'/sddefault.webp') : ( $item->music_image ?  asset('storage/musics/images/'.$item->music_image) : asset('storage/default.png')),
-                'duration' => time(),
+                'thumbnail' =>  $item->music_image ?  asset('storage/musics/images/'.$item->music_image) : asset('storage/default.png'),
+                'duration' => 123,
             ];
         }
         return json_encode($result);
