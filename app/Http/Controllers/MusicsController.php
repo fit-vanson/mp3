@@ -345,7 +345,7 @@ class MusicsController extends Controller
             switch ($action){
                 case 'view':
 //                    dd($music);
-                    $music->increment('music_like_count');
+                    $music->increment('music_view_count');
                     break;
                 case 'download':
                     $music->increment('music_download_count');
