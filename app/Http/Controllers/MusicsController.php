@@ -343,10 +343,12 @@ class MusicsController extends Controller
         }else{
             $link = $this->checkLink($music->music_link_1) ? $this->checkLink($music->music_link_1) :
                     ( $this->checkLink($music->music_link_2) ? $this->checkLink($music->music_link_2) : url('/storage/musics/files').'/'.$music->music_file) ;
-            $music->update(['music_url_link_ytb'=>$this->getLinkUrl($music->music_id_ytb,'url'), 'time_get_url_ytb'=>time()+21500]);
-
+            $music->update([
+                'music_url_link_ytb'=>$this->getLinkUrl($music->music_id_ytb,'url'),
+                'music_duration'=>$this->getLinkUrl($music->music_id_ytb,'lengthSeconds'),
+                'time_get_url_ytb'=>time()+21500]);
         }
-        $music->update(['music_url_download'=>$link]);
+//        $music->update(['music_url_download'=>$link]);
 
 //        $link = $this->getLinkUrl($music->music_id_ytb) ? $this->getLinkUrl($music->music_id_ytb,'url') :
 //            ( $this->checkLink($music->music_link_1) ? $this->checkLink($music->music_link_1) :
