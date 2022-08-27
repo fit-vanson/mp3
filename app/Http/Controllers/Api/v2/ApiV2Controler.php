@@ -105,7 +105,7 @@ class ApiV2Controler extends Controller
                 'view' => $item->music_view_count,
                 'date' => $item->created_at->format('d/m/Y'),
                 'urlstream' => route('musics.stream',['id'=>$item->uuid,'action'=>'view']),
-                'urldownload' => route('musics.stream',['id'=>$item->uuid,'action'=>'download']),
+                'urldownload' => $item->music_url_download,
                 'thumbnail' =>  $item->music_image ?  asset('storage/musics/images/'.$item->music_image) : asset('storage/default.png'),
                 'duration' =>  $item->duration,
             ];
@@ -139,7 +139,7 @@ class ApiV2Controler extends Controller
                 'view' => $item->music_view_count,
                 'date' => $item->created_at->format('d/m/Y'),
                 'urlstream' => route('musics.stream',['id'=>$item->uuid,'action'=>'view']),
-                'urldownload' => route('musics.stream',['id'=>$item->uuid,'action'=>'download']),
+                'urldownload' => $item->music_url_download,
                 'thumbnail' =>  $item->music_image ?  asset('storage/musics/images/'.$item->music_image) : asset('storage/default.png'),
                 'duration' =>  $item->duration,
             ];

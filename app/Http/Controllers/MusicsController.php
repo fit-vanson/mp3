@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Musics;
 
 use App\Tags;
+use Carbon\Carbon;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -336,9 +337,20 @@ class MusicsController extends Controller
 
     public function streamID($id){
         $music = Musics::where('uuid',$id)->firstOrFail();
-        $link = $this->getLinkUrl($music->music_id_ytb) ? $this->getLinkUrl($music->music_id_ytb,'url') :
-            ( $this->checkLink($music->music_link_1) ? $this->checkLink($music->music_link_1) :
-                ( $this->checkLink($music->music_link_2) ? $this->checkLink($music->music_link_2) : url('/storage/musics/files').'/'.$music->music_file)) ;
+
+        if (isset($music->music_url_link_ytb) && Carbon::now()->timestamp < $music->time_get_url_ytb ){
+            $link = $music->music_url_link_ytb;
+        }else{
+            $link = $this->checkLink($music->music_link_1) ? $this->checkLink($music->music_link_1) :
+                    ( $this->checkLink($music->music_link_2) ? $this->checkLink($music->music_link_2) : url('/storage/musics/files').'/'.$music->music_file) ;
+            $music->update(['music_url_link_ytb'=>$this->getLinkUrl($music->music_id_ytb,'url'), 'time_get_url_ytb'=>time()+21500]);
+
+        }
+        $music->update(['music_url_download'=>$link]);
+
+//        $link = $this->getLinkUrl($music->music_id_ytb) ? $this->getLinkUrl($music->music_id_ytb,'url') :
+//            ( $this->checkLink($music->music_link_1) ? $this->checkLink($music->music_link_1) :
+//                ( $this->checkLink($music->music_link_2) ? $this->checkLink($music->music_link_2) : url('/storage/musics/files').'/'.$music->music_file)) ;
 
         if (isset(\request()->action)){
             $action = \request()->action;
@@ -367,7 +379,6 @@ class MusicsController extends Controller
 
     public function getLinkUrl($id_ytb, $option=null)
     {
-
         try {
             $youtube = new YouTubeDownloader();
             $downloadOptions = $youtube->getDownloadLinks("https://www.youtube.com/watch?v=" . $id_ytb);
