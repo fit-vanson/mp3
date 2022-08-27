@@ -68,7 +68,8 @@ class ApiV2Controler extends Controller
                 'thong_bao_thay_the' => 'com.pinterest',
             ];
         }
-        return json_encode($result);
+        return response()->json($result);
+//        return json_encode($result);
     }
 
     public function view(){
@@ -111,7 +112,9 @@ class ApiV2Controler extends Controller
             ];
         }
 
-        return json_encode($result);
+//        return json_encode($result);
+        return response()->json($result);
+
     }
 
     public function search(){
@@ -145,6 +148,7 @@ class ApiV2Controler extends Controller
             ];
         }
 
-        return json_encode($result);
+//        return json_encode($result);
+        return response()->json($result);
     }
 }
