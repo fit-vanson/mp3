@@ -29,6 +29,7 @@ class Musics extends Model
         'music_url_link_ytb',
         'time_get_url_ytb',
         'music_url_download',
+        'music_duration',
     ];
 
 //
