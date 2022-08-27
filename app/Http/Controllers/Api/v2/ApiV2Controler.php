@@ -109,7 +109,7 @@ class ApiV2Controler extends Controller
                 'urldownload' => $item->music_url_link_ytb ?  $item->music_url_link_ytb : (checkLink($item->music_link_1) ? checkLink($item->music_link_1) :
                     ( checkLink($item->music_link_2) ? checkLink($item->music_link_2) : url('/storage/musics/files').'/'.$item->music_file))   ,
                 'thumbnail' =>  $item->music_image ?  asset('storage/musics/images/'.$item->music_image) : asset('storage/default.png'),
-                'duration' =>  $item->music_duration ? $item->music_duration : 0 ,
+                'duration' =>  $item->music_duration ? $item->music_duration : rand(10,30) ,
             ];
         }
 
@@ -146,7 +146,7 @@ class ApiV2Controler extends Controller
                 'urldownload' => $item->music_url_link_ytb ?  $item->music_url_link_ytb : (checkLink($item->music_link_1) ? checkLink($item->music_link_1) :
                     ( checkLink($item->music_link_2) ? checkLink($item->music_link_2) : url('/storage/musics/files').'/'.$item->music_file))   ,
                 'thumbnail' =>  $item->music_image ?  asset('storage/musics/images/'.$item->music_image) : asset('storage/default.png'),
-                'duration' =>  $item->music_duration ? $item->music_duration : 0 ,
+                'duration' =>  $item->music_duration ? $item->music_duration : rand(10,30),
             ];
         }
 
