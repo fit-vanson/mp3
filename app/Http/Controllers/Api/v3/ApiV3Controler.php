@@ -33,6 +33,9 @@ class ApiV3Controler extends Controller
     }
 
     public function getHome(){
+
+//        $check = $this->CURL('https://aio.vietmmo.net/api/v3/get_home');
+//        dd($check);
         $domain=$_SERVER['SERVER_NAME'];
         $site = Sites::where('site_web',$domain)->first();
         $isFake = checkBlockIp()?1:0;
@@ -45,14 +48,15 @@ class ApiV3Controler extends Controller
             ->paginate(10);
 
 
-//        $result = [
-//            'videos' => MusicsResource::collection($data),
-//            'current_page' => $data->currentPage(),
-//            'total_items' => $data->total(),
-//            'total_pages' => $data->lastPage(),
-//        ];
+        $result = [
+            'videos' => MusicsResource::collection($data),
+            'current_page' => $data->currentPage(),
+            'total_items' => $data->total(),
+            'total_pages' => $data->lastPage(),
+        ];
 
-        return response()->json($data);
+
+        return json_encode($result);
     }
 
     public function getCategory(){
