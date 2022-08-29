@@ -76,6 +76,7 @@ Route::group([
     Route::get('/ads', [\App\Http\Controllers\Api\v3\ApiV3Controler::class, 'getAds']);
     Route::get('/get_home', [\App\Http\Controllers\Api\v3\ApiV3Controler::class, 'getHome']);
     Route::get('/category', [\App\Http\Controllers\Api\v3\ApiV3Controler::class, 'getCategory']);
+    Route::get('/category_detail', [\App\Http\Controllers\Api\v3\ApiV3Controler::class, 'getCategoryDetail']);
 
 });
 
