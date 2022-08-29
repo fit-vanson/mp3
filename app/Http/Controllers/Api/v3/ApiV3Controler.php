@@ -94,41 +94,35 @@ class ApiV3Controler extends Controller
 
     public function getCategoryDetail(){
 
-        $category = $_GET['cat'];
+        $cat = $_GET['cat'];
 
         $domain=$_SERVER['SERVER_NAME'];
         $site = Sites::where('site_web',$domain)->first();
+        $category = Categories::where('site_id',$site->id)
+            ->where('category_name',$cat)->firstOrFail();
 
         $load_by_categories = $site->load_view_by_category;
 
         if($load_by_categories == 0 ){
-            $data = Categories::where('category_name',$category)
-                ->where('site_id',$site->id)
-                ->first()
+            $data = $category
                 ->music()
                 ->inRandomOrder()
                 ->paginate(15);
         }
         elseif($load_by_categories == 1 ){
-            $data = Categories::where('category_name',$category)
-                ->where('site_id',$site->id)
-                ->first()
+            $data = $category
                 ->music()
                 ->orderByDesc('music_like_count')
                 ->paginate(15);
         }
         elseif($load_by_categories == 2 ){
-            $data = Categories::where('category_name',$category)
-                ->where('site_id',$site->id)
-                ->first()
+            $data = $category
                 ->music()
                 ->orderByDesc('music_view_count')
                 ->paginate(15);
         }
         elseif($load_by_categories == 3 ){
-            $data = Categories::where('category_name',$category)
-                ->where('site_id',$site->id)
-                ->first()
+            $data = $category
                 ->music()
                 ->orderByDesc('updated_at')
                 ->paginate(15);
