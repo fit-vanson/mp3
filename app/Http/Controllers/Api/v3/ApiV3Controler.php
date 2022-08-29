@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\v3;
 
+use App\Categories;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\v3\CategoriesResource;
 use App\Http\Resources\v3\MusicsResource;
@@ -33,12 +34,6 @@ class ApiV3Controler extends Controller
     }
 
     public function getHome(){
-//
-//        $page_limit = 12;
-//        $limit=(isset($_GET['page']) ? $_GET['page'] -1 : 0) * $page_limit;
-
-//        $check = $this->CURL('https://aio.vietmmo.net/api/v3/get_home');
-//        dd($check);
         $domain=$_SERVER['SERVER_NAME'];
         $site = Sites::where('site_web',$domain)->first();
         $isFake = checkBlockIp()?1:0;
@@ -49,13 +44,6 @@ class ApiV3Controler extends Controller
                     ->where('site_id',$site->id);
             })
             ->paginate(15);
-//            ->skip($limit)
-//            ->take($page_limit)
-//            ->get();
-
-
-
-
 
         $result = [
             'videos' => MusicsResource::collection($data),
@@ -65,8 +53,6 @@ class ApiV3Controler extends Controller
         ];
 
         return response()->json($result);
-//
-//        return json_encode($result);
     }
 
     public function getCategory(){
@@ -104,6 +90,59 @@ class ApiV3Controler extends Controller
                 ->get();
         }
         return response()->json(CategoriesResource::collection($data));
+    }
+
+    public function getCategoryDetail(){
+
+        $category = $_GET['cat'];
+
+        $domain=$_SERVER['SERVER_NAME'];
+        $site = Sites::where('site_web',$domain)->first();
+
+        $load_by_categories = $site->load_view_by_category;
+
+
+
+        if($load_by_categories == 0 ){
+            $data = Categories::where('category_name',$category)
+                ->where('site_id',$site->id)
+                ->firstOrFail()
+                ->music()
+                ->inRandomOrder()
+                ->paginate(15);
+        }
+        elseif($load_by_categories == 1 ){
+            $data = Categories::where('category_name',$category)
+                ->where('site_id',$site->id)
+                ->firstOrFail()
+                ->music()
+                ->orderByDesc('music_like_count')
+                ->paginate(15);
+        }
+        elseif($load_by_categories == 2 ){
+            $data = Categories::where('category_name',$category)
+                ->where('site_id',$site->id)
+                ->firstOrFail()
+                ->music()
+                ->orderByDesc('music_view_count')
+                ->paginate(15);
+        }
+        elseif($load_by_categories == 3 ){
+            $data = Categories::where('category_name',$category)
+                ->where('site_id',$site->id)
+                ->firstOrFail()
+                ->music()
+                ->orderByDesc('updated_at')
+                ->paginate(15);
+        }
+        $result = [
+            'videos' => MusicsResource::collection($data),
+            'current_page' => $data->currentPage(),
+            'total_items' => $data->total(),
+            'total_pages' => $data->lastPage(),
+        ];
+
+        return response()->json($result);
     }
 
 
