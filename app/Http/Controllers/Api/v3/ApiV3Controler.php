@@ -34,6 +34,9 @@ class ApiV3Controler extends Controller
 
     public function getHome(){
 
+        $page_limit = 12;
+        $limit=(isset($_GET['page']) ? $_GET['page'] -1 : 0) * $page_limit;
+
 //        $check = $this->CURL('https://aio.vietmmo.net/api/v3/get_home');
 //        dd($check);
         $domain=$_SERVER['SERVER_NAME'];
@@ -45,15 +48,20 @@ class ApiV3Controler extends Controller
                 $query->where('category_checked_ip', $isFake)
                     ->where('site_id',$site->id);
             })
-            ->paginate(10);
+            ->skip($limit)
+            ->take($page_limit)
+            ->get();
+
+
 
 
         $result = [
             'videos' => MusicsResource::collection($data),
-            'current_page' => $data->currentPage(),
-            'total_items' => $data->total(),
-            'total_pages' => $data->lastPage(),
+            'current_page' => 1,
+            'total_items' => 44,
+            'total_pages' => 6,
         ];
+        return response()->json($result);
 
 
         return json_encode($result);
