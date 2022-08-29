@@ -20,7 +20,7 @@ class CategoriesResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->category_name,
-            'tag'=> implode(",", $tags),
+            'tag'=> $this->category_name,
 
         ];
     }
