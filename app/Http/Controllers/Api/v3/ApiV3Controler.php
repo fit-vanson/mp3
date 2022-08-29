@@ -63,7 +63,7 @@ class ApiV3Controler extends Controller
             'total_pages' => $data->lastPage(),
         ];
 
-        return response()->json($result);
+        return response()->json(MusicsResource::collection($data));
 
 //        return json_encode($result);
     }
