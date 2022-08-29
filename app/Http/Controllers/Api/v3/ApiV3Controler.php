@@ -58,7 +58,7 @@ class ApiV3Controler extends Controller
 
         $result = [
             'videos' => MusicsResource::collection($data),
-            'current_page' => $_GET['page'],
+            'current_page' => isset($_GET['page']) ? $_GET['page'] : 1,
             'total_items' => 44,
             'total_pages' => 3,
         ];
