@@ -58,9 +58,9 @@ class ApiV3Controler extends Controller
 
         $result = [
             'videos' => MusicsResource::collection($data),
-//            'current_page' => $data->currentPage(),
-//            'total_items' => $data->total(),
-//            'total_pages' => $data->lastPage(),
+            'current_page' => $data->currentPage(),
+            'total_items' => $data->total(),
+            'total_pages' => $data->lastPage(),
         ];
 
         return response()->json($result);
