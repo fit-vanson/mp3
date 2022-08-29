@@ -45,14 +45,14 @@ class ApiV3Controler extends Controller
             ->paginate(10);
 
 
-        $result = [
-            'videos' => MusicsResource::collection($data),
-            'current_page' => $data->currentPage(),
-            'total_items' => $data->total(),
-            'total_pages' => $data->lastPage(),
-        ];
+//        $result = [
+//            'videos' => MusicsResource::collection($data),
+//            'current_page' => $data->currentPage(),
+//            'total_items' => $data->total(),
+//            'total_pages' => $data->lastPage(),
+//        ];
 
-        return response()->json($result);
+        return response()->json($data);
     }
 
     public function getCategory(){
