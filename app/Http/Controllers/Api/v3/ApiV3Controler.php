@@ -101,12 +101,10 @@ class ApiV3Controler extends Controller
 
         $load_by_categories = $site->load_view_by_category;
 
-
-
         if($load_by_categories == 0 ){
             $data = Categories::where('category_name',$category)
                 ->where('site_id',$site->id)
-                ->firstOrFail()
+                ->first()
                 ->music()
                 ->inRandomOrder()
                 ->paginate(15);
@@ -114,7 +112,7 @@ class ApiV3Controler extends Controller
         elseif($load_by_categories == 1 ){
             $data = Categories::where('category_name',$category)
                 ->where('site_id',$site->id)
-                ->firstOrFail()
+                ->first()
                 ->music()
                 ->orderByDesc('music_like_count')
                 ->paginate(15);
@@ -122,7 +120,7 @@ class ApiV3Controler extends Controller
         elseif($load_by_categories == 2 ){
             $data = Categories::where('category_name',$category)
                 ->where('site_id',$site->id)
-                ->firstOrFail()
+                ->first()
                 ->music()
                 ->orderByDesc('music_view_count')
                 ->paginate(15);
@@ -130,7 +128,7 @@ class ApiV3Controler extends Controller
         elseif($load_by_categories == 3 ){
             $data = Categories::where('category_name',$category)
                 ->where('site_id',$site->id)
-                ->firstOrFail()
+                ->first()
                 ->music()
                 ->orderByDesc('updated_at')
                 ->paginate(15);
