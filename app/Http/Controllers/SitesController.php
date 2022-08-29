@@ -776,6 +776,7 @@ class SitesController extends Controller
             $dataGet = $this->CURL($url);
 
 
+
             if($dataGet['msg'] == 'success'){
                 $data = $dataGet['data'];
                 $ads_type = $site->site_type_ads;

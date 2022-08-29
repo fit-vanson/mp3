@@ -145,6 +145,7 @@ class MusicsController extends Controller
 
     public function create(Request $request){
 
+
         $rules = [
             'file.*' => 'max:20000|mimes:mp3,txt,jpg',
         ];
@@ -166,6 +167,7 @@ class MusicsController extends Controller
 
         $dataArray = [];
         foreach ($request->file as $file){
+
             $filenameWithExt=$file->getClientOriginalName();
             $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
             $extension = $file->getClientOriginalExtension();
