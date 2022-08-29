@@ -138,6 +138,30 @@ class ApiV3Controler extends Controller
     }
 
 
+    public function getSearch(){
+        $domain=$_SERVER['SERVER_NAME'];
+        $site = Sites::where('site_web',$domain)->first();
+        $isFake = checkBlockIp()?1:0;
+
+        $data = Musics::orderBy('music_like_count','desc')
+            ->whereHas('categories', function ($query) use ($isFake, $site) {
+                $query->where('category_checked_ip', $isFake)
+                    ->where('site_id',$site->id);
+            })
+            ->where('music_name', 'like', '%' . $_GET['keywords'] . '%')
+            ->paginate(15);
+
+        $result = [
+            'videos' => MusicsResource::collection($data),
+            'current_page' => $data->currentPage(),
+            'total_items' => $data->total(),
+            'total_pages' => $data->lastPage(),
+        ];
+
+        return response()->json($result);
+    }
+
+
 
     public function CURL($url){
         $dataArr = [
