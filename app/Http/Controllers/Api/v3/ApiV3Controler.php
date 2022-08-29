@@ -63,9 +63,9 @@ class ApiV3Controler extends Controller
             'total_pages' => $data->lastPage(),
         ];
 
-        return response()->json($result);
+//        return response()->json($result);
 
-//        return json_encode($result);
+        return json_encode($result);
     }
 
     public function getCategory(){
