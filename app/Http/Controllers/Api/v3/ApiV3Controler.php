@@ -48,10 +48,10 @@ class ApiV3Controler extends Controller
                 $query->where('category_checked_ip', $isFake)
                     ->where('site_id',$site->id);
             })
-//            ->paginate(10);
-            ->skip($limit)
-            ->take($page_limit)
-            ->get();
+            ->paginate(15);
+//            ->skip($limit)
+//            ->take($page_limit)
+//            ->get();
 
 
 
@@ -63,9 +63,9 @@ class ApiV3Controler extends Controller
             'total_pages' => 3,
         ];
 
-//        return response()->json($result);
-
-        return json_encode($result);
+        return response()->json($result);
+//
+//        return json_encode($result);
     }
 
     public function getCategory(){
