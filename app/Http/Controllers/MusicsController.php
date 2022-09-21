@@ -382,21 +382,29 @@ class MusicsController extends Controller
             $downloadOptions = $youtube->getDownloadLinks("https://www.youtube.com/watch?v=" . $id_ytb);
                 if ( $downloadOptions->getAllFormats() && $downloadOptions->getInfo()) {
 
-                    switch ($option){
-                        case 'url':
-                            return $downloadOptions->getFirstCombinedFormat()->url;
-                            break;
-                        case 'lengthSeconds':
-                            return  $downloadOptions->getInfo()->getLengthSeconds();
+                    if(isset($_GET['action']) && $_GET['action'] =='all' ){
+                        dd($downloadOptions);
+                        return response()->json($downloadOptions->getVideoInfo());
 
-                        default :
-                            $result = [
-                                'url' => $downloadOptions->getFirstCombinedFormat()->url,
-                                'title' =>  $downloadOptions->getInfo()->getTitle(),
-                                'lengthSeconds' =>  $downloadOptions->getInfo()->getLengthSeconds(),
-                            ];
-                            return response()->json($result);
+                    }else{
+                        switch ($option){
+                            case 'url':
+                                return $downloadOptions->getFirstCombinedFormat()->url;
+                                break;
+                            case 'lengthSeconds':
+                                return  $downloadOptions->getInfo()->getLengthSeconds();
+
+                            default :
+                                $result = [
+                                    'url' => $downloadOptions->getFirstCombinedFormat()->url,
+                                    'title' =>  $downloadOptions->getInfo()->getTitle(),
+                                    'lengthSeconds' =>  $downloadOptions->getInfo()->getLengthSeconds(),
+                                ];
+                                return response()->json($result);
+                        }
                     }
+
+
 
                 } else {
                     return  false;
