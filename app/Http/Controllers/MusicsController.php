@@ -213,8 +213,10 @@ class MusicsController extends Controller
             if(isset($data['tags']) && !empty($data['tags']) && isset($data['music_file']) && !empty($data['music_file']) ){
                 $music = Musics::updateOrCreate(
                     [
-                        'uuid' => uniqid(),
                         'music_name' => $key,
+                    ],
+                    [
+                        'uuid' => uniqid(),
                         'music_image'=> isset($data['music_image']) ? $data['music_image'] : null ,
                         'music_file'=> $data['music_file'],
                         'music_view_count' => 1000,
