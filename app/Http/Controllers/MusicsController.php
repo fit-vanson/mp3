@@ -113,8 +113,10 @@ class MusicsController extends Controller
             $image_url = $record->music_url_image ? '<img class="rounded-circle" alt="'.$record->music_name.'"  src="'.$record->music_url_image .'" width="150" ">' : null;
 
             $music_file     = $record->music_file    ?   '<h5 class="mt-0 font-16">On Site</h5><audio class="audio-player" controls><source src="'.url('/storage/musics/files').'/'.$record->music_file.'" type="audio/mp3"/></audio>' :  null;
-            $music_link_1   = checkLink($record->music_link_1)  ?   '<h5 class="mt-0 font-16">Link 1</h5><audio class="audio-player" controls><source src="'.$record->music_link_1.'" type="audio/mp3"/></audio>' : null ;
-            $music_link_2   = checkLink($record->music_link_2)  ?   '<h5 class="mt-0 font-16">Link 2</h5><audio class="audio-player" controls><source src="'.$record->music_link_2.'" type="audio/mp3"/></audio>' : null ;
+//            $music_link_1   = checkLink($record->music_link_1)  ?   '<h5 class="mt-0 font-16">Link 1</h5><audio class="audio-player" controls><source src="'.$record->music_link_1.'" type="audio/mp3"/></audio>' : null ;
+            $music_link_1   = '<h5 class="mt-0 font-16">Link 1</h5><audio class="audio-player" controls><source src="'.$record->music_link_1.'" type="audio/mp3"/></audio>';
+            $music_link_2   = '<h5 class="mt-0 font-16">Link 2</h5><audio class="audio-player" controls><source src="'.$record->music_link_2.'" type="audio/mp3"/></audio>';
+//            $music_link_2   = checkLink($record->music_link_2)  ?   '<h5 class="mt-0 font-16">Link 2</h5><audio class="audio-player" controls><source src="'.$record->music_link_2.'" type="audio/mp3"/></audio>' : null ;
             $music_ytb      = $record->music_id_ytb ? '<h5 class="mt-0 font-16">YTB</h5><audio class="audio-player" controls><source src="'.$this->getLinkUrl($record->music_id_ytb,'url').'" type="audio/mp3"/></audio>' : null ;
 
 
