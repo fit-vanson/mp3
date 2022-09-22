@@ -148,18 +148,18 @@ class MusicsController extends Controller
     public function create(Request $request){
 
 
-        $rules = [
-            'file.*' => 'max:20000|mimes:mp3,txt,jpg',
-        ];
-        $message = [
-            'file.mimes'=>'Định dạng File',
-            'file.max'=>'Dung lượng File',
-
-        ];
-        $error = Validator::make($request->all(),$rules, $message );
-        if($error->fails()){
-            return response()->json(['errors'=> $error->errors()->all()]);
-        }
+//        $rules = [
+//            'file.*' => 'max:20000|mimes:mp3,txt,jpg',
+//        ];
+//        $message = [
+//            'file.mimes'=>'Định dạng File',
+//            'file.max'=>'Dung lượng File',
+//
+//        ];
+//        $error = Validator::make($request->all(),$rules, $message );
+//        if($error->fails()){
+//            return response()->json(['errors'=> $error->errors()->all()]);
+//        }
         $now = new \DateTime('now'); //Datetime
         $monthNum = $now->format('m');
         $dateObj   = DateTime::createFromFormat('!m', $monthNum);
@@ -168,86 +168,87 @@ class MusicsController extends Controller
         $monthYear = $monthName.$year;
 
         $dataArray = [];
-        foreach ($request->file as $file){
+        try {
+            foreach ($request->file as $file){
 
-            $filenameWithExt=$file->getClientOriginalName();
-            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
-            $extension = $file->getClientOriginalExtension();
-            $fileNameToStore = time().'_'.Str::random(10);
+                $filenameWithExt=$file->getClientOriginalName();
+                $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+                $extension = $file->getClientOriginalExtension();
+                $fileNameToStore = time().'_'.Str::random(10);
 
-            switch ($extension){
-                case 'txt':
-                    $file = file_get_contents($file);
-                    $tags = explode(',',$file);
-                    $tags = array_map('trim', $tags);
-                    $getTags = Tags::select('id')->whereIn('tag_name',$tags)->get()->pluck('id')->toArray();
-                    $dataArray[$filename]['tags']=  $getTags;
-                    break;
-                case 'jpg':
-                    $path_image   =  storage_path('app/public/musics/images/'.$monthYear.'/');
-                    if (!file_exists($path_image)) {
-                        mkdir($path_image, 0777, true);
+                switch ($extension){
+                    case 'txt':
+                        $file = file_get_contents($file);
+                        $tags = explode(',',$file);
+                        $tags = array_map('trim', $tags);
+                        $getTags = Tags::select('id')->whereIn('tag_name',$tags)->get()->pluck('id')->toArray();
+                        $dataArray[$filename]['tags']=  $getTags;
+                        break;
+                    case 'jpg':
+                        $path_image   =  storage_path('app/public/musics/images/'.$monthYear.'/');
+                        if (!file_exists($path_image)) {
+                            mkdir($path_image, 0777, true);
+                        }
+
+                        $NameToStore = $fileNameToStore.'.'.$extension;
+                        $img = Image::make($file);
+                        $img->resize(500, 500)
+                            ->save($path_image.$NameToStore,60);
+                        $dataArray[$filename]['music_image'] = $monthYear.'/'.$NameToStore;
+                        break;
+                    case 'mp3':
+                        $NameToStore = $fileNameToStore.'.'.$extension;
+                        $path = Storage::disk('music_files')->putFileAs($monthYear,$file, $NameToStore);
+                        $dataArray[$filename]['music_file'] = $path;
+                        break;
+                }
+            }
+
+
+
+            foreach ($dataArray as $key=>$data){
+                if(isset($data['tags']) && !empty($data['tags']) && isset($data['music_file']) && !empty($data['music_file']) ){
+                    $music = Musics::updateOrCreate(
+                        [
+                            'music_name' => $key,
+                        ],
+                        [
+                            'uuid' => uniqid(),
+                            'music_image'=> isset($data['music_image']) ? $data['music_image'] : null ,
+                            'music_file'=> $data['music_file'],
+                            'music_view_count' => 1000,
+                            'music_like_count' => 1000,
+                            'music_download_count' => 1000,
+                            'music_feature' => rand(0,1),
+                            'music_status' => 0,
+                            'music_type' => 'mp3'
+                        ]);
+
+                    $music->tags()->sync($data['tags']);
+                }else{
+                    try {
+                        $pathFile    =   storage_path('app/public/musics/files/').$data['music_file'];
+                        if(file_exists($pathFile)){
+                            unlink($pathFile);
+                        }
+                    }catch (\Exception $ex) {
+                        Log::error('Message: File ' . $ex->getMessage() .'--: '.$key. ' -----' . $ex->getLine());
+                    }
+                    try {
+                        $pathImage   =   storage_path('app/public/musics/images/').$data['music_image'];
+                        if(file_exists($pathImage)){
+                            unlink($pathImage);
+                        }
+                    }catch (\Exception $ex) {
+                        Log::error('Message: Image' . $ex->getMessage() .'--: '.$key. ' -----' . $ex->getLine());
                     }
 
-
-
-
-
-
-
-                    $NameToStore = $fileNameToStore.'.'.$extension;
-                    $img = Image::make($file);
-                    $img->resize(500, 500)
-                        ->save($path_image.$NameToStore,60);
-                    $dataArray[$filename]['music_image'] = $monthYear.'/'.$NameToStore;
-                    break;
-                case 'mp3':
-                    $NameToStore = $fileNameToStore.'.'.$extension;
-                    $path = Storage::disk('music_files')->putFileAs($monthYear,$file, $NameToStore);
-                    $dataArray[$filename]['music_file'] = $path;
-                    break;
+                }
             }
+        }catch (\Exception $exception) {
+            Log::error('Message:' . $exception->getMessage() . '--- create music : ' . $exception->getLine());
         }
 
-        foreach ($dataArray as $key=>$data){
-            if(isset($data['tags']) && !empty($data['tags']) && isset($data['music_file']) && !empty($data['music_file']) ){
-                $music = Musics::updateOrCreate(
-                    [
-                        'music_name' => $key,
-                    ],
-                    [
-                        'uuid' => uniqid(),
-                        'music_image'=> isset($data['music_image']) ? $data['music_image'] : null ,
-                        'music_file'=> $data['music_file'],
-                        'music_view_count' => 1000,
-                        'music_like_count' => 1000,
-                        'music_download_count' => 1000,
-                        'music_feature' => rand(0,1),
-                        'music_status' => 0,
-                        'music_type' => 'mp3'
-                    ]);
-
-                $music->tags()->sync($data['tags']);
-            }else{
-                try {
-                    $pathFile    =   storage_path('app/public/musics/files/').$data['music_file'];
-                    if(file_exists($pathFile)){
-                        unlink($pathFile);
-                    }
-                }catch (\Exception $ex) {
-                    Log::error('Message: File ' . $ex->getMessage() .'--: '.$key. ' -----' . $ex->getLine());
-                }
-                try {
-                    $pathImage   =   storage_path('app/public/musics/images/').$data['music_image'];
-                    if(file_exists($pathImage)){
-                        unlink($pathImage);
-                    }
-                }catch (\Exception $ex) {
-                    Log::error('Message: Image' . $ex->getMessage() .'--: '.$key. ' -----' . $ex->getLine());
-                }
-
-            }
-        }
         return response()->json(['success'=>'Thành công']);
 
     }
