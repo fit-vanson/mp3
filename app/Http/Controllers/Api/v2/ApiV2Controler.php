@@ -57,15 +57,21 @@ class ApiV2Controler extends Controller
             $result = [
                 'cho_tai_khong' => true,
                 'them_ung_dung_store_link' => 'Nghe nhạc hay nhất',
-                'quangcaofull' => false,
-                'banner_id' => 'ca-app-pub-3044948700774356/858630886',
-                'inter_ads_id' => 'ca-app-pub-3044948700774356/8322584984',
-                'gioi_thieu_ung_dung' => true,
-                'id_ung_dung_gioi_thieu' => 'com.my_music',
-                'thong_bao_gioi_thieu_app_moi' => '(ADS)Ứng dụng nghe nhạc remix DJ với giao diện mới và tốc độ cực nhanh, khắc phục vấn đề nghe nhạc khi tắt màn hình,chắc chắn bạn sẽ hài lòng,bạn có muốn thử nghiệm không',
+                'quangcaofull' => true,
+
+                // lấy theo ads
+                'banner_id' => '',
+                'inter_ads_id' => '',
+
+                // thêm bảng more app (giới thiệu chéo ứng dụng)
+                'gioi_thieu_ung_dung' => false,
+                'id_ung_dung_gioi_thieu' => 'com.abc.xyz',
+                'thong_bao_gioi_thieu_app_moi' => '',
+
+                // bỏ
                 'co_phien_ban_thay_the' => false,
-                'id_phien_ban_thay_the' => 'com.pinterest',
-                'thong_bao_thay_the' => 'com.pinterest',
+                'id_phien_ban_thay_the' => '',
+                'thong_bao_thay_the' => '',
             ];
         }
         return response()->json($result);

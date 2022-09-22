@@ -188,6 +188,13 @@ class MusicsController extends Controller
                     if (!file_exists($path_image)) {
                         mkdir($path_image, 0777, true);
                     }
+
+
+
+
+
+
+
                     $NameToStore = $fileNameToStore.'.'.$extension;
                     $img = Image::make($file);
                     $img->resize(500, 500)
