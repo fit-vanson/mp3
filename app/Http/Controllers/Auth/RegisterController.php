@@ -71,7 +71,7 @@ class RegisterController extends Controller
         ]);
     }
 
-    protected function showRegistrationForm(){
-        return redirect('/login');
-    }
+//    protected function showRegistrationForm(){
+//        return redirect('/login');
+//    }
 }
