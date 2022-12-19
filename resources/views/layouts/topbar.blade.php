@@ -30,21 +30,11 @@
         <div class="d-flex">
             <div class="d-none d-sm-block">
                 <div class="d-inline-block"style="padding-right: 30px;">
-                    @if(isset($page_title))
-
-
-                        @if(isset($action))
-                            @if(in_array('create',$action))
-                                <button type="button" class="btn btn-primary waves-effect waves-light create{{preg_replace('/\s+/','',$page_title)}}">Create</button>
-                            @endif
-
-                            @if(in_array('update_multiple',$action))
-                                <button type="button" class="btn btn-success waves-effect waves-light update_multiple{{preg_replace('/\s+/','',$page_title)}}">Update</button>
-                            @endif
+                        @if(isset($button))
+                            @foreach($button as $key=>$item)
+                                <button type="button" id="{{$item['id']}}" class="btn btn-{{$item['style']}} waves-effect waves-light">{{$key}}</button>
+                            @endforeach
                         @endif
-                    @endif
-
-
                 </div>
             </div>
         </div>

@@ -7,51 +7,72 @@ use App\Musics;
 use App\Tags;
 use Carbon\Carbon;
 use DateTime;
+
+use Facade\FlareClient\Http\Response;
+
+use GuzzleHttp\Pool;
 use Illuminate\Http\Request;
+
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
 
-use Mavinoo\Batch\Batch;
+
 use YouTube\YouTubeDownloader;
 
 
 class MusicsController extends Controller
 {
 
+    const PART_LENGTH = 5000;
+
     public function __construct()
     {
         $this->middleware('auth')->except('streamID','getLinkUrl');
     }
+//    public function index()
+//    {
+//        $page_title =  'Musics';
+//        $action = ['update_multiple','delete_multiple',];
+//        $tags = Tags::latest()->get();
+//
+//        $search = null;
+//        if (isset($_GET['search'])){
+//            $search = $_GET['search'];
+//        }
+//        if (isset($_GET['view']) && $_GET['view'] == 'grid' ){
+//            $data = Ringtones::latest('ringtone_name')
+//                ->orwhereRelation('tags','tag_name', 'like', '%' . $search . '%')
+//                ->paginate(12);
+//            $data->load('tags');
+//            return view('ringtones.index',[
+//                'page_title' => $page_title,
+//                'tags' => $tags,
+//                'data' => $data,
+//            ]);
+//        }else{
+//            return view('musics.index',[
+//                'page_title' => $page_title,
+//                'action' => $action,
+//                'tags' => $tags,
+//            ]);
+//        }
+//    }
+
     public function index()
     {
-        $page_title =  'Musics';
-        $action = ['update_multiple','delete_multiple',];
-        $tags = Tags::latest()->get();
+        $header = [
+            'title' => 'Musics',
+            'button' => [
+//                'Create'            => ['id'=>'createMusics','style'=>'primary'],
+                'Create YTB'        => ['id'=>'createYTB','style'=>'success'],
+                'Update Multiple'   => ['id'=>'update_multipleMusics','style'=>'warning'],
+            ]
 
-        $search = null;
-        if (isset($_GET['search'])){
-            $search = $_GET['search'];
-        }
-        if (isset($_GET['view']) && $_GET['view'] == 'grid' ){
-            $data = Ringtones::latest('ringtone_name')
-                ->orwhereRelation('tags','tag_name', 'like', '%' . $search . '%')
-                ->paginate(12);
-            $data->load('tags');
-            return view('ringtones.index',[
-                'page_title' => $page_title,
-                'tags' => $tags,
-                'data' => $data,
-            ]);
-        }else{
-            return view('musics.index',[
-                'page_title' => $page_title,
-                'action' => $action,
-                'tags' => $tags,
-            ]);
-        }
+        ];
+        $tags = Tags::latest()->get();
+        return view('musics.index')->with(compact('header','tags'));
     }
 
     public function getIndex(Request $request)
@@ -214,7 +235,7 @@ class MusicsController extends Controller
                         ],
                         [
                             'uuid' => uniqid(),
-                            'music_image'=> isset($data['music_image']) ? $data['music_image'] : null ,
+                            'music_image'=> $data['music_image'] ?? null,
                             'music_file'=> $data['music_file'],
                             'music_view_count' => 1000,
                             'music_like_count' => 1000,
@@ -428,4 +449,125 @@ class MusicsController extends Controller
         }
 
     }
+
+    public function getInfoYTB($_id): \Illuminate\Http\JsonResponse
+    {
+        $youtube = new YouTubeDownloader();
+
+        $list_id = preg_split("/[|,]+/",$_id);
+
+        $dataArr = [];
+        foreach ($list_id as $id){
+            try {
+                $downloadOptions = $youtube->getDownloadLinks("https://www.youtube.com/watch?v=" . trim($id));
+
+                $info = $downloadOptions->getInfo();
+
+//                $audio = $downloadOptions->getSplitFormats()->audio->url;
+                $dataArr[] = [
+                    'videoId' => trim($id),
+                    'title' => $info->getTitle(),
+                    'viewCount' => $info->getViewCount(),
+                    'keywords' => implode(",\n",$info->getKeywords()),
+                    'shortDescription' => $info->getShortDescription(),
+                    'lengthSeconds' => gmdate("H:i:s",$info->getLengthSeconds()),
+                    'image' => 'https://i.ytimg.com/vi_webp/'.trim($id).'/mqdefault.webp',
+                    'url_audio' => $downloadOptions->getSplitFormats()->audio->url,
+                ];
+            }catch (\Exception $ex) {
+                Log::error('Error: Not link ID YTB: '.$id);
+//                return response()->json(['error'=>'Not link ID YTB: '.$id]);
+            }
+        }
+        return response()->json($dataArr);
+
+    }
+
+    public function createYTB(Request $request){
+        $data = $request->getInfo;
+        foreach ($data as $key=>$value){
+//            dd($value,$key);
+            if(isset($value['download'])){
+
+                $source = $value['url_audio'];
+
+                header('Content-Type: application/octet-stream');
+                header("Content-Transfer-Encoding: Binary");
+                header("Content-disposition: attachment; filename=\"" . basename($source) . "\"");
+                readfile($source);
+
+//                $curlSession = curl_init();
+//                curl_setopt($curlSession, CURLOPT_URL, $value['url_audio']);
+//                curl_setopt($curlSession, CURLOPT_BINARYTRANSFER, true);
+//                curl_setopt($curlSession, CURLOPT_RETURNTRANSFER, true);
+//
+//                $jsonData = json_decode(curl_exec($curlSession));
+//                dd($jsonData);
+//                curl_close($curlSession);
+//                dd($value['url_audio']);
+            }
+            Musics::updateOrCreate(
+                [
+                    'music_id_ytb' =>$key
+                ],
+                [
+                    'music_url_link_audio_ytb'=>$value['url_audio'],
+                    'music_view_count'=>$value['viewCount'],
+                    'music_thumbnail_link'=>  "https://i.ytimg.com/vi_webp/$key/mqdefault.webp"
+                ]
+            );
+        }
+        return response()->json(['success'=>'Thành công.']);
+    }
+
+
+
+
+
+    function asyncDownload($dir, $url, $contentlength = 0){
+        $start = 0;
+        $request = [];
+        file_put_contents($dir,'');
+        for($i = 0; $i<= ($contentlength/$this::PART_LENGTH); $i++){
+            $end = ($start + $this::PART_LENGTH > $contentlength) ? $contentlength : $start + $this::PART_LENGTH;
+            $request [] = new Request('GET',$url, ($contentlength == 0 ) ? [] : ['range'=> "bytes={$start}-{$end}"] );
+            dd(123);
+            $start = $start + $this::PART_LENGTH+1;
+
+        }
+        $partlength = $this::PART_LENGTH;
+        $pool = new Pool($this->client, $request,
+            [
+                'concurrency' =>'100',
+                'fulfilled' => function(Response $response, $index) use ($partlength,$dir){
+                    file_put_contents($dir, substr_replace(file_get_contents($dir),$response->getBody(),$index*($partlength + 1),0));
+                }
+
+            ]
+        );
+        $pool->promise()->wait();
+
+    }
+
+    function download($streamURL, $name, $contentLength)
+    {
+
+        $maxRead = 1 * 1024 * 1024; // 1MB
+
+        $fh = fopen($streamURL, 'r');
+
+        header('Content-Type: application/octet-stream');
+        header('Content-Length: ' . $contentLength);
+        header('Content-Disposition: attachment; filename="' . basename($name) . '"');
+
+        while (!feof($fh)) {
+            print fread($fh, $maxRead);
+            ob_flush();
+        }
+
+        exit;
+    }
+
+
+
 }

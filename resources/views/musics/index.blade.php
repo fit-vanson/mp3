@@ -1,5 +1,8 @@
 @extends('layouts.master')
-
+<?php
+$page_title = $header['title'];
+$button = $header['button'];
+?>
 @section('title') {{$page_title}}  @endsection
 
 @section('css')
@@ -39,17 +42,17 @@
                         <form method="post" action="{{route('musics.create')}}" enctype="multipart/form-data"
                               class="dropzone" id="form{{preg_replace('/\s+/','',$page_title)}}">
                             @csrf
-{{--                            <div class="form-group mb-0">--}}
-{{--                                <label class="control-label">Tags Select</label>--}}
-{{--                                <select class="select2 form-control select2-multiple" id="select_tags"--}}
-{{--                                        name="select_tags[]" multiple="multiple"--}}
-{{--                                        data-placeholder="Choose ...">--}}
-{{--                                    @foreach($tags as $tag)--}}
-{{--                                        <option value="{{$tag->id}}">{{$tag->tag_name}}</option>--}}
-{{--                                    @endforeach--}}
-{{--                                </select>--}}
+                            <div class="form-group mb-0">
+                                <label class="control-label">Tags Select</label>
+                                <select class="select2 form-control select2-multiple" id="select_tags"
+                                        name="select_tags[]" multiple="multiple"
+                                        data-placeholder="Choose ...">
+                                    @foreach($tags as $tag)
+                                        <option value="{{$tag->id}}">{{$tag->tag_name}}</option>
+                                    @endforeach
+                                </select>
 
-{{--                            </div>--}}
+                            </div>
                             <div class="fallback">
                                 <input name="file" type="file" multiple="multiple">
                             </div>
@@ -60,70 +63,70 @@
         </div>
     </div>
 
-    <!--  Modal content for the above example -->
-    <div class="modal fade" id="modal{{preg_replace('/\s+/','',$page_title)}}" tabindex="-1" role="dialog"
-         aria-labelledby="myLargeModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title mt-0" id="{{preg_replace('/\s+/','',$page_title)}}ModalLabel"></h5>
-                    <button type="button" class="close" data-dismiss="modal"
-                            aria-hidden="true">×</button>
-                </div>
-                <div class="card-body">
-                    <form id="form{{preg_replace('/\s+/','',$page_title)}}EditMusic">
-                        <input type="hidden" name="id" id="id">
+{{--    <!--  Modal content for the above example -->--}}
+{{--    <div class="modal fade" id="modal{{preg_replace('/\s+/','',$page_title)}}" tabindex="-1" role="dialog"--}}
+{{--         aria-labelledby="myLargeModalLabel" aria-hidden="true">--}}
+{{--        <div class="modal-dialog modal-lg">--}}
+{{--            <div class="modal-content">--}}
+{{--                <div class="modal-header">--}}
+{{--                    <h5 class="modal-title mt-0" id="{{preg_replace('/\s+/','',$page_title)}}ModalLabel"></h5>--}}
+{{--                    <button type="button" class="close" data-dismiss="modal"--}}
+{{--                            aria-hidden="true">×</button>--}}
+{{--                </div>--}}
+{{--                <div class="card-body">--}}
+{{--                    <form id="form{{preg_replace('/\s+/','',$page_title)}}EditMusic">--}}
+{{--                        <input type="hidden" name="id" id="id">--}}
 
-                        <div class="form-group">
-                            <label>Name</label>
-                            <input type="text" class="form-control" id="music_name" name="music_name" >
-                        </div>
+{{--                        <div class="form-group">--}}
+{{--                            <label>Name</label>--}}
+{{--                            <input type="text" class="form-control" id="music_name" name="music_name" >--}}
+{{--                        </div>--}}
 
-                        <div class="form-group">
-                            <label>Link Url Image</label>
-                            <input type="text" class="form-control" id="music_url_image" name="music_url_image" >
-                        </div>
+{{--                        <div class="form-group">--}}
+{{--                            <label>Link Url Image</label>--}}
+{{--                            <input type="text" class="form-control" id="music_url_image" name="music_url_image" >--}}
+{{--                        </div>--}}
 
-                        <div class="form-group">
-                            <label>Link 1</label>
-                            <input type="text" class="form-control" id="music_link_1" name="music_link_1" >
-                        </div>
+{{--                        <div class="form-group">--}}
+{{--                            <label>Link 1</label>--}}
+{{--                            <input type="text" class="form-control" id="music_link_1" name="music_link_1" >--}}
+{{--                        </div>--}}
 
-                        <div class="form-group">
-                            <label>Link 2</label>
-                            <input type="text" class="form-control" id="music_link_2" name="music_link_2" >
-                        </div>
+{{--                        <div class="form-group">--}}
+{{--                            <label>Link 2</label>--}}
+{{--                            <input type="text" class="form-control" id="music_link_2" name="music_link_2" >--}}
+{{--                        </div>--}}
 
-                        <div class="form-group">
-                            <label>ID YouTuBe</label>
-                            <input type="text" class="form-control" id="music_id_ytb" name="music_id_ytb" >
-                        </div>
+{{--                        <div class="form-group">--}}
+{{--                            <label>ID YouTuBe</label>--}}
+{{--                            <input type="text" class="form-control" id="music_id_ytb" name="music_id_ytb" >--}}
+{{--                        </div>--}}
 
-                        <div class="form-group">
-                            <label class="control-label">Tags Select</label>
-                            <select class="select2 form-control select2-multiple" id="select_tags_edit"
-                                    name="select_tags[]" multiple="multiple"
-                                    data-placeholder="Choose ..." style="width: 100%">
-                                @foreach($tags as $tag)
-                                    <option value="{{$tag->id}}">{{$tag->tag_name}}</option>
-                                @endforeach
-                            </select>
-                        </div>
+{{--                        <div class="form-group">--}}
+{{--                            <label class="control-label">Tags Select</label>--}}
+{{--                            <select class="select2 form-control select2-multiple" id="select_tags_edit"--}}
+{{--                                    name="select_tags[]" multiple="multiple"--}}
+{{--                                    data-placeholder="Choose ..." style="width: 100%">--}}
+{{--                                @foreach($tags as $tag)--}}
+{{--                                    <option value="{{$tag->id}}">{{$tag->tag_name}}</option>--}}
+{{--                                @endforeach--}}
+{{--                            </select>--}}
+{{--                        </div>--}}
 
 
 
-                        <div class="form-group mb-0">
-                            <div>
-                                <button type="submit" id="saveBtn{{preg_replace('/\s+/','',$page_title)}}" class="btn btn-primary waves-effect waves-light mr-1">
-                                    Submit
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
+{{--                        <div class="form-group mb-0">--}}
+{{--                            <div>--}}
+{{--                                <button type="submit" id="saveBtn{{preg_replace('/\s+/','',$page_title)}}" class="btn btn-primary waves-effect waves-light mr-1">--}}
+{{--                                    Submit--}}
+{{--                                </button>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                    </form>--}}
+{{--                </div>--}}
+{{--            </div><!-- /.modal-content -->--}}
+{{--        </div><!-- /.modal-dialog -->--}}
+{{--    </div><!-- /.modal -->--}}
 
     <!--  Modal content for the above example -->
     <div class="modal fade" id="modal{{preg_replace('/\s+/','',$page_title)}}update_multiple" tabindex="-1" role="dialog"
@@ -157,130 +160,51 @@
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
 
-{{--    <div class="row align-items-center" style="padding-bottom: 10px">--}}
-{{--        <div class="col-sm-12">--}}
-{{--            <div class="float-right" >--}}
-{{--                <a href="{{route('wallpapers.index')}}" class="btn btn-outline-primary waves-effect waves-light" type="button">--}}
-{{--                    <i class="ti-list"></i>--}}
-{{--                </a>--}}
-{{--                <a href="{{route('wallpapers.index')}}?view=grid" class="btn btn-outline-primary waves-effect waves-light" type="button">--}}
-{{--                    <i class="ti-layout-grid2"></i>--}}
-{{--                </a>--}}
 
-{{--            </div>--}}
-{{--        </div>--}}
-{{--    </div>--}}
+    <!-- Create from YTB-->
 
-
-
-
-    <div class="load_ajax">
-        @if(isset($data))
-
-            <div class="infinite-scroll">
-                <div class="row">
-                    @foreach($data as $item)
-                        <div class="col-md-6 col-lg-6 col-xl-2">
-                            <!-- Simple card -->
-                            <div class="card" id="card_image_{{$item->id}}">
-                                <a class="image-popup-no-margins" href="{{url('/storage/wallpapers').'/'.$item->wallpaper_image}}">
-                                    <img class="img-fluid" alt="{{$item->wallpaper_name}}" src="{{url('/storage/wallpapers/thumbnails').'/'.$item->wallpaper_image}}">
-                                </a>
-
-                                <div class="card-body">
-
-                                    <span class="card-title" style="font-size: larger; font-weight: bold">{{$item->wallpaper_name}}</span>
-                                    @if($item->wallpaper_status == 1)
-                                        <i class="fas fa-check-circle" style="color: green"></i>
-                                    @elseif($item->wallpaper_status == 0)
-                                        <i class="fas fa-times-circle" style="color: red"></i>
-                                    @endif
-
-                                    <a href="javascript:void(0)" onclick="deleteWallpaper('{{$item->id}}')" class="btn btn-danger float-right"><i class="ti-trash"></i></a>
-
-                                    <p>
-                                        <?php
-                                        $tags = [];
-                                        foreach ($item->tags as $tag){
-                                        ?>
-                                        <span class="badge badge-pill badge-success">{{$tag->tag_name}}</span>
-                                        <?php
-                                        }
-                                        ?>
-                                    </p>
-
-
-
-
-
-                                </div>
-                            </div>
-
-                        </div><!-- end col -->
-                    @endforeach
-                    <?php
-                        $search = null;
-                        if (isset($_GET['search'])){
-                            $search = $_GET['search'];
-                        }
-                    ?>
-                    {{$data->appends(['view' => 'grid','search'=>$search])->links()}}
+    <div class="modal fade" id="modalCreateYTB" tabindex="-1" role="dialog"
+         aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title mt-0" id="CreateYTBLabel">Thêm mới từ YTB</h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-hidden="true">×</button>
                 </div>
-            </div>
+                <div class="card-body">
+                    <form id="formCreateYTB" name="formCreateYTB" class="form-horizontal" enctype="multipart/form-data">
+                        <div class="mb-4">
+                            <div class="inner form-group">
+                                <label>LIST ID YouTuBe  <code>( | , )</code></label>
+                                <div class="inner mb-3 row">
+                                    <div class="col-md-10 col-8">
+                                        <input type="text"  id="music_id_ytb" name="music_id_ytb" class="inner form-control" placeholder="Enter ID YTB ..." value="mwP7B0NPkFU,hmb3GDpPQ2Y|aTOAbIdmq_c">
+                                    </div>
+                                    <div class="col-md-2 col-4">
+                                        <a href="javascript:void(0)" class="btn btn-primary btn-block inner getInfoID">Get Info</a>
+                                    </div>
 
-
-        @else
-
-
-
-
-            <div class="row">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="table-rep-plugin">
-                                <div class="table-responsive mb-1">
-                                    <form id="checkForm" name="checkForm">
-                                        <table id="table{{preg_replace('/\s+/','',$page_title)}}"
-                                               class="table table-bordered dt-responsive"
-                                               style="width: 100%;">
-                                            <thead>
-                                            <tr>
-                                                <th style="width: 5%">
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input class="custom-control-input" type="checkbox" name="select_all" value="1" id="select_all" />
-                                                        <label class="custom-control-label" for="select_all"></label>
-                                                    </div>
-                                                </th>
-                                                <th style="width: 15%">File</th>
-                                                <th style="width: 15%">Name</th>
-                                                <th style="width: 10%">Link</th>
-                                                <th style="width: 10%">View Count</th>
-                                                <th style="width: 10%">Like Count</th>
-                                                <th style="width: 10%">
-                                                    <div class="custom-control custom-checkbox">
-                                                    <input class="custom-control-input" type="checkbox" name="null_tag" value="0"  id="null_tag" />
-                                                    <label class="custom-control-label" for="null_tag">Tags</label>
-                                                    </div>
-                                                </th>
-                                                <th style="width: 10%">Action</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-
-                                            </tbody>
-                                        </table>
-                                    </form>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                        <div id="tablist_result_getInfo" style="display: none">
+                            <ul class="nav nav-tabs" role="tablist" id="nav_tabs_result_getInfo"></ul>
+                            <div class="tab-content" id="tab_content_result_getInfo"></div>
+                        </div>
 
-                </div> <!-- end col -->
-            </div> <!-- end row -->
-
-        @endif
-    </div>
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button type="submit" class="btn btn-primary" id="saveBtn">Save changes</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+{{--                        <div class="form-group mb-0">--}}
+{{--                            <button type="submit" id="saveBtnCreateYTB" class="btn btn-primary waves-effect waves-light mr-1">Submit</button>--}}
+{{--                        </div>--}}
+                    </form>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 
 @endsection
 
@@ -347,7 +271,6 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-
             var dtTable = $('#table{{preg_replace('/\s+/','',$page_title)}}').DataTable({
                 processing: true,
                 serverSide: true,
@@ -423,18 +346,6 @@
                         }
                     },
                 ],
-                // buttons: [
-                //     {
-                //         text: 'Delete',
-                //         className: 'deleteSelect btn btn-danger',
-                //         attr: {
-                //             'type': 'submit'
-                //         },
-                //         init: function (api, node, config) {
-                //             $(node).removeClass('btn-secondary');
-                //         }
-                //     }
-                // ],
                 order: [2, 'desc'],
                 fnDrawCallback: function () {
                     $('.image-popup-no-margins').magnificPopup({
@@ -537,35 +448,155 @@
                 });
             });
 
+            $(document).on('click', '#createYTB', function () {
+                $('#modalCreateYTB').modal('show');
+                // $('#saveBtnCreateYTB').hide();
+                // $('#formCreateYTB').trigger("reset");
+                $('#tab_content_result_getInfo').html('');
+                $('#nav_tabs_result_getInfo').html('');
+            });
+            $(document).on('click', '.getInfoID', function () {
+                const _id = $("#music_id_ytb").val();
+                $.ajax({
+                    type: "get",
+                    url: "{{ asset("admin/musics/get-info-ytb") }}/" + _id,
+                    success: function (data) {
+                        $('#tablist_result_getInfo').show();
+                        $('#saveBtnCreateYTB').show();
+                        let nav_tabs_result_getInfo = '';
+                        let tab_content_result_getInfo = '';
+                        let active = '';
+                        $.each(data, function (k,v){
 
-            $(document).on('click', '.update_multiple{{preg_replace('/\s+/','',$page_title)}}', function () {
+                            active = k==0 ? 'active':'';
+
+                            nav_tabs_result_getInfo +=
+                                '<li class="nav-item" role="presentation">'+
+                                '<a class="nav-link '+active+'"  data-toggle="tab"  href="#tab_'+v.videoId+'" role="tab" id="nav_'+v.videoId+'">'+
+                                '<span class="d-none d-sm-block">'+v.videoId+'</span>'+
+                                '</a>'+
+                                '</li>';
+
+                            tab_content_result_getInfo +=
+                                '<div class="tab-pane p-3 '+active+'" id="tab_' + v.videoId + '" role="tabpanel">'+
+                                    '<div  class="row">' +
+
+
+
+
+                                        '<div class="form-group col-lg-4">' +
+                                        '<h6 class="mt-0 header-title">Download</h6>'+
+                                        // '<label for="name">Download </label>' +
+                                        '<input type="checkbox" id="getInfo_'+v.videoId+'_download" name="getInfo['+v.videoId+'][download]" switch="none" >'+
+                                        '<label for="getInfo_'+v.videoId+'_download" data-on-label="Yes" data-off-label="No"></label>'+
+                                        '</div>'+
+
+
+                                        '<input id="getInfo_'+v.videoId+'_url_audio" name="getInfo['+v.videoId+'][url_audio]" hidden value="'+v.url_audio+'">' +
+
+                                        '<div class="form-group col-lg-4">' +
+                                        '<label for="name">Time </label>' +
+                                        '<input type="text" id="getInfo_'+v.videoId+'_lengthSeconds" name="getInfo['+v.videoId+'][lengthSeconds]" disabled class="form-control" value="'+v.lengthSeconds+'" >' +
+                                        '</div>'+
+                                        '<div class="form-group col-lg-4">' +
+                                        '<label for="name">View Count</label>' +
+                                        '<input type="text" id="getInfo_'+v.videoId+'_viewCount" name="getInfo['+v.videoId+'][viewCount]" class="form-control"   value="'+v.viewCount+'">' +
+                                        '</div>'+
+
+                                        '<div class="form-group col-lg-6">' +
+                                        '<img id="getInfo_'+v.videoId+'_image" name="getInfo['+v.videoId+'][image]" width="300px" src="'+v.image+'">' +
+                                        '</div>'+
+
+                                        '<div class="form-group col-lg-6">' +
+                                        '<label for="name">Title</label>' +
+                                        '<textarea type="text" id="getInfo_'+v.videoId+'_title" rows="6" name="getInfo['+v.videoId+'][title]" class="form-control" >' +v.title +'</textarea>'+
+                                        '</div>'+
+
+                                        '<div class="form-group col-lg-6">' +
+                                        '<label for="name">Keywords</label>' +
+                                        '<textarea  id="getInfo_'+v.videoId+'_keywords" name="getInfo['+v.videoId+'][keywords]" class="form-control"  rows="8">' +v.keywords +'</textarea>'+
+                                        '</div>'+
+
+                                        '<div class="form-group col-lg-6">' +
+                                        '<label for="name">Description</label>' +
+                                        '<textarea  id="getInfo_'+v.videoId+'_description" name="getInfo['+v.videoId+'][description]" class="form-control"  rows="8">' +v.shortDescription +'</textarea>'+
+                                        '</div>'+
+                                    '</div>'+
+                                '</div>';
+                            // $('#tab_content_result_getInfo').append(html);
+                        })
+                        $('#nav_tabs_result_getInfo').html(nav_tabs_result_getInfo);
+                        $('#tab_content_result_getInfo').html(tab_content_result_getInfo);
+                    },
+                    error: function (data) {
+                        console.log('Error:', data);
+                    }
+                });
+
+
+                console.log(_id);
+            });
+
+            $(document).on('click', '#update_multipleMusics', function () {
                 $('#modal{{preg_replace('/\s+/','',$page_title)}}update_multiple').modal('show');
+            });
+
+            $('#formCreateYTB').on('submit', function (event) {
+
+                event.preventDefault();
+                const formData = $('#formCreateYTB').serialize();
+                console.log(formData)
+                // var formData = new FormData($("formCreateYTB")[0]);
+
+                $.ajax({
+                    data: formData,
+                    url: '{{route('musics.createYTB')}}',
+                    type: "POST",
+                    dataType: 'json',
+                    // processData: false,
+                    // contentType: false,
+                    success: function (data) {
+                        if (data.success) {
+                            $('#form{{preg_replace('/\s+/','',$page_title)}}update_multiple').trigger("reset");
+                            toastr['success'](data.success, 'Success!');
+                            $('#modal{{preg_replace('/\s+/','',$page_title)}}update_multiple').modal('hide');
+                            dtTable.draw();
+                        }
+                        if (data.errors) {
+                            for (var count = 0; count < data.errors.length; count++) {
+                                toastr['error'](data.errors[count], 'Error!',);
+                            }
+                        }
+                    }
+                });
+
+
             });
 
             $('#form{{preg_replace('/\s+/','',$page_title)}}update_multiple').on('submit', function (event) {
                 event.preventDefault();
                 var formData = new FormData($("#form{{preg_replace('/\s+/','',$page_title)}}update_multiple")[0]);
-                    $.ajax({
-                        data: formData,
-                        url: '{{route('musics.update_multiple')}}',
-                        type: "POST",
-                        dataType: 'json',
-                        processData: false,
-                        contentType: false,
-                        success: function (data) {
-                            if (data.success) {
-                                $('#form{{preg_replace('/\s+/','',$page_title)}}update_multiple').trigger("reset");
-                                toastr['success'](data.success, 'Success!');
-                                $('#modal{{preg_replace('/\s+/','',$page_title)}}update_multiple').modal('hide');
-                                dtTable.draw();
-                            }
-                            if (data.errors) {
-                                for (var count = 0; count < data.errors.length; count++) {
-                                    toastr['error'](data.errors[count], 'Error!',);
-                                }
+                $.ajax({
+                    data: formData,
+                    url: '{{route('musics.update_multiple')}}',
+                    type: "POST",
+                    dataType: 'json',
+                    processData: false,
+                    contentType: false,
+                    success: function (data) {
+                        if (data.success) {
+                            $('#form{{preg_replace('/\s+/','',$page_title)}}update_multiple').trigger("reset");
+                            toastr['success'](data.success, 'Success!');
+                            $('#modal{{preg_replace('/\s+/','',$page_title)}}update_multiple').modal('hide');
+                            dtTable.draw();
+                        }
+                        if (data.errors) {
+                            for (var count = 0; count < data.errors.length; count++) {
+                                toastr['error'](data.errors[count], 'Error!',);
                             }
                         }
-                    });
+                    }
+                });
 
 
             });
@@ -705,51 +736,9 @@
                     },
                 });
 
-            $('ul.pagination').hide();
-            $('.infinite-scroll').jscroll({
-                autoTrigger: true,
-                padding: 0,
-                nextSelector: '.pagination li.active + li a',
-                contentSelector: 'div.infinite-scroll',
-                callback: function() {
-                    $('ul.pagination').remove();
-                    $('.image-popup-no-margins').magnificPopup({
-                        type: 'image',
-                        closeOnContentClick: true,
-                        closeBtnInside: false,
-                        fixedContentPos: true,
-                        mainClass: 'mfp-no-margins mfp-with-zoom',
-                        // class to remove default margin from left and right side
-                        image: {
-                            verticalFit: true
-                        },
-                        zoom: {
-                            enabled: true,
-                            duration: 300 // don't foget to change the duration also in CSS
-
-                        }
-                    });
-                }
-            });
 
 
         })
-
-        function deleteWallpaper(id){
-            var $target = $('#card_image_'+id);
-
-            $.ajax({
-                type: "get",
-                url: "{{ asset("admin/wallpapers/delete") }}/" + id,
-                success: function (data) {
-                    $target.hide('slow', function(){ $target.remove(); });
-                    toastr['success'](data.success, 'Success!');
-                },
-                error: function (data) {
-                    console.log('Error:', data);
-                }
-            });
-        }
     </script>
 
 

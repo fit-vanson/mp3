@@ -156,6 +156,9 @@ Route::group(['prefix'=>env('ADMIN_PAGE','admin')], function (){
 //        Route::post('/postImport', [RingtonesController::class, 'postImport'])->name('wallpapers.postImport');
 //        Route::get('/importToDb', [RingtonesController::class, 'importToDb'])->name('wallpapers.importToDb');
         Route::get('/compare', [MusicsController::class, 'compare'])->name('musics.compare');
+
+        Route::get('/get-info-ytb/{id}',[MusicsController::class,'getInfoYTB'])->name('musics.getInfoYTB');
+        Route::post('/createYTB}',[MusicsController::class,'createYTB'])->name('musics.createYTB');
     });
 
     Route::group(['prefix'=>'sites'], function (){
