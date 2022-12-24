@@ -124,10 +124,6 @@ class ApiV4Controller extends Controller
             'app_update_link' =>  "https://google.com",
             'app_update_cancel_option' =>  true,
             'song_download' =>  true,
-
-
-
-
             'ads_list' => $ads,
             'page_list' => $page_list,
             'success' => '1');
