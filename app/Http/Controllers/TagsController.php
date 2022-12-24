@@ -16,12 +16,24 @@ class TagsController extends Controller
     }
     public function index()
     {
-        $page_title =  'Tags';
-        $action = ['create'];
-        return view('tags.index',[
-            'page_title' => $page_title,
-            'action' => $action
-        ]);
+
+
+        $header = [
+            'title' => 'Tags',
+            'button' => [
+//                'Create'            => ['id'=>'createMusics','style'=>'primary'],
+                'Create'        => ['id'=>'createtags','style'=>'success'],
+                'Update Multiple'   => ['id'=>'update_multipleMusics','style'=>'warning'],
+            ]
+
+        ];
+        return view('tags.index')->with(compact('header'));
+//        $page_title =  'Tags';
+//        $action = ['create'];
+//        return view('tags.index',[
+//            'page_title' => $page_title,
+//            'action' => $action
+//        ]);
     }
     public function getIndex(Request $request)
     {
@@ -96,7 +108,7 @@ class TagsController extends Controller
             return response()->json(['errors'=> $error->errors()->all()]);
         }
         $tags = preg_split("/[;,.|]+/", $request->tag_name);
-        foreach ($tags as $tag){
+        foreach (array_filter($tags) as $tag){
             Tags::updateOrCreate(
                 ['tag_name'=> trim($tag)]
             );

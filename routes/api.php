@@ -6,8 +6,7 @@ use App\Http\Controllers\Api\v1\MusicsController;
 use App\Http\Controllers\Api\v1\RingtonesController;
 
 
-
-
+use App\Http\Controllers\Api\v4\ApiV4Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 
@@ -80,6 +79,16 @@ Route::group([
     Route::get('/search', [\App\Http\Controllers\Api\v3\ApiV3Controler::class, 'getSearch']);
 
 });
+
+Route::group([
+    "prefix" => "v4"
+], function() {
+    Route::post('/app_details', [ApiV4Controller::class, 'app_details']);
+    Route::get('/home', [ApiV4Controller::class, 'home']);
+
+
+});
+
 
 
 

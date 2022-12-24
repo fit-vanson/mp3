@@ -506,7 +506,7 @@ class MusicsController extends Controller
 //                curl_close($curlSession);
 //                dd($value['url_audio']);
             }
-            Musics::updateOrCreate(
+            $music = Musics::updateOrCreate(
                 [
                     'music_id_ytb' =>$key
                 ],
@@ -516,6 +516,7 @@ class MusicsController extends Controller
                     'music_thumbnail_link'=>  "https://i.ytimg.com/vi_webp/$key/mqdefault.webp"
                 ]
             );
+            $music->tags()->sync($request->select_tags);
         }
         return response()->json(['success'=>'Thành công.']);
     }

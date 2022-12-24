@@ -28,14 +28,26 @@ class SitesController extends Controller
     }
     public function index()
     {
-        $page_title =  'Sites';
-        $action = ['create'];
+
+        $header = [
+            'title' => 'Sites',
+            'button' => [
+//                'Create'            => ['id'=>'createMusics','style'=>'primary'],
+                'Create'        => ['id'=>'createSites','style'=>'success'],
+//                'Update Multiple'   => ['id'=>'update_multipleMusics','style'=>'warning'],
+            ]
+
+        ];
+        return view('sites.index')->with(compact('header'));
+
+//        $page_title =  'Sites';
+//        $action = ['create'];
 //        $categories = Categories::get();
-        return view('sites.index',[
-            'page_title' => $page_title,
-            'action' => $action,
-//            'categories' => $categories
-        ]);
+//        return view('sites.index',[
+//            'page_title' => $page_title,
+//            'action' => $action,
+////            'categories' => $categories
+//        ]);
     }
     public function getIndex(Request $request)
     {
@@ -772,67 +784,75 @@ class SitesController extends Controller
     public function getAIO($id){
         try {
             $site = Sites::find($id);
+
+
             $url = "https://aio.vietmmo.net/api/project-aio/".$site->site_project;
             $dataGet = $this->CURL($url);
 
-
-
             if($dataGet['msg'] == 'success'){
                 $data = $dataGet['data'];
+//                dd($data);
                 $ads_type = $site->site_type_ads;
+
+                $key = false;
                 switch ($ads_type) {
-                    case 0:
-                        $ads_get = json_decode($data['Chplay_ads'],true);
-                        $package = $data['Chplay_package'];
-                        break;
                     case 1:
-                        $ads_get = json_decode($data['Oppo_ads'],true);
-                        $package = $data['Oppo_package'];
+                        $key = array_search('CHPLAY', array_column($data['markets'], 'market_name'));
                         break;
-                    case 2:
-                        $ads_get = json_decode($data['Vivo_ads'],true);
-                        $package = $data['Vivo_package'];
+                    case 5:
+                        $key = array_search('OPPO', array_column($data['markets'], 'market_name'));
                         break;
-                    case 3:
-                        $ads_get = json_decode($data['Xiaomi_ads'],true);
-                        $package = $data['Xiaomi_package'];
+                    case 6:
+                        $key = array_search('VIVO', array_column($data['markets'], 'market_name'));
                         break;
                     case 4:
-                        $ads_get = json_decode($data['Huawei_ads'],true);
-                        $package = $data['Huawei_package'];
+                        $key = array_search('XIAOMI', array_column($data['markets'], 'market_name'));
+                        break;
+                    case 7:
+                        $key = array_search('HUAWEI', array_column($data['markets'], 'market_name'));
+                        break;
+                    case 8:
+                        $key = array_search('NASH', array_column($data['markets'], 'market_name'));
                         break;
                 }
-                $ads = [
-                    "ads_provider" => "ADMOB",
-                    "AdMob_Publisher_ID" => $ads_get['ads_id'],
-                    "AdMob_App_ID" => $ads_get['ads_id'],
-                    "AdMob_Banner_Ad_Unit_ID" => $ads_get['ads_banner'],
-                    "AdMob_Interstitial_Ad_Unit_ID" => $ads_get['ads_inter'],
-                    "AdMob_App_Reward_Ad_Unit_ID" => $ads_get['ads_reward'],
-                    "AdMob_Native_Ad_Unit_ID" => $ads_get['ads_native'],
-                    "AdMob_App_Open_Ad_Unit_ID" => $ads_get['ads_open'],
-                    "applovin_banner" => '',
-                    "applovin_interstitial" => '',
-                    "applovin_reward" => '',
-                    "ironsource_id" => '',
-                    "startapp_id" => $ads_get['ads_start'],
-                ];
+//                dd($data,$key);
 
-                $update = [
-                    'site_name' => $data['title_app'],
-                    'site_app_name' => $data['buildinfo_app_name_x'],
-                    'site_chplay_link' => $data['Chplay_buildinfo_link_app'],
-                    'site_oppo_link' => $data['Oppo_buildinfo_link_app'],
-                    'site_vivo_link' => $data['Vivo_buildinfo_link_app'],
-                    'site_xiaomi_link' => $data['Xiaomi_buildinfo_link_app'],
-                    'site_huawei_link' => $data['Huawei_buildinfo_link_app'],
-                    'site_logo_url' => 'https://aio.vietmmo.net/uploads/project/'.$site->site_project.'/'.$data['logo'],
-                    'site_package' => $package,
-                    'site_ads' => json_encode($ads)
-                ];
-                $site->update($update);
-                return response()->json(['success'=>'Get thành công']);
+                if($key || $key == 0){
+                    $market_get = $data['markets'][$key];
 
+                    $ads_get = json_decode($market_get['pivot']['ads'],true);
+                    $package = $market_get['pivot']['package'];
+                    $link = $market_get['pivot']['app_link'];
+                    $site_app_name = $market_get['pivot']['app_name_x'];
+
+                    $ads = [
+                        "ads_provider" => "ADMOB",
+                        "AdMob_Publisher_ID" => $ads_get['ads_id'],
+                        "AdMob_App_ID" => $ads_get['ads_id'],
+                        "AdMob_Banner_Ad_Unit_ID" => $ads_get['ads_banner'],
+                        "AdMob_Interstitial_Ad_Unit_ID" => $ads_get['ads_inter'],
+                        "AdMob_App_Reward_Ad_Unit_ID" => $ads_get['ads_reward'],
+                        "AdMob_Native_Ad_Unit_ID" => $ads_get['ads_native'],
+                        "AdMob_App_Open_Ad_Unit_ID" => $ads_get['ads_open'],
+                        "applovin_banner" => '',
+                        "applovin_interstitial" => '',
+                        "applovin_reward" => '',
+                        "ironsource_id" => '',
+                        "startapp_id" => $ads_get['ads_start'],
+                    ];
+                    $update = [
+                        'site_name' => $data['title_app'],
+                        'site_app_name' => $site_app_name,
+                        'site_link' => $link,
+                        'site_logo_url' => 'https://aio.vietmmo.net/storage/projects/'.$data['da']['ma_da'].'/'.$data['projectname'].'/'.$data['logo'],
+                        'site_package' => $package,
+                        'site_ads' => json_encode($ads)
+                    ];
+                    $site->update($update);
+                    return response()->json(['success'=>'Get thành công']);
+                }else{
+                    return response()->json(['error'=>'Kiểm tra Market trên AIO']);
+                }
             }else{
                 return response()->json(['error'=>'Get error']);
             }

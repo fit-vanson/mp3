@@ -1,5 +1,8 @@
 @extends('layouts.master')
-
+<?php
+$page_title = $header['title'];
+$button = $header['button'];
+?>
 @section('title') {{$page_title}}  @endsection
 
 @section('css')
@@ -230,7 +233,7 @@
 
 
 
-            $('.create{{preg_replace('/\s+/','',$page_title)}}').click(function () {
+            $('#create{{preg_replace('/\s+/','',$page_title)}}').click(function () {
                 $('#modal{{preg_replace('/\s+/','',$page_title)}}').modal('show');
                 $('#{{preg_replace('/\s+/','',$page_title)}}ModalLabel').html("Add {{$page_title}}");
                 $('#saveBtn{{preg_replace('/\s+/','',$page_title)}}').val("create");

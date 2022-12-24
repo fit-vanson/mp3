@@ -147,6 +147,8 @@ $button = $header['button'];
                         </div>
 
 
+
+
                         <div class="form-group mb-0">
                             <div>
                                 <button type="submit" id="saveBtn{{preg_replace('/\s+/','',$page_title)}}update_multiple" class="btn btn-success waves-effect waves-light mr-1">
@@ -187,7 +189,19 @@ $button = $header['button'];
 
                                 </div>
                             </div>
+
+                            <div class="inner form-group">
+                                <label >Tags Select</label>
+                                <select class="select2 form-control select2-multiple" id="select_tags" style="width: 100%"
+                                        name="select_tags[]" multiple="multiple"
+                                        data-placeholder="Choose ...">
+                                    @foreach($tags as $tag)
+                                        <option value="{{$tag->id}}">{{$tag->tag_name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
+
                         <div id="tablist_result_getInfo" style="display: none">
                             <ul class="nav nav-tabs" role="tablist" id="nav_tabs_result_getInfo"></ul>
                             <div class="tab-content" id="tab_content_result_getInfo"></div>
@@ -542,12 +556,9 @@ $button = $header['button'];
             });
 
             $('#formCreateYTB').on('submit', function (event) {
-
                 event.preventDefault();
                 const formData = $('#formCreateYTB').serialize();
-                console.log(formData)
                 // var formData = new FormData($("formCreateYTB")[0]);
-
                 $.ajax({
                     data: formData,
                     url: '{{route('musics.createYTB')}}',
@@ -556,10 +567,11 @@ $button = $header['button'];
                     // processData: false,
                     // contentType: false,
                     success: function (data) {
+                        console.log(data)
                         if (data.success) {
-                            $('#form{{preg_replace('/\s+/','',$page_title)}}update_multiple').trigger("reset");
+                            $('#formCreateYTB').trigger("reset");
                             toastr['success'](data.success, 'Success!');
-                            $('#modal{{preg_replace('/\s+/','',$page_title)}}update_multiple').modal('hide');
+                            $('#modalCreateYTB').modal('hide');
                             dtTable.draw();
                         }
                         if (data.errors) {

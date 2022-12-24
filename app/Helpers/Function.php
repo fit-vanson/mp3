@@ -1,6 +1,7 @@
 <?php
 
 use App\BlockIPs;
+use App\Sites;
 use Illuminate\Support\Facades\Log;
 use YouTube\YouTubeDownloader;
 
@@ -96,4 +97,142 @@ function getLinkUrl($id_ytb, $option=null)
     }
 
 }
+
+
+function getDomain(){
+    return $_SERVER['SERVER_NAME'];
+}
+
+function getSite(){
+    return Sites::where('site_web',getDomain())->firstorFail();
+}
+
+function load_categories($site){
+    return $site->load_categories;
+}
+
+function load_wallpapers_category($site){
+    return $site->load_wallpapers_category;
+}
+
+function getHome($site){
+    if (isset($_SERVER['HTTP_CLIENT_IP']))
+        $ipaddress = $_SERVER['HTTP_CLIENT_IP'];
+    else if(isset($_SERVER['HTTP_X_FORWARDED_FOR']))
+        $ipaddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
+    else if(isset($_SERVER['HTTP_X_FORWARDED']))
+        $ipaddress = $_SERVER['HTTP_X_FORWARDED'];
+    else if(isset($_SERVER['HTTP_FORWARDED_FOR']))
+        $ipaddress = $_SERVER['HTTP_FORWARDED_FOR'];
+    else if(isset($_SERVER['HTTP_FORWARDED']))
+        $ipaddress = $_SERVER['HTTP_FORWARDED'];
+    else if(isset($_SERVER['REMOTE_ADDR']))
+        $ipaddress = $_SERVER['REMOTE_ADDR'];
+    else if (isset($_SERVER["HTTP_CF_CONNECTING_IP"]))
+        $ipaddress= $_SERVER["HTTP_CF_CONNECTING_IP"];
+    else
+        $ipaddress = 'UNKNOWN';
+
+    $listIp = ListIP::where('ip_address',$ipaddress)->where('id_site',$site->id)->whereDate('created_at', Carbon::today())->first();
+
+    if(!$listIp){
+        ListIP::create([
+            'ip_address'=>$ipaddress,
+            'id_site' => $site->id,
+            'count' => 1
+        ]);
+    }else{
+        $listIp->update(['count' => $listIp->count +1]);
+    }
+    return true;
+
+}
+
+
+function get_categories($site)
+{
+    $data = false;
+    $isFake = checkBlockIp() ? 1 : 0;
+
+
+        switch (load_categories($site)){
+            case 0:
+                $data =
+                    $site
+                        ->categories()
+                        ->where('category_checked_ip', $isFake)
+                        ->inRandomOrder()
+                        ->withCount('music')
+                        ->having('music_count', '>', 0)
+                        ->get();
+                break;
+            case 1:
+                $data =
+                    $site
+                        ->categories()
+                        ->where('category_checked_ip',$isFake)
+                        ->orderBy('category_view_count','desc')
+                        ->withCount('music')
+                        ->having('music_count', '>', 0)
+                        ->get();
+                break;
+            case 2:
+                $data =
+                    $site
+                        ->categories()
+                        ->where('category_checked_ip', $isFake)
+                        ->orderBy('updated_at','desc')
+                        ->withCount('music')
+                        ->having('music_count', '>', 0)
+                        ->get();
+                break;
+            case 3:
+                $data =
+                    $site
+                        ->categories()
+                        ->where('category_checked_ip', $isFake)
+                        ->orderBy('category_order','asc')
+                        ->withCount('music')
+                        ->having('music_count', '>', 0)
+                        ->get();
+                break;
+            case 4:
+                $data =
+                    $site
+                        ->categories()
+                        ->where('category_checked_ip', $isFake)
+                        ->orderBy('category_name','asc')
+                        ->withCount('music')
+                        ->having('music_count', '>', 0)
+                        ->get();
+                break;
+        }
+
+
+
+    return $data;
+}
+
+function get_songs($site,$page_limit,$order){
+    $data = false;
+    $isFake = checkBlockIp() ? 1 : 0;
+    $data = \App\Musics
+        ::with(['categories' => function($query) use ($isFake, $site) {
+            $query
+                ->where('category_checked_ip', $isFake)
+                ->where('site_id', $site->id);
+        }])
+
+        ->whereHas('categories', function ($query) use ($isFake, $site) {
+            $query
+                ->where('category_checked_ip', $isFake)
+                ->where('site_id', $site->id);
+        })
+        ->distinct()
+        ->orderByDesc($order)
+        ->paginate($page_limit);
+    return $data;
+}
+
+
 
