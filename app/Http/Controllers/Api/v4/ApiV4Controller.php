@@ -68,13 +68,13 @@ class ApiV4Controller extends Controller
 
         $ads[] = [
             'ads_info' =>[
-                'publisher_id' => $site_ads['AdMob_Publisher_ID'],
-                'banner_on_off' => $status_ads,
-                'banner_id' => $site_ads['AdMob_Banner_Ad_Unit_ID'],
-                'interstitial_on_off' => $status_ads,
-                'native_on_off' => $status_ads,
-                'interstitial_id' => $site_ads['AdMob_Interstitial_Ad_Unit_ID'],
-                'native_id' => $site_ads['AdMob_Native_Ad_Unit_ID'],
+                'publisher_id' => @$site_ads['AdMob_Publisher_ID'],
+                'banner_on_off' => @$status_ads,
+                'banner_id' => @$site_ads['AdMob_Banner_Ad_Unit_ID'],
+                'interstitial_on_off' => @$status_ads,
+                'native_on_off' => @$status_ads,
+                'interstitial_id' => @$site_ads['AdMob_Interstitial_Ad_Unit_ID'],
+                'native_id' => @$site_ads['AdMob_Native_Ad_Unit_ID'],
                 'interstitial_clicks' => 5,
                 'native_position' => 5,
             ],
@@ -128,7 +128,7 @@ class ApiV4Controller extends Controller
 
     public function home(){
 
-//        $get_data= $this->checkSignSalt($_POST['data']);
+        $get_data= $this->checkSignSalt($_POST['data']);
 
         $site = getSite();
         $categories = get_categories($site);
