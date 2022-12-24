@@ -84,7 +84,7 @@ Route::group([
     "prefix" => "v4"
 ], function() {
     Route::post('/app_details', [ApiV4Controller::class, 'app_details']);
-    Route::get('/home', [ApiV4Controller::class, 'home']);
+    Route::post('/home', [ApiV4Controller::class, 'home']);
 
 
 });
