@@ -104,12 +104,26 @@ class ApiV4Controller extends Controller
             'app_package_name' => $app_package_name,
             'app_name' => $app_name,
 
+            "app_email"=> "info@viavilab.com",
             'app_logo' => $app_logo,
+            "app_company"=> "info@viavilab.com",
+            "app_website"=> "info@viavilab.com",
+            "app_contact"=> "info@viavilab.com",
+
+
             'facebook_link' => $facebook_link,
             'twitter_link' => $twitter_link,
             'instagram_link' => $instagram_link,
             'youtube_link' => $youtube_link,
             'google_play_link' => $google_play_link,
+            'apple_store_link' => $google_play_link,
+            'app_version' => "1.1.1",
+            'app_update_hide_show' => false,
+            'app_update_version_code' => "1.2",
+            'app_update_desc' => "Please update new app",
+            'app_update_link' =>  "https://google.com",
+            'app_update_cancel_option' =>  true,
+            'song_download' =>  true,
 
 
 
