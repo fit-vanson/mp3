@@ -162,7 +162,770 @@ class ApiV4Controller extends Controller
         $get_trending_songs = MusicResource::collection($trending_songs);
 
 
-        $home = '[
+        $data = '{
+  "ONLINE_MP3_APP": {
+    "slider": [
+      {
+        "slider_id": 6,
+        "slider_title": "New Releases Hindi",
+        "slider_info": "New Releases Hindi Songs 2022",
+        "songs_ids": "1,27,29,28,15,10,3,4,5,2",
+        "slider_image": "https://mp3app.viaviweb.in/upload/images/slider/New_Releases_Hindi.jpg"
+      },
+      {
+        "slider_id": 5,
+        "slider_title": "New Releases Punjabi",
+        "slider_info": "New Releases Punjabi",
+        "songs_ids": "2,27,28,18,16",
+        "slider_image": "https://mp3app.viaviweb.in/upload/images/slider/New_Releases_Panjabi.jpg"
+      },
+      {
+        "slider_id": 4,
+        "slider_title": "Slow Romantic Hindi",
+        "slider_info": "Slow Romantic Hindi Songs",
+        "songs_ids": "4,25,20,14,30",
+        "slider_image": "https://mp3app.viaviweb.in/upload/images/slider/Slow_Romantic_Hindi.jpg"
+      },
+      {
+        "slider_id": 3,
+        "slider_title": "Hindi Chartbusters",
+        "slider_info": "Hindi Chartbusters",
+        "songs_ids": "2,26,27,29,28,11",
+        "slider_image": "https://mp3app.viaviweb.in/upload/images/slider/charts_HindiChartbusters.jpg"
+      },
+      {
+        "slider_id": 2,
+        "slider_title": "Trending Today",
+        "slider_info": "Top Trending Song for Today",
+        "songs_ids": "1,4,5,8,19",
+        "slider_image": "https://mp3app.viaviweb.in/upload/images/slider/charts_TrendingToday.jpg"
+      },
+      {
+        "slider_id": 1,
+        "slider_title": "Romantic Top 40",
+        "slider_info": "Best Romantic Songs",
+        "songs_ids": "1,4,7,11,8,19",
+        "slider_image": "https://mp3app.viaviweb.in/upload/images/slider/charts_RomanticTop40.jpg"
+      }
+    ],
+    "recently_songs": [],
+    "trending_songs": [
+      {
+        "song_id": 29,
+        "song_title": "Yaara",
+        "song_image": "https://mp3app.viaviweb.in/upload/images/songs/Vikram-Vedha.jpg",
+        "song_info": "<p>Vikram Vedha &nbsp;by Armaan Malik</p>",
+        "song_lyrics": "",
+        "song_type": "local",
+        "song_url": "https://mp3app.viaviweb.in/upload/files/test1.mp3",
+        "views": "261",
+        "downloads": "30",
+        "total_rate": 0,
+        "favourite": false,
+        "artist_list": [
+          {
+            "artist_id": "3",
+            "artist_name": "Ammy Virk"
+          },
+          {
+            "artist_id": "14",
+            "artist_name": "Kumar Sanu"
+          },
+          {
+            "artist_id": "21",
+            "artist_name": "Sonu Nigam"
+          },
+          {
+            "artist_id": "18",
+            "artist_name": "Nimrat Khaira"
+          }
+        ]
+      },
+      {
+        "song_id": 28,
+        "song_title": "Bande",
+        "song_image": "https://mp3app.viaviweb.in/upload/images/songs/Vikram-Vedha.jpg",
+        "song_info": "<p>Vikram Vedha &nbsp;by Vishal-Sheykhar, Snigdhajit Bhowmik, Ananya Chakraborty</p>",
+        "song_lyrics": "<p>bande, kaalaa kya, safed kya, ki donon mein hai bhed kya<br />ye khwaah-makhaah nazar kee bhool hai<br />bande, bhale-bure mein farq kya, hai swarg kya, hai nark kya<br />ye paap-punya saba fizool hain</p>",
+        "song_type": "local",
+        "song_url": "https://mp3app.viaviweb.in/upload/files/test3.mp3",
+        "views": "183",
+        "downloads": "12",
+        "total_rate": 0,
+        "favourite": false,
+        "artist_list": [
+          {
+            "artist_id": "3",
+            "artist_name": "Ammy Virk"
+          },
+          {
+            "artist_id": "14",
+            "artist_name": "Kumar Sanu"
+          },
+          {
+            "artist_id": "21",
+            "artist_name": "Sonu Nigam"
+          },
+          {
+            "artist_id": "18",
+            "artist_name": "Nimrat Khaira"
+          },
+          {
+            "artist_id": "3",
+            "artist_name": "Ammy Virk"
+          },
+          {
+            "artist_id": "21",
+            "artist_name": "Sonu Nigam"
+          }
+        ]
+      },
+      {
+        "song_id": 26,
+        "song_title": "Thank God",
+        "song_image": "https://mp3app.viaviweb.in/upload/images/songs/Thank-God.jpg",
+        "song_info": "<p>Thank God &nbsp;by Rochak Kohli, Arijit Singh, Eklavya</p>",
+        "song_lyrics": "<p>Ye Pyari Subah Tumhari<br />Naye Naye Phool Layi Hai<br />Thank God<br />Khoye Khoye Panchi Raaton Ke<br />Kahin Se Ye Dhundh Layi Hai</p>",
+        "song_type": "local",
+        "song_url": "https://mp3app.viaviweb.in/upload/files/test3.mp3",
+        "views": "131",
+        "downloads": "9",
+        "total_rate": 0,
+        "favourite": false,
+        "artist_list": [
+          {
+            "artist_id": "3",
+            "artist_name": "Ammy Virk"
+          },
+          {
+            "artist_id": "14",
+            "artist_name": "Kumar Sanu"
+          },
+          {
+            "artist_id": "21",
+            "artist_name": "Sonu Nigam"
+          },
+          {
+            "artist_id": "18",
+            "artist_name": "Nimrat Khaira"
+          },
+          {
+            "artist_id": "3",
+            "artist_name": "Ammy Virk"
+          },
+          {
+            "artist_id": "21",
+            "artist_name": "Sonu Nigam"
+          },
+          {
+            "artist_id": "5",
+            "artist_name": "Arijit Singh"
+          },
+          {
+            "artist_id": "22",
+            "artist_name": "Honey Singh"
+          }
+        ]
+      },
+      {
+        "song_id": 30,
+        "song_title": "Oo Saahiba",
+        "song_image": "https://mp3app.viaviweb.in/upload/images/songs/Vikram-Vedha.jpg",
+        "song_info": "<p>Vikram Vedha &nbsp;by Vishal-Sheykhar, Sheykhar Ravjiani</p>",
+        "song_lyrics": "<p>सौदेबाज़ियाँ ये दिल की हैं मुश्किल भरी<br />सौदेबाज़ियाँ ये दिल की हैं मुश्किल भरी<br />भा गई मगर तेरी जादूगरी</p>",
+        "song_type": "local",
+        "song_url": "https://mp3app.viaviweb.in/upload/files/test3.mp3",
+        "views": "118",
+        "downloads": "7",
+        "total_rate": 4,
+        "favourite": false,
+        "artist_list": [
+          {
+            "artist_id": "3",
+            "artist_name": "Ammy Virk"
+          },
+          {
+            "artist_id": "14",
+            "artist_name": "Kumar Sanu"
+          },
+          {
+            "artist_id": "21",
+            "artist_name": "Sonu Nigam"
+          },
+          {
+            "artist_id": "18",
+            "artist_name": "Nimrat Khaira"
+          },
+          {
+            "artist_id": "3",
+            "artist_name": "Ammy Virk"
+          },
+          {
+            "artist_id": "21",
+            "artist_name": "Sonu Nigam"
+          },
+          {
+            "artist_id": "5",
+            "artist_name": "Arijit Singh"
+          },
+          {
+            "artist_id": "22",
+            "artist_name": "Honey Singh"
+          },
+          {
+            "artist_id": "19",
+            "artist_name": "Shreya Ghoshal"
+          },
+          {
+            "artist_id": "21",
+            "artist_name": "Sonu Nigam"
+          },
+          {
+            "artist_id": "17",
+            "artist_name": "Neha Kakkar"
+          },
+          {
+            "artist_id": "16",
+            "artist_name": "Miss Pooja"
+          }
+        ]
+      },
+      {
+        "song_id": 2,
+        "song_title": "Thumkeshwari",
+        "song_image": "https://mp3app.viaviweb.in/upload/images/songs/Bhediya.jpg",
+        "song_info": "<p>Bhediya &nbsp;by Sachin-Jigar, Rashmeet Kaur, Ash King, Divya Kumar</p>",
+        "song_lyrics": "<p>Curvy kamariyaa teri, haay re, meri jaan le gayi, oe</p>\r\n<p>Ban ke bijuriya giri, haay re, pareshaan kar gayi, oe</p>\r\n<p>Curvy kamariyaa teri, haay re, meri jaan le gayi, oe</p>\r\n<p>O-ri, gori, sun ri, sun ri, sun ri</p>",
+        "song_type": "server_url",
+        "song_url": "http://www.viaviweb.in/envato/cc/demo/mp3/file_example_MP3_5MG.mp3",
+        "views": "76",
+        "downloads": "3",
+        "total_rate": 3,
+        "favourite": false,
+        "artist_list": [
+          {
+            "artist_id": "3",
+            "artist_name": "Ammy Virk"
+          },
+          {
+            "artist_id": "14",
+            "artist_name": "Kumar Sanu"
+          },
+          {
+            "artist_id": "21",
+            "artist_name": "Sonu Nigam"
+          },
+          {
+            "artist_id": "18",
+            "artist_name": "Nimrat Khaira"
+          },
+          {
+            "artist_id": "3",
+            "artist_name": "Ammy Virk"
+          },
+          {
+            "artist_id": "21",
+            "artist_name": "Sonu Nigam"
+          },
+          {
+            "artist_id": "5",
+            "artist_name": "Arijit Singh"
+          },
+          {
+            "artist_id": "22",
+            "artist_name": "Honey Singh"
+          },
+          {
+            "artist_id": "19",
+            "artist_name": "Shreya Ghoshal"
+          },
+          {
+            "artist_id": "21",
+            "artist_name": "Sonu Nigam"
+          },
+          {
+            "artist_id": "17",
+            "artist_name": "Neha Kakkar"
+          },
+          {
+            "artist_id": "16",
+            "artist_name": "Miss Pooja"
+          },
+          {
+            "artist_id": "5",
+            "artist_name": "Arijit Singh"
+          },
+          {
+            "artist_id": "21",
+            "artist_name": "Sonu Nigam"
+          }
+        ]
+      },
+      {
+        "song_id": 1,
+        "song_title": "Apna Bana Le",
+        "song_image": "https://mp3app.viaviweb.in/upload/images/songs/Bhediya.jpg",
+        "song_info": "<p>Bhediya &nbsp;by Sachin-Jigar, Arijit Singh</p>",
+        "song_lyrics": "<p>Tu Mera Koyi Na<br />Hoke Bhi Kuchh Laage<br />Tu Mera Koyi Na<br />Hoke Bhi Kuchh Laage</p>",
+        "song_type": "local",
+        "song_url": "https://mp3app.viaviweb.in/upload/files/test1.mp3",
+        "views": "76",
+        "downloads": "7",
+        "total_rate": 4,
+        "favourite": false,
+        "artist_list": [
+          {
+            "artist_id": "3",
+            "artist_name": "Ammy Virk"
+          },
+          {
+            "artist_id": "14",
+            "artist_name": "Kumar Sanu"
+          },
+          {
+            "artist_id": "21",
+            "artist_name": "Sonu Nigam"
+          },
+          {
+            "artist_id": "18",
+            "artist_name": "Nimrat Khaira"
+          },
+          {
+            "artist_id": "3",
+            "artist_name": "Ammy Virk"
+          },
+          {
+            "artist_id": "21",
+            "artist_name": "Sonu Nigam"
+          },
+          {
+            "artist_id": "5",
+            "artist_name": "Arijit Singh"
+          },
+          {
+            "artist_id": "22",
+            "artist_name": "Honey Singh"
+          },
+          {
+            "artist_id": "19",
+            "artist_name": "Shreya Ghoshal"
+          },
+          {
+            "artist_id": "21",
+            "artist_name": "Sonu Nigam"
+          },
+          {
+            "artist_id": "17",
+            "artist_name": "Neha Kakkar"
+          },
+          {
+            "artist_id": "16",
+            "artist_name": "Miss Pooja"
+          },
+          {
+            "artist_id": "5",
+            "artist_name": "Arijit Singh"
+          },
+          {
+            "artist_id": "21",
+            "artist_name": "Sonu Nigam"
+          },
+          {
+            "artist_id": "5",
+            "artist_name": "Arijit Singh"
+          }
+        ]
+      },
+      {
+        "song_id": 25,
+        "song_title": "Dil De Diya",
+        "song_image": "https://mp3app.viaviweb.in/upload/images/songs/Thank-God.jpg",
+        "song_info": "<p>Thank God &nbsp;by Rochak Kohli, Anand Raaj Anand, Rashmi Virag, Sameer</p>",
+        "song_lyrics": "<p>rukh zindagi ne mod liya kaisa?<br />hamne sochaa nahin tha kabhi aisa<br />rukh zindagi ne mod liya kaisa?<br />hamne sochaa nahin tha kabhi aisa</p>",
+        "song_type": "local",
+        "song_url": "https://mp3app.viaviweb.in/upload/files/test1.mp3",
+        "views": "73",
+        "downloads": "2",
+        "total_rate": 0,
+        "favourite": false,
+        "artist_list": [
+          {
+            "artist_id": "3",
+            "artist_name": "Ammy Virk"
+          },
+          {
+            "artist_id": "14",
+            "artist_name": "Kumar Sanu"
+          },
+          {
+            "artist_id": "21",
+            "artist_name": "Sonu Nigam"
+          },
+          {
+            "artist_id": "18",
+            "artist_name": "Nimrat Khaira"
+          },
+          {
+            "artist_id": "3",
+            "artist_name": "Ammy Virk"
+          },
+          {
+            "artist_id": "21",
+            "artist_name": "Sonu Nigam"
+          },
+          {
+            "artist_id": "5",
+            "artist_name": "Arijit Singh"
+          },
+          {
+            "artist_id": "22",
+            "artist_name": "Honey Singh"
+          },
+          {
+            "artist_id": "19",
+            "artist_name": "Shreya Ghoshal"
+          },
+          {
+            "artist_id": "21",
+            "artist_name": "Sonu Nigam"
+          },
+          {
+            "artist_id": "17",
+            "artist_name": "Neha Kakkar"
+          },
+          {
+            "artist_id": "16",
+            "artist_name": "Miss Pooja"
+          },
+          {
+            "artist_id": "5",
+            "artist_name": "Arijit Singh"
+          },
+          {
+            "artist_id": "21",
+            "artist_name": "Sonu Nigam"
+          },
+          {
+            "artist_id": "5",
+            "artist_name": "Arijit Singh"
+          },
+          {
+            "artist_id": "11",
+            "artist_name": "Jassi Gill"
+          },
+          {
+            "artist_id": "10",
+            "artist_name": "Guru Randhawa"
+          }
+        ]
+      },
+      {
+        "song_id": 27,
+        "song_title": "Alcoholia",
+        "song_image": "https://mp3app.viaviweb.in/upload/images/songs/Vikram-Vedha.jpg",
+        "song_info": "<p>Vikram Vedha &nbsp;by Vishal-Sheykhar, Snigdhajit Bhowmik, Ananya Chakraborty</p>",
+        "song_lyrics": "",
+        "song_type": "local",
+        "song_url": "https://mp3app.viaviweb.in/upload/files/test2.mp3",
+        "views": "68",
+        "downloads": "4",
+        "total_rate": 0,
+        "favourite": false,
+        "artist_list": [
+          {
+            "artist_id": "3",
+            "artist_name": "Ammy Virk"
+          },
+          {
+            "artist_id": "14",
+            "artist_name": "Kumar Sanu"
+          },
+          {
+            "artist_id": "21",
+            "artist_name": "Sonu Nigam"
+          },
+          {
+            "artist_id": "18",
+            "artist_name": "Nimrat Khaira"
+          },
+          {
+            "artist_id": "3",
+            "artist_name": "Ammy Virk"
+          },
+          {
+            "artist_id": "21",
+            "artist_name": "Sonu Nigam"
+          },
+          {
+            "artist_id": "5",
+            "artist_name": "Arijit Singh"
+          },
+          {
+            "artist_id": "22",
+            "artist_name": "Honey Singh"
+          },
+          {
+            "artist_id": "19",
+            "artist_name": "Shreya Ghoshal"
+          },
+          {
+            "artist_id": "21",
+            "artist_name": "Sonu Nigam"
+          },
+          {
+            "artist_id": "17",
+            "artist_name": "Neha Kakkar"
+          },
+          {
+            "artist_id": "16",
+            "artist_name": "Miss Pooja"
+          },
+          {
+            "artist_id": "5",
+            "artist_name": "Arijit Singh"
+          },
+          {
+            "artist_id": "21",
+            "artist_name": "Sonu Nigam"
+          },
+          {
+            "artist_id": "5",
+            "artist_name": "Arijit Singh"
+          },
+          {
+            "artist_id": "11",
+            "artist_name": "Jassi Gill"
+          },
+          {
+            "artist_id": "10",
+            "artist_name": "Guru Randhawa"
+          },
+          {
+            "artist_id": "8",
+            "artist_name": "Diljit Dosanjh"
+          },
+          {
+            "artist_id": "22",
+            "artist_name": "Honey Singh"
+          },
+          {
+            "artist_id": "10",
+            "artist_name": "Guru Randhawa"
+          }
+        ]
+      },
+      {
+        "song_id": 4,
+        "song_title": "Kesariya",
+        "song_image": "https://mp3app.viaviweb.in/upload/images/songs/Brahmastra.jpg",
+        "song_info": "<p>Brahmastra (Original Motion Picture Soundtrack) &nbsp;by Pritam, Arijit Singh, Amitabh Bhattacharya</p>",
+        "song_lyrics": "<p>mujko itana bataae koyi<br />kaise tujhse dil naa lagaae koyi?</p>",
+        "song_type": "local",
+        "song_url": "https://mp3app.viaviweb.in/upload/files/test2.mp3",
+        "views": "63",
+        "downloads": "5",
+        "total_rate": 0,
+        "favourite": false,
+        "artist_list": [
+          {
+            "artist_id": "3",
+            "artist_name": "Ammy Virk"
+          },
+          {
+            "artist_id": "14",
+            "artist_name": "Kumar Sanu"
+          },
+          {
+            "artist_id": "21",
+            "artist_name": "Sonu Nigam"
+          },
+          {
+            "artist_id": "18",
+            "artist_name": "Nimrat Khaira"
+          },
+          {
+            "artist_id": "3",
+            "artist_name": "Ammy Virk"
+          },
+          {
+            "artist_id": "21",
+            "artist_name": "Sonu Nigam"
+          },
+          {
+            "artist_id": "5",
+            "artist_name": "Arijit Singh"
+          },
+          {
+            "artist_id": "22",
+            "artist_name": "Honey Singh"
+          },
+          {
+            "artist_id": "19",
+            "artist_name": "Shreya Ghoshal"
+          },
+          {
+            "artist_id": "21",
+            "artist_name": "Sonu Nigam"
+          },
+          {
+            "artist_id": "17",
+            "artist_name": "Neha Kakkar"
+          },
+          {
+            "artist_id": "16",
+            "artist_name": "Miss Pooja"
+          },
+          {
+            "artist_id": "5",
+            "artist_name": "Arijit Singh"
+          },
+          {
+            "artist_id": "21",
+            "artist_name": "Sonu Nigam"
+          },
+          {
+            "artist_id": "5",
+            "artist_name": "Arijit Singh"
+          },
+          {
+            "artist_id": "11",
+            "artist_name": "Jassi Gill"
+          },
+          {
+            "artist_id": "10",
+            "artist_name": "Guru Randhawa"
+          },
+          {
+            "artist_id": "8",
+            "artist_name": "Diljit Dosanjh"
+          },
+          {
+            "artist_id": "22",
+            "artist_name": "Honey Singh"
+          },
+          {
+            "artist_id": "10",
+            "artist_name": "Guru Randhawa"
+          },
+          {
+            "artist_id": "5",
+            "artist_name": "Arijit Singh"
+          }
+        ]
+      },
+      {
+        "song_id": 8,
+        "song_title": "Mahi Mera Dil",
+        "song_image": "https://mp3app.viaviweb.in/upload/images/songs/Dhokha-Round-D.jpg",
+        "song_info": "<p>Dhokha Round D Corner &nbsp;by Arijit Singh, Tulsi Kumar, Tanishk Bagchi, Kumaar</p>",
+        "song_lyrics": "<p>beparwah hai maahi mera<br />puchhe naa mera haal ve<br />kisi gal da vi jawaab naa deve<br />मेरे रोते रहे सवाल वे</p>",
+        "song_type": "local",
+        "song_url": "https://mp3app.viaviweb.in/upload/files/test3.mp3",
+        "views": "59",
+        "downloads": "6",
+        "total_rate": 5,
+        "favourite": false,
+        "artist_list": [
+          {
+            "artist_id": "3",
+            "artist_name": "Ammy Virk"
+          },
+          {
+            "artist_id": "14",
+            "artist_name": "Kumar Sanu"
+          },
+          {
+            "artist_id": "21",
+            "artist_name": "Sonu Nigam"
+          },
+          {
+            "artist_id": "18",
+            "artist_name": "Nimrat Khaira"
+          },
+          {
+            "artist_id": "3",
+            "artist_name": "Ammy Virk"
+          },
+          {
+            "artist_id": "21",
+            "artist_name": "Sonu Nigam"
+          },
+          {
+            "artist_id": "5",
+            "artist_name": "Arijit Singh"
+          },
+          {
+            "artist_id": "22",
+            "artist_name": "Honey Singh"
+          },
+          {
+            "artist_id": "19",
+            "artist_name": "Shreya Ghoshal"
+          },
+          {
+            "artist_id": "21",
+            "artist_name": "Sonu Nigam"
+          },
+          {
+            "artist_id": "17",
+            "artist_name": "Neha Kakkar"
+          },
+          {
+            "artist_id": "16",
+            "artist_name": "Miss Pooja"
+          },
+          {
+            "artist_id": "5",
+            "artist_name": "Arijit Singh"
+          },
+          {
+            "artist_id": "21",
+            "artist_name": "Sonu Nigam"
+          },
+          {
+            "artist_id": "5",
+            "artist_name": "Arijit Singh"
+          },
+          {
+            "artist_id": "11",
+            "artist_name": "Jassi Gill"
+          },
+          {
+            "artist_id": "10",
+            "artist_name": "Guru Randhawa"
+          },
+          {
+            "artist_id": "8",
+            "artist_name": "Diljit Dosanjh"
+          },
+          {
+            "artist_id": "22",
+            "artist_name": "Honey Singh"
+          },
+          {
+            "artist_id": "10",
+            "artist_name": "Guru Randhawa"
+          },
+          {
+            "artist_id": "5",
+            "artist_name": "Arijit Singh"
+          },
+          {
+            "artist_id": "5",
+            "artist_name": "Arijit Singh"
+          },
+          {
+            "artist_id": "19",
+            "artist_name": "Shreya Ghoshal"
+          },
+          {
+            "artist_id": "14",
+            "artist_name": "Kumar Sanu"
+          }
+        ]
+      }
+    ],
+    "home_sections": [
       {
         "home_id": 1,
         "home_title": "Popular Category",
@@ -450,22 +1213,19 @@ class ApiV4Controller extends Controller
           }
         ]
       }
-    ]';
+    ]
+  },
+  "status_code": 200
+}';
+
+        $json = json_decode($data);
+//        dd($json);
 
 
-//        dd(json_decode($home));
 
-
-
-        return response()->json([
-            'ONLINE_MP3_APP'=> [
-                'slider'=>$getMusicCategory,
-                'recently_songs'=>$getMusic,
-                'trending_songs'=>$get_trending_songs,
-                'home_sections'=>json_decode($home),
-                'status_code'=>200,
-                ]
-        ]);
+        return response()->json(
+            $json
+        );
 
 
     }
