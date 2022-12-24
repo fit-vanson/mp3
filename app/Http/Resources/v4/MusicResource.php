@@ -1,0 +1,34 @@
+<?php
+
+namespace App\Http\Resources\v4;
+
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class MusicResource extends JsonResource
+{
+    /**
+     * Transform the resource into an array.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
+     */
+    public function toArray($request)
+    {
+
+
+        return [
+            'song_id' => $this->id,
+            'song_title' => $this->title,
+            'slider_image' => $this->music_thumbnail_link ,
+            'song_info' => $this->song_info ,
+            'song_lyrics' => $this->song_lyrics ,
+            'song_type' => 'local' ,
+            'song_url' => $this->music_url_link_audio_ytb ,
+            'views' => $this->music_view_count ,
+            'downloads' => $this->music_view_count ,
+            'total_rate' => rand(3,5) ,
+            'favourite' => false ,
+            'artist_list' => [] ,
+        ];
+    }
+}
