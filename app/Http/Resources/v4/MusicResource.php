@@ -24,11 +24,11 @@ class MusicResource extends JsonResource
             'song_lyrics' => "33333333333333" ,
             'song_type' => 'local' ,
             'song_url' => $this->music_url_link_audio_ytb ,
-            'views' => $this->music_view_count ,
-            'downloads' => $this->music_view_count ,
+            'views' => "$this->music_view_count" ,
+            'downloads' => "$this->music_view_count" ,
             'total_rate' => rand(3,5) ,
-            'favourite' => false ,
-            'artist_list' => [] ,
+            'favourite' => "false" ,
+//            'artist_list' => [] ,
         ];
     }
 }
