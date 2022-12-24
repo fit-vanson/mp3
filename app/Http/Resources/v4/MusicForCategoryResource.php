@@ -19,9 +19,9 @@ class MusicForCategoryResource extends JsonResource
 
             return [
                 'slider_id' => $item->id,
-                'slider_title' => $item->title ,
-                'slider_info' => $item->slider_info ,
-                'songs_ids' => $item->id ,
+                'slider_title' => '333333333333' ,
+                'slider_info' => "33333333333333" ,
+                'songs_ids' => "1,27,29,28,15,10,3,4,5,2",
                 'slider_image' => $item->music_thumbnail_link ,
             ];
         }

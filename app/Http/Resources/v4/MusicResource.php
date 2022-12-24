@@ -18,10 +18,10 @@ class MusicResource extends JsonResource
 
         return [
             'song_id' => $this->id,
-            'song_title' => $this->title,
+            'song_title' => "slider_title",
             'slider_image' => $this->music_thumbnail_link ,
-            'song_info' => $this->song_info ,
-            'song_lyrics' => $this->song_lyrics ,
+            'song_info' => "11111111" ,
+            'song_lyrics' => "33333333333333" ,
             'song_type' => 'local' ,
             'song_url' => $this->music_url_link_audio_ytb ,
             'views' => $this->music_view_count ,
