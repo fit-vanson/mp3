@@ -583,7 +583,8 @@ class MusicsController extends Controller
                 'expire' => $expire
             ]);
         }
-        return $info->music_url_link_audio_ytb;
+        $link = $info->music_url_link_audio_ytb;
+        return redirect($link);
     }
 
     function parse_query($var)
