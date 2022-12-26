@@ -235,11 +235,14 @@ class ApiV4Controller extends Controller
         return response()->json($data);
     }
 
-    public function song_by_category(){
+    public function song_by_category($catID = null){
+
         $get_data= $this->checkSignSalt($_POST['data']);
-        $category_id = $get_data['category_id'];
+        $category_id = $catID ?? $get_data['category_id'];
+
         $site = getSite();
         $category = Categories::findOrFail($category_id);
+
 
 
         $data = get_category_details($site,$category,20);
@@ -254,6 +257,7 @@ class ApiV4Controller extends Controller
 
     public function home_slider_songs(){
         $get_data= $this->checkSignSalt($_POST['data']);
-        dd($get_data);
+        $category_id = $get_data['slider_id'];
+        return $this->song_by_category($category_id);
     }
 }

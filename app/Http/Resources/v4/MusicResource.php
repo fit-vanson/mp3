@@ -16,9 +16,6 @@ class MusicResource extends JsonResource
      */
     public function toArray($request)
     {
-
-        $faker = \Faker\Factory::create();
-
         return [
             'song_id' => $this->id,
             'song_title' =>base64_decode($this->music_title),
