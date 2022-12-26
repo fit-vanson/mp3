@@ -463,9 +463,12 @@ class MusicsController extends Controller
 
                 $info = $downloadOptions->getInfo();
 
-//                $audio = $downloadOptions->getSplitFormats()->audio->url;
+
+
+
                 $dataArr[] = [
                     'videoId' => trim($id),
+//                    'author' => $info->getAuthor(),
                     'title' => $info->getTitle(),
                     'viewCount' => $info->getViewCount(),
                     'keywords' => implode(",\n",@$info->getKeywords()),
@@ -496,15 +499,6 @@ class MusicsController extends Controller
                 header("Content-disposition: attachment; filename=\"" . basename($source) . "\"");
                 readfile($source);
 
-//                $curlSession = curl_init();
-//                curl_setopt($curlSession, CURLOPT_URL, $value['url_audio']);
-//                curl_setopt($curlSession, CURLOPT_BINARYTRANSFER, true);
-//                curl_setopt($curlSession, CURLOPT_RETURNTRANSFER, true);
-//
-//                $jsonData = json_decode(curl_exec($curlSession));
-//                dd($jsonData);
-//                curl_close($curlSession);
-//                dd($value['url_audio']);
             }
             $music = Musics::updateOrCreate(
                 [
@@ -513,6 +507,9 @@ class MusicsController extends Controller
                 [
                     'music_url_link_audio_ytb'=>$value['url_audio'],
                     'music_view_count'=>$value['viewCount'],
+                    'music_description'=>base64_encode($value['description']),
+                    'music_title'=>base64_encode($value['title']),
+                    'music_keywords'=>base64_encode($value['keywords']),
                     'music_thumbnail_link'=>  "https://i.ytimg.com/vi_webp/$key/mqdefault.webp"
                 ]
             );

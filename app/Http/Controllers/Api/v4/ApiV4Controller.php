@@ -150,11 +150,6 @@ class ApiV4Controller extends Controller
         $categories = get_categories($site);
         $getMusicCategory = MusicForCategoryResource::collection($categories);
         $getCategory = CategoryHomeResource::collection($categories);
-
-
-
-
-
         if(isset($get_data['songs_ids'])){
             $songs_ids= explode(',',$get_data['songs_ids']);
             $musics = Musics::whereIN('id',$songs_ids)->get();
@@ -255,5 +250,10 @@ class ApiV4Controller extends Controller
             "status_code"=> 200
         ];
         return response()->json($data);
+    }
+
+    public function home_slider_songs(){
+        $get_data= $this->checkSignSalt($_POST['data']);
+        dd($get_data);
     }
 }

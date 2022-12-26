@@ -14,13 +14,13 @@ class MusicForCategoryResource extends JsonResource
      */
     public function toArray($request)
     {
+
         $faker = \Faker\Factory::create();
         foreach ($this->music->random(1) as $item){
-
             return [
-                'slider_id' => $item->id,
-                'slider_title' => $faker->name ,
-                'slider_info' => $faker->company,
+                'slider_id' => $this->id,
+                'slider_title' => base64_decode($item->music_title) ,
+                'slider_info' => base64_decode($item->music_description) ,
                 'songs_ids' => "",
                 'slider_image' => $item->music_thumbnail_link ,
             ];
