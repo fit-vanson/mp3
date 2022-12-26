@@ -291,6 +291,16 @@ function update_song_view($id){
     }
     return $return;
 }
+function update_song_download($id){
+    $return = false;
+    $music = Musics::findorfail($id);
+    if ($music) {
+        $music->music_download_count = $music->music_download_count + 1;
+        $music->save();
+        $return = $music;
+    }
+    return $return;
+}
 
 
 
