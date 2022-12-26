@@ -180,7 +180,7 @@ class ApiV4Controller extends Controller
         $popular_songs = [
             'home_id' => 2,
             'home_title'=> 'Popular Songs',
-            'home_type'=> 'popular_songs',
+            'home_type'=> 'song',
             'home_content'=> $get_popular_songs,
         ];
         $home_sections = [
@@ -202,5 +202,10 @@ class ApiV4Controller extends Controller
         );
 
 
+    }
+
+    public function home_collections(){
+        $get_data= $this->checkSignSalt($_POST['data']);
+        dd($get_data);
     }
 }
