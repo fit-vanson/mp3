@@ -153,7 +153,7 @@ class ApiV4Controller extends Controller
             $songs_ids= explode(',',$get_data['songs_ids']);
             $musics = Musics::whereIN('id',$songs_ids)->get();
             foreach($musics as $music){
-                $recently_songs = new MusicResource($music);
+                $recently_songs[] = new MusicResource($music);
             }
         }
 
