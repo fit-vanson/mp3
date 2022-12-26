@@ -159,6 +159,7 @@ class ApiV4Controller extends Controller
 
 
 
+
         $trending_songs = get_songs($site,10,'music_view_count');
         $get_trending_songs = MusicResource::collection($trending_songs);
 
@@ -258,5 +259,9 @@ class ApiV4Controller extends Controller
         $get_data= $this->checkSignSalt($_POST['data']);
         $category_id = $get_data['slider_id'];
         return $this->song_by_category($category_id);
+    }
+
+    public function home_recently_songs(){
+
     }
 }
