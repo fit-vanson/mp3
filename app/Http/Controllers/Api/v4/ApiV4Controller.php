@@ -165,6 +165,9 @@ class ApiV4Controller extends Controller
         $trending_songs = get_songs($site,10,'music_view_count');
         $get_trending_songs = MusicResource::collection($trending_songs);
 
+        $popular_songs = get_songs($site,10,'music_like_count');
+        $get_popular_songs = MusicResource::collection($popular_songs);
+
         $home_sections = [];
 
         $category = [
@@ -191,6 +194,7 @@ class ApiV4Controller extends Controller
                 'slider' => $getMusicCategory,
                 'recently_songs' => [],
                 'trending_songs' => $get_trending_songs,
+                'popular_songs' => $get_popular_songs,
                 'home_sections' => $home_sections
             ],
             "status_code"=> 200,
