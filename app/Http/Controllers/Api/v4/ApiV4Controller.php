@@ -203,6 +203,19 @@ class ApiV4Controller extends Controller
 
     }
 
+    public function trending_songs(){
+
+        $get_data= $this->checkSignSalt($_POST['data']);
+        $site = getSite();
+        $trending_songs = get_songs($site,10,'music_view_count');
+        $getResource = MusicResource::collection($trending_songs);
+        $data = [
+            'ONLINE_MP3_APP' => $getResource,
+            "status_code"=> 200
+        ];
+        return response()->json($data);
+    }
+
     public function home_collections(){
         $get_data= $this->checkSignSalt($_POST['data']);
         $id = $get_data['id'];
