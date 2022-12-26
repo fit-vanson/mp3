@@ -143,9 +143,8 @@ class ApiV4Controller extends Controller
 
     public function home(){
 
-//        $get_data= $this->checkSignSalt($_POST['data']);
-
-
+        $get_data= $this->checkSignSalt($_POST['data']);
+        $recently_songs = [];
         $site = getSite();
         $categories = get_categories($site);
         $getMusicCategory = MusicForCategoryResource::collection($categories);
@@ -154,11 +153,11 @@ class ApiV4Controller extends Controller
             $songs_ids= explode(',',$get_data['songs_ids']);
             $musics = Musics::whereIN('id',$songs_ids)->get();
             foreach($musics as $music){
-                $getMusic = new MusicResource($music);
+                $recently_songs = new MusicResource($music);
             }
-        }else{
-            $getMusic = [];
         }
+
+
 
         $trending_songs = get_songs($site,10,'music_view_count');
         $get_trending_songs = MusicResource::collection($trending_songs);
@@ -187,7 +186,7 @@ class ApiV4Controller extends Controller
         $data = [
             'ONLINE_MP3_APP' => [
                 'slider' => $getMusicCategory,
-                'recently_songs' => [],
+                'recently_songs' => $recently_songs,
                 'trending_songs' => $get_trending_songs,
                 'popular_songs' => $get_popular_songs,
                 'home_sections' => $home_sections
