@@ -142,10 +142,11 @@ class ApiV4Controller extends Controller
     }
 
     public function home(){
-
         $get_data= $this->checkSignSalt($_POST['data']);
         $recently_songs = [];
         $site = getSite();
+        getHome($site);
+        getVisitors($get_data['androidId']);
         $categories = get_categories($site,3);
         $getMusicCategory = MusicForCategoryResource::collection($categories);
         $getCategory = CategoryHomeResource::collection($categories);
@@ -156,10 +157,6 @@ class ApiV4Controller extends Controller
                 $recently_songs[] = new MusicResource($music);
             }
         }
-
-
-
-
         $trending_songs = get_songs($site,10,'music_view_count');
         $get_trending_songs = MusicResource::collection($trending_songs);
 
@@ -331,6 +328,21 @@ class ApiV4Controller extends Controller
             "status_code"=> 200
         ];
 
+        return response()->json($data);
+    }
+
+
+    public function song_favourite(){
+        $site = getSite();
+        $get_data= $this->checkSignSalt($_POST['data']);
+        $androidId = $get_data['androidId'];
+        $musicId = $get_data['post_id'];
+        get_song_favourite($site,$androidId,$musicId);
+        $response[]=array("success"=>true,"msg"=>'Favourite successfully');
+        $data = [
+            'ONLINE_MP3_APP' => $response,
+            "status_code"=> 200
+        ];
         return response()->json($data);
     }
 }

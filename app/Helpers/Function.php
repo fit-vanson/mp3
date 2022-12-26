@@ -1,8 +1,12 @@
 <?php
 
 use App\BlockIPs;
+use App\ListIP;
 use App\Musics;
 use App\Sites;
+use App\VisitorFavorite;
+use App\Visitors;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use YouTube\YouTubeDownloader;
 
@@ -135,7 +139,6 @@ function getHome($site){
         $ipaddress = 'UNKNOWN';
 
     $listIp = ListIP::where('ip_address',$ipaddress)->where('id_site',$site->id)->whereDate('created_at', Carbon::today())->first();
-
     if(!$listIp){
         ListIP::create([
             'ip_address'=>$ipaddress,
@@ -144,6 +147,17 @@ function getHome($site){
         ]);
     }else{
         $listIp->update(['count' => $listIp->count +1]);
+    }
+    return true;
+
+}
+
+function getVisitors($device_id){
+    $visitor = Visitors::where('device_id', $device_id)->first();
+    if (!$visitor) {
+        Visitors::create([
+            'device_id' => $device_id
+        ]);
     }
     return true;
 
@@ -300,6 +314,30 @@ function update_song_download($id){
         $return = $music;
     }
     return $return;
+}
+
+function get_song_favourite($site,$androidId,$musicId){
+    $visitorFavorite = VisitorFavorite::where([
+        'music_id' => $musicId,
+        'visitor_id' => Visitors::where('device_id', $androidId)->value('id'),
+        'site_id' => Sites::find($site->id)->value('id'),
+    ])->first();
+
+    if ($visitorFavorite) {
+        return response()->json(['warning' => ['This Wallpaper has already in your List']], 200);
+    } else {
+        VisitorFavorite::create([
+            'music_id' => $musicId,
+            'visitor_id' => Visitors::where('device_id', $androidId)->value('id'),
+            'site_id' => Sites::find($site->id)->value('id'),
+        ])
+            ->first();
+        $music = Musics::where('id', $musicId)->first();
+        $music->increment('music_like_count');
+    }
+    return true;
+
+
 }
 
 
