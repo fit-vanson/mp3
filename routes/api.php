@@ -87,6 +87,7 @@ Route::group([
     Route::post('/home', [ApiV4Controller::class, 'home']);
     Route::post('/home_collections', [ApiV4Controller::class, 'home_collections']);
     Route::post('/trending_songs', [ApiV4Controller::class, 'trending_songs']);
+    Route::post('/song_by_category', [ApiV4Controller::class, 'song_by_category']);
 
 
 });

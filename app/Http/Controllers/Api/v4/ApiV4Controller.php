@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\v4;
 
+use App\Categories;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\v4\CategoryHomeResource;
 use App\Http\Resources\v4\CategoryResource;
@@ -221,9 +222,6 @@ class ApiV4Controller extends Controller
         $id = $get_data['id'];
         $site = getSite();
         $getResource = false;
-//        dd($get_data);
-
-
         switch ($id){
             case 'category':
                 $categories = get_categories($site);
@@ -240,7 +238,22 @@ class ApiV4Controller extends Controller
             "status_code"=> 200
         ];
         return response()->json($data);
+    }
 
-        dd($id);
+    public function song_by_category(){
+        $get_data= $this->checkSignSalt($_POST['data']);
+        $category_id = $get_data['category_id'];
+        $site = getSite();
+        $category = Categories::findOrFail($category_id);
+
+
+        $data = get_category_details($site,$category,20);
+        $getResource = MusicResource::collection($data);
+        $data = [
+            'ONLINE_MP3_APP' => $getResource,
+            'total_records'=>$data->total(),
+            "status_code"=> 200
+        ];
+        return response()->json($data);
     }
 }

@@ -213,6 +213,59 @@ function get_categories($site)
     return $data;
 }
 
+function get_category_details($site,$category,$page_limit){
+    $data = false;
+
+
+    switch (load_wallpapers_category($site)){
+        case 0:
+            $data = $category
+                ->music()
+                ->with(['categories' => function($query) {
+                    $query->where('site_id', getSite()->id);
+                }])
+                ->distinct()
+                ->inRandomOrder()
+                ->paginate($page_limit);
+            break;
+        case 1:
+            $data = $category
+                ->music()
+                ->with(['categories' => function($query) {
+                    $query->where('site_id', getSite()->id);
+                }])
+                ->distinct()
+                ->orderBy('music_like_count','desc')
+                ->paginate($page_limit);
+            break;
+        case 2:
+            $data = $category
+                ->music()
+                ->with(['categories' => function($query) {
+                    $query->where('site_id', getSite()->id);
+                }])
+                ->distinct()
+                ->orderBy('music_view_count','desc')
+                ->paginate($page_limit);
+            break;
+        case 3:
+            $data = $category
+                ->music()
+                ->with(['categories' => function($query) {
+                    $query->where('site_id', getSite()->id);
+                }])
+                ->distinct()
+                ->orderBy('updated_at','desc')
+                ->paginate($page_limit);
+            break;
+    }
+
+
+
+
+    return $data;
+}
+
 function get_songs($site,$page_limit,$order){
     $data = false;
     $isFake = checkBlockIp() ? 1 : 0;

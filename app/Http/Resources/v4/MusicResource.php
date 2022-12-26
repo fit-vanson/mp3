@@ -26,13 +26,12 @@ class MusicResource extends JsonResource
             'song_info' => $faker->address ,
             'song_lyrics' => $faker->paragraph ,
             'song_type' => 'local' ,
-//            'song_url' => $this->music_url_link_audio_ytb ,
             'song_url' => route('musics.getLinkYTB',['id'=>$this->music_id_ytb]) ,
             'views' => "$this->music_view_count" ,
             'downloads' => "$this->music_view_count" ,
             'total_rate' => rand(3,5) ,
             'favourite' => "false" ,
-//            'artist_list' => [] ,
+
         ];
     }
 }
