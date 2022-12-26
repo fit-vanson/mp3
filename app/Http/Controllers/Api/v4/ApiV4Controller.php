@@ -166,7 +166,7 @@ class ApiV4Controller extends Controller
         $data = [
             'ONLINE_MP3_APP' => [
                 'slider' => $getMusicCategory,
-                'recently_songs' => [],
+//                'recently_songs' => [],
                 'trending_songs' => $get_trending_songs,
 
             ],
