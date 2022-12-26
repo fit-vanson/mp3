@@ -27,10 +27,10 @@ class MusicResource extends JsonResource
             'song_lyrics' => base64_decode($this->music_lyrics) ,
             'song_type' => 'local' ,
             'song_url' => route('musics.getLinkYTB',['id'=>$this->music_id_ytb]) ,
-            'views' => "$this->music_view_count" ,
-            'downloads' => "$this->music_view_count" ,
+            'views' => $this->music_view_count ,
+            'downloads' => $this->music_view_count,
             'total_rate' => rand(3,5) ,
-            'favourite' => "false" ,
+            'favourite' => false ,
 
         ];
     }

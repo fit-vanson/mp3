@@ -20,7 +20,7 @@ class MusicForCategoryResource extends JsonResource
             return [
                 'slider_id' => $this->id,
                 'slider_title' => base64_decode($item->music_title) ,
-                'slider_info' => base64_decode($item->music_description) ,
+                'slider_info' => substr(base64_decode($item->music_description),0,30) ,
                 'songs_ids' => "",
                 'slider_image' => $item->music_thumbnail_link ,
             ];
