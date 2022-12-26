@@ -140,7 +140,7 @@ class ApiV4Controller extends Controller
 
     public function home(){
 
-        $get_data= $this->checkSignSalt($_POST['data']);
+//        $get_data= $this->checkSignSalt($_POST['data']);
 
         $site = getSite();
         $categories = get_categories($site);
