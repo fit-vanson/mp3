@@ -22,7 +22,7 @@ class MusicResource extends JsonResource
         return [
             'song_id' => $this->id,
             'song_title' => $faker->name,
-            'slider_image' => $this->music_thumbnail_link ,
+            'song_image' => $this->music_thumbnail_link ,
             'song_info' => $faker->address ,
             'song_lyrics' => $faker->paragraph ,
             'song_type' => 'local' ,
