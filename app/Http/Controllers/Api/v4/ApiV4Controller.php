@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\v4;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\v4\CategoryResource;
 use App\Http\Resources\v4\MusicForCategoryResource;
 use App\Http\Resources\v4\MusicResource;
 use App\Musics;
@@ -145,30 +146,43 @@ class ApiV4Controller extends Controller
         $site = getSite();
         $categories = get_categories($site);
         $getMusicCategory = MusicForCategoryResource::collection($categories);
+        $getCategory = CategoryResource::collection($categories);
+
+
+
+
 
         if(isset($get_data['songs_ids'])){
             $songs_ids= explode(',',$get_data['songs_ids']);
             $musics = Musics::whereIN('id',$songs_ids)->get();
             foreach($musics as $music){
-
                 $getMusic = new MusicResource($music);
             }
         }else{
             $getMusic = [];
         }
 
-//        dd(1);
         $trending_songs = get_songs($site,10,'music_view_count');
         $get_trending_songs = MusicResource::collection($trending_songs);
+
+
+
+
+
 
 
 
         $data = [
             'ONLINE_MP3_APP' => [
                 'slider' => $getMusicCategory,
-//                'recently_songs' => [],
+                'recently_songs' => [],
                 'trending_songs' => $get_trending_songs,
-
+                'home_sections' =>[
+                    'home_id'=> 1,
+                    'home_title'=> 'Category',
+                    'home_type'=> 'category',
+                    'home_content'=> $getCategory,
+                ]
             ],
             "status_code"=> 200,
         ];
