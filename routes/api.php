@@ -92,6 +92,7 @@ Route::group([
     Route::post('/home_recently_songs', [ApiV4Controller::class, 'home_recently_songs']);
     Route::post('/category', [ApiV4Controller::class, 'category']);
     Route::post('/latest_songs', [ApiV4Controller::class, 'latest_songs']);
+    Route::post('/song_view', [ApiV4Controller::class, 'song_view']);
 
 
 });

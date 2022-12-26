@@ -1,6 +1,7 @@
 <?php
 
 use App\BlockIPs;
+use App\Musics;
 use App\Sites;
 use Illuminate\Support\Facades\Log;
 use YouTube\YouTubeDownloader;
@@ -278,6 +279,17 @@ function get_songs($site,$page_limit,$order){
         ->orderByDesc($order)
         ->paginate($page_limit);
     return $data;
+}
+
+function update_song_view($id){
+    $return = false;
+    $music = Musics::findorfail($id);
+    if ($music) {
+        $music->music_view_count = $music->music_view_count + 1;
+        $music->save();
+        $return = $music;
+    }
+    return $return;
 }
 
 
