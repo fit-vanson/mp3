@@ -187,19 +187,6 @@ class ApiV4Controller extends Controller
             $category,$popular_songs
         ];
 
-        dd($home_sections);
-
-
-
-
-
-
-
-
-
-
-
-
         $data = [
             'ONLINE_MP3_APP' => [
                 'slider' => $getMusicCategory,
