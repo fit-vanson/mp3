@@ -146,7 +146,7 @@ class ApiV4Controller extends Controller
         $get_data= $this->checkSignSalt($_POST['data']);
         $recently_songs = [];
         $site = getSite();
-        $categories = get_categories($site);
+        $categories = get_categories($site,3);
         $getMusicCategory = MusicForCategoryResource::collection($categories);
         $getCategory = CategoryHomeResource::collection($categories);
         if(isset($get_data['songs_ids'])){
@@ -219,7 +219,7 @@ class ApiV4Controller extends Controller
         $getResource = false;
         switch ($id){
             case 'category':
-                $categories = get_categories($site);
+                $categories = get_categories($site,5);
                 $getResource = CategoryResource::collection($categories);
                 break;
             case 'popular_songs':
@@ -278,7 +278,7 @@ class ApiV4Controller extends Controller
     public function category(){
         $get_data= $this->checkSignSalt($_POST['data']);
         $site = getSite();
-        $categories = get_categories($site);
+        $categories = get_categories($site,10);
         $getResource = CategoryResource::collection($categories);
         $data = [
             'ONLINE_MP3_APP' => $getResource,

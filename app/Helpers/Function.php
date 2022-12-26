@@ -149,7 +149,7 @@ function getHome($site){
 }
 
 
-function get_categories($site)
+function get_categories($site,$page_limit)
 {
     $data = false;
     $isFake = checkBlockIp() ? 1 : 0;
@@ -164,7 +164,7 @@ function get_categories($site)
                         ->inRandomOrder()
                         ->withCount('music')
                         ->having('music_count', '>', 0)
-                        ->get();
+                        ->paginate($page_limit);
                 break;
             case 1:
                 $data =
@@ -174,7 +174,7 @@ function get_categories($site)
                         ->orderBy('category_view_count','desc')
                         ->withCount('music')
                         ->having('music_count', '>', 0)
-                        ->get();
+                        ->paginate($page_limit);
                 break;
             case 2:
                 $data =
@@ -184,7 +184,7 @@ function get_categories($site)
                         ->orderBy('updated_at','desc')
                         ->withCount('music')
                         ->having('music_count', '>', 0)
-                        ->get();
+                        ->paginate($page_limit);
                 break;
             case 3:
                 $data =
@@ -194,7 +194,7 @@ function get_categories($site)
                         ->orderBy('category_order','asc')
                         ->withCount('music')
                         ->having('music_count', '>', 0)
-                        ->get();
+                        ->paginate($page_limit);
                 break;
             case 4:
                 $data =
@@ -204,12 +204,9 @@ function get_categories($site)
                         ->orderBy('category_name','asc')
                         ->withCount('music')
                         ->having('music_count', '>', 0)
-                        ->get();
+                        ->paginate($page_limit);
                 break;
         }
-
-
-
     return $data;
 }
 
@@ -259,10 +256,6 @@ function get_category_details($site,$category,$page_limit){
                 ->paginate($page_limit);
             break;
     }
-
-
-
-
     return $data;
 }
 
