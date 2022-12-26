@@ -262,6 +262,16 @@ class ApiV4Controller extends Controller
     }
 
     public function home_recently_songs(){
-
+        $get_data= $this->checkSignSalt($_POST['data']);
+        $songs_ids= explode(',',$get_data['songs_ids']);
+        $musics = Musics::whereIN('id',$songs_ids)->get();
+        foreach($musics as $music){
+            $recently_songs[] = new MusicResource($music);
+        }
+        $data = [
+            'ONLINE_MP3_APP' => $recently_songs,
+            "status_code"=> 200
+        ];
+        return response()->json($data);
     }
 }
