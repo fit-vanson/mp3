@@ -510,7 +510,8 @@ class MusicsController extends Controller
                     'music_description'=>base64_encode($value['description']),
                     'music_title'=>base64_encode($value['title']),
                     'music_keywords'=>base64_encode($value['keywords']),
-                    'music_thumbnail_link'=>  "https://i.ytimg.com/vi_webp/$key/mqdefault.webp"
+                    'music_thumbnail_link'=>  "https://i.ytimg.com/vi_webp/$key/mqdefault.webp",
+                    'expire' => time(),
                 ]
             );
             $music->tags()->sync($request->select_tags);
