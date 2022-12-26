@@ -274,4 +274,31 @@ class ApiV4Controller extends Controller
         ];
         return response()->json($data);
     }
+
+    public function category(){
+        $get_data= $this->checkSignSalt($_POST['data']);
+        $site = getSite();
+        $categories = get_categories($site);
+        $getResource = CategoryResource::collection($categories);
+        $data = [
+            'ONLINE_MP3_APP' => $getResource,
+            "total_records"=> $categories->count(),
+            "status_code"=> 200
+        ];
+        return response()->json($data);
+    }
+
+    public function latest_songs(){
+        $get_data= $this->checkSignSalt($_POST['data']);
+        $site = getSite();
+        $latest_songs = get_songs($site,10,'id');
+        $getResource = MusicResource::collection($latest_songs);
+        $data = [
+            'ONLINE_MP3_APP' => $getResource,
+            "total_records"=> $latest_songs->total(),
+            "status_code"=> 200
+        ];
+        return response()->json($data);
+
+    }
 }
