@@ -93,6 +93,7 @@ Route::group([
     Route::post('/category', [ApiV4Controller::class, 'category']);
     Route::post('/latest_songs', [ApiV4Controller::class, 'latest_songs']);
     Route::post('/song_view', [ApiV4Controller::class, 'song_view']);
+    Route::post('/song_download', [ApiV4Controller::class, 'song_download']);
 
 
 });
