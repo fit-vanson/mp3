@@ -51,6 +51,7 @@ Route::get('/link',function (){
 
 Route::get('/stream/{id}',[MusicsController::class,'streamID'])->name('musics.stream');
 Route::get('/getLinkUrl/{id}',[MusicsController::class,'getLinkUrl'])->name('musics.getLinkUrl');
+Route::get('/getLinkYTB/{id}',[MusicsController::class,'getLinkYTB'])->name('musics.getLinkYTB');
 
 Route::get('/phpinfo',function (){
     echo phpinfo();

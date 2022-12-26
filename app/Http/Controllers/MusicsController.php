@@ -29,7 +29,7 @@ class MusicsController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth')->except('streamID','getLinkUrl');
+        $this->middleware('auth')->except('streamID','getLinkUrl','getLinkYTB');
     }
 //    public function index()
 //    {
@@ -567,6 +567,43 @@ class MusicsController extends Controller
         }
 
         exit;
+    }
+
+    public function getLinkYTB($id){
+        $info = Musics::where('music_id_ytb',$id)->firstOrFail();
+        if($info->expire < time()){
+            $youtube = new YouTubeDownloader();
+            $downloadOptions = $youtube->getDownloadLinks("https://www.youtube.com/watch?v=" . trim($id));
+
+            $music_url_link_audio_ytb = $downloadOptions->getSplitFormats()->audio->url;
+            $expire = $this->parse_query($music_url_link_audio_ytb)['expire'];
+
+            $info->update([
+                'music_url_link_audio_ytb'=>$music_url_link_audio_ytb,
+                'expire' => $expire
+            ]);
+        }
+        return $info->music_url_link_audio_ytb;
+    }
+
+    function parse_query($var)
+    {
+        /**
+         *  Use this function to parse out the query array element from
+         *  the output of parse_url().
+         */
+        $var  = parse_url($var, PHP_URL_QUERY);
+        $var  = html_entity_decode($var);
+        $var  = explode('&', $var);
+        $arr  = array();
+
+        foreach($var as $val)
+        {
+            $x          = explode('=', $val);
+            $arr[$x[0]] = $x[1];
+        }
+        unset($val, $x, $var);
+        return $arr;
     }
 
 
