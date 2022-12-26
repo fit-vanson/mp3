@@ -171,14 +171,14 @@ class ApiV4Controller extends Controller
 
 
         $category = [
-            'home_id' => 1,
+            'home_id' => 'category',
             'home_title'=> 'Category',
             'home_type'=> 'category',
             'home_content'=> $getCategory,
         ];
 
         $popular_songs = [
-            'home_id' => 2,
+            'home_id' => 'popular_songs',
             'home_title'=> 'Popular Songs',
             'home_type'=> 'song',
             'home_content'=> $get_popular_songs,
@@ -206,6 +206,7 @@ class ApiV4Controller extends Controller
 
     public function home_collections(){
         $get_data= $this->checkSignSalt($_POST['data']);
-        dd($get_data);
+        $id = $get_data['id'];
+        dd($id);
     }
 }
