@@ -141,7 +141,7 @@ class ApiV4Controller extends Controller
 
     public function home(){
 
-        $get_data= $this->checkSignSalt($_POST['data']);
+//        $get_data= $this->checkSignSalt($_POST['data']);
 
         $site = getSite();
         $categories = get_categories($site);
@@ -165,6 +165,20 @@ class ApiV4Controller extends Controller
         $trending_songs = get_songs($site,10,'music_view_count');
         $get_trending_songs = MusicResource::collection($trending_songs);
 
+        $home_sections = [];
+
+        $category = [
+          'home_id' => 1,
+            'home_title'=> 'Category',
+            'home_type'=> 'category',
+            'home_content'=> $getCategory,
+        ];
+        $home_sections[] = $category;
+
+
+
+
+
 
 
 
@@ -177,12 +191,7 @@ class ApiV4Controller extends Controller
                 'slider' => $getMusicCategory,
                 'recently_songs' => [],
                 'trending_songs' => $get_trending_songs,
-                'home_sections' =>[
-                    'home_id'=> 1,
-                    'home_title'=> 'Category',
-                    'home_type'=> 'category',
-                    'home_content'=> $getCategory,
-                ]
+                'home_sections' => $home_sections
             ],
             "status_code"=> 200,
         ];
