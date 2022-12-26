@@ -85,6 +85,7 @@ Route::group([
 ], function() {
     Route::post('/app_details', [ApiV4Controller::class, 'app_details']);
     Route::post('/home', [ApiV4Controller::class, 'home']);
+    Route::post('/home_collections', [ApiV4Controller::class, 'home_collections']);
 
 
 });

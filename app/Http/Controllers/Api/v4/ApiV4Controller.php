@@ -141,7 +141,8 @@ class ApiV4Controller extends Controller
 
     public function home(){
 
-//        $get_data= $this->checkSignSalt($_POST['data']);
+        $get_data= $this->checkSignSalt($_POST['data']);
+
 
         $site = getSite();
         $categories = get_categories($site);
@@ -168,15 +169,25 @@ class ApiV4Controller extends Controller
         $popular_songs = get_songs($site,10,'music_like_count');
         $get_popular_songs = MusicResource::collection($popular_songs);
 
-        $home_sections = [];
 
         $category = [
-          'home_id' => 1,
+            'home_id' => 1,
             'home_title'=> 'Category',
             'home_type'=> 'category',
             'home_content'=> $getCategory,
         ];
-        $home_sections[] = $category;
+
+        $popular_songs = [
+            'home_id' => 2,
+            'home_title'=> 'Popular Songs',
+            'home_type'=> 'popular_songs',
+            'home_content'=> $get_popular_songs,
+        ];
+        $home_sections = [
+            $category,$popular_songs
+        ];
+
+        dd($home_sections);
 
 
 
