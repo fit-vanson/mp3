@@ -216,6 +216,10 @@ class ApiV4Controller extends Controller
                 $categories = get_categories($site);
                 $getResource = CategoryResource::collection($categories);
                 break;
+            case 'popular_songs':
+                $popular_songs = get_songs($site,10,'music_like_count');
+                $getResource = MusicResource::collection($popular_songs);
+                break;
 
         }
         $data = [
