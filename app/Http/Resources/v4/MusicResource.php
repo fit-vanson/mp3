@@ -26,7 +26,7 @@ class MusicResource extends JsonResource
             'song_type' => 'local' ,
             'song_url' => route('musics.getLinkYTB',['id'=>$this->music_id_ytb]) ,
             'views' => $this->music_view_count ,
-            'downloads' => $this->music_view_count,
+            'downloads' => $this->music_download_count,
             'total_rate' => rand(3,5) ,
             'favourite' => $this->fav != null ? $this->fav : false ,
 
