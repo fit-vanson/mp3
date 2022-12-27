@@ -360,8 +360,7 @@ class ApiV4Controller extends Controller
         $get_data= $this->checkSignSalt($_POST['data']);
         $androidId = $get_data['androidId'];
         $musicId = $get_data['post_id'];
-        update_song_favourite($site,$androidId,$musicId);
-        $response[]=array("success"=>true,"msg"=>'Favourite successfully');
+        $response = update_song_favourite($site,$androidId,$musicId);
         $data = [
             'ONLINE_MP3_APP' => $response,
             "status_code"=> 200

@@ -320,8 +320,21 @@ function update_song_favourite($site,$androidId,$musicId){
         'site_id' => Sites::find($site->id)->value('id'),
     ])->first();
 
+
     if ($visitorFavorite) {
-        return response()->json(['warning' => ['This Wallpaper has already in your List']], 200);
+        VisitorFavorite::where([
+            'music_id' => $musicId,
+            'visitor_id' => Visitors::where('device_id', $androidId)->value('id'),
+            'site_id' => Sites::find($site->id)->value('id'),
+        ])
+            ->delete();
+        $music = Musics::where('id', $musicId)->first();
+        $music->decrement('music_like_count');
+        $result = [
+            'success' =>false,
+            'msg' => 'Favourite delete',
+        ];
+
     } else {
         VisitorFavorite::create([
             'music_id' => $musicId,
@@ -331,8 +344,12 @@ function update_song_favourite($site,$androidId,$musicId){
             ->first();
         $music = Musics::where('id', $musicId)->first();
         $music->increment('music_like_count');
+        $result = [
+            'success' => true,
+            'msg' => 'Favourite successfully',
+        ];
     }
-    return true;
+    return $result;
 
 
 }
