@@ -72,7 +72,7 @@ class ApiV4Controller extends Controller
 
 
         $ads[] = [
-            "ad_id"=> 5,
+            "ad_id"=> 1,
             "ads_name"=> "Admob",
             'ads_info' =>[
                 'publisher_id' => $site_ads ? $site_ads['AdMob_Publisher_ID'] : "",
