@@ -310,6 +310,7 @@ $button = $header['button'];
 
             $(document).on('click', '#createYTB', function () {
                 $('#modalCreateYTB').modal('show');
+                $('#select_tags').select2();
                 // $('#saveBtnCreateYTB').hide();
                 // $('#formCreateYTB').trigger("reset");
                 $('#tab_content_result_getInfo').html('');
