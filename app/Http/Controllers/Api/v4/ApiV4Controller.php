@@ -391,18 +391,25 @@ class ApiV4Controller extends Controller
     public function search(){
         $get_data= $this->checkSignSalt($_POST['data']);
         $site = getSite();
-        $getMusicResource = [];
+        $getMusicResource = false;
+        $getCategoriesResource = false;
         $search = $get_data['search_text'];
+
         $result_music = get_search_music($site,$search,10);
         foreach($result_music as $music){
             $music->fav = true;
             $getMusicResource[] = new MusicResource($music);
         }
         $result_categories = get_search_categories($site,$search,10);
-        $getCategoriesesource = CategoryResource::collection($result_categories);
+        foreach($result_categories as $cate){
+            $getCategoriesResource[] = new CategoryResource($cate);
+        }
+
+
+
         $data = [
             'ONLINE_MP3_APP' => [
-                'category_list'=>$getCategoriesesource,
+                'category_list'=> $getCategoriesResource  ,
                 'songs_list'=>$getMusicResource,
             ],
             "status_code"=> 200
