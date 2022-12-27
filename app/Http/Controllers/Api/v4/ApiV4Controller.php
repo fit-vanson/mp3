@@ -362,7 +362,7 @@ class ApiV4Controller extends Controller
         $musicId = $get_data['post_id'];
         $response = update_song_favourite($site,$androidId,$musicId);
         $data = [
-            'ONLINE_MP3_APP' => $response,
+            'ONLINE_MP3_APP' => [$response],
             "status_code"=> 200
         ];
         return response()->json($data);
