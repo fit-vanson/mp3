@@ -392,9 +392,8 @@ class ApiV4Controller extends Controller
         $get_data= $this->checkSignSalt($_POST['data']);
         $site = getSite();
         $getMusicResource = [];
-        $getCategoriesResource = [];
         $search = $get_data['search_text'];
-        $search = 'cat_1';
+
         $data['ONLINE_MP3_APP'] = [];
         $result_music = get_search_music($site,$search,10);
         foreach($result_music as $music){
@@ -402,20 +401,9 @@ class ApiV4Controller extends Controller
             $getMusicResource[] = new MusicResource($music);
 
         }
-//        dd($getMusicResource);
-//        $data['ONLINE_MP3_APP'] += [
-//            'songs_list' => $getMusicResource
-//        ] ;
-//
+
         $result_categories = get_search_categories($site,$search,10);
-        foreach($result_categories as $cate){
-            $getCategoriesResource[] = new CategoryResource($cate);
-        }
-//
-//
-//        $data['ONLINE_MP3_APP'] += [
-//            'category_list' => $getCategoriesResource
-//        ] ;//
+        $getCategoriesResource = CategoryResource::collection($result_categories);
         $data = [
             'ONLINE_MP3_APP' => [
                 'category_list'=> $getCategoriesResource  ,
@@ -424,6 +412,33 @@ class ApiV4Controller extends Controller
             "status_code"=> 200
         ];
         return response()->json($data);
+    }
+
+    public function search_single(){
+        $get_data= $this->checkSignSalt($_POST['data']);
+        $search_type = $get_data['search_type'];
+        $search = $get_data['search_text'];
+        $site = getSite();
+        switch ($search_type){
+            case 'category':
+                $result = get_search_categories($site,$search,10);
+                $resource = CategoryResource::collection($result);
+                break;
+            case 'songs':
+                $resource = [];
+                $result = get_search_music($site,$search,10);
+                foreach($result as $music){
+                    $music->fav = true;
+                    $resource[] = new MusicResource($music);
+                }
+        }
+        $data = [
+            'ONLINE_MP3_APP' => $resource,
+            'total_records' =>$result->total(),
+            "status_code"=> 200
+        ];
+        return response()->json($data);
+
     }
 
 
