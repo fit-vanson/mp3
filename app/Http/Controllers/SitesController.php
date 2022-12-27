@@ -782,10 +782,9 @@ class SitesController extends Controller
     }
 
     public function getAIO($id){
+
         try {
             $site = Sites::find($id);
-
-
             $url = "https://aio.vietmmo.net/api/project-aio/".$site->site_project;
             $dataGet = $this->CURL($url);
 
