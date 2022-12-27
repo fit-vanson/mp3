@@ -18,8 +18,8 @@ class MusicForCategoryResource extends JsonResource
         foreach ($this->music->random(1) as $item){
             return [
                 'slider_id' => $this->id,
-                'slider_title' => $item->music_title ,
-                'slider_info' => substr($item->music_description,0,30),
+                'slider_title' => utf8_decode($item->music_title) ,
+                'slider_info' => substr(utf8_decode($item->music_description),0,30),
                 'songs_ids' => "",
                 'slider_image' => $item->music_thumbnail_link ,
             ];

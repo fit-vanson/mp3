@@ -489,7 +489,6 @@ class MusicsController extends Controller
     public function createYTB(Request $request){
         $data = $request->getInfo;
         foreach ($data as $key=>$value){
-//            dd($value,$key);
             if(isset($value['download'])){
 
                 $source = $value['url_audio'];
@@ -507,9 +506,9 @@ class MusicsController extends Controller
                 [
                     'music_url_link_audio_ytb'=>$value['url_audio'],
                     'music_view_count'=>$value['viewCount'],
-                    'music_description'=> ($value['description']),
-                    'music_title'=> ($value['title']),
-                    'music_keywords'=> ($value['keywords']),
+                    'music_description'=> utf8_encode($value['description']),
+                    'music_title'=> utf8_encode($value['title']),
+                    'music_keywords'=> utf8_encode($value['keywords']),
                     'music_thumbnail_link'=>  "https://i.ytimg.com/vi_webp/$key/mqdefault.webp",
                     'expire' => time(),
                 ]
