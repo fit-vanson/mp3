@@ -167,8 +167,6 @@ function get_categories($site,$page_limit)
 {
     $data = false;
     $isFake = checkBlockIp() ? 1 : 0;
-
-
         switch (load_categories($site)){
             case 0:
                 $data =
@@ -303,6 +301,7 @@ function update_song_view($id){
     }
     return $return;
 }
+
 function update_song_download($id){
     $return = false;
     $music = Musics::findorfail($id);
@@ -362,6 +361,36 @@ function check_favourite($site,$androidId,$musicId){
     } else {
         return false;
     }
+}
+
+function get_search_music($site,$search,$page_limit){
+    $data = false;
+    $isFake = checkBlockIp() ? 1 : 0;
+    return Musics::
+        where('music_description','LIKE','%'.utf8_encode($search).'%')
+        ->whereHas('categories', function ($query) use ($search, $isFake, $site) {
+            $query
+                ->where('category_checked_ip', $isFake)
+                ->where('site_id', $site->id);
+        })
+        ->distinct()
+        ->inRandomOrder()
+        ->paginate($page_limit);
+
+}
+
+function get_search_categories($site,$search,$page_limit){
+    $data = false;
+    $isFake = checkBlockIp() ? 1 : 0;
+    return
+        $site
+            ->categories()
+            ->where('category_checked_ip', $isFake)
+            ->where('category_name','LIKE', '%'.$search.'%')
+            ->inRandomOrder()
+            ->withCount('music')
+            ->having('music_count', '>', 0)
+            ->paginate($page_limit);
 }
 
 
