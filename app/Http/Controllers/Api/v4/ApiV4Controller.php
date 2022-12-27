@@ -391,8 +391,8 @@ class ApiV4Controller extends Controller
     public function search(){
         $get_data= $this->checkSignSalt($_POST['data']);
         $site = getSite();
-        $getMusicResource = false;
-        $getCategoriesResource = false;
+        $getMusicResource = [];
+        $getCategoriesResource = [];
         $search = $get_data['search_text'];
 
         $result_music = get_search_music($site,$search,10);
