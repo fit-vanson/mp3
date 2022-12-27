@@ -353,7 +353,6 @@ class ApiV4Controller extends Controller
         return response()->json($data);
     }
 
-
     public function song_favourite(){
         $site = getSite();
         $get_data= $this->checkSignSalt($_POST['data']);
@@ -368,7 +367,7 @@ class ApiV4Controller extends Controller
         return response()->json($data);
     }
 
-    function user_favourite_songs(){
+    public function user_favourite_songs(){
         $get_data= $this->checkSignSalt($_POST['data']);
         $androidId = $get_data['androidId'];
         $site = getSite();
@@ -388,4 +387,15 @@ class ApiV4Controller extends Controller
         ];
         return response()->json($data);
     }
+
+    public function search(){
+        $get_data= $this->checkSignSalt($_POST['data']);
+        $site = getSite();
+//        $search = $get_data['search_text'];
+        $search = 'Nhạc Chill TikTok';
+        $result_music = get_search_music($site,$search,10);
+        dd($result_music);
+    }
+
+
 }

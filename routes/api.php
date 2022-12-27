@@ -96,6 +96,7 @@ Route::group([
     Route::post('/song_download', [ApiV4Controller::class, 'song_download']);
     Route::post('/song_favourite', [ApiV4Controller::class, 'song_favourite']);
     Route::post('/user_favourite_songs', [ApiV4Controller::class, 'user_favourite_songs']);
+    Route::post('/search', [ApiV4Controller::class, 'search']);
 
 
 });
