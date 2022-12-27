@@ -157,7 +157,7 @@
 
                                     <label class="d-block mb-3">Load Categories</label>
                                     <?php
-                                    $loads = ['Random','Most View','Update New'];
+                                    $loads = ['Random','Most View','Update New','Order','A-Z'];
                                     foreach ($loads as $key=>$load){
                                     ?>
 

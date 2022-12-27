@@ -151,9 +151,13 @@ class ApiV4Controller extends Controller
         $site = getSite();
         getHome($site);
         getVisitors($get_data['androidId']);
+
         $categories = get_categories($site,3);
         $getMusicCategory = MusicForCategoryResource::collection($categories);
+
         $getCategory = CategoryHomeResource::collection($categories);
+
+
         if(isset($get_data['songs_ids'])){
             $songs_ids= explode(',',$get_data['songs_ids']);
             $musics = Musics::whereIN('id',$songs_ids)->get();
@@ -167,16 +171,13 @@ class ApiV4Controller extends Controller
             $item->fav = check_favourite($site,$get_data['androidId'],$item->id);
             $get_trending_songs[] = new MusicResource($item);
         }
-//        $get_trending_songs = MusicResource::collection($trending_songs);
+
 
         $popular_songs = get_songs($site,10,'music_like_count');
         foreach ($popular_songs as $item ){
             $item->fav = check_favourite($site,$get_data['androidId'],$item->id);
             $get_popular_songs[] = new MusicResource($item);
         }
-
-//        $get_popular_songs = MusicResource::collection($popular_songs);
-
 
         $category = [
             'home_id' => 'category',
