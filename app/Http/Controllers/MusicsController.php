@@ -566,7 +566,7 @@ class MusicsController extends Controller
 //                    'author' => $info->getAuthor(),
                     'title' => $info->getTitle(),
                     'viewCount' => $info->getViewCount(),
-                    'keywords' => implode(",\n",@$info->getKeywords()),
+                    'keywords' => $info->getKeywords()? implode(",\n",$info->getKeywords()):'',
                     'shortDescription' => $info->getShortDescription(),
                     'lengthSeconds' => gmdate("H:i:s",$info->getLengthSeconds()),
                     'image' => 'https://i.ytimg.com/vi_webp/'.trim($id).'/mqdefault.webp',
