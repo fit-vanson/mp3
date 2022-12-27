@@ -375,7 +375,8 @@ function get_search_music($site,$search,$page_limit){
         })
         ->distinct()
         ->inRandomOrder()
-        ->take($page_limit)->get();
+        ->paginate($page_limit);
+//        ->take($page_limit)->get();
 
 }
 
@@ -390,7 +391,7 @@ function get_search_categories($site,$search,$page_limit){
             ->inRandomOrder()
             ->withCount('music')
             ->having('music_count', '>', 0)
-            ->take($page_limit)->get();
+            ->paginate($page_limit);
 }
 
 

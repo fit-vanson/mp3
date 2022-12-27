@@ -97,6 +97,7 @@ Route::group([
     Route::post('/song_favourite', [ApiV4Controller::class, 'song_favourite']);
     Route::post('/user_favourite_songs', [ApiV4Controller::class, 'user_favourite_songs']);
     Route::post('/search', [ApiV4Controller::class, 'search']);
+    Route::post('/search_single', [ApiV4Controller::class, 'search_single']);
 
 
 });
