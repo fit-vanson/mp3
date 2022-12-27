@@ -10,7 +10,6 @@ use App\Http\Resources\v4\MusicForCategoryResource;
 use App\Http\Resources\v4\MusicResource;
 use App\Musics;
 use Illuminate\Http\Request;
-use function PHPUnit\Framework\isEmpty;
 
 class ApiV4Controller extends Controller
 {
@@ -395,6 +394,7 @@ class ApiV4Controller extends Controller
         $getMusicResource = [];
         $getCategoriesResource = [];
         $search = $get_data['search_text'];
+        $search = 'cat_1';
         $data['ONLINE_MP3_APP'] = [];
         $result_music = get_search_music($site,$search,10);
         foreach($result_music as $music){
@@ -402,21 +402,27 @@ class ApiV4Controller extends Controller
             $getMusicResource[] = new MusicResource($music);
 
         }
-        if(count($getMusicResource)!=0){
-            $data['ONLINE_MP3_APP'] += [
-                'songs_list' => $getMusicResource
-            ] ;
-        }
+//        dd($getMusicResource);
+//        $data['ONLINE_MP3_APP'] += [
+//            'songs_list' => $getMusicResource
+//        ] ;
+//
         $result_categories = get_search_categories($site,$search,10);
         foreach($result_categories as $cate){
             $getCategoriesResource[] = new CategoryResource($cate);
         }
-        if(count($getCategoriesResource) !=0){
-            $data['ONLINE_MP3_APP'] += [
-                'category_list' => $getCategoriesResource
-            ] ;
-        }
-
+//
+//
+//        $data['ONLINE_MP3_APP'] += [
+//            'category_list' => $getCategoriesResource
+//        ] ;//
+        $data = [
+            'ONLINE_MP3_APP' => [
+                'category_list'=> $getCategoriesResource  ,
+                'songs_list'=>$getMusicResource,
+            ],
+            "status_code"=> 200
+        ];
         return response()->json($data);
     }
 
