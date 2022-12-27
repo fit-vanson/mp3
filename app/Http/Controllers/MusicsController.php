@@ -74,7 +74,7 @@ class MusicsController extends Controller
         $tags = Tags::latest()->get();
         return view('musics.index')->with(compact('header','tags'));
     }
-
+ /**
     public function getIndex(Request $request)
     {
 
@@ -149,6 +149,107 @@ class MusicsController extends Controller
                 "music_view_count" => $record->music_view_count,
                 "music_like_count" => $record->music_like_count,
                 "music_link" => $record->music_link ? '<a target="_blank" href="'.$record->music_link.'" class="btn btn-outline-warning"><i class="ti-link"></i></a>': null,
+                "tags" => $record->tags,
+                "action" => $btn,
+            );
+        }
+
+        $response = array(
+            "draw" => intval($draw),
+            "iTotalRecords" => $totalRecords,
+            "iTotalDisplayRecords" => $totalRecordswithFilter,
+            "aaData" => $data_arr,
+        );
+
+        echo json_encode($response);
+
+
+    }
+
+  **/
+
+
+
+    public function getIndex(Request $request)
+    {
+
+        $draw = $request->get('draw');
+        $start = $request->get("start");
+        $rowperpage = $request->get("length"); // total number of rows per page
+
+        $columnIndex_arr = $request->get('order');
+        $columnName_arr = $request->get('columns');
+        $order_arr = $request->get('order');
+        $search_arr = $request->get('search');
+
+        $columnIndex = $columnIndex_arr[0]['column']; // Column index
+
+        $columnName = $columnName_arr[$columnIndex]['data']; // Column name
+        $columnSortOrder = $order_arr[0]['dir']; // asc or desc
+        $searchValue = $search_arr['value']; // Search value
+
+        // Total records
+        $totalRecords = Musics::select('count(*) as allcount')->count();
+
+        $totalRecordswithFilter = Musics::select('count(*) as allcount')
+            ->where('music_id_ytb', 'like', '%' . $searchValue . '%')
+            ->orwhere('music_keywords', 'like', '%' . utf8_encode($searchValue) . '%')
+            ->orwhere('music_description', 'like', '%' . utf8_encode($searchValue) . '%')
+            ->orwhere('music_title', 'like', '%' . utf8_encode($searchValue) . '%')
+            ->orwhereRelation('tags','tag_name','like', '%' . $searchValue . '%')
+            ->count();
+
+        // Get records, also we have included search filter as well
+        $records = Musics::with('tags')
+            ->where('music_id_ytb', 'like', '%' . $searchValue . '%')
+            ->orwhere('music_keywords', 'like', '%' . utf8_encode($searchValue) . '%')
+            ->orwhere('music_description', 'like', '%' . utf8_encode($searchValue) . '%')
+            ->orwhere('music_title', 'like', '%' . utf8_encode($searchValue) . '%')
+            ->orwhereRelation('tags','tag_name','like', '%' . $searchValue . '%')
+            ->select('*')
+            ->orderBy($columnName, $columnSortOrder)
+            ->skip($start)
+            ->take($rowperpage)
+            ->get();
+
+
+
+        if ($request->get('null_tag') == 1){
+            $totalRecordswithFilter = Musics::select('count(*) as allcount')
+                ->doesntHave('tags')
+                ->where('music_id_ytb', 'like', '%' . $searchValue . '%')
+                ->orwhere('music_keywords', 'like', '%' . utf8_encode($searchValue) . '%')
+                ->orwhere('music_description', 'like', '%' . utf8_encode($searchValue) . '%')
+                ->orwhere('music_title', 'like', '%' . utf8_encode($searchValue) . '%')
+                ->count();
+            $records = Musics::doesntHave('tags')
+                ->where('music_id_ytb', 'like', '%' . $searchValue . '%')
+                ->orwhere('music_keywords', 'like', '%' . utf8_encode($searchValue) . '%')
+                ->orwhere('music_description', 'like', '%' . utf8_encode($searchValue) . '%')
+                ->orwhere('music_title', 'like', '%' . utf8_encode($searchValue) . '%')
+                ->select('*')
+                ->orderBy($columnName, $columnSortOrder)
+                ->skip($start)
+                ->take($rowperpage)
+                ->get();
+        }
+
+        $data_arr = array();
+        foreach ($records as $record) {
+            $btn = ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-warning editMusics"><i class="ti-pencil-alt"></i></a>';
+            $btn .= ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-danger deleteMusics"><i class="ti-trash"></i></a>';
+
+            $image_url = '<img alt="'.$record->music_id_ytb.'"  src="'.$record->music_thumbnail_link .'" width="150" ">';
+            $music_ytb      =  '<audio class="audio-player" controls><source src="'.$this->getLinkYTB($record->music_id_ytb,'url').'" type="audio/mp3"/></audio>' ;
+
+
+            $data_arr[] = array(
+                "id" => $record->id,
+                "music_thumbnail_link" => $image_url,
+                "music_id_ytb" =>$music_ytb,
+                "music_view_count" => $record->music_view_count,
+                "music_download_count" => $record->music_download_count,
+                "music_like_count" => $record->music_like_count,
                 "tags" => $record->tags,
                 "action" => $btn,
             );
@@ -518,10 +619,6 @@ class MusicsController extends Controller
         return response()->json(['success'=>'Thành công.']);
     }
 
-
-
-
-
     function asyncDownload($dir, $url, $contentlength = 0){
         $start = 0;
         $request = [];
@@ -566,7 +663,7 @@ class MusicsController extends Controller
         exit;
     }
 
-    public function getLinkYTB($id){
+    public function getLinkYTB($id,$action=null){
         $info = Musics::where('music_id_ytb',$id)->firstOrFail();
         if($info->expire < time()){
             $youtube = new YouTubeDownloader();
@@ -581,7 +678,12 @@ class MusicsController extends Controller
             ]);
         }
         $link = $info->music_url_link_audio_ytb;
-        return redirect($link);
+        if (isset($action) && $action== 'url'){
+            return $link;
+        }else{
+            return redirect($link);
+        }
+
     }
 
     function parse_query($var)

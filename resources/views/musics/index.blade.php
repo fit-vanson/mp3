@@ -34,34 +34,34 @@ $button = $header['button'];
     <!-- end page title -->
 
 
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-body">
-                    <div class="mb-5">
-                        <form method="post" action="{{route('musics.create')}}" enctype="multipart/form-data"
-                              class="dropzone" id="form{{preg_replace('/\s+/','',$page_title)}}">
-                            @csrf
-                            <div class="form-group mb-0">
-                                <label class="control-label">Tags Select</label>
-                                <select class="select2 form-control select2-multiple" id="select_tags"
-                                        name="select_tags[]" multiple="multiple"
-                                        data-placeholder="Choose ...">
-                                    @foreach($tags as $tag)
-                                        <option value="{{$tag->id}}">{{$tag->tag_name}}</option>
-                                    @endforeach
-                                </select>
+{{--    <div class="row">--}}
+{{--        <div class="col-12">--}}
+{{--            <div class="card">--}}
+{{--                <div class="card-body">--}}
+{{--                    <div class="mb-5">--}}
+{{--                        <form method="post" action="{{route('musics.create')}}" enctype="multipart/form-data"--}}
+{{--                              class="dropzone" id="form{{preg_replace('/\s+/','',$page_title)}}">--}}
+{{--                            @csrf--}}
+{{--                            <div class="form-group mb-0">--}}
+{{--                                <label class="control-label">Tags Select</label>--}}
+{{--                                <select class="select2 form-control select2-multiple" id="select_tags"--}}
+{{--                                        name="select_tags[]" multiple="multiple"--}}
+{{--                                        data-placeholder="Choose ...">--}}
+{{--                                    @foreach($tags as $tag)--}}
+{{--                                        <option value="{{$tag->id}}">{{$tag->tag_name}}</option>--}}
+{{--                                    @endforeach--}}
+{{--                                </select>--}}
 
-                            </div>
-                            <div class="fallback">
-                                <input name="file" type="file" multiple="multiple">
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+{{--                            </div>--}}
+{{--                            <div class="fallback">--}}
+{{--                                <input name="file" type="file" multiple="multiple">--}}
+{{--                            </div>--}}
+{{--                        </form>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--        </div>--}}
+{{--    </div>--}}
 
 {{--    <!--  Modal content for the above example -->--}}
 {{--    <div class="modal fade" id="modal{{preg_replace('/\s+/','',$page_title)}}" tabindex="-1" role="dialog"--}}
@@ -127,6 +127,42 @@ $button = $header['button'];
 {{--            </div><!-- /.modal-content -->--}}
 {{--        </div><!-- /.modal-dialog -->--}}
 {{--    </div><!-- /.modal -->--}}
+
+
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-rep-plugin">
+                        <div class="table-responsive mb-1">
+                            <table id="tableMusics" class="table table-bordered dt-responsive"
+                                   style="width: 100%;">
+                                <thead>
+                                <tr>
+                                    <th >Name</th>
+                                    <th >Image</th>
+                                    <th >Music Count</th>
+                                    <th >Music Count</th>
+                                    <th >Music Count</th>
+                                    <th >Music Count</th>
+                                    <th >Music Count</th>
+                                    <th >Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div> <!-- end col -->
+    </div> <!-- end row -->
 
     <!--  Modal content for the above example -->
     <div class="modal fade" id="modal{{preg_replace('/\s+/','',$page_title)}}update_multiple" tabindex="-1" role="dialog"
@@ -285,7 +321,7 @@ $button = $header['button'];
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-            var dtTable = $('#table{{preg_replace('/\s+/','',$page_title)}}').DataTable({
+            var dtTable = $('#tableMusics').DataTable({
                 processing: true,
                 serverSide: true,
                 displayLength: 50,
@@ -300,10 +336,10 @@ $button = $header['button'];
                 columns: [
                     // columns according to JSON
                     {data: 'id',className: "text-center align-middle "},
-                    {data: 'music_file',className: "text-center "},
-                    {data: 'music_name', className: "align-middle",},
-                    {data: 'music_link', className: "align-middle",},
-                    {data: 'music_view_count', className: "align-middle"},
+                    {data: 'music_thumbnail_link',className: "text-center align-middle "},
+                    {data: 'music_id_ytb',className: "text-center "},
+                    {data: 'music_view_count', className: "align-middle",},
+                    {data: 'music_download_count', className: "align-middle",},
                     {data: 'music_like_count', className: "align-middle"},
                     {data: 'tags',className: "align-middle",orderable: false,},
                     {data: 'action', className: "align-middle text-center ",orderable: false,}
@@ -361,24 +397,7 @@ $button = $header['button'];
                     },
                 ],
                 order: [2, 'desc'],
-                fnDrawCallback: function () {
-                    $('.image-popup-no-margins').magnificPopup({
-                        type: 'image',
-                        closeOnContentClick: true,
-                        closeBtnInside: false,
-                        fixedContentPos: true,
-                        mainClass: 'mfp-no-margins mfp-with-zoom',
-                        // class to remove default margin from left and right side
-                        image: {
-                            verticalFit: true
-                        },
-                        zoom: {
-                            enabled: true,
-                            duration: 300 // don't foget to change the duration also in CSS
 
-                        }
-                    });
-                }
             });
 
             const queryString = window.location.search;
