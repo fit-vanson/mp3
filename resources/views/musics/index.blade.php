@@ -63,70 +63,56 @@ $button = $header['button'];
 {{--        </div>--}}
 {{--    </div>--}}
 
-{{--    <!--  Modal content for the above example -->--}}
-{{--    <div class="modal fade" id="modal{{preg_replace('/\s+/','',$page_title)}}" tabindex="-1" role="dialog"--}}
-{{--         aria-labelledby="myLargeModalLabel" aria-hidden="true">--}}
-{{--        <div class="modal-dialog modal-lg">--}}
-{{--            <div class="modal-content">--}}
-{{--                <div class="modal-header">--}}
-{{--                    <h5 class="modal-title mt-0" id="{{preg_replace('/\s+/','',$page_title)}}ModalLabel"></h5>--}}
-{{--                    <button type="button" class="close" data-dismiss="modal"--}}
-{{--                            aria-hidden="true">×</button>--}}
-{{--                </div>--}}
-{{--                <div class="card-body">--}}
-{{--                    <form id="form{{preg_replace('/\s+/','',$page_title)}}EditMusic">--}}
-{{--                        <input type="hidden" name="id" id="id">--}}
-
-{{--                        <div class="form-group">--}}
-{{--                            <label>Name</label>--}}
-{{--                            <input type="text" class="form-control" id="music_name" name="music_name" >--}}
-{{--                        </div>--}}
-
-{{--                        <div class="form-group">--}}
-{{--                            <label>Link Url Image</label>--}}
-{{--                            <input type="text" class="form-control" id="music_url_image" name="music_url_image" >--}}
-{{--                        </div>--}}
-
-{{--                        <div class="form-group">--}}
-{{--                            <label>Link 1</label>--}}
-{{--                            <input type="text" class="form-control" id="music_link_1" name="music_link_1" >--}}
-{{--                        </div>--}}
-
-{{--                        <div class="form-group">--}}
-{{--                            <label>Link 2</label>--}}
-{{--                            <input type="text" class="form-control" id="music_link_2" name="music_link_2" >--}}
-{{--                        </div>--}}
+    <!--  Modal content for the above example -->
+    <div class="modal fade" id="modalMusicEdit" tabindex="-1" role="dialog"
+         aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title mt-0" id="ModalEditLabel"></h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-hidden="true">×</button>
+                </div>
+                <div class="card-body">
+                    <form id="formEditMusic">
+                        <input type="hidden" name="id" id="id">
 
 {{--                        <div class="form-group">--}}
 {{--                            <label>ID YouTuBe</label>--}}
 {{--                            <input type="text" class="form-control" id="music_id_ytb" name="music_id_ytb" >--}}
 {{--                        </div>--}}
-
-{{--                        <div class="form-group">--}}
-{{--                            <label class="control-label">Tags Select</label>--}}
-{{--                            <select class="select2 form-control select2-multiple" id="select_tags_edit"--}}
-{{--                                    name="select_tags[]" multiple="multiple"--}}
-{{--                                    data-placeholder="Choose ..." style="width: 100%">--}}
-{{--                                @foreach($tags as $tag)--}}
-{{--                                    <option value="{{$tag->id}}">{{$tag->tag_name}}</option>--}}
-{{--                                @endforeach--}}
-{{--                            </select>--}}
-{{--                        </div>--}}
+                        <div class="form-group">
+                            <label>Link Url Image</label>
+                            <input type="text" class="form-control" id="music_thumbnail_link" name="music_thumbnail_link" >
+                            <img id="link_thumbnail"  src=""/>
+                        </div>
 
 
+                        <div class="form-group">
+                            <label class="control-label">Tags Select</label>
+                            <select class="select2 form-control select2-multiple" id="select_tags_edit"
+                                    name="select_tags[]" multiple="multiple"
+                                    data-placeholder="Choose ..." style="width: 100%">
+                                @foreach($tags as $tag)
+                                    <option value="{{$tag->id}}">{{$tag->tag_name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
 
-{{--                        <div class="form-group mb-0">--}}
-{{--                            <div>--}}
-{{--                                <button type="submit" id="saveBtn{{preg_replace('/\s+/','',$page_title)}}" class="btn btn-primary waves-effect waves-light mr-1">--}}
-{{--                                    Submit--}}
-{{--                                </button>--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
-{{--                    </form>--}}
-{{--                </div>--}}
-{{--            </div><!-- /.modal-content -->--}}
-{{--        </div><!-- /.modal-dialog -->--}}
-{{--    </div><!-- /.modal -->--}}
+
+
+                        <div class="form-group mb-0">
+                            <div>
+                                <button type="submit" id="saveBtnEdit" class="btn btn-primary waves-effect waves-light mr-1">
+                                    Submit
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 
 
 
@@ -140,13 +126,18 @@ $button = $header['button'];
                                    style="width: 100%;">
                                 <thead>
                                 <tr>
-                                    <th >Name</th>
+{{--                                    <th >Name</th>--}}
                                     <th >Image</th>
-                                    <th >Music Count</th>
-                                    <th >Music Count</th>
-                                    <th >Music Count</th>
-                                    <th >Music Count</th>
-                                    <th >Music Count</th>
+                                    <th >ID YTB</th>
+                                    <th >View</th>
+                                    <th >Download</th>
+                                    <th >Like</th>
+                                    <th style="width: 15%">
+                                        <div class="custom-control custom-checkbox">
+                                            <input class="custom-control-input" type="checkbox" name="null_tag" value="0"  id="null_tag" />
+                                            <label class="custom-control-label" for="null_tag">Tags</label>
+                                        </div>
+                                    </th>
                                     <th >Action</th>
                                 </tr>
                                 </thead>
@@ -163,41 +154,6 @@ $button = $header['button'];
 
         </div> <!-- end col -->
     </div> <!-- end row -->
-
-    <!--  Modal content for the above example -->
-    <div class="modal fade" id="modal{{preg_replace('/\s+/','',$page_title)}}update_multiple" tabindex="-1" role="dialog"
-         aria-labelledby="myLargeModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title mt-0"> Update Multiple </h5>
-                    <button type="button" class="close" data-dismiss="modal"
-                            aria-hidden="true">×</button>
-                </div>
-                <div class="card-body">
-                    <form id="form{{preg_replace('/\s+/','',$page_title)}}update_multiple">
-                        <div class="form-group">
-                            <p class="text-muted"> <code>{id} | {link1} | {link2} | {id Ytb}</code>
-                            </p>
-                            <textarea id="update_multiple" name="update_multiple" class="form-control" rows="20" ></textarea>
-                        </div>
-
-
-
-
-                        <div class="form-group mb-0">
-                            <div>
-                                <button type="submit" id="saveBtn{{preg_replace('/\s+/','',$page_title)}}update_multiple" class="btn btn-success waves-effect waves-light mr-1">
-                                    Update
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
-
 
     <!-- Create from YTB-->
 
@@ -217,7 +173,7 @@ $button = $header['button'];
                                 <label>LIST ID YouTuBe  <code>( | , )</code></label>
                                 <div class="inner mb-3 row">
                                     <div class="col-md-10 col-8">
-                                        <input type="text"  id="music_id_ytb" name="music_id_ytb" class="inner form-control" placeholder="Enter ID YTB ..." value="mwP7B0NPkFU,hmb3GDpPQ2Y|aTOAbIdmq_c">
+                                        <input type="text"  id="music_id_ytb" name="music_id_ytb" class="inner form-control" placeholder="Enter ID YTB ...">
                                     </div>
                                     <div class="col-md-2 col-4">
                                         <a href="javascript:void(0)" class="btn btn-primary btn-block inner getInfoID">Get Info</a>
@@ -278,43 +234,6 @@ $button = $header['button'];
 
     <script>
         Dropzone.autoDiscover = false;
-        $(".select2").select2({});
-        // $(".select2").select2({
-        //     // closeOnSelect: false,
-        //     tags: true,
-        //     tokenSeparators: [',', ';'],
-        //     createTag: function (params) {
-        //         var term = $.trim(params.term);
-        //
-        //         if (term === '') {
-        //             return null;
-        //         }
-        //         return {
-        //             id: term,
-        //             text: term,
-        //             newTag: true // add additional parameters
-        //         }
-        //     }
-        // }).on("change", function(e) {
-        //     var isNew = $(this).find('[data-select2-tag="true"]');
-        //     if(isNew.length && $.inArray(isNew.val(), $(this).val()) !== -1){
-        //         $.ajax({
-        //             url: '/admin/tags/create',
-        //             type: 'post',
-        //             dataType: 'json',
-        //             data: {tag_name: isNew.val()},
-        //             success: function (data) {
-        //                 if (data.success) {
-        //                     isNew.replaceWith('<option selected value="'+data.tag.id+'">'+data.tag.tag_name+'</option>');
-        //                 }
-        //                 if (data.errors) {
-        //                     console.log(data.errors)
-        //                 }
-        //             }
-        //         });
-        //     }
-        // });
-
         $(function () {
             $.ajaxSetup({
                 headers: {
@@ -335,7 +254,7 @@ $button = $header['button'];
                 },
                 columns: [
                     // columns according to JSON
-                    {data: 'id',className: "text-center align-middle "},
+                    // {data: 'id',className: "text-center align-middle "},
                     {data: 'music_thumbnail_link',className: "text-center align-middle "},
                     {data: 'music_id_ytb',className: "text-center "},
                     {data: 'music_view_count', className: "align-middle",},
@@ -358,26 +277,7 @@ $button = $header['button'];
 
                 columnDefs: [
                     {
-                        // For Checkboxes
-                        targets: 0,
-                        // visible: false,
-                        orderable: false,
-                        responsivePriority: 3,
-                        render: function (data, type, full, meta) {
-                            return (
-                                '<div class="custom-control custom-checkbox"> ' +
-                                    '<input class="custom-control-input" type="checkbox" value="' + [full.id] + '" name="id[]" id="checkbox' +data +'" />' +
-                                '<label class="custom-control-label" for="checkbox' +data +'"></label>' +
-                                '</div>'
-                            );
-                        },
-                        checkboxes: {
-                            selectAllRender:
-                                '<div class="form-check"> <input class="form-check-input" type="checkbox" value="" id="checkboxSelectAll" /><label class="form-check-label" for="checkboxSelectAll"></label></div>'
-                        }
-                    },
-                    {
-                        targets: 6,
+                        targets: 5,
                         responsivePriority: 1,
                         render: function (data) {
                             var tags = data,
@@ -400,39 +300,6 @@ $button = $header['button'];
 
             });
 
-            const queryString = window.location.search;
-            const urlParams = new URLSearchParams(queryString);
-            const search = urlParams.get('search')
-
-            if(search !== null){
-                dtTable.search(search).draw();
-            }
-
-            $(".dataTables_filter input")
-                .unbind() // Unbind previous default bindings
-                .bind("input", function(e) { // Bind our desired behavior
-                    // If the length is 3 or more characters, or the user pressed ENTER, search
-                    if(this.value.length >= 3 || e.keyCode == 13) {
-                        // Call the API search function
-                        dtTable.search(this.value).draw();
-                    }
-                    // Ensure we clear the search if they backspace far enough
-                    if(this.value == "") {
-                        dtTable.search("").draw();
-                    }
-                    return;
-                });
-
-
-            // Handle click on "Select all" control
-            $('#select_all').on('click', function(){
-                // Check/uncheck all checkboxes in the table
-                var rows = dtTable.rows({ 'search': 'applied' }).nodes();
-                $('input[type="checkbox"]', rows).prop('checked', this.checked);
-            });
-
-
-
             $('#null_tag').on('change', function(){
                 var active = $('#null_tag').prop("checked") ? 1 : 0 ;
                 $('#null_tag').val(active);
@@ -440,46 +307,6 @@ $button = $header['button'];
             });
 
 
-            // Handle click on checkbox to set state of "Select all" control
-            $('#table{{preg_replace('/\s+/','',$page_title)}} tbody').on('change', 'input[type="checkbox"]', function(){
-                // If checkbox is not checked
-                if(!this.checked){
-                    var el = $('#select_all').get(0);
-                    // If "Select all" control is checked and has 'indeterminate' property
-                    if(el && el.checked && ('indeterminate' in el)){
-                        // Set visual state of "Select all" control
-                        // as 'indeterminate'
-                        el.indeterminate = true;
-                    }
-                }
-            });
-
-            $(document).on('click', '.delete{{preg_replace('/\s+/','',$page_title)}}', function (data) {
-                var id = $(this).data("id");
-                Swal.fire({
-                    title: "Are you sure?",
-                    text: "You won't be able to revert this!",
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#34c38f",
-                    cancelButtonColor: "#f46a6a",
-                    confirmButtonText: "Yes, delete it!"
-                }).then(function (result) {
-                    if (result.value) {
-                        $.ajax({
-                            type: "get",
-                            url: "{{ asset("admin/musics/delete") }}/" + id,
-                            success: function (data) {
-                                toastr['success'](data.success, 'Success!');
-                                dtTable.draw();
-                            },
-                            error: function (data) {
-                                console.log('Error:', data);
-                            }
-                        });
-                    }
-                });
-            });
 
             $(document).on('click', '#createYTB', function () {
                 $('#modalCreateYTB').modal('show');
@@ -570,10 +397,6 @@ $button = $header['button'];
                 console.log(_id);
             });
 
-            $(document).on('click', '#update_multipleMusics', function () {
-                $('#modal{{preg_replace('/\s+/','',$page_title)}}update_multiple').modal('show');
-            });
-
             $('#formCreateYTB').on('submit', function (event) {
                 event.preventDefault();
                 const formData = $('#formCreateYTB').serialize();
@@ -604,55 +427,29 @@ $button = $header['button'];
 
             });
 
-            $('#form{{preg_replace('/\s+/','',$page_title)}}update_multiple').on('submit', function (event) {
-                event.preventDefault();
-                var formData = new FormData($("#form{{preg_replace('/\s+/','',$page_title)}}update_multiple")[0]);
-                $.ajax({
-                    data: formData,
-                    url: '{{route('musics.update_multiple')}}',
-                    type: "POST",
-                    dataType: 'json',
-                    processData: false,
-                    contentType: false,
-                    success: function (data) {
-                        if (data.success) {
-                            $('#form{{preg_replace('/\s+/','',$page_title)}}update_multiple').trigger("reset");
-                            toastr['success'](data.success, 'Success!');
-                            $('#modal{{preg_replace('/\s+/','',$page_title)}}update_multiple').modal('hide');
-                            dtTable.draw();
-                        }
-                        if (data.errors) {
-                            for (var count = 0; count < data.errors.length; count++) {
-                                toastr['error'](data.errors[count], 'Error!',);
-                            }
-                        }
-                    }
-                });
 
 
-            });
-
-            $(document).on('click', '.edit{{preg_replace('/\s+/','',$page_title)}}', function (data) {
-                $('#form{{preg_replace('/\s+/','',$page_title)}}').trigger("reset");
+            $(document).on('click', '.editMusic', function (data) {
+                $('#formEditMusic').trigger("reset");
                 var id = $(this).data("id");
                 $.ajax({
                     type: "get",
                     url: "{{ asset("admin/musics/edit") }}/" + id,
                     success: function (data) {
-                        $('#modal{{preg_replace('/\s+/','',$page_title)}}').modal('show');
-                        $('#{{preg_replace('/\s+/','',$page_title)}}ModalLabel').html("Edit {{$page_title}}");
-                        $('#saveBtn{{preg_replace('/\s+/','',$page_title)}}').val("update");
+                        console.log(data)
+                        $('#modalMusicEdit').modal('show');
+                        $('#ModalEditLabel').html("Edit "+data.music_id_ytb);
+                        $('#saveBtnEdit').val("update");
 
-                        $('#id').val(data.music.id);
-                        $('#music_name').val(data.music.music_name);
-                        $('#music_link_1').val(data.music.music_link_1);
-                        $('#music_url_image').val(data.music.music_url_image);
-                        $('#music_link_2').val(data.music.music_link_2);
-                        $('#music_id_ytb').val(data.music.music_id_ytb);
+                        $('#id').val(data.id);
+                        // $('#music_id_ytb').val(data.music_id_ytb);
+                        $('#music_thumbnail_link').val(data.music_thumbnail_link);
+                        $('#link_thumbnail').attr("src", data.music_thumbnail_link);
+
 
 
                         var id_tags =[];
-                        $.each(data.music.tags, function(i, item) {
+                        $.each(data.tags, function(i, item) {
                             id_tags.push(item.id.toString())
                         });
                         $('#select_tags_edit').val(id_tags).trigger('change');
@@ -666,7 +463,38 @@ $button = $header['button'];
                 });
             });
 
-            $(document).on('click', '.deleteSelect', function (data) {
+            $('#formEditMusic').on('submit', function (event) {
+                event.preventDefault();
+                const formData = $('#formEditMusic').serialize();
+
+                $.ajax({
+                    data: formData,
+                    url: '{{route('musics.update')}}',
+                    type: "POST",
+                    dataType: 'json',
+                    // processData: false,
+                    // contentType: false,
+                    success: function (data) {
+                        console.log(data)
+                        if (data.success) {
+                            $('#formEditMusic').trigger("reset");
+                            toastr['success'](data.success, 'Success!');
+                            $('#modalMusicEdit').modal('hide');
+                            dtTable.draw();
+                        }
+                        if (data.errors) {
+                            for (var count = 0; count < data.errors.length; count++) {
+                                toastr['error'](data.errors[count], 'Error!',);
+                            }
+                        }
+                    }
+                });
+
+
+            });
+
+            $(document).on('click', '.deleteMusic', function (data) {
+                var id = $(this).data("id");
                 Swal.fire({
                     title: "Are you sure?",
                     text: "You won't be able to revert this!",
@@ -678,17 +506,11 @@ $button = $header['button'];
                 }).then(function (result) {
                     if (result.value) {
                         $.ajax({
-                            data: $('#checkForm').serialize(),
-                            url: "{{ route('musics.deleteSelect') }}",
-                            type: "post",
-                            dataType: 'json',
+                            type: "get",
+                            url: "{{ asset("admin/musics/delete") }}/" + id,
                             success: function (data) {
+                                toastr['success'](data.success, 'Success!');
                                 dtTable.draw();
-                                toastr['success']('', data.success, {
-                                    showMethod: 'fadeIn',
-                                    hideMethod: 'fadeOut',
-                                    timeOut: 2000,
-                                });
                             },
                             error: function (data) {
                                 console.log('Error:', data);
@@ -696,76 +518,7 @@ $button = $header['button'];
                         });
                     }
                 });
-
-
             });
-
-
-            $('#form{{preg_replace('/\s+/','',$page_title)}}EditMusic').on('submit', function (event) {
-                event.preventDefault();
-                var formData = new FormData($("#form{{preg_replace('/\s+/','',$page_title)}}EditMusic")[0]);
-
-                if ($('#saveBtn{{preg_replace('/\s+/','',$page_title)}}').val() == 'update') {
-                    $.ajax({
-                        data: formData,
-                        url: '{{route('musics.update')}}',
-                        type: "POST",
-                        dataType: 'json',
-                        processData: false,
-                        contentType: false,
-                        success: function (data) {
-                            if (data.success) {
-                                $('#form{{preg_replace('/\s+/','',$page_title)}}EditMusic').trigger("reset");
-                                toastr['success'](data.success, 'Success!');
-                                $('#modal{{preg_replace('/\s+/','',$page_title)}}').modal('hide');
-                                dtTable.draw();
-                            }
-                            if (data.errors) {
-                                for (var count = 0; count < data.errors.length; count++) {
-                                    toastr['error'](data.errors[count], 'Error!',);
-                                }
-                            }
-                        }
-                    });
-                }
-
-            });
-
-            $('#form{{preg_replace('/\s+/','',$page_title)}}').dropzone(
-                {
-                    maxFilesize: 20,
-                    parallelUploads: 30 ,
-                    uploadMultiple: true,
-                    acceptedFiles: ".mp3,.txt,.jpg",
-                    addRemoveLinks: true,
-                    timeout: 0,
-                    dictRemoveFile: 'Xoá',
-                    init: function () {
-                        var _this = this; // For the closure
-
-                        this.on('success', function (file, response) {
-
-                            if (response.success) {
-                                _this.removeFile(file);
-                                toastr['success'](file.name, response.success, {
-                                    showMethod: 'slideDown',
-                                    hideMethod: 'slideUp',
-                                    timeOut: 1000,
-                                });
-                            }
-                            if (response.errors) {
-                                for (var count = 0; count < response.errors.length; count++) {
-                                    toastr['error'](file.name, response.errors[count], {
-                                        showMethod: 'slideDown',
-                                        hideMethod: 'slideUp',
-                                        timeOut: 5000,
-                                    });
-                                }
-                            }
-                            dtTable.clear().draw();
-                        });
-                    },
-                });
 
 
 

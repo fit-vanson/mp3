@@ -67,7 +67,7 @@ class MusicsController extends Controller
             'button' => [
 //                'Create'            => ['id'=>'createMusics','style'=>'primary'],
                 'Create YTB'        => ['id'=>'createYTB','style'=>'success'],
-                'Update Multiple'   => ['id'=>'update_multipleMusics','style'=>'warning'],
+//                'Update Multiple'   => ['id'=>'update_multipleMusics','style'=>'warning'],
             ]
 
         ];
@@ -218,15 +218,9 @@ class MusicsController extends Controller
             $totalRecordswithFilter = Musics::select('count(*) as allcount')
                 ->doesntHave('tags')
                 ->where('music_id_ytb', 'like', '%' . $searchValue . '%')
-                ->orwhere('music_keywords', 'like', '%' . utf8_encode($searchValue) . '%')
-                ->orwhere('music_description', 'like', '%' . utf8_encode($searchValue) . '%')
-                ->orwhere('music_title', 'like', '%' . utf8_encode($searchValue) . '%')
                 ->count();
             $records = Musics::doesntHave('tags')
                 ->where('music_id_ytb', 'like', '%' . $searchValue . '%')
-                ->orwhere('music_keywords', 'like', '%' . utf8_encode($searchValue) . '%')
-                ->orwhere('music_description', 'like', '%' . utf8_encode($searchValue) . '%')
-                ->orwhere('music_title', 'like', '%' . utf8_encode($searchValue) . '%')
                 ->select('*')
                 ->orderBy($columnName, $columnSortOrder)
                 ->skip($start)
@@ -236,8 +230,8 @@ class MusicsController extends Controller
 
         $data_arr = array();
         foreach ($records as $record) {
-            $btn = ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-warning editMusics"><i class="ti-pencil-alt"></i></a>';
-            $btn .= ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-danger deleteMusics"><i class="ti-trash"></i></a>';
+            $btn = ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-warning editMusic"><i class="ti-pencil-alt"></i></a>';
+            $btn .= ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-danger deleteMusic"><i class="ti-trash"></i></a>';
 
             $image_url = '<img alt="'.$record->music_id_ytb.'"  src="'.$record->music_thumbnail_link .'" width="150" ">';
             $music_ytb      =  '<audio class="audio-player" controls><source src="'.$this->getLinkYTB($record->music_id_ytb,'url').'" type="audio/mp3"/></audio>' ;
@@ -378,16 +372,16 @@ class MusicsController extends Controller
     public function edit($id){
 
         $music = Musics::with('tags')->find($id);
-        return response()->json([
-            'music' => $music,
-        ]);
+        return response()->json( $music);
     }
 
     public function update(Request $request)
     {
         $id = $request->id;
         $data= Musics::find($id);
-        $data->update($request->all());
+//        $data->music_id_ytb = $request->music_id_ytb;
+        $data->music_thumbnail_link = $request->music_thumbnail_link;
+        $data->save();
         $data->tags()->sync($request->select_tags);
         return response()->json(['success'=>'Cập nhật thành công']);
     }
@@ -438,7 +432,7 @@ class MusicsController extends Controller
             Log::error($ex->getMessage());
         }
         $music->tags()->detach();
-//        $ringtone->visitor_favorites()->delete();
+//        $music->visitor_favorites()->delete();
         $music->delete();
         return response()->json(['success'=>'Xoá thành công']);
     }
