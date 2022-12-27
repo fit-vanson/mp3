@@ -1,6 +1,8 @@
 <?php
 
 use App\BlockIPs;
+use App\Http\Resources\v4\MusicFeatureResource;
+use App\Http\Resources\v4\MusicForCategoryResource;
 use App\ListIP;
 use App\Musics;
 use App\Sites;
@@ -116,8 +118,35 @@ function load_categories($site){
     return $site->load_categories;
 }
 
-function load_wallpapers_category($site){
-    return $site->load_wallpapers_category;
+function load_view_by_category($site){
+    return $site->load_view_by_category;
+}
+
+function load_feature($site){
+    $data = false;
+    $isFake = checkBlockIp() ? 1 : 0;
+    $load_feature = $site->load_view_by;
+    switch ($load_feature){
+        case 0:
+            $data =get_songs($site,10);
+            $getResource = MusicFeatureResource::collection($data);
+            break;
+        case 1:
+            $data = get_songs($site,10,'music_like_count');
+            $getResource = MusicFeatureResource::collection($data);
+            break;
+        case 2:
+            $data = get_songs($site,10,'music_view_count');
+            $getResource = MusicFeatureResource::collection($data);
+            break;
+        case 3:
+            $data = get_categories($site,10);
+            $getResource = MusicForCategoryResource::collection($data);
+            break;
+    }
+    return $getResource;
+//    dd($data);
+
 }
 
 function getHome($site){
@@ -162,6 +191,8 @@ function getVisitors($device_id){
     return true;
 
 }
+
+
 
 function get_categories($site,$page_limit)
 {
@@ -224,9 +255,7 @@ function get_categories($site,$page_limit)
 
 function get_category_details($site,$category,$page_limit){
     $data = false;
-
-
-    switch (load_wallpapers_category($site)){
+    switch (load_view_by_category($site)){
         case 0:
             $data = $category
                 ->music()
@@ -271,24 +300,43 @@ function get_category_details($site,$category,$page_limit){
     return $data;
 }
 
-function get_songs($site,$page_limit,$order){
+function get_songs($site,$page_limit,$order = null){
     $data = false;
     $isFake = checkBlockIp() ? 1 : 0;
-    return Musics
-        ::with(['categories' => function($query) use ($isFake, $site) {
-            $query
-                ->where('category_checked_ip', $isFake)
-                ->where('site_id', $site->id);
-        }])
+    if($order){
+        $data = Musics
+            ::with(['categories' => function($query) use ($isFake, $site) {
+                $query
+                    ->where('category_checked_ip', $isFake)
+                    ->where('site_id', $site->id);
+            }])
 
-        ->whereHas('categories', function ($query) use ($isFake, $site) {
-            $query
-                ->where('category_checked_ip', $isFake)
-                ->where('site_id', $site->id);
-        })
-        ->distinct()
-        ->orderByDesc($order)
-        ->paginate($page_limit);
+            ->whereHas('categories', function ($query) use ($isFake, $site) {
+                $query
+                    ->where('category_checked_ip', $isFake)
+                    ->where('site_id', $site->id);
+            })
+            ->distinct()
+            ->orderByDesc($order)
+            ->paginate($page_limit);
+    }else{
+        $data = Musics
+            ::with(['categories' => function($query) use ($isFake, $site) {
+                $query
+                    ->where('category_checked_ip', $isFake)
+                    ->where('site_id', $site->id);
+            }])
+
+            ->whereHas('categories', function ($query) use ($isFake, $site) {
+                $query
+                    ->where('category_checked_ip', $isFake)
+                    ->where('site_id', $site->id);
+            })
+            ->distinct()
+            ->inRandomOrder()
+            ->paginate($page_limit);
+    }
+    return $data;
 }
 
 function update_song_view($id){

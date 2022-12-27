@@ -139,9 +139,9 @@
 
                                     <input type="hidden" name="id" id="id_load_view_by" value="{{$site->id}}">
 
-                                    <label class="d-block mb-3">Load Feature Image</label>
+                                    <label class="d-block mb-3">Load Feature</label>
                                     <?php
-                                        $loads = ['Random','Manual','Most View','Feature Wallpaper'];
+                                        $loads = ['Random','Most Like','Most View',' Random Category'];
                                         foreach ($loads as $key=>$load){
                                     ?>
 
@@ -172,14 +172,14 @@
 
                                     <hr>
 
-                                    <label class="d-block mb-3">Load Wallpaper By Category</label>
+                                    <label class="d-block mb-3">Load View By Category</label>
                                     <?php
                                     $loads = ['Random','Most Like','Most View','Update New'];
                                     foreach ($loads as $key=>$load){
                                     ?>
 
                                     <div class="custom-control custom-radio custom-control-inline">
-                                        <input type="radio"  id="load_wallpapers_category_{{$key}}" name="load_wallpapers_category" class="custom-control-input" value="{{$key}}" {{$site->load_wallpapers_category == $key ? 'checked' : ''}} >
+                                        <input type="radio"  id="load_wallpapers_category_{{$key}}" name="load_view_by_category" class="custom-control-input" value="{{$key}}" {{$site->load_wallpapers_category == $key ? 'checked' : ''}} >
                                         <label class="custom-control-label" for="load_wallpapers_category_{{$key}}">{{$load}}</label>
                                     </div>
 

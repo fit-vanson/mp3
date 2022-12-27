@@ -152,8 +152,12 @@ class ApiV4Controller extends Controller
         getHome($site);
         getVisitors($get_data['androidId']);
 
-        $categories = get_categories($site,3);
-        $getMusicCategory = MusicForCategoryResource::collection($categories);
+        $categories = get_categories($site,10);
+
+        $slide = load_feature($site);
+
+
+//        $getMusicCategory = MusicForCategoryResource::collection($categories);
 
         $getCategory = CategoryHomeResource::collection($categories);
 
@@ -198,7 +202,7 @@ class ApiV4Controller extends Controller
 
         $data = [
             'ONLINE_MP3_APP' => [
-                'slider' => $getMusicCategory,
+                'slider' => $slide,
                 'recently_songs' => $recently_songs,
                 'trending_songs' => $get_trending_songs,
                 'popular_songs' => $get_popular_songs,
