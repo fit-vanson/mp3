@@ -71,13 +71,13 @@ class ApiV4Controller extends Controller
 
         $ads[] = [
             "ad_id"=> 5,
-            "ads_name"=> "Wortise",
+            "ads_name"=> "Admob",
             'ads_info' =>[
                 'publisher_id' => "c2f94dbb-e29a-4a95-bbf9-fbf860c428b3",
-                'banner_on_off' =>"1",
+                'banner_on_off' =>$status_ads,
                 'banner_id' =>"acbb8bfe-be23-4252-a173-3bbc0d8dfb8a",
-                'interstitial_on_off' => "1",
-                'native_on_off' => "1",
+                'interstitial_on_off' => $status_ads,
+                'native_on_off' => $status_ads,
                 'interstitial_id' => "70f3bdd5-4cd1-4943-a34d-9d23ba25542d",
                 'native_id' => "f78f3300-dc1b-4ece-b85b-2bc5ecbca8bb",
                 'interstitial_clicks' => 5,
