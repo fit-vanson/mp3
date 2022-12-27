@@ -163,7 +163,6 @@ function getVisitors($device_id){
 
 }
 
-
 function get_categories($site,$page_limit)
 {
     $data = false;
@@ -277,7 +276,7 @@ function get_category_details($site,$category,$page_limit){
 function get_songs($site,$page_limit,$order){
     $data = false;
     $isFake = checkBlockIp() ? 1 : 0;
-    $data = \App\Musics
+    return Musics
         ::with(['categories' => function($query) use ($isFake, $site) {
             $query
                 ->where('category_checked_ip', $isFake)
@@ -292,7 +291,6 @@ function get_songs($site,$page_limit,$order){
         ->distinct()
         ->orderByDesc($order)
         ->paginate($page_limit);
-    return $data;
 }
 
 function update_song_view($id){
@@ -316,7 +314,7 @@ function update_song_download($id){
     return $return;
 }
 
-function get_song_favourite($site,$androidId,$musicId){
+function update_song_favourite($site,$androidId,$musicId){
     $visitorFavorite = VisitorFavorite::where([
         'music_id' => $musicId,
         'visitor_id' => Visitors::where('device_id', $androidId)->value('id'),
@@ -338,6 +336,32 @@ function get_song_favourite($site,$androidId,$musicId){
     return true;
 
 
+}
+
+function get_song_favourite($site,$androidId,$page_limit){
+    return  VisitorFavorite::where([
+        'visitor_id' => Visitors::where('device_id', $androidId)->value('id'),
+        'site_id' => $site->id
+    ])
+        ->with('music')
+        ->paginate($page_limit);
+}
+
+function check_favourite($site,$androidId,$musicId){
+    $visitorFavorite = VisitorFavorite::where([
+        'music_id' => $musicId,
+        'visitor_id' => Visitors::where('device_id', $androidId)->value('id'),
+        'site_id' => Sites::find($site->id)->value('id'),
+    ])->first();
+
+
+
+
+    if ($visitorFavorite) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 

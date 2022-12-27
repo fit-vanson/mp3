@@ -144,6 +144,8 @@ class ApiV4Controller extends Controller
     public function home(){
         $get_data= $this->checkSignSalt($_POST['data']);
         $recently_songs = [];
+        $get_trending_songs = [];
+        $get_popular_songs = [];
         $site = getSite();
         getHome($site);
         getVisitors($get_data['androidId']);
@@ -154,14 +156,24 @@ class ApiV4Controller extends Controller
             $songs_ids= explode(',',$get_data['songs_ids']);
             $musics = Musics::whereIN('id',$songs_ids)->get();
             foreach($musics as $music){
+                $music->fav = check_favourite($site,$get_data['androidId'],$music->id);
                 $recently_songs[] = new MusicResource($music);
             }
         }
         $trending_songs = get_songs($site,10,'music_view_count');
-        $get_trending_songs = MusicResource::collection($trending_songs);
+        foreach ($trending_songs as $item ){
+            $item->fav = check_favourite($site,$get_data['androidId'],$item->id);
+            $get_trending_songs[] = new MusicResource($item);
+        }
+//        $get_trending_songs = MusicResource::collection($trending_songs);
 
         $popular_songs = get_songs($site,10,'music_like_count');
-        $get_popular_songs = MusicResource::collection($popular_songs);
+        foreach ($popular_songs as $item ){
+            $item->fav = check_favourite($site,$get_data['androidId'],$item->id);
+            $get_popular_songs[] = new MusicResource($item);
+        }
+
+//        $get_popular_songs = MusicResource::collection($popular_songs);
 
 
         $category = [
@@ -201,7 +213,11 @@ class ApiV4Controller extends Controller
         $get_data= $this->checkSignSalt($_POST['data']);
         $site = getSite();
         $trending_songs = get_songs($site,10,'music_view_count');
-        $getResource = MusicResource::collection($trending_songs);
+        $getResource =[];
+        foreach ($trending_songs as $item ){
+            $item->fav = check_favourite($site,$get_data['androidId'],$item->id);
+            $getResource[] = new MusicResource($item);
+        }
         $data = [
             'ONLINE_MP3_APP' => $getResource,
             "status_code"=> 200
@@ -211,9 +227,10 @@ class ApiV4Controller extends Controller
 
     public function home_collections(){
         $get_data= $this->checkSignSalt($_POST['data']);
+
         $id = $get_data['id'];
         $site = getSite();
-        $getResource = false;
+        $getResource = [];
         switch ($id){
             case 'category':
                 $categories = get_categories($site,5);
@@ -221,9 +238,11 @@ class ApiV4Controller extends Controller
                 break;
             case 'popular_songs':
                 $popular_songs = get_songs($site,10,'music_like_count');
-                $getResource = MusicResource::collection($popular_songs);
+                foreach ($popular_songs as $item ){
+                    $item->fav = check_favourite($site,$get_data['androidId'],$item->id);
+                    $getResource[] = new MusicResource($item);
+                }
                 break;
-
         }
         $data = [
            'ONLINE_MP3_APP' => $getResource,
@@ -239,11 +258,12 @@ class ApiV4Controller extends Controller
 
         $site = getSite();
         $category = Categories::findOrFail($category_id);
-
-
-
         $data = get_category_details($site,$category,20);
-        $getResource = MusicResource::collection($data);
+        $getResource = [];
+        foreach ($data as $item ){
+            $item->fav = check_favourite($site,$get_data['androidId'],$item->id);
+            $getResource[] = new MusicResource($item);
+        }
         $data = [
             'ONLINE_MP3_APP' => $getResource,
             'total_records'=>$data->total(),
@@ -259,10 +279,12 @@ class ApiV4Controller extends Controller
     }
 
     public function home_recently_songs(){
+        $site = getSite();
         $get_data= $this->checkSignSalt($_POST['data']);
         $songs_ids= explode(',',$get_data['songs_ids']);
         $musics = Musics::whereIN('id',$songs_ids)->get();
         foreach($musics as $music){
+            $music->fav = check_favourite($site,$get_data['androidId'],$music->id);
             $recently_songs[] = new MusicResource($music);
         }
         $data = [
@@ -337,10 +359,31 @@ class ApiV4Controller extends Controller
         $get_data= $this->checkSignSalt($_POST['data']);
         $androidId = $get_data['androidId'];
         $musicId = $get_data['post_id'];
-        get_song_favourite($site,$androidId,$musicId);
+        update_song_favourite($site,$androidId,$musicId);
         $response[]=array("success"=>true,"msg"=>'Favourite successfully');
         $data = [
             'ONLINE_MP3_APP' => $response,
+            "status_code"=> 200
+        ];
+        return response()->json($data);
+    }
+
+    function user_favourite_songs(){
+        $get_data= $this->checkSignSalt($_POST['data']);
+        $androidId = $get_data['androidId'];
+        $site = getSite();
+        $getMusic = get_song_favourite($site,$androidId,10);
+
+
+        foreach($getMusic as $music){
+            $music->music->fav = true;
+            $getResource[] = new MusicResource($music->music);
+        }
+
+
+        $data = [
+            'ONLINE_MP3_APP' => $getResource,
+            "total_records"=> $getMusic->total(),
             "status_code"=> 200
         ];
         return response()->json($data);

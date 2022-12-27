@@ -27,7 +27,7 @@ class MusicResource extends JsonResource
             'views' => $this->music_view_count ,
             'downloads' => $this->music_view_count,
             'total_rate' => rand(3,5) ,
-            'favourite' => false ,
+            'favourite' => $this->fav != null ? $this->fav : false ,
 
         ];
     }
