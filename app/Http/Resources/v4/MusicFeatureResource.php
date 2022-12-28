@@ -16,7 +16,7 @@ class MusicFeatureResource extends JsonResource
     {
 //        dd($this->categories[rand(0,count($this->categories)-1)]);
         return [
-            'slider_id' => $this->categories[rand(0,count($this->categories)-1)]->id,
+            'slider_id' => 1,
             'slider_title' => ($this->music_title) ,
             'slider_info' => substr($this->music_title,0,30),
             'songs_ids' => "",
