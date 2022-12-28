@@ -432,7 +432,7 @@ function get_search_music($site,$search,$page_limit){
     $data = false;
     $isFake = checkBlockIp() ? 1 : 0;
     return Musics::
-        where('music_description','LIKE','%'.base64_encode($search).'%')
+        where('music_description','LIKE','%'.($search).'%')
         ->whereHas('categories', function ($query) use ($search, $isFake, $site) {
             $query
                 ->where('category_checked_ip', $isFake)
@@ -452,7 +452,7 @@ function get_search_categories($site,$search,$page_limit){
         $site
             ->categories()
             ->where('category_checked_ip', $isFake)
-            ->where('category_name','LIKE', '%'.base64_encode($search).'%')
+            ->where('category_name','LIKE', '%'.($search).'%')
             ->inRandomOrder()
             ->withCount('music')
             ->having('music_count', '>', 0)
