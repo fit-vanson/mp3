@@ -18,7 +18,7 @@ class MusicFeatureResource extends JsonResource
         return [
             'slider_id' => 1,
             'slider_title' => ($this->music_title) ,
-            'slider_info' => substr($this->music_title,0,30),
+            'slider_info' => $this->music_title,
             'songs_ids' => "",
             'slider_image' => $this->music_thumbnail_link ,
         ];
