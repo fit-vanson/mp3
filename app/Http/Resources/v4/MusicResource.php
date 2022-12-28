@@ -21,7 +21,7 @@ class MusicResource extends JsonResource
             'song_id' => $this->id,
             'song_title' =>($this->music_title),
             'song_image' => $this->music_thumbnail_link ,
-            'song_info' =>  ($this->music_description) ,
+            'song_info' =>  ($this->music_title) ,
             'song_lyrics' => ($this->music_lyrics) ,
             'song_type' => 'local' ,
             'song_url' => route('musics.getLinkYTB',['id'=>$this->music_id_ytb]) ,
