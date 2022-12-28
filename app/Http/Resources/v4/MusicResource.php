@@ -19,10 +19,10 @@ class MusicResource extends JsonResource
 
         return [
             'song_id' => $this->id,
-            'song_title' =>utf8_decode($this->music_title),
+            'song_title' =>base64_decode($this->music_title),
             'song_image' => $this->music_thumbnail_link ,
-            'song_info' =>  utf8_decode($this->music_description) ,
-            'song_lyrics' => utf8_decode($this->music_lyrics) ,
+            'song_info' =>  base64_decode($this->music_description) ,
+            'song_lyrics' => base64_decode($this->music_lyrics) ,
             'song_type' => 'local' ,
             'song_url' => route('musics.getLinkYTB',['id'=>$this->music_id_ytb]) ,
             'views' => $this->music_view_count ,
