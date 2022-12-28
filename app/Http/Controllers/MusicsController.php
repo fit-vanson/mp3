@@ -601,9 +601,9 @@ class MusicsController extends Controller
                 [
                     'music_url_link_audio_ytb'=>$value['url_audio'],
                     'music_view_count'=>$value['viewCount'],
-                    'music_description'=> ($value['description']),
+//                    'music_description'=> ($value['description']),
                     'music_title'=> ($value['title']),
-                    'music_keywords'=> ($value['keywords']),
+//                    'music_keywords'=> ($value['keywords']),
                     'music_thumbnail_link'=>  "https://i.ytimg.com/vi_webp/$key/mqdefault.webp",
                     'expire' => time(),
                 ]
