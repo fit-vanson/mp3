@@ -240,12 +240,12 @@ class ApiV4Controller extends Controller
         $getResource = [];
         switch ($id){
             case 'category':
-                $categories = get_categories($site,5);
-                $getResource = CategoryResource::collection($categories);
+                $getdata = get_categories($site,5);
+                $getResource = CategoryResource::collection($getdata);
                 break;
             case 'popular_songs':
-                $popular_songs = get_songs($site,10,'music_like_count');
-                foreach ($popular_songs as $item ){
+                $getdata = get_songs($site,10,'music_like_count');
+                foreach ($getdata as $item ){
                     $item->fav = check_favourite($site,$get_data['androidId'],$item->id);
                     $getResource[] = new MusicResource($item);
                 }
@@ -253,6 +253,7 @@ class ApiV4Controller extends Controller
         }
         $data = [
            'ONLINE_MP3_APP' => $getResource,
+            "total_records"=> $getdata->total(),
             "status_code"=> 200
         ];
         return response()->json($data);
