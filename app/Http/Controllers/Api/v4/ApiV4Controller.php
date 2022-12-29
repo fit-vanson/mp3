@@ -254,9 +254,6 @@ class ApiV4Controller extends Controller
         return response()->json($data);
     }
 
-
-
-
     public function song_by_category($catID = null){
 
         $get_data= $this->checkSignSalt($_POST['data']);
@@ -311,6 +308,37 @@ class ApiV4Controller extends Controller
             "status_code"=> 200
         ];
         return response()->json($data);
+    }
+
+    public function all_musics(){
+        $get_data= $this->checkSignSalt($_POST['data']);
+        $site = getSite();
+        switch ($site->load_categories){
+
+            case 1:
+                $all_musics = get_songs($site,10,'music_view_count');
+                break;
+            case 2:
+                $all_musics = get_songs($site,10,'updated_at');
+                break;
+            case 3:
+                $all_musics = get_songs($site,10,'music_like_count');
+                break;
+            case 4:
+                $all_musics = get_songs($site,10,'music_title');
+                break;
+            default:
+                $all_musics = get_songs($site,10);
+                break;
+        }
+        $getResource = MusicResource::collection($all_musics);
+        $data = [
+            'ONLINE_MP3_APP' => $getResource,
+            "total_records"=> $all_musics->total(),
+            "status_code"=> 200
+        ];
+        return response()->json($data);
+
     }
 
     public function latest_songs(){

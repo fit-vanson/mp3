@@ -91,6 +91,7 @@ Route::group([
     Route::post('/home_slider_songs', [ApiV4Controller::class, 'home_slider_songs']);
     Route::post('/home_recently_songs', [ApiV4Controller::class, 'home_recently_songs']);
     Route::post('/category', [ApiV4Controller::class, 'category']);
+    Route::post('/all_musics', [ApiV4Controller::class, 'all_musics']);
     Route::post('/latest_songs', [ApiV4Controller::class, 'latest_songs']);
     Route::post('/song_view', [ApiV4Controller::class, 'song_view']);
     Route::post('/song_download', [ApiV4Controller::class, 'song_download']);
