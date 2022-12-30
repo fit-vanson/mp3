@@ -684,7 +684,7 @@ class MusicsController extends Controller
                 $info->update([
                     'music_url_link_audio_ytb'=>$music_url_link_audio_ytb,
                     'expire' => $expire,
-                    'status'=>1
+                    'status'=> 0
                 ]);
             }catch (\Exception $exception) {
                 $info->update(['status'=>1]);
