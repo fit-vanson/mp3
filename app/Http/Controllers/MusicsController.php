@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
 
@@ -193,8 +194,6 @@ class MusicsController extends Controller
 
         $totalRecordswithFilter = Musics::select('count(*) as allcount')
             ->where('music_id_ytb', 'like', '%' . $searchValue . '%')
-            ->orwhere('music_keywords', 'like', '%' . utf8_encode($searchValue) . '%')
-            ->orwhere('music_description', 'like', '%' . utf8_encode($searchValue) . '%')
             ->orwhere('music_title', 'like', '%' . utf8_encode($searchValue) . '%')
             ->orwhereRelation('tags','tag_name','like', '%' . $searchValue . '%')
             ->count();
@@ -202,8 +201,6 @@ class MusicsController extends Controller
         // Get records, also we have included search filter as well
         $records = Musics::with('tags')
             ->where('music_id_ytb', 'like', '%' . $searchValue . '%')
-            ->orwhere('music_keywords', 'like', '%' . utf8_encode($searchValue) . '%')
-            ->orwhere('music_description', 'like', '%' . utf8_encode($searchValue) . '%')
             ->orwhere('music_title', 'like', '%' . utf8_encode($searchValue) . '%')
             ->orwhereRelation('tags','tag_name','like', '%' . $searchValue . '%')
             ->select('*')
@@ -582,6 +579,21 @@ class MusicsController extends Controller
     }
 
     public function createYTB(Request $request){
+
+
+        $rules = [
+            'select_tags' =>'required',
+        ];
+        $message = [
+            'select_tags.required'=>'Vui lòng chọn tags',
+
+
+        ];
+        $error = Validator::make($request->all(),$rules, $message );
+
+        if($error->fails()){
+            return response()->json(['errors'=> $error->errors()->all()]);
+        }
         $data = $request->getInfo;
         foreach ($data as $key=>$value){
             if(isset($value['download'])){
@@ -600,7 +612,7 @@ class MusicsController extends Controller
                 ],
                 [
                     'music_url_link_audio_ytb'=>$value['url_audio'],
-                    'music_view_count'=>$value['viewCount'],
+//                    'music_view_count'=>$value['viewCount'],
 //                    'music_description'=> ($value['description']),
                     'music_title'=> ($value['title']),
 //                    'music_keywords'=> ($value['keywords']),

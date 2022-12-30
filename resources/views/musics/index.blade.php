@@ -83,16 +83,16 @@ $button = $header['button'];
 {{--                        </div>--}}
                         <div class="form-group">
                             <label>Link Url Image</label>
-                            <input type="text" class="form-control" id="music_thumbnail_link" name="music_thumbnail_link" >
+                            <input  type="text" class="form-control" id="music_thumbnail_link" name="music_thumbnail_link" >
                             <img id="link_thumbnail"  src=""/>
                         </div>
 
 
                         <div class="form-group">
                             <label class="control-label">Tags Select</label>
-                            <select class="select2 form-control select2-multiple" id="select_tags_edit"
+                            <select  class="select2 form-control select2-multiple" id="select_tags_edit"
                                     name="select_tags[]" multiple="multiple"
-                                    data-placeholder="Choose ..." style="width: 100%">
+                                    data-placeholder="Choose ..." style="width: 100%" required   >
                                 @foreach($tags as $tag)
                                     <option value="{{$tag->id}}">{{$tag->tag_name}}</option>
                                 @endforeach
@@ -184,9 +184,9 @@ $button = $header['button'];
 
                             <div class="inner form-group">
                                 <label >Tags Select</label>
-                                <select class="select2 form-control select2-multiple" id="select_tags" style="width: 100%"
+                                <select class="form-control select2-multiple" id="select_tags" style="width: 100%"
                                         name="select_tags[]" multiple="multiple"
-                                        data-placeholder="Choose ...">
+                                        data-placeholder="Choose ..." required>
                                     @foreach($tags as $tag)
                                         <option value="{{$tag->id}}">{{$tag->tag_name}}</option>
                                     @endforeach
@@ -229,6 +229,8 @@ $button = $header['button'];
     <script src="{{ URL::asset('/assets/libs/dropzone/dropzone.min.js') }}"></script>
 
     <script src="{{ URL::asset('/assets/libs/magnific-popup/magnific-popup.min.js') }}"></script>
+
+
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jscroll/2.4.1/jquery.jscroll.min.js"></script>
 
