@@ -127,7 +127,7 @@ class ApiV4Controller extends Controller
             'google_play_link' => $site->site_link,
             'apple_store_link' => "#ap",
             'app_version' => $site->site_app_version,
-            'app_update_hide_show' => "true",
+            'app_update_hide_show' => false,
             'app_update_version_code' => $site->site_app_version,
             'app_update_desc' => "Please update new app",
             'app_update_link' =>  $site->site_link,
