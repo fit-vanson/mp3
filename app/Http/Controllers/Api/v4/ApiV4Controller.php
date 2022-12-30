@@ -120,7 +120,7 @@ class ApiV4Controller extends Controller
             "app_company"=>  $app_name,
             "app_website"=> getDomain(),
             "app_contact"=> "",
-            'facebook_link' =>  $site->site_direct_link,
+            'facebook_link' =>  $site->site_direct_link ?? 'https://facebook.com',
             'twitter_link' => "https://twitter.com",
             'instagram_link' => "https://instagram.com",
             'youtube_link' => "https://youtube.com",
