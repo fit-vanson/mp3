@@ -54,6 +54,7 @@ class ApiV4Controller extends Controller
     }
     public function app_details()
     {
+
         $get_data= $this->checkSignSalt($_POST['data']);
         $site = getSite();
         $app_name = $site->site_app_name;
@@ -107,28 +108,29 @@ class ApiV4Controller extends Controller
 
         ];
 
+
+
+
         $response[] = array(
             'app_package_name' => $app_package_name,
             'app_name' => $app_name,
 
-            "app_email"=>"info@viavilab.com",
-            'app_logo' =>  "https://mp3app.viaviweb.in/upload/app_icon.png",
-            "app_company"=>  "Viavi Webtech",
-            "app_website"=> "www.viaviweb.com",
-            "app_contact"=> "+91 9227777522",
-
-
-            'facebook_link' =>  "https://facebook.com",
+            "app_email"=>"info@".getDomain(),
+            'app_logo' =>  getDomain().'/storage/sites/'.$site->id.'/'.$site->site_image,
+            "app_company"=>  $app_name,
+            "app_website"=> getDomain(),
+            "app_contact"=> "",
+            'facebook_link' =>  getDomain().'/directlink',
             'twitter_link' => "https://twitter.com",
             'instagram_link' => "https://instagram.com",
             'youtube_link' => "https://youtube.com",
-            'google_play_link' => "#gp",
+            'google_play_link' => $site->site_link,
             'apple_store_link' => "#ap",
-            'app_version' => "1.1.1",
-            'app_update_hide_show' => "false",
-            'app_update_version_code' => "1.2",
+            'app_version' => $site->site_app_version,
+            'app_update_hide_show' => "true",
+            'app_update_version_code' => $site->site_app_version,
             'app_update_desc' => "Please update new app",
-            'app_update_link' =>  "https://google.com",
+            'app_update_link' =>  $site->site_link,
             'app_update_cancel_option' => "true",
             'song_download' => "true",
             'ads_list' => $ads,

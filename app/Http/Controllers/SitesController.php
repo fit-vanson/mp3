@@ -196,7 +196,7 @@ class SitesController extends Controller
             $file = $request->image;
             $filename = Str::slug($data->site_web);
             $extension = $file->getClientOriginalExtension();
-            $fileNameToStore = $filename.'_'.time().'.'.$extension;
+            $fileNameToStore = $filename.'.'.$extension;
 
             $img = Image::make($file);
             $img->save($path.$fileNameToStore);
@@ -247,7 +247,7 @@ class SitesController extends Controller
             $file = $request->image;
             $filename = Str::slug($request->site_web);
             $extension = $file->getClientOriginalExtension();
-            $fileNameToStore = $filename.'_'.time().'.'.$extension;
+            $fileNameToStore = $filename.'.'.$extension;
 
             $path    =  storage_path('app/public/sites/'.$data->id.'/');
             if (!file_exists($path)) {
@@ -784,13 +784,13 @@ class SitesController extends Controller
     public function getAIO($id){
 
         try {
+
             $site = Sites::find($id);
             $url = "https://aio.vietmmo.net/api/project-aio/".$site->site_project;
             $dataGet = $this->CURL($url);
 
             if($dataGet['msg'] == 'success'){
                 $data = $dataGet['data'];
-//                dd($data);
                 $ads_type = $site->site_type_ads;
 
                 $key = false;
@@ -839,14 +839,19 @@ class SitesController extends Controller
                         "ironsource_id" => '',
                         "startapp_id" => $ads_get['ads_start'],
                     ];
+
+                    $url_img_aio = 'https://aio.vietmmo.net/storage/projects/'.$data['da']['ma_da'].'/'.$data['projectname'].'/'.$data['logo'];
+                    $this->downloadIMG($data['logo'],$url_img_aio,$id);
                     $update = [
                         'site_name' => $data['title_app'],
                         'site_app_name' => $site_app_name,
+                        'site_app_version' => $data['buildinfo_verstr'],
                         'site_link' => $link,
-                        'site_logo_url' => 'https://aio.vietmmo.net/storage/projects/'.$data['da']['ma_da'].'/'.$data['projectname'].'/'.$data['logo'],
+                        'site_image' => $data['logo'],
                         'site_package' => $package,
                         'site_ads' => json_encode($ads)
                     ];
+//                    dd($update);
                     $site->update($update);
                     return response()->json(['success'=>'Get thành công']);
                 }else{
@@ -871,6 +876,12 @@ class SitesController extends Controller
             $data = $response->json();
         }
         return $data;
+    }
+
+    function downloadIMG($filename,$link,$id){
+        $tempImage = storage_path('app/public/sites/'.$id.'/'.$filename);
+        copy($link, $tempImage);
+        return response()->download($tempImage, $filename);
     }
 
 
