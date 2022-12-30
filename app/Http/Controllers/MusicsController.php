@@ -230,9 +230,7 @@ class MusicsController extends Controller
             $btn = ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-warning editMusic"><i class="ti-pencil-alt"></i></a>';
             $btn .= ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-danger deleteMusic"><i class="ti-trash"></i></a>';
 
-            $image_url = '<img alt="'.$record->music_id_ytb.'"  src="'.$record->music_thumbnail_link .'" width="150" ">';
-//            $music_ytb      =  '<audio class="audio-player" controls><source src="'.$this->getLinkYTB($record->music_id_ytb,'url').'" type="audio/mp3"/></audio>' ;
-//            $music_ytb      =  '<a href="'.asset('getLinkYTB').'/'.$record->music_id_ytb.'">Click here to play a sound</a>' ;
+            $image_url = '<a target="_blank" href="https://www.youtube.com/watch?v='.$record->music_id_ytb.'"><img alt="'.$record->music_id_ytb.'"  src="'.$record->music_thumbnail_link .'" width="150" "></a>';
             $music_ytb      =  '<a class="popup-music btn btn-secondary" href="'.asset('getLinkYTB').'/'.$record->music_id_ytb.'">Open Music</a>' ;
 
             $data_arr[] = array(
@@ -544,38 +542,47 @@ class MusicsController extends Controller
 
     }
 
-    public function getInfoYTB($_id): \Illuminate\Http\JsonResponse
+    public function getInfoYTB(Request $request): \Illuminate\Http\JsonResponse
     {
+
+
+        $ytb_id = base64_decode($request->ytb_id);
+
+
         $youtube = new YouTubeDownloader();
 
-        $list_id = preg_split("/[|,]+/",$_id);
+        $list_id = preg_split("/[|]+/",$ytb_id);
+
+
 
         $dataArr = [];
         foreach ($list_id as $id){
             try {
-                $downloadOptions = $youtube->getDownloadLinks("https://www.youtube.com/watch?v=" . trim($id));
+
+                if (filter_var($id, FILTER_VALIDATE_URL) === FALSE) {
+                    $downloadOptions = $youtube->getDownloadLinks("https://www.youtube.com/watch?v=" . trim($id));
+                }else{
+                    $downloadOptions = $youtube->getDownloadLinks(trim($id));
+                }
 
                 $info = $downloadOptions->getInfo();
-
-
-
-
                 $dataArr[] = [
-                    'videoId' => trim($id),
+//                    'videoId' => trim($id),
+                    'videoId' => $info->getId(),
 //                    'author' => $info->getAuthor(),
                     'title' => $info->getTitle(),
                     'viewCount' => $info->getViewCount(),
                     'keywords' => $info->getKeywords()? implode(",\n",$info->getKeywords()):'',
                     'shortDescription' => $info->getShortDescription(),
                     'lengthSeconds' => gmdate("H:i:s",$info->getLengthSeconds()),
-                    'image' => 'https://i.ytimg.com/vi_webp/'.trim($id).'/mqdefault.webp',
+                    'image' => 'https://i.ytimg.com/vi_webp/'.$info->getId().'/mqdefault.webp',
                     'url_audio' => $downloadOptions->getSplitFormats()->audio->url,
                 ];
             }catch (\Exception $ex) {
                 Log::error('Error: Not link ID YTB: '.$id);
-//                return response()->json(['error'=>'Not link ID YTB: '.$id]);
             }
         }
+
         return response()->json($dataArr);
 
     }

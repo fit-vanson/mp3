@@ -341,9 +341,10 @@ $button = $header['button'];
             });
             $(document).on('click', '.getInfoID', function () {
                 const _id = $("#music_id_ytb").val();
+
                 $.ajax({
                     type: "get",
-                    url: "{{ asset("admin/musics/get-info-ytb") }}/" + _id,
+                    url: "{{ asset("admin/musics/get-info-ytb?ytb_id=") }}" + btoa(_id),
                     success: function (data) {
                         $('#tablist_result_getInfo').show();
                         $('#saveBtnCreateYTB').show();
