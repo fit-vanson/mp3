@@ -1,5 +1,8 @@
 @extends('layouts.master')
-
+<?php
+$page_title = $header['title'];
+$button = $header['button'];
+?>
 @section('title') {{$page_title}}   @endsection
 
 @section('css')
@@ -76,17 +79,17 @@
                             <input type="password" class="form-control" id="userpassword" name="userpassword" placeholder="Enter password">
                         </div>
 
-                        <div class="form-group">
-                            <label for="userpassword">Role</label>
-                            <select class="form-control" id="userrole" name="userrole">
-                                @if(isset($roles))
-                                    @foreach($roles as $role)
-                                        <option value="{{$role->name}}">{{$role->name}}</option>
-                                    @endforeach
-                                @endif
-                            </select>
+{{--                        <div class="form-group">--}}
+{{--                            <label for="userpassword">Role</label>--}}
+{{--                            <select class="form-control" id="userrole" name="userrole">--}}
+{{--                                @if(isset($roles))--}}
+{{--                                    @foreach($roles as $role)--}}
+{{--                                        <option value="{{$role->name}}">{{$role->name}}</option>--}}
+{{--                                    @endforeach--}}
+{{--                                @endif--}}
+{{--                            </select>--}}
 
-                        </div>
+{{--                        </div>--}}
 
 
 
@@ -181,7 +184,7 @@
 
 
 
-            $('.create{{preg_replace('/\s+/','',$page_title)}}').click(function () {
+            $('#create{{preg_replace('/\s+/','',$page_title)}}').click(function () {
                 $('#modal{{preg_replace('/\s+/','',$page_title)}}').modal('show');
                 $('#{{preg_replace('/\s+/','',$page_title)}}ModalLabel').html("Add {{$page_title}}");
                 $('#saveBtn{{preg_replace('/\s+/','',$page_title)}}').val("create");

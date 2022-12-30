@@ -17,14 +17,27 @@ class UsersController extends Controller
     }
     public function index()
     {
-        $page_title =  'Users';
-        $action = ['create'];
-        $roles = Role::with('users')->get();
-        return view('users.index',[
-            'roles'=> $roles,
-            'action'=> $action,
-            'page_title' => $page_title
-        ]);
+
+
+        $header = [
+            'title' => 'Users',
+            'button' => [
+//                'Create'            => ['id'=>'createMusics','style'=>'primary'],
+                'Create'        => ['id'=>'createUsers','style'=>'success'],
+//                'Update Multiple'   => ['id'=>'update_multipleMusics','style'=>'warning'],
+            ]
+
+        ];
+        return view('users.index')->with(compact('header'));
+
+//        $page_title =  'Users';
+//        $action = ['create'];
+//        $roles = Role::with('users')->get();
+//        return view('users.index',[
+//            'roles'=> $roles,
+//            'action'=> $action,
+//            'page_title' => $page_title
+//        ]);
     }
     public function getIndex(Request $request)
     {
