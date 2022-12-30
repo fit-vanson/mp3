@@ -15,7 +15,6 @@ $button = $header['button'];
     <link href="{{ URL::asset('assets/libs/toastr/ext-component-toastr.css') }}" rel="stylesheet" type="text/css"/>
     <link href="{{ URL::asset('assets/libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet" type="text/css"/>
     <!-- Dropzone css -->
-    <link href="{{ URL::asset('/assets/libs/dropzone/dropzone.min.css') }}" rel="stylesheet" type="text/css"/>
 
     <link href="{{ URL::asset('/assets/libs/select2/select2.min.css') }}" rel="stylesheet" type="text/css"/>
 
@@ -226,22 +225,21 @@ $button = $header['button'];
 
     <script src="{{ URL::asset('/assets/libs/select2/select2.min.js') }}"></script>
 
-    <script src="{{ URL::asset('/assets/libs/dropzone/dropzone.min.js') }}"></script>
-
     <script src="{{ URL::asset('/assets/libs/magnific-popup/magnific-popup.min.js') }}"></script>
-
-
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jscroll/2.4.1/jquery.jscroll.min.js"></script>
 
     <script>
-        Dropzone.autoDiscover = false;
+        // Dropzone.autoDiscover = false;
         $(function () {
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
+
+
+
             var dtTable = $('#tableMusics').DataTable({
                 processing: true,
                 serverSide: true,
@@ -299,6 +297,29 @@ $button = $header['button'];
                     },
                 ],
                 order: [2, 'desc'],
+                fnDrawCallback: function () {
+                    $('.popup-music').magnificPopup({
+                        disableOn: 100,
+                        type: 'iframe',
+                        mainClass: 'mfp-fade',
+                        removalDelay: 160,
+                        preloader: false,
+
+                        fixedContentPos: false
+                    });
+                },
+
+                fnRowCallback: function (nRow, aData) {
+                    switch (aData.status){
+                        case 1:
+                            $('td', nRow).css('background-color', 'rgba(253,0,0,0.07)');
+                            break;
+                        default:
+                            $('td', nRow).css('background-color', 'rgba(255,255,255,0)');
+                            break;
+                    }
+                },
+
 
             });
 

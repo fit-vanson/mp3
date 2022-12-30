@@ -231,8 +231,9 @@ class MusicsController extends Controller
             $btn .= ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-danger deleteMusic"><i class="ti-trash"></i></a>';
 
             $image_url = '<img alt="'.$record->music_id_ytb.'"  src="'.$record->music_thumbnail_link .'" width="150" ">';
-            $music_ytb      =  '<audio class="audio-player" controls><source src="'.$this->getLinkYTB($record->music_id_ytb,'url').'" type="audio/mp3"/></audio>' ;
-
+//            $music_ytb      =  '<audio class="audio-player" controls><source src="'.$this->getLinkYTB($record->music_id_ytb,'url').'" type="audio/mp3"/></audio>' ;
+//            $music_ytb      =  '<a href="'.asset('getLinkYTB').'/'.$record->music_id_ytb.'">Click here to play a sound</a>' ;
+            $music_ytb      =  '<a class="popup-music btn btn-secondary" href="'.asset('getLinkYTB').'/'.$record->music_id_ytb.'">Open Music</a>' ;
 
             $data_arr[] = array(
                 "id" => $record->id,
@@ -242,6 +243,7 @@ class MusicsController extends Controller
                 "music_download_count" => $record->music_download_count,
                 "music_like_count" => $record->music_like_count,
                 "tags" => $record->tags,
+                "status" => $record->status,
                 "action" => $btn,
             );
         }
@@ -672,16 +674,20 @@ class MusicsController extends Controller
     public function getLinkYTB($id,$action=null){
         $info = Musics::where('music_id_ytb',$id)->firstOrFail();
         if($info->expire < time()){
-            $youtube = new YouTubeDownloader();
-            $downloadOptions = $youtube->getDownloadLinks("https://www.youtube.com/watch?v=" . trim($id));
+            try {
+                $youtube = new YouTubeDownloader();
+                $downloadOptions = $youtube->getDownloadLinks("https://www.youtube.com/watch?v=" . trim($id));
 
-            $music_url_link_audio_ytb = $downloadOptions->getSplitFormats()->audio->url;
-            $expire = $this->parse_query($music_url_link_audio_ytb)['expire'];
+                $music_url_link_audio_ytb = $downloadOptions->getSplitFormats()->audio->url;
+                $expire = $this->parse_query($music_url_link_audio_ytb)['expire'];
 
-            $info->update([
-                'music_url_link_audio_ytb'=>$music_url_link_audio_ytb,
-                'expire' => $expire
-            ]);
+                $info->update([
+                    'music_url_link_audio_ytb'=>$music_url_link_audio_ytb,
+                    'expire' => $expire
+                ]);
+            }catch (\Exception $exception) {
+                $info->update(['status'=>1]);
+            }
         }
         $link = $info->music_url_link_audio_ytb;
         if (isset($action) && $action== 'url'){
