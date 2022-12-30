@@ -116,11 +116,11 @@ class ApiV4Controller extends Controller
             'app_name' => $app_name,
 
             "app_email"=>"info@".getDomain(),
-            'app_logo' =>  getDomain().'/storage/sites/'.$site->id.'/'.$site->site_image,
+            'app_logo' =>  'https://'.getDomain().'/storage/sites/'.$site->id.'/'.$site->site_image,
             "app_company"=>  $app_name,
             "app_website"=> getDomain(),
             "app_contact"=> "",
-            'facebook_link' =>  getDomain().'/directlink',
+            'facebook_link' =>  $site->site_direct_link,
             'twitter_link' => "https://twitter.com",
             'instagram_link' => "https://instagram.com",
             'youtube_link' => "https://youtube.com",
