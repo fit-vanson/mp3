@@ -127,10 +127,6 @@ function load_feature($site){
     $isFake = checkBlockIp() ? 1 : 0;
     $load_feature = $site->load_view_by;
     switch ($load_feature){
-        case 0:
-            $data =get_songs($site,10);
-            $getResource = MusicFeatureResource::collection($data);
-            break;
         case 1:
             $data = get_songs($site,10,'music_like_count');
             $getResource = MusicFeatureResource::collection($data);
@@ -143,9 +139,13 @@ function load_feature($site){
             $data = get_categories($site,10);
             $getResource = MusicForCategoryResource::collection($data);
             break;
+        default:
+            $data =get_songs($site,10);
+            $getResource = MusicFeatureResource::collection($data);
+            break;
     }
     return $getResource;
-//    dd($data);
+
 
 }
 
@@ -262,6 +262,7 @@ function get_category_details($site,$category,$page_limit){
                 ->with(['categories' => function($query) {
                     $query->where('site_id', getSite()->id);
                 }])
+                ->where('status',0)
                 ->distinct()
                 ->inRandomOrder()
                 ->paginate($page_limit);
@@ -272,6 +273,7 @@ function get_category_details($site,$category,$page_limit){
                 ->with(['categories' => function($query) {
                     $query->where('site_id', getSite()->id);
                 }])
+                ->where('status',0)
                 ->distinct()
                 ->orderBy('music_like_count','desc')
                 ->paginate($page_limit);
@@ -282,6 +284,7 @@ function get_category_details($site,$category,$page_limit){
                 ->with(['categories' => function($query) {
                     $query->where('site_id', getSite()->id);
                 }])
+                ->where('status',0)
                 ->distinct()
                 ->orderBy('music_view_count','desc')
                 ->paginate($page_limit);
@@ -292,6 +295,7 @@ function get_category_details($site,$category,$page_limit){
                 ->with(['categories' => function($query) {
                     $query->where('site_id', getSite()->id);
                 }])
+                ->where('status',0)
                 ->distinct()
                 ->orderBy('updated_at','desc')
                 ->paginate($page_limit);
@@ -310,7 +314,7 @@ function get_songs($site,$page_limit,$order = null){
                     ->where('category_checked_ip', $isFake)
                     ->where('site_id', $site->id);
             }])
-
+            ->where('status',0)
             ->whereHas('categories', function ($query) use ($isFake, $site) {
                 $query
                     ->where('category_checked_ip', $isFake)
@@ -326,7 +330,7 @@ function get_songs($site,$page_limit,$order = null){
                     ->where('category_checked_ip', $isFake)
                     ->where('site_id', $site->id);
             }])
-
+            ->where('status',0)
             ->whereHas('categories', function ($query) use ($isFake, $site) {
                 $query
                     ->where('category_checked_ip', $isFake)
@@ -417,10 +421,6 @@ function check_favourite($site,$androidId,$musicId){
         'visitor_id' => Visitors::where('device_id', $androidId)->value('id'),
         'site_id' => Sites::find($site->id)->value('id'),
     ])->first();
-
-
-
-
     if ($visitorFavorite) {
         return true;
     } else {
@@ -438,6 +438,7 @@ function get_search_music($site,$search,$page_limit){
                 ->where('category_checked_ip', $isFake)
                 ->where('site_id', $site->id);
         })
+        ->where('status',0)
         ->distinct()
         ->inRandomOrder()
         ->paginate($page_limit);
