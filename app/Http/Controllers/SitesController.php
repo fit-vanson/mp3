@@ -476,6 +476,7 @@ class SitesController extends Controller
 
     public function update_site(Request $request)
     {
+//        dd($request->all());
         Sites::find($request->id)->update($request->all());
         return response()->json(['success'=>'Cập nhật thành công']);
     }

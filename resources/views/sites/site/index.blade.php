@@ -113,7 +113,7 @@
                                     </div>
                                     <div class="form-group col-lg-6">
                                         <label>Link CHPlay</label>
-                                        <input type="text" class="form-control" id="site_chplay_link" name="site_chplay_link" value="{{$site->site_chplay_link}}" >
+                                        <input type="text" class="form-control" id="site_link" name="site_link" value="{{$site->site_chplay_link}}" >
                                     </div>
 
                                     <div class="form-group col-lg-12">
