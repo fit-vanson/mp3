@@ -95,19 +95,19 @@ $button = $header['button'];
                                    style="width: 100%;">
                                 <thead>
                                 <tr>
-{{--                                    <th >Name</th>--}}
-                                    <th >Image</th>
-                                    <th >ID YTB</th>
-                                    <th >View</th>
-                                    <th >Download</th>
-                                    <th >Like</th>
+                                    <th style="display: none"></th>
+                                    <th style="width: 10%">Image</th>
+                                    <th style="width: 10%">ID YTB</th>
+                                    <th style="width: 10%">View</th>
+                                    <th style="width: 10%">Download</th>
+                                    <th style="width: 10%">Like</th>
                                     <th style="width: 15%">
                                         <div class="custom-control custom-checkbox">
                                             <input class="custom-control-input" type="checkbox" name="null_tag" value="0"  id="null_tag" />
                                             <label class="custom-control-label" for="null_tag">Tags</label>
                                         </div>
                                     </th>
-                                    <th >Action</th>
+                                    <th style="width: 10%">Action</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -309,7 +309,7 @@ $button = $header['button'];
                 },
                 columns: [
                     // columns according to JSON
-                    // {data: 'id',className: "text-center align-middle "},
+                    {data: 'id', visible: false,},
                     {data: 'music_thumbnail_link',className: "text-center align-middle "},
                     {data: 'music_id_ytb',className: "text-center "},
                     {data: 'music_view_count', className: "align-middle",},
@@ -332,7 +332,7 @@ $button = $header['button'];
 
                 columnDefs: [
                     {
-                        targets: 5,
+                        targets: 6,
                         responsivePriority: 1,
                         render: function (data) {
                             var tags = data,
@@ -351,7 +351,7 @@ $button = $header['button'];
                         }
                     },
                 ],
-                order: [2, 'desc'],
+                order: [0, 'desc'],
                 fnDrawCallback: function () {
                     $('.popup-music').magnificPopup({
                         disableOn: 100,
