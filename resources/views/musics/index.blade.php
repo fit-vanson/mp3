@@ -32,36 +32,6 @@ $button = $header['button'];
     </div>
     <!-- end page title -->
 
-
-{{--    <div class="row">--}}
-{{--        <div class="col-12">--}}
-{{--            <div class="card">--}}
-{{--                <div class="card-body">--}}
-{{--                    <div class="mb-5">--}}
-{{--                        <form method="post" action="{{route('musics.create')}}" enctype="multipart/form-data"--}}
-{{--                              class="dropzone" id="form{{preg_replace('/\s+/','',$page_title)}}">--}}
-{{--                            @csrf--}}
-{{--                            <div class="form-group mb-0">--}}
-{{--                                <label class="control-label">Tags Select</label>--}}
-{{--                                <select class="select2 form-control select2-multiple" id="select_tags"--}}
-{{--                                        name="select_tags[]" multiple="multiple"--}}
-{{--                                        data-placeholder="Choose ...">--}}
-{{--                                    @foreach($tags as $tag)--}}
-{{--                                        <option value="{{$tag->id}}">{{$tag->tag_name}}</option>--}}
-{{--                                    @endforeach--}}
-{{--                                </select>--}}
-
-{{--                            </div>--}}
-{{--                            <div class="fallback">--}}
-{{--                                <input name="file" type="file" multiple="multiple">--}}
-{{--                            </div>--}}
-{{--                        </form>--}}
-{{--                    </div>--}}
-{{--                </div>--}}
-{{--            </div>--}}
-{{--        </div>--}}
-{{--    </div>--}}
-
     <!--  Modal content for the above example -->
     <div class="modal fade" id="modalMusicEdit" tabindex="-1" role="dialog"
          aria-labelledby="myLargeModalLabel" aria-hidden="true">
@@ -76,10 +46,10 @@ $button = $header['button'];
                     <form id="formEditMusic">
                         <input type="hidden" name="id" id="id">
 
-{{--                        <div class="form-group">--}}
-{{--                            <label>ID YouTuBe</label>--}}
-{{--                            <input type="text" class="form-control" id="music_id_ytb" name="music_id_ytb" >--}}
-{{--                        </div>--}}
+                        <div class="form-group">
+                            <label>Title</label>
+                            <input type="text" class="form-control" id="music_title" name="music_title" >
+                        </div>
                         <div class="form-group">
                             <label>Link Url Image</label>
                             <input  type="text" class="form-control" id="music_thumbnail_link" name="music_thumbnail_link" >
@@ -155,7 +125,6 @@ $button = $header['button'];
     </div> <!-- end row -->
 
     <!-- Create from YTB-->
-
     <div class="modal fade" id="modalCreateYTB" tabindex="-1" role="dialog"
          aria-labelledby="myLargeModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl">
@@ -202,9 +171,94 @@ $button = $header['button'];
                             <button type="submit" class="btn btn-primary" id="saveBtn">Save changes</button>
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                         </div>
-{{--                        <div class="form-group mb-0">--}}
-{{--                            <button type="submit" id="saveBtnCreateYTB" class="btn btn-primary waves-effect waves-light mr-1">Submit</button>--}}
-{{--                        </div>--}}
+                    </form>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <!-- Create from Channel-->
+    <div class="modal fade" id="modalCreateList" tabindex="-1" role="dialog"
+         aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title mt-0" >Thêm mới</h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-hidden="true">×</button>
+                </div>
+                <div class="card-body">
+                    <form id="formCreateList" name="formCreateList" class="form-horizontal" enctype="multipart/form-data">
+                        <div class="mb-4">
+                            <div class="inner form-group">
+                                <label>Channel YouTuBe </label>
+                                <div class="inner mb-3 row">
+                                    <div class="col-md-10 col-8">
+                                        <input type="text"  id="music_id_channel" name="music_id_channel" class="inner form-control" placeholder="Enter ID Channel ...">
+                                    </div>
+                                    <div class="col-md-2 col-4">
+                                        <a href="javascript:void(0)" class="btn btn-primary btn-block inner getInfoChannel">Get Channel</a>
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+                            <div class="inner form-group">
+                                <label>Play List YouTuBe </label>
+                                <div class="inner mb-3 row">
+                                    <div class="col-md-10 col-8">
+                                        <input type="text"  id="music_id_list" name="music_id_list" class="inner form-control" placeholder="Enter ID Channel ...">
+                                    </div>
+                                    <div class="col-md-2 col-4">
+                                        <a href="javascript:void(0)" class="btn btn-primary btn-block inner getInfoList">Get List</a>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="inner form-group">
+                                <label >Tags Select</label>
+                                <select class="form-control select2-multiple" id="select_tags_channel" style="width: 100%"
+                                        name="select_tags_channel[]" multiple="multiple"
+                                        data-placeholder="Choose ..." required>
+                                    @foreach($tags as $tag)
+                                        <option value="{{$tag->id}}">{{$tag->tag_name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="table-rep-plugin">
+                            <div class="table-responsive mb-1">
+                                <table id="tableMusicsList" class="table table-bordered dt-responsive"
+                                       style="width: 100%;">
+                                    <thead>
+                                    <tr>
+
+                                        <th>
+                                            <div class="custom-control custom-checkbox">
+                                                <input class="custom-control-input" type="checkbox" name="select_all" value="1" id="select_all" />
+                                                <label class="custom-control-label" for="select_all"></label>
+                                            </div>
+                                        </th>
+                                        <th >Image</th>
+                                        <th >Title</th>
+
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button type="submit" class="btn btn-primary" id="saveBtn">Save changes</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
                     </form>
                 </div>
             </div><!-- /.modal-content -->
@@ -226,6 +280,7 @@ $button = $header['button'];
     <script src="{{ URL::asset('/assets/libs/select2/select2.min.js') }}"></script>
 
     <script src="{{ URL::asset('/assets/libs/magnific-popup/magnific-popup.min.js') }}"></script>
+
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jscroll/2.4.1/jquery.jscroll.min.js"></script>
 
@@ -339,6 +394,7 @@ $button = $header['button'];
                 $('#tab_content_result_getInfo').html('');
                 $('#nav_tabs_result_getInfo').html('');
             });
+
             $(document).on('click', '.getInfoID', function () {
                 const _id = $("#music_id_ytb").val();
 
@@ -364,49 +420,49 @@ $button = $header['button'];
 
                             tab_content_result_getInfo +=
                                 '<div class="tab-pane p-3 '+active+'" id="tab_' + v.videoId + '" role="tabpanel">'+
-                                    '<div  class="row">' +
+                                '<div  class="row">' +
 
 
 
 
-                                        '<div class="form-group col-lg-4">' +
-                                        '<h6 class="mt-0 header-title">Download</h6>'+
-                                        // '<label for="name">Download </label>' +
-                                        '<input type="checkbox" id="getInfo_'+v.videoId+'_download" name="getInfo['+v.videoId+'][download]" switch="none" >'+
-                                        '<label for="getInfo_'+v.videoId+'_download" data-on-label="Yes" data-off-label="No"></label>'+
-                                        '</div>'+
+                                '<div class="form-group col-lg-4">' +
+                                '<h6 class="mt-0 header-title">Download</h6>'+
+                                // '<label for="name">Download </label>' +
+                                '<input type="checkbox" id="getInfo_'+v.videoId+'_download" name="getInfo['+v.videoId+'][download]" switch="none" >'+
+                                '<label for="getInfo_'+v.videoId+'_download" data-on-label="Yes" data-off-label="No"></label>'+
+                                '</div>'+
 
 
-                                        '<input id="getInfo_'+v.videoId+'_url_audio" name="getInfo['+v.videoId+'][url_audio]" hidden value="'+v.url_audio+'">' +
+                                '<input id="getInfo_'+v.videoId+'_url_audio" name="getInfo['+v.videoId+'][url_audio]" hidden value="'+v.url_audio+'">' +
 
-                                        '<div class="form-group col-lg-4">' +
-                                        '<label for="name">Time </label>' +
-                                        '<input type="text" id="getInfo_'+v.videoId+'_lengthSeconds" name="getInfo['+v.videoId+'][lengthSeconds]" disabled class="form-control" value="'+v.lengthSeconds+'" >' +
-                                        '</div>'+
-                                        '<div class="form-group col-lg-4">' +
-                                        '<label for="name">View Count</label>' +
-                                        '<input type="text" id="getInfo_'+v.videoId+'_viewCount" name="getInfo['+v.videoId+'][viewCount]" class="form-control"   value="'+v.viewCount+'">' +
-                                        '</div>'+
+                                '<div class="form-group col-lg-4">' +
+                                '<label for="name">Time </label>' +
+                                '<input type="text" id="getInfo_'+v.videoId+'_lengthSeconds" name="getInfo['+v.videoId+'][lengthSeconds]" disabled class="form-control" value="'+v.lengthSeconds+'" >' +
+                                '</div>'+
+                                '<div class="form-group col-lg-4">' +
+                                '<label for="name">View Count</label>' +
+                                '<input type="text" id="getInfo_'+v.videoId+'_viewCount" name="getInfo['+v.videoId+'][viewCount]" class="form-control"   value="'+v.viewCount+'">' +
+                                '</div>'+
 
-                                        '<div class="form-group col-lg-6">' +
-                                        '<img id="getInfo_'+v.videoId+'_image" name="getInfo['+v.videoId+'][image]" width="300px" src="'+v.image+'">' +
-                                        '</div>'+
+                                '<div class="form-group col-lg-6">' +
+                                '<img id="getInfo_'+v.videoId+'_image" name="getInfo['+v.videoId+'][image]" width="300px" src="'+v.image+'">' +
+                                '</div>'+
 
-                                        '<div class="form-group col-lg-6">' +
-                                        '<label for="name">Title</label>' +
-                                        '<textarea type="text" id="getInfo_'+v.videoId+'_title" rows="6" name="getInfo['+v.videoId+'][title]" class="form-control" >' +v.title +'</textarea>'+
-                                        '</div>'+
+                                '<div class="form-group col-lg-6">' +
+                                '<label for="name">Title</label>' +
+                                '<textarea type="text" id="getInfo_'+v.videoId+'_title" rows="6" name="getInfo['+v.videoId+'][title]" class="form-control" >' +v.title +'</textarea>'+
+                                '</div>'+
 
-                                        '<div class="form-group col-lg-6">' +
-                                        '<label for="name">Keywords</label>' +
-                                        '<textarea  id="getInfo_'+v.videoId+'_keywords" name="getInfo['+v.videoId+'][keywords]" class="form-control"  rows="8">' +v.keywords +'</textarea>'+
-                                        '</div>'+
+                                '<div class="form-group col-lg-6">' +
+                                '<label for="name">Keywords</label>' +
+                                '<textarea  id="getInfo_'+v.videoId+'_keywords" name="getInfo['+v.videoId+'][keywords]" class="form-control"  rows="8">' +v.keywords +'</textarea>'+
+                                '</div>'+
 
-                                        '<div class="form-group col-lg-6">' +
-                                        '<label for="name">Description</label>' +
-                                        '<textarea  id="getInfo_'+v.videoId+'_description" name="getInfo['+v.videoId+'][description]" class="form-control"  rows="8">' +v.shortDescription +'</textarea>'+
-                                        '</div>'+
-                                    '</div>'+
+                                '<div class="form-group col-lg-6">' +
+                                '<label for="name">Description</label>' +
+                                '<textarea  id="getInfo_'+v.videoId+'_description" name="getInfo['+v.videoId+'][description]" class="form-control"  rows="8">' +v.shortDescription +'</textarea>'+
+                                '</div>'+
+                                '</div>'+
                                 '</div>';
                             // $('#tab_content_result_getInfo').append(html);
                         })
@@ -452,7 +508,152 @@ $button = $header['button'];
 
             });
 
+            $(document).on('click', '#videoList', function () {
+                $('#modalCreateList').modal('show');
+                $('#select_tags_channel').select2();
+            });
 
+            let MusicsList = $('#tableMusicsList').DataTable();
+
+            $(document).on('click', '.getInfoChannel', function () {
+                const _id = $("#music_id_channel").val();
+                $.ajax({
+                    type: "get",
+                    url: "{{ asset("admin/musics/get-info-list-video?channel_id=") }}" + btoa(_id),
+                    success: function (data) {
+                        var selected = [];
+                        MusicsList = $('#tableMusicsList').DataTable({
+                            searching: false,
+                            destroy: true,
+                            displayLength: 5,
+                            data: data,
+                            columns: [
+                                {data: 'videoId', className: 'align-middle'},
+                                {data: 'thumbnails', className: "text-center align-middle "},
+                                {data: 'title',},
+                            ],
+
+                            columnDefs: [
+                                {
+                                    // For Checkboxes
+                                    targets: 0,
+                                    // visible: false,
+                                    orderable: false,
+                                    responsivePriority: 3,
+                                    render: function (data, type, full, meta) {
+                                        return (
+                                            '<div class="custom-control custom-checkbox"> ' +
+                                            '<input class="custom-control-input" type="checkbox" value="' + [data] + '" name="'+full.title+'" id="checkbox' + data + '" />' +
+                                            // '<input class="custom-control-input" type="checkbox"  name="'+full.title+'" id="checkbox' + data + '" />' +
+                                            '<label class="custom-control-label" for="checkbox' + data + '"></label>' +
+                                            '</div>'
+                                        );
+                                    },
+                                    checkboxes: {
+                                        selectAllRender:
+                                            '<div class="form-check"> <input class="form-check-input" type="checkbox" value="" id="checkboxSelectAll" /><label class="form-check-label" for="checkboxSelectAll"></label></div>'
+                                    }
+                                },
+
+                            ],
+                            order: [2, 'desc'],
+                        });
+                    },
+                    error: function (data) {
+                        console.log('Error:', data);
+                    }
+                });
+
+            });
+
+            $(document).on('click', '.getInfoList', function () {
+                const playlist_id = $("#music_id_list").val();
+                $.ajax({
+                    type: "get",
+                    url: "{{ asset("admin/musics/get-info-list-video?playlist_id=") }}" + btoa(playlist_id),
+                    success: function (data) {
+                        var selected = [];
+                        MusicsList = $('#tableMusicsList').DataTable({
+                            searching: false,
+                            destroy: true,
+                            displayLength: 5,
+                            data: data,
+                            columns: [
+                                {data: 'videoId', className: 'align-middle'},
+                                {data: 'thumbnails', className: "text-center align-middle "},
+                                {data: 'title',},
+                            ],
+
+                            columnDefs: [
+                                {
+                                    // For Checkboxes
+                                    targets: 0,
+                                    // visible: false,
+                                    orderable: false,
+                                    responsivePriority: 3,
+                                    render: function (data, type, full, meta) {
+                                        return (
+                                            '<div class="custom-control custom-checkbox"> ' +
+                                            '<input class="custom-control-input" type="checkbox" value="' + [data] + '" name="'+full.title+'" id="checkbox' + data + '" />' +
+                                            // '<input class="custom-control-input" type="checkbox"  name="'+full.title+'" id="checkbox' + data + '" />' +
+                                            '<label class="custom-control-label" for="checkbox' + data + '"></label>' +
+                                            '</div>'
+                                        );
+                                    },
+                                    checkboxes: {
+                                        selectAllRender:
+                                            '<div class="form-check"> <input class="form-check-input" type="checkbox" value="" id="checkboxSelectAll" /><label class="form-check-label" for="checkboxSelectAll"></label></div>'
+                                    }
+                                },
+
+                            ],
+                            order: [2, 'desc'],
+                        });
+                    },
+                    error: function (data) {
+                        console.log('Error:', data);
+                    }
+                });
+
+            });
+
+            $('#select_all').on('click', function(){
+                // Check/uncheck all checkboxes in the table
+                const rows = MusicsList.rows({'search': 'applied'}).nodes();
+                $('input[type="checkbox"]', rows).prop('checked', this.checked);
+            });
+
+            $('#formCreateList').on('submit', function (event) {
+                event.preventDefault();
+                var videoID = MusicsList.$('input[type="checkbox"]').serializeArray();
+                var tags = $('#select_tags_channel').val();
+
+                $.ajax({
+                    data: {'tags': tags, videoID},
+                    url: '{{route('musics.createListVideos')}}',
+                    type: "POST",
+                    dataType: 'json',
+                    // processData: false,
+                    // contentType: false,
+                    success: function (data) {
+                        if (data.success) {
+                            $('#formCreateList').trigger("reset");
+                            toastr['success'](data.success, 'Success!');
+                            $('#modalCreateList').modal('hide');
+                            dtTable.draw();
+
+
+                        }
+                        if (data.errors) {
+                            for (var count = 0; count < data.errors.length; count++) {
+                                toastr['error'](data.errors[count], 'Error!',);
+                            }
+                        }
+                    }
+                });
+
+
+            });
 
             $(document).on('click', '.editMusic', function (data) {
                 $('#formEditMusic').trigger("reset");
@@ -468,6 +669,7 @@ $button = $header['button'];
 
                         $('#id').val(data.id);
                         // $('#music_id_ytb').val(data.music_id_ytb);
+                        $('#music_title').val(data.music_title);
                         $('#music_thumbnail_link').val(data.music_thumbnail_link);
                         $('#link_thumbnail').attr("src", data.music_thumbnail_link);
 

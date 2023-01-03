@@ -160,6 +160,9 @@ Route::group(['prefix'=>env('ADMIN_PAGE','admin')], function (){
 
         Route::get('/get-info-ytb',[MusicsController::class,'getInfoYTB'])->name('musics.getInfoYTB');
         Route::post('/createYTB}',[MusicsController::class,'createYTB'])->name('musics.createYTB');
+
+        Route::get('/get-info-list-video',[MusicsController::class,'listVideos'])->name('musics.listVideos');
+        Route::post('/create-list-video',[MusicsController::class,'createListVideos'])->name('musics.createListVideos');
     });
 
     Route::group(['prefix'=>'sites'], function (){

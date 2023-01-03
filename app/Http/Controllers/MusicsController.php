@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+
+use Alaouy\Youtube\Youtube;
 use App\Musics;
 
 use App\Tags;
@@ -18,9 +20,12 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
-
-
 use YouTube\YouTubeDownloader;
+
+
+
+//use YouTube\YouTubeDownloader;
+//use Masih\YoutubeDownloader\YoutubeDownloader;
 
 
 class MusicsController extends Controller
@@ -68,6 +73,7 @@ class MusicsController extends Controller
             'button' => [
 //                'Create'            => ['id'=>'createMusics','style'=>'primary'],
                 'Create YTB'        => ['id'=>'createYTB','style'=>'success'],
+                'Play List'        => ['id'=>'videoList','style'=>'primary'],
 //                'Update Multiple'   => ['id'=>'update_multipleMusics','style'=>'warning'],
             ]
 
@@ -542,18 +548,13 @@ class MusicsController extends Controller
 
     }
 
+
+
     public function getInfoYTB(Request $request): \Illuminate\Http\JsonResponse
     {
-
-
         $ytb_id = base64_decode($request->ytb_id);
-
-
         $youtube = new YouTubeDownloader();
-
         $list_id = preg_split("/[|]+/",$ytb_id);
-
-
 
         $dataArr = [];
         foreach ($list_id as $id){
@@ -621,10 +622,7 @@ class MusicsController extends Controller
                 ],
                 [
                     'music_url_link_audio_ytb'=>$value['url_audio'],
-//                    'music_view_count'=>$value['viewCount'],
-//                    'music_description'=> ($value['description']),
                     'music_title'=> ($value['title']),
-//                    'music_keywords'=> ($value['keywords']),
                     'music_thumbnail_link'=>  "https://i.ytimg.com/vi_webp/$key/mqdefault.webp",
                     'expire' => time(),
                 ]
@@ -726,6 +724,69 @@ class MusicsController extends Controller
         return $arr;
     }
 
+
+    public function listVideos(Request $request, $page_limit = 50){
+
+        $limit = $_GET['page_limit']?? $page_limit;
+        $API_KEY = env('YOUTUBE_API_KEY');
+        try {
+            $video = new Youtube($API_KEY);
+            $data_arr = [];
+            if(isset($request->channel_id)){
+                $list_video = $video->listChannelVideos(base64_decode($request->channel_id),$limit);
+                foreach ($list_video as $item ){
+                    $data_arr[] = array(
+                        "videoId" => $item->id->videoId,
+                        "title" =>$item->snippet->title,
+                        "thumbnails" => '<img alt="'.$item->id->videoId.'"  src="https://i.ytimg.com/vi_webp/'.$item->id->videoId.'/mqdefault.webp" width="150" ">',
+                    );
+                }
+            }elseif (isset($request->playlist_id)){
+                $list_video = $video->getPlaylistItemsByPlaylistId(base64_decode($request->playlist_id));
+                foreach ($list_video['results'] as $item ){
+                    $data_arr[] = array(
+                        "videoId" => $item->snippet->resourceId->videoId,
+                        "title" =>$item->snippet->title,
+                        "thumbnails" => '<img alt="'.$item->snippet->resourceId->videoId.'"  src="https://i.ytimg.com/vi_webp/'.$item->snippet->resourceId->videoId.'/mqdefault.webp" width="150" ">',
+                    );
+                }
+            }
+
+            return response()->json($data_arr);
+        } catch (\Exception $e) {
+            Log::error('Error: listChannelVideos: ');
+        }
+    }
+
+    public function createListVideos(Request $request){
+        $rules = [
+            'videoID' =>'required',
+        ];
+        $message = [
+            'videoID.required'=>'Vui lòng chọn ít nhất 1 video',
+
+        ];
+        $error = Validator::make($request->all(),$rules, $message );
+
+        if($error->fails()){
+            return response()->json(['errors'=> $error->errors()->all()]);
+        }
+        $videosId = $request->videoID;
+        foreach ($videosId as $video){
+            $music = Musics::updateOrCreate(
+                [
+                    'music_id_ytb' =>$video['value']
+                ],
+                [
+                    'music_title'=> $video['name'],
+                    'music_thumbnail_link'=>  'https://i.ytimg.com/vi_webp/'.$video['value'].'/mqdefault.webp',
+                    'expire' => time(),
+                ]
+            );
+            $music->tags()->sync($request->tags);
+        }
+        return response()->json(['success'=>'Thành công.']);
+    }
 
 
 }
