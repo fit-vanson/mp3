@@ -236,14 +236,14 @@ $button = $header['button'];
                                     <thead>
                                     <tr>
 
-                                        <th>
+                                        <th style="width: 10%">
                                             <div class="custom-control custom-checkbox">
                                                 <input class="custom-control-input" type="checkbox" name="select_all" value="1" id="select_all" />
                                                 <label class="custom-control-label" for="select_all"></label>
                                             </div>
                                         </th>
-                                        <th >Image</th>
-                                        <th >Title</th>
+                                        <th style="width: 30%">Image</th>
+                                        <th style="width: 60%">Title</th>
 
                                     </tr>
                                     </thead>
