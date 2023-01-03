@@ -10,8 +10,8 @@
 
             <a target="_blank" href="//{{$site->site_web}}"><p class="card-title-desc">{{$site->site_web}}</p></a>
             <p style="text-align: center">
-                <a class="image-popup-no-margins" href="{{$site->site_logo_url ? $site->site_logo_url :   URL::asset('/storage/sites/'.$site->site_image) }}">
-                    <img class="img-fluid" alt="" src="{{ $site->site_logo_url ? $site->site_logo_url : URL::asset('/storage/sites/'.$site->site_image) }}" width="75">
+                <a class="image-popup-no-margins" href="{{$site->site_logo_url ? $site->site_logo_url :   URL::asset('/storage/sites/'.$site->id.'/'.$site->site_image) }}">
+                    <img class="img-fluid" alt="" src="{{ $site->site_logo_url ? $site->site_logo_url : URL::asset('/storage/sites/'.$site->id.'/'.$site->site_image) }}" width="75">
                 </a>
             </p>
             <dl class="row mb-0">
