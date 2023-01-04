@@ -569,29 +569,29 @@ $button = $header['button'];
                                 {data: 'title',},
                             ],
 
-                            // columnDefs: [
-                            //     {
-                            //         // For Checkboxes
-                            //         targets: 0,
-                            //         // visible: false,
-                            //         orderable: false,
-                            //         responsivePriority: 3,
-                            //         render: function (data, type, full, meta) {
-                            //             return (
-                            //                 '<div class="custom-control custom-checkbox"> ' +
-                            //                 '<input class="custom-control-input" type="checkbox" value="' + [data] + '" name="'+full.title+'" id="checkbox' + data + '" />' +
-                            //                 // '<input class="custom-control-input" type="checkbox"  name="'+full.title+'" id="checkbox' + data + '" />' +
-                            //                 '<label class="custom-control-label" for="checkbox' + data + '"></label>' +
-                            //                 '</div>'
-                            //             );
-                            //         },
-                            //         checkboxes: {
-                            //             selectAllRender:
-                            //                 '<div class="form-check"> <input class="form-check-input" type="checkbox" value="" id="checkboxSelectAll" /><label class="form-check-label" for="checkboxSelectAll"></label></div>'
-                            //         }
-                            //     },
-                            //
-                            // ],
+                            columnDefs: [
+                                {
+                                    // For Checkboxes
+                                    targets: 0,
+                                    // visible: false,
+                                    orderable: false,
+                                    responsivePriority: 3,
+                                    render: function (data, type, full, meta) {
+                                        return (
+                                            '<div class="custom-control custom-checkbox"> ' +
+                                            '<input class="custom-control-input" type="checkbox" value="' + [data] + '" name="'+full.title+'" id="checkbox' + data + '" />' +
+                                            // '<input class="custom-control-input" type="checkbox"  name="'+full.title+'" id="checkbox' + data + '" />' +
+                                            '<label class="custom-control-label" for="checkbox' + data + '"></label>' +
+                                            '</div>'
+                                        );
+                                    },
+                                    checkboxes: {
+                                        selectAllRender:
+                                            '<div class="form-check"> <input class="form-check-input" type="checkbox" value="" id="checkboxSelectAll" /><label class="form-check-label" for="checkboxSelectAll"></label></div>'
+                                    }
+                                },
+
+                            ],
                             order: [2, 'desc'],
                         });
                     },
