@@ -727,35 +727,57 @@ class MusicsController extends Controller
 
     public function listVideos(Request $request, $page_limit = 50){
 
-        $limit = $_GET['page_limit']?? $page_limit;
-        $API_KEY = env('YOUTUBE_API_KEY');
-        try {
-            $video = new Youtube($API_KEY);
-            $data_arr = [];
-            if(isset($request->channel_id)){
-                $list_video = $video->listChannelVideos(base64_decode($request->channel_id),$limit);
-                foreach ($list_video as $item ){
-                    $data_arr[] = array(
-                        "videoId" => $item->id->videoId,
-                        "title" =>$item->snippet->title,
-                        "thumbnails" => '<img alt="'.$item->id->videoId.'"  src="https://i.ytimg.com/vi_webp/'.$item->id->videoId.'/mqdefault.webp" width="150" ">',
-                    );
-                }
-            }elseif (isset($request->playlist_id)){
-                $list_video = $video->getPlaylistItemsByPlaylistId(base64_decode($request->playlist_id));
-                foreach ($list_video['results'] as $item ){
-                    $data_arr[] = array(
-                        "videoId" => $item->snippet->resourceId->videoId,
-                        "title" =>$item->snippet->title,
-                        "thumbnails" => '<img alt="'.$item->snippet->resourceId->videoId.'"  src="https://i.ytimg.com/vi_webp/'.$item->snippet->resourceId->videoId.'/mqdefault.webp" width="150" ">',
-                    );
-                }
+        if (isset($request->link_mucsic)){
+            $ytb_id = base64_decode($request->link_mucsic);
+            $youtube = new YouTubeDownloader();
+            if (filter_var($ytb_id, FILTER_VALIDATE_URL) === FALSE) {
+                $downloadOptions = $youtube->getDownloadLinks("https://www.youtube.com/watch?v=" . trim($ytb_id));
+            }else{
+                $downloadOptions = $youtube->getDownloadLinks(trim($ytb_id));
             }
+            $channelId = $downloadOptions->getInfo()->getChannelId();
+            return response()->json($channelId);
+        }else{
+            $limit = $_GET['page_limit']?? $page_limit;
+            $API_KEY = env('YOUTUBE_API_KEY','AIzaSyD-fR2VVsOhrx6cF80FEmGOaminbeLPl2k');
 
-            return response()->json($data_arr);
-        } catch (\Exception $e) {
-            Log::error('Error: listChannelVideos: ');
+            try {
+                $video = new Youtube($API_KEY);
+                $data_arr = [];
+                if(isset($request->channel_id)){
+                    $list_video = $video->listChannelVideos(base64_decode($request->channel_id),$limit);
+                    foreach ($list_video as $item ){
+                        $data_arr[] = array(
+                            "videoId" => $item->id->videoId,
+                            "title" =>$item->snippet->title,
+                            "thumbnails" => '<img alt="'.$item->id->videoId.'"  src="https://i.ytimg.com/vi_webp/'.$item->id->videoId.'/mqdefault.webp" width="150" ">',
+                        );
+                    }
+                }elseif (isset($request->playlist_id)){
+                    $list_video = $video->getPlaylistItemsByPlaylistId(base64_decode($request->playlist_id));
+                    foreach ($list_video['results'] as $item ){
+                        $data_arr[] = array(
+                            "videoId" => $item->snippet->resourceId->videoId,
+                            "title" =>$item->snippet->title,
+                            "thumbnails" => '<img alt="'.$item->snippet->resourceId->videoId.'"  src="https://i.ytimg.com/vi_webp/'.$item->snippet->resourceId->videoId.'/mqdefault.webp" width="150" ">',
+                        );
+                    }
+                }
+//                $draw = $request->get('draw');
+//                $response = array(
+//                    "draw" => intval($draw),
+//                    "iTotalRecords" => $video->page_info['totalResults'],
+//                    "aaData" => $data_arr,
+//                );
+//                return  json_encode($response);
+
+                return response()->json($data_arr);
+            } catch (\Exception $e) {
+                Log::error('Error: listChannelVideos: ');
+            }
         }
+
+
     }
 
     public function createListVideos(Request $request){

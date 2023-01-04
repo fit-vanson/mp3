@@ -190,10 +190,28 @@ $button = $header['button'];
                 <div class="card-body">
                     <form id="formCreateList" name="formCreateList" class="form-horizontal" enctype="multipart/form-data">
                         <div class="mb-4">
+
                             <div class="inner form-group">
-                                <label>Channel YouTuBe </label>
+                                <label>Get ID Channel </label>
+{{--                                <p class="text-muted">https://www.youtube.com/channel/<code>UCH47ZILH_ksP_fALgRaEP9g</code></p>--}}
                                 <div class="inner mb-3 row">
                                     <div class="col-md-10 col-8">
+                                        <input type="text" id="music_link_music" name="music_link_music" class="inner form-control" placeholder="Link bài hát bất kỳ của kênh ...">
+                                    </div>
+                                    <div class="col-md-2 col-4">
+                                        <a href="javascript:void(0)" class="btn btn-primary btn-block inner getIDChannel">Get ID Channel</a>
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+                            <div class="inner form-group">
+                                <label>Channel YouTuBe </label>
+                                <p class="text-muted">https://www.youtube.com/channel/<code>UCH47ZILH_ksP_fALgRaEP9g</code></p>
+                                <div class="inner mb-3 row">
+                                    <div class="col-md-10 col-8">
+
                                         <input type="text"  id="music_id_channel" name="music_id_channel" class="inner form-control" placeholder="Enter ID Channel ...">
                                     </div>
                                     <div class="col-md-2 col-4">
@@ -206,6 +224,7 @@ $button = $header['button'];
 
                             <div class="inner form-group">
                                 <label>Play List YouTuBe </label>
+                                <p class="text-muted">https://www.youtube.com/playlist?list=<code>PLaF9wIrIXl1nN6jfm945iBjcegS7vGsws</code></p>
                                 <div class="inner mb-3 row">
                                     <div class="col-md-10 col-8">
                                         <input type="text"  id="music_id_list" name="music_id_list" class="inner form-control" placeholder="Enter ID Channel ...">
@@ -515,17 +534,34 @@ $button = $header['button'];
 
             let MusicsList = $('#tableMusicsList').DataTable();
 
+            $(document).on('click', '.getIDChannel', function () {
+                const _id = $("#music_link_music").val();
+                $.ajax({
+                    type: "get",
+                    url: "{{ asset("admin/musics/get-info-list-video?link_mucsic=") }}" + btoa(_id),
+                    success: function (data) {
+                        $("#music_id_channel").val(data);
+
+                    },
+                    error: function (data) {
+                        console.log('Error:', data);
+                    }
+                });
+
+            });
+
             $(document).on('click', '.getInfoChannel', function () {
                 const _id = $("#music_id_channel").val();
                 $.ajax({
                     type: "get",
                     url: "{{ asset("admin/musics/get-info-list-video?channel_id=") }}" + btoa(_id),
                     success: function (data) {
+                        console.log(data)
                         var selected = [];
                         MusicsList = $('#tableMusicsList').DataTable({
                             searching: false,
                             destroy: true,
-                            displayLength: 5,
+                            // displayLength: 5,
                             data: data,
                             columns: [
                                 {data: 'videoId', className: 'align-middle'},
@@ -533,29 +569,29 @@ $button = $header['button'];
                                 {data: 'title',},
                             ],
 
-                            columnDefs: [
-                                {
-                                    // For Checkboxes
-                                    targets: 0,
-                                    // visible: false,
-                                    orderable: false,
-                                    responsivePriority: 3,
-                                    render: function (data, type, full, meta) {
-                                        return (
-                                            '<div class="custom-control custom-checkbox"> ' +
-                                            '<input class="custom-control-input" type="checkbox" value="' + [data] + '" name="'+full.title+'" id="checkbox' + data + '" />' +
-                                            // '<input class="custom-control-input" type="checkbox"  name="'+full.title+'" id="checkbox' + data + '" />' +
-                                            '<label class="custom-control-label" for="checkbox' + data + '"></label>' +
-                                            '</div>'
-                                        );
-                                    },
-                                    checkboxes: {
-                                        selectAllRender:
-                                            '<div class="form-check"> <input class="form-check-input" type="checkbox" value="" id="checkboxSelectAll" /><label class="form-check-label" for="checkboxSelectAll"></label></div>'
-                                    }
-                                },
-
-                            ],
+                            // columnDefs: [
+                            //     {
+                            //         // For Checkboxes
+                            //         targets: 0,
+                            //         // visible: false,
+                            //         orderable: false,
+                            //         responsivePriority: 3,
+                            //         render: function (data, type, full, meta) {
+                            //             return (
+                            //                 '<div class="custom-control custom-checkbox"> ' +
+                            //                 '<input class="custom-control-input" type="checkbox" value="' + [data] + '" name="'+full.title+'" id="checkbox' + data + '" />' +
+                            //                 // '<input class="custom-control-input" type="checkbox"  name="'+full.title+'" id="checkbox' + data + '" />' +
+                            //                 '<label class="custom-control-label" for="checkbox' + data + '"></label>' +
+                            //                 '</div>'
+                            //             );
+                            //         },
+                            //         checkboxes: {
+                            //             selectAllRender:
+                            //                 '<div class="form-check"> <input class="form-check-input" type="checkbox" value="" id="checkboxSelectAll" /><label class="form-check-label" for="checkboxSelectAll"></label></div>'
+                            //         }
+                            //     },
+                            //
+                            // ],
                             order: [2, 'desc'],
                         });
                     },
