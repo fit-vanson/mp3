@@ -237,8 +237,8 @@ class MusicsController extends Controller
             $btn .= ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-danger deleteMusic"><i class="ti-trash"></i></a>';
 
             $image_url = '<a target="_blank" href="https://www.youtube.com/watch?v='.$record->music_id_ytb.'"><img alt="'.$record->music_id_ytb.'"  src="'.$record->music_thumbnail_link .'" width="150" "></a>';
-            $music_ytb      =  '<a class="popup-music btn btn-secondary" href="'.asset('getLinkYTB').'/'.$record->music_id_ytb.'">Open Music</a>' ;
-
+            $style_time = $record->expire > time() ?: 'red';
+            $music_ytb  =  '<a class="popup-music btn btn-secondary  align-middle" href="'.asset('getLinkYTB').'/'.$record->music_id_ytb.'">Open Music</a><p  style="color: '.$style_time.'">'.date('h:i:s d-m-Y',$record->expire).'</p>';
             $data_arr[] = array(
                 "id" => $record->id,
                 "music_thumbnail_link" => $image_url,
