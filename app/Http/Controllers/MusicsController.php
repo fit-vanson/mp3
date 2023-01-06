@@ -627,7 +627,7 @@ class MusicsController extends Controller
                     'expire' => time(),
                 ]
             );
-            $music->tags()->sync($request->select_tags);
+            $music->tags()->syncWithoutDetaching($request->select_tags);
         }
         return response()->json(['success'=>'Thành công.']);
     }
@@ -724,7 +724,6 @@ class MusicsController extends Controller
         return $arr;
     }
 
-
     public function listVideos(Request $request, $page_limit = 50){
 
         if (isset($request->link_mucsic)){
@@ -805,7 +804,7 @@ class MusicsController extends Controller
                     'expire' => time(),
                 ]
             );
-            $music->tags()->sync($request->tags);
+            $music->tags()->syncWithoutDetaching($request->tags);
         }
         return response()->json(['success'=>'Thành công.']);
     }
