@@ -130,7 +130,7 @@ class ApiV5Controller extends Controller
 
     public function home_components(){
         $home_components = [];
-        $data = ['Banner Slider','Category','Top Sounds','Popular Sounds','Recently Played'];
+        $data = ['Banner Slider','Category','Top Sounds','Popular Sounds','Recently Played','Random'];
         foreach ($data as $key=>$value){
             $home_components[] =[
                 'home_components_id' => $key+1,
@@ -220,6 +220,10 @@ class ApiV5Controller extends Controller
                 $data = get_songs($site,10,'music_view_count');
                 $getResource = MusicResource::collection($data);
                 break;
+            case 'Random':
+                $data = get_songs($site,10);
+                $getResource = MusicResource::collection($data);
+                break;
 
         }
         return \Response::json($getResource);
@@ -230,9 +234,27 @@ class ApiV5Controller extends Controller
         $category_id = $request->category_id;
         $androidId = $request->android_id;
 
+        $page_limit = 3;
+        $page = $_GET['page'] ?? 1;
+        $limit=($page-1) * $page_limit;
+
+
         $site = getSite();
         $category = Categories::findOrFail($category_id);
-        $data = get_category_details($site,$category,20);
+//        $data = get_category_details($site,$category,20);
+
+        $data = $category
+            ->music()
+            ->with(['categories' => function($query) {
+                $query->where('site_id', getSite()->id);
+            }])
+            ->where('status',0)
+            ->distinct()
+//            ->inRandomOrder()
+            ->skip($limit)
+            ->take($page_limit)
+            ->get();
+
         $getResource = [];
         foreach ($data as $item ){
             $item->fav = check_favourite($site,$androidId,$item->id);
