@@ -58,7 +58,6 @@ class ApiV5Controller extends Controller
         header('Content-Type: application/json; charset=utf-8');
         return \Response::json(array(
             'ONLINE_MP3_APP' => $result,
-            'status_code' => 200
         ));
 
     }
@@ -114,6 +113,10 @@ class ApiV5Controller extends Controller
             'isScreenshot' => false,
             'facebook_login' => false,
             'google_login' => false,
+
+            'envato_purchase_code' => "",
+            'app_api_key' => "",
+
         );
         return $response;
     }
