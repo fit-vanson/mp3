@@ -9,8 +9,8 @@ class ApiV5Controller extends Controller
 {
     function checkSignSalt($data_info){
 
-//        $key="vietmmozxcv";
-        $key="nemosofts";
+        $key="vietmmozxcv";
+//        $key="nemosofts";
 
         $data_json = $data_info;
 
@@ -49,7 +49,6 @@ class ApiV5Controller extends Controller
     }
     public function get_data(){
         $get_data= $this->checkSignSalt($_POST['data']);
-        dd($get_data);
 
         $method_name = $get_data['method_name'];
         switch ($method_name){
