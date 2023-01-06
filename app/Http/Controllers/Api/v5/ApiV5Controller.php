@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\v5;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\v5\CategoryHomeResource;
+use App\Http\Resources\v5\CategoryResource;
 use App\Http\Resources\v5\MusicResource;
 use Illuminate\Http\Request;
 
@@ -202,9 +203,12 @@ class ApiV5Controller extends Controller
         $home_components_name = $request->home_components_name;
         switch ($home_components_name){
             case 'Category':
-            case 'Banner Slider':
                 $data = get_categories($site,10);
                 $getResource = CategoryHomeResource::collection($data);
+                break;
+            case 'Banner Slider':
+                $data = get_categories($site,10);
+                $getResource = CategoryResource::collection($data);
                 break;
             case 'Top Sounds':
                 $data = get_songs($site,10,'music_like_count');
