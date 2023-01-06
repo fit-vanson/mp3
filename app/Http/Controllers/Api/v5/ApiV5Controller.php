@@ -243,9 +243,6 @@ class ApiV5Controller extends Controller
             $page_limit =10;
         }
 
-
-
-
         $site = getSite();
         $category = Categories::findOrFail($category_id);
 //        $data = get_category_details($site,$category,20);
@@ -260,7 +257,9 @@ class ApiV5Controller extends Controller
 //            ->inRandomOrder()
 //            ->skip($start)
 //            ->take($page_limit,$start)
-            ->get($page_limit,$start);
+            ->skip($start)
+            ->take($page_limit)
+            ->get();
         dd($data);
 
         $getResource = [];
