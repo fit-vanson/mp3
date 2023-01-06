@@ -130,7 +130,7 @@ class ApiV5Controller extends Controller
 
     public function home_components(){
         $home_components = [];
-        $data = ['Banner Slider','Category','Top Sounds','Popular Sounds','Recently Played','Random'];
+        $data = ['Banner Slider','Category','Top Sounds','Popular Sounds','Recently Played','Sleep Stories'];
         foreach ($data as $key=>$value){
             $home_components[] =[
                 'home_components_id' => $key+1,
@@ -220,7 +220,7 @@ class ApiV5Controller extends Controller
                 $data = get_songs($site,10,'music_view_count');
                 $getResource = MusicResource::collection($data);
                 break;
-            case 'Random':
+            case 'Sleep Stories':
                 $data = get_songs($site,10);
                 $getResource = MusicResource::collection($data);
                 break;
