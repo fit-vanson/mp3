@@ -254,13 +254,10 @@ class ApiV5Controller extends Controller
             }])
             ->where('status',0)
             ->distinct()
-//            ->inRandomOrder()
-//            ->skip($start)
-//            ->take($page_limit,$start)
             ->skip($start)
             ->take($page_limit)
             ->get();
-        dd($data);
+
 
         $getResource = [];
         foreach ($data as $item ){
