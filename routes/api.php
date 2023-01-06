@@ -108,7 +108,9 @@ Route::group([
 Route::group([
     "prefix" => "v5"
 ], function() {
+    Route::get('/settingsFlag', [ApiV5Controller::class, 'settingsFlag']);
     Route::post('/home_components', [ApiV5Controller::class, 'home_components']);
+    Route::post('/home', [ApiV5Controller::class, 'home']);
 
 
 

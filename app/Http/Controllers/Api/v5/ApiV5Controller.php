@@ -64,7 +64,140 @@ class ApiV5Controller extends Controller
 
     }
 
+    public function settingsFlag(){
+
+
+        $site = getSite();
+        $app_name = $site->site_app_name;
+        $app_package_name = $site->site_package ?? "com.vietmmonet.abcdzxcv";
+        $site_ads = json_decode($site->site_ads, true);
+        $status_ads = $site->ad_switch == 1 ? "ENABLE" : "DISABLE";
+
+        $response[] = array(
+            'app_name' => $app_name,
+            'app_logo' =>  'https://'.getDomain().'/storage/sites/'.$site->id.'/'.$site->site_image,
+            'app_version' => $site->site_app_version,
+            'app_author' => $site->site_app_version,
+            "app_contact"=> "",
+            "app_email"=>"info@".getDomain(),
+            "app_website"=> getDomain(),
+            "app_description"=> getDomain(),
+            "app_developed_by"=> getDomain(),
+            "app_privacy_policy"=> getDomain(),
+            'package_name' => $app_package_name,
+
+            'publisher_id' => $site_ads ? $site_ads['AdMob_Publisher_ID'] : "",
+            'interstitial_id' => $status_ads,
+            'interstital_ad_type' => "admob",
+            'interstital_ad_id' => $site_ads ? $site_ads['AdMob_Interstitial_Ad_Unit_ID'] : "",
+            'interstital_ad_click' => 5,
+
+            'banner_ad_type' => "admob",
+            'banner_ad' => $status_ads,
+            'banner_ad_id' => $site_ads ? $site_ads['AdMob_Banner_Ad_Unit_ID'] : "",
+            'banner_size' => "BANNER",
+
+            'native_ad' => $status_ads,
+            'native_ad_type' => "admob",
+            'native_ad_id' => $site_ads ? $site_ads['AdMob_Native_Ad_Unit_ID'] : "",
+            'native_position' => 5,
+
+            'isUpdate' => false,
+            'version' => $site->site_app_version,
+            'version_name' => $site->site_app_version,
+            'description' => $site->site_app_version,
+            'url' => $site->site_link,
+            'isRTL' => false,
+
+            'isSongDownload' => true,
+            'isMoviePromote' => true,
+            'isNews' => true,
+            'isAppMaintenance' => false,
+            'isScreenshot' => false,
+            'facebook_login' => false,
+            'google_login' => false,
+
+            'envato_purchase_code' => "5w9wsru9-8685-hx977-uv839-8545x4ykx4t2",
+            'app_api_key' => "dh9bmctw-5265-jfl2-h85y-42pcnzkjb3n9",
+
+        );
+        return $response;
+    }
+
     public function home_components(){
+        $home_components = [];
+        $data = ['Banner Slider','Category','Top Sounds','Popular Sounds','Recently Played'];
+        foreach ($data as $key=>$value){
+            $home_components[] =[
+                'home_components_id' => $key+1,
+                'home_components_name' => $value,
+                'home_components_order' => $key+1,
+                'home_components_status' => "ENABLE"
+            ];
+        }
+        return \Response::json($home_components);
+
+        $site = getSite();
+        $app_name = $site->site_app_name;
+        $app_package_name = $site->site_package ?? "com.vietmmonet.abcdzxcv";
+        $site_ads = json_decode($site->site_ads, true);
+        $status_ads = $site->ad_switch == 1 ? true : false;
+
+        $response[] = array(
+            'app_name' => $app_name,
+            'app_logo' =>  'https://'.getDomain().'/storage/sites/'.$site->id.'/'.$site->site_image,
+            'app_version' => $site->site_app_version,
+            'app_author' => $site->site_app_version,
+            "app_contact"=> "",
+            "app_email"=>"info@".getDomain(),
+            "app_website"=> getDomain(),
+            "app_description"=> getDomain(),
+            "app_developed_by"=> getDomain(),
+            "app_privacy_policy"=> getDomain(),
+            'package_name' => $app_package_name,
+
+            'publisher_id' => $site_ads ? $site_ads['AdMob_Publisher_ID'] : "",
+            'interstitial_id' => $status_ads,
+            'interstital_ad_type' => "admob",
+            'interstital_ad_id' => $site_ads ? $site_ads['AdMob_Interstitial_Ad_Unit_ID'] : "",
+            'interstital_ad_click' => 5,
+
+            'banner_ad_type' => "admob",
+            'banner_ad' => $status_ads,
+            'banner_ad_id' => $site_ads ? $site_ads['AdMob_Banner_Ad_Unit_ID'] : "",
+            'banner_size' => "BANNER",
+
+            'native_ad' => $status_ads,
+            'native_ad_type' => "admob",
+            'native_ad_id' => $site_ads ? $site_ads['AdMob_Native_Ad_Unit_ID'] : "",
+            'native_position' => 5,
+
+            'isUpdate' => false,
+            'version' => $site->site_app_version,
+            'version_name' => $site->site_app_version,
+            'description' => $site->site_app_version,
+            'url' => $site->site_link,
+            'isRTL' => false,
+
+            'isSongDownload' => true,
+            'isMoviePromote' => true,
+            'isNews' => true,
+            'isAppMaintenance' => false,
+            'isScreenshot' => false,
+            'facebook_login' => false,
+            'google_login' => false,
+
+            'envato_purchase_code' => "5w9wsru9-8685-hx977-uv839-8545x4ykx4t2",
+            'app_api_key' => "dh9bmctw-5265-jfl2-h85y-42pcnzkjb3n9",
+
+        );
+        return $response;
+    }
+
+    public function home(Request $request){
+
+        $home_components_name = $request->home_components_name;
+        dd($home_components_name);
         $home_components = [];
         $data = ['Banner Slider','Category','Top Sounds','Popular Sounds','Recently Played'];
         foreach ($data as $key=>$value){
