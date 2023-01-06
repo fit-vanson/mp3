@@ -114,8 +114,8 @@ class ApiV5Controller extends Controller
             'facebook_login' => false,
             'google_login' => false,
 
-            'envato_purchase_code' => "",
-            'app_api_key' => "",
+            'envato_purchase_code' => "1",
+            'app_api_key' => "1",
 
         );
         return $response;
