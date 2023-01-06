@@ -108,6 +108,11 @@ Route::group([
 Route::group([
     "prefix" => "v5"
 ], function() {
+    Route::post('/home_components', [ApiV5Controller::class, 'home_components']);
+
+
+
+
     Route::post('/get-data', [ApiV5Controller::class, 'get_data']);
     Route::post('/app_details', [ApiV4Controller::class, 'app_details']);
     Route::post('/home', [ApiV4Controller::class, 'home']);

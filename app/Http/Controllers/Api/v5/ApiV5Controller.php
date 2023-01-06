@@ -9,8 +9,8 @@ class ApiV5Controller extends Controller
 {
     function checkSignSalt($data_info){
 
-        $key="vietmmozxcv";
-//        $key="nemosofts";
+//        $key="vietmmozxcv";
+        $key="nemosofts";
 
         $data_json = $data_info;
 
@@ -49,6 +49,7 @@ class ApiV5Controller extends Controller
     }
     public function get_data(){
         $get_data= $this->checkSignSalt($_POST['data']);
+        dd($get_data);
 
         $method_name = $get_data['method_name'];
         switch ($method_name){
@@ -63,7 +64,18 @@ class ApiV5Controller extends Controller
 
     }
 
-    public function app_details($get_data){
+    public function home_components(){
+        $home_components = [];
+        $data = ['Banner Slider','Category','Top Sounds','Popular Sounds','Recently Played'];
+        foreach ($data as $key=>$value){
+            $home_components[] =[
+                'home_components_id' => $key+1,
+                'home_components_name' => $value,
+                'home_components_order' => $key+1,
+                'home_components_status' => "ENABLE"
+            ];
+        }
+        return \Response::json($home_components);
 
         $site = getSite();
         $app_name = $site->site_app_name;
