@@ -9,7 +9,8 @@ class ApiV5Controller extends Controller
 {
     function checkSignSalt($data_info){
 
-        $key="vietmmozxcv";
+//        $key="vietmmozxcv";
+        $key="nemosofts";
 
         $data_json = $data_info;
 
@@ -48,6 +49,7 @@ class ApiV5Controller extends Controller
     }
     public function get_data(){
         $get_data= $this->checkSignSalt($_POST['data']);
+        dd($get_data);
 
         $method_name = $get_data['method_name'];
         switch ($method_name){
@@ -114,8 +116,8 @@ class ApiV5Controller extends Controller
             'facebook_login' => false,
             'google_login' => false,
 
-            'envato_purchase_code' => "1",
-            'app_api_key' => "1",
+            'envato_purchase_code' => "5w9wsru9-8685-hx977-uv839-8545x4ykx4t2",
+            'app_api_key' => "dh9bmctw-5265-jfl2-h85y-42pcnzkjb3n9",
 
         );
         return $response;
