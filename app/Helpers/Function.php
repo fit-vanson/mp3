@@ -149,6 +149,33 @@ function load_feature($site){
 
 }
 
+function load_banner($site){
+    $data = false;
+    $isFake = checkBlockIp() ? 1 : 0;
+    $load_feature = $site->load_view_by;
+    switch ($load_feature){
+        case 1:
+            $data = get_songs($site,10,'music_like_count');
+            $getResource = MusicFeatureResource::collection($data);
+            break;
+        case 2:
+            $data = get_songs($site,10,'music_view_count');
+            $getResource = MusicFeatureResource::collection($data);
+            break;
+        case 3:
+            $data = get_categories($site,10);
+            $getResource = MusicForCategoryResource::collection($data);
+            break;
+        default:
+            $data =get_songs($site,10);
+            $getResource = MusicFeatureResource::collection($data);
+            break;
+    }
+    return $getResource;
+
+
+}
+
 function getHome($site){
     if (isset($_SERVER['HTTP_CLIENT_IP']))
         $ipaddress = $_SERVER['HTTP_CLIENT_IP'];

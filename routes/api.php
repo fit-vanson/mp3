@@ -114,24 +114,24 @@ Route::group([
 
 
 
-
-    Route::post('/get-data', [ApiV5Controller::class, 'get_data']);
-    Route::post('/app_details', [ApiV4Controller::class, 'app_details']);
-    Route::post('/home', [ApiV4Controller::class, 'home']);
-    Route::post('/home_collections', [ApiV4Controller::class, 'home_collections']);
-    Route::post('/trending_songs', [ApiV4Controller::class, 'trending_songs']);
-    Route::post('/song_by_category', [ApiV4Controller::class, 'song_by_category']);
-    Route::post('/home_slider_songs', [ApiV4Controller::class, 'home_slider_songs']);
-    Route::post('/home_recently_songs', [ApiV4Controller::class, 'home_recently_songs']);
-    Route::post('/category', [ApiV4Controller::class, 'category']);
-    Route::post('/all_musics', [ApiV4Controller::class, 'all_musics']);
-    Route::post('/latest_songs', [ApiV4Controller::class, 'latest_songs']);
-    Route::post('/song_view', [ApiV4Controller::class, 'song_view']);
-    Route::post('/song_download', [ApiV4Controller::class, 'song_download']);
-    Route::post('/song_favourite', [ApiV4Controller::class, 'song_favourite']);
-    Route::post('/user_favourite_songs', [ApiV4Controller::class, 'user_favourite_songs']);
-    Route::post('/search', [ApiV4Controller::class, 'search']);
-    Route::post('/search_single', [ApiV4Controller::class, 'search_single']);
+//
+//    Route::post('/get-data', [ApiV5Controller::class, 'get_data']);
+//    Route::post('/app_details', [ApiV4Controller::class, 'app_details']);
+//    Route::post('/home', [ApiV4Controller::class, 'home']);
+//    Route::post('/home_collections', [ApiV4Controller::class, 'home_collections']);
+//    Route::post('/trending_songs', [ApiV4Controller::class, 'trending_songs']);
+//    Route::post('/song_by_category', [ApiV4Controller::class, 'song_by_category']);
+//    Route::post('/home_slider_songs', [ApiV4Controller::class, 'home_slider_songs']);
+//    Route::post('/home_recently_songs', [ApiV4Controller::class, 'home_recently_songs']);
+//    Route::post('/category', [ApiV4Controller::class, 'category']);
+//    Route::post('/all_musics', [ApiV4Controller::class, 'all_musics']);
+//    Route::post('/latest_songs', [ApiV4Controller::class, 'latest_songs']);
+//    Route::post('/song_view', [ApiV4Controller::class, 'song_view']);
+//    Route::post('/song_download', [ApiV4Controller::class, 'song_download']);
+//    Route::post('/song_favourite', [ApiV4Controller::class, 'song_favourite']);
+//    Route::post('/user_favourite_songs', [ApiV4Controller::class, 'user_favourite_songs']);
+//    Route::post('/search', [ApiV4Controller::class, 'search']);
+//    Route::post('/search_single', [ApiV4Controller::class, 'search_single']);
 
 
 });

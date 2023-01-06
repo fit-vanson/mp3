@@ -688,6 +688,7 @@ class MusicsController extends Controller
 
                 $info->update([
                     'music_url_link_audio_ytb'=>$music_url_link_audio_ytb,
+                    'lengthSeconds'=>$downloadOptions->getInfo()->getLengthSeconds(),
                     'expire' => $expire,
                     'status'=> 0
                 ]);
