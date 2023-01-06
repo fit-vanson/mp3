@@ -234,9 +234,16 @@ class ApiV5Controller extends Controller
         $category_id = $request->category_id;
         $androidId = $request->android_id;
 
-        $page_limit = 3;
-        $page = $_GET['page'] ?? 1;
-        $limit=($page-1) * $page_limit;
+
+        $start = $request->start ?? '';
+        $end = $request->end ?? '';
+        if($start != '' and $end != ''){
+            $page_limit = $end - $start;
+        }else{
+            $page_limit =10;
+        }
+
+
 
 
         $site = getSite();
@@ -251,7 +258,7 @@ class ApiV5Controller extends Controller
             ->where('status',0)
             ->distinct()
 //            ->inRandomOrder()
-            ->skip($limit)
+            ->skip($start)
             ->take($page_limit)
             ->get();
 
