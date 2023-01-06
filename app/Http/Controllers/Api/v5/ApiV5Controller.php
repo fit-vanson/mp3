@@ -202,11 +202,11 @@ class ApiV5Controller extends Controller
         getHome($site);
         $home_components_name = $request->home_components_name;
         switch ($home_components_name){
-            case 'Category':
+            case 'Banner Slider':
                 $data = get_categories($site,10);
                 $getResource = CategoryHomeResource::collection($data);
                 break;
-            case 'Banner Slider':
+            case 'Category':
                 $data = get_categories($site,10);
                 $getResource = CategoryResource::collection($data);
                 break;
