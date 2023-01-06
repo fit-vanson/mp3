@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\v5;
 
+use App\Categories;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\v5\CategoryHomeResource;
 use App\Http\Resources\v5\CategoryResource;
@@ -223,4 +224,21 @@ class ApiV5Controller extends Controller
         }
         return \Response::json($getResource);
     }
+
+    public function getCategoryMusic(Request $request){
+
+        $category_id = $request->category_id;
+        $androidId = $request->android_id;
+
+        $site = getSite();
+        $category = Categories::findOrFail($category_id);
+        $data = get_category_details($site,$category,20);
+        $getResource = [];
+        foreach ($data as $item ){
+            $item->fav = check_favourite($site,$androidId,$item->id);
+            $getResource[] = new MusicResource($item);
+        }
+        return response()->json($getResource);
+    }
+
 }
