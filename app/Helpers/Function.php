@@ -145,8 +145,6 @@ function load_feature($site){
             break;
     }
     return $getResource;
-
-
 }
 
 function load_banner($site){
@@ -219,7 +217,30 @@ function getVisitors($device_id){
 
 }
 
+function get_all_music($site,$page_limit){
+    $data = false;
+    $isFake = checkBlockIp() ? 1 : 0;
+    $load_song = $site->load_categories;
+    switch ($load_song){
+        case 1:
+            $data = get_songs($site,$page_limit,'music_view_count');
+            break;
+        case 2:
+            $data = get_songs($site,$page_limit,'updated_at');
+            break;
+        case 3:
+            $data = get_songs($site,$page_limit,'music_like_count');
+            break;
+        case 4:
+            $data = get_songs($site,$page_limit,'music_title');
+            break;
+        default:
+            $data = get_songs($site,$page_limit);
 
+            break;
+    }
+    return $data;
+}
 
 function get_categories($site,$page_limit)
 {

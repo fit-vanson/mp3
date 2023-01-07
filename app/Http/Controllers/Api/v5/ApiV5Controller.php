@@ -287,6 +287,26 @@ class ApiV5Controller extends Controller
         return response()->json($result);
     }
 
+    public function getAllMusics(Request $request){
+        $androidId = $request->android_id;
+        $site = getSite();
+        $getMusic = get_all_music($site,10);
+
+        $getResource = [];
+
+        foreach($getMusic as $music){
+            $check_favourite = check_favourite($site,$androidId,$music->id) ? 1 : 0;
+            try {
+                $music->fav = $check_favourite;
+                $getResource[] = new MusicResource($music);
+            }catch (\Exception $ex) {
+                Log::error('Message: favorite ' . $ex->getMessage() .'--: '.$music->id. ' -----' . $ex->getLine());
+            }
+        }
+        return response()->json($getResource);
+    }
+
+
     public function favorite(Request $request){
         $androidId = $request->android_id;
         $site = getSite();
@@ -303,10 +323,6 @@ class ApiV5Controller extends Controller
 
         }
         return response()->json($getResource);
-
-
-        dd($result);
-        return response()->json($result);
     }
 
 
