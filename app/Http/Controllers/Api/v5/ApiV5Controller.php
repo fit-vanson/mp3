@@ -231,35 +231,11 @@ class ApiV5Controller extends Controller
     }
 
     public function getCategoryMusic(Request $request){
-
         $category_id = $request->category_id;
         $androidId = $request->android_id;
-
-
-        $start = $request->start ?? '';
-        $end = $request->end ?? '';
-        if($start != '' and $end != ''){
-            $page_limit = $end - $start;
-        }else{
-            $page_limit =10;
-        }
-
         $site = getSite();
         $category = Categories::findOrFail($category_id);
-        $data = get_category_details($site,$category,20);
-
-//        $data = $category
-//            ->music()
-//            ->with(['categories' => function($query) {
-//                $query->where('site_id', getSite()->id);
-//            }])
-//            ->where('status',0)
-//            ->distinct()
-//            ->skip($start)
-//            ->take($page_limit)
-//            ->get();
-
-
+        $data = get_category_details($site,$category,500);
         $getResource = [];
         foreach ($data as $item ){
             $item->fav = check_favourite($site,$androidId,$item->id);
@@ -289,14 +265,9 @@ class ApiV5Controller extends Controller
 
     public function getAllMusics(Request $request){
         $androidId = $request->android_id;
-        $start = $request->start ?? 0 ;
-        $end = $request->end ?? 10;
-        $limit = $end-$start;
-        $site = getSite();
+;        $site = getSite();
         $getMusic = get_all_music($site,1000);
-
         $getResource = [];
-
         foreach($getMusic as $music){
             $check_favourite = check_favourite($site,$androidId,$music->id) ? 1 : 0;
             try {
