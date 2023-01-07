@@ -217,28 +217,51 @@ function getVisitors($device_id){
 
 }
 
-function get_all_music($site,$page_limit){
+function get_all_music($site,$page_limit,$paginate = null){
     $data = false;
     $isFake = checkBlockIp() ? 1 : 0;
     $load_song = $site->load_categories;
-    switch ($load_song){
-        case 1:
-            $data = get_songs($site,$page_limit,'music_view_count');
-            break;
-        case 2:
-            $data = get_songs($site,$page_limit,'updated_at');
-            break;
-        case 3:
-            $data = get_songs($site,$page_limit,'music_like_count');
-            break;
-        case 4:
-            $data = get_songs($site,$page_limit,'music_title');
-            break;
-        default:
-            $data = get_songs($site,$page_limit);
+    if(!$paginate){
+        switch ($load_song){
+            case 1:
+                $data = get_songs($site,$page_limit,'music_view_count');
+                break;
+            case 2:
+                $data = get_songs($site,$page_limit,'updated_at');
+                break;
+            case 3:
+                $data = get_songs($site,$page_limit,'music_like_count');
+                break;
+            case 4:
+                $data = get_songs($site,$page_limit,'music_title');
+                break;
+            default:
+                $data = get_songs($site,$page_limit);
 
-            break;
+                break;
+        }
+    }else{
+        switch ($load_song){
+            case 1:
+                $data = get_songs($site,$page_limit,'music_view_count',$paginate);
+                break;
+            case 2:
+                $data = get_songs($site,$page_limit,'updated_at',$paginate);
+                break;
+            case 3:
+                $data = get_songs($site,$page_limit,'music_like_count',$paginate);
+                break;
+            case 4:
+                $data = get_songs($site,$page_limit,'music_title',$paginate);
+                break;
+            default:
+                $data = get_songs($site,$page_limit,null,$paginate);
+
+                break;
+        }
     }
+
+
     return $data;
 }
 
@@ -352,42 +375,84 @@ function get_category_details($site,$category,$page_limit){
     return $data;
 }
 
-function get_songs($site,$page_limit,$order = null){
+function get_songs($site,$page_limit,$order = null,$paginate = null){
     $data = false;
     $isFake = checkBlockIp() ? 1 : 0;
-    if($order){
-        $data = Musics
-            ::with(['categories' => function($query) use ($isFake, $site) {
-                $query
-                    ->where('category_checked_ip', $isFake)
-                    ->where('site_id', $site->id);
-            }])
-            ->where('status',0)
-            ->whereHas('categories', function ($query) use ($isFake, $site) {
-                $query
-                    ->where('category_checked_ip', $isFake)
-                    ->where('site_id', $site->id);
-            })
-            ->distinct()
-            ->orderByDesc($order)
-            ->paginate($page_limit);
+
+    if (!$paginate){
+        if($order){
+            $data = Musics
+                ::with(['categories' => function($query) use ($isFake, $site) {
+                    $query
+                        ->where('category_checked_ip', $isFake)
+                        ->where('site_id', $site->id);
+                }])
+                ->where('status',0)
+                ->whereHas('categories', function ($query) use ($isFake, $site) {
+                    $query
+                        ->where('category_checked_ip', $isFake)
+                        ->where('site_id', $site->id);
+                })
+                ->distinct()
+                ->orderByDesc($order)
+                ->paginate($page_limit);
+        }else{
+            $data = Musics
+                ::with(['categories' => function($query) use ($isFake, $site) {
+                    $query
+                        ->where('category_checked_ip', $isFake)
+                        ->where('site_id', $site->id);
+                }])
+                ->where('status',0)
+                ->whereHas('categories', function ($query) use ($isFake, $site) {
+                    $query
+                        ->where('category_checked_ip', $isFake)
+                        ->where('site_id', $site->id);
+                })
+                ->distinct()
+                ->inRandomOrder()
+                ->paginate($page_limit);
+        }
     }else{
-        $data = Musics
-            ::with(['categories' => function($query) use ($isFake, $site) {
-                $query
-                    ->where('category_checked_ip', $isFake)
-                    ->where('site_id', $site->id);
-            }])
-            ->where('status',0)
-            ->whereHas('categories', function ($query) use ($isFake, $site) {
-                $query
-                    ->where('category_checked_ip', $isFake)
-                    ->where('site_id', $site->id);
-            })
-            ->distinct()
-            ->inRandomOrder()
-            ->paginate($page_limit);
+        if($order){
+            $data = Musics
+                ::with(['categories' => function($query) use ($isFake, $site) {
+                    $query
+                        ->where('category_checked_ip', $isFake)
+                        ->where('site_id', $site->id);
+                }])
+                ->where('status',0)
+                ->whereHas('categories', function ($query) use ($isFake, $site) {
+                    $query
+                        ->where('category_checked_ip', $isFake)
+                        ->where('site_id', $site->id);
+                })
+                ->distinct()
+                ->orderByDesc($order)
+                ->skip($paginate)
+                ->take($page_limit)
+                ->get();
+        }else{
+            $data = Musics
+                ::with(['categories' => function($query) use ($isFake, $site) {
+                    $query
+                        ->where('category_checked_ip', $isFake)
+                        ->where('site_id', $site->id);
+                }])
+                ->where('status',0)
+                ->whereHas('categories', function ($query) use ($isFake, $site) {
+                    $query
+                        ->where('category_checked_ip', $isFake)
+                        ->where('site_id', $site->id);
+                })
+                ->distinct()
+                ->inRandomOrder()
+                ->skip($paginate)
+                ->take($page_limit)
+                ->get();
+        }
     }
+
     return $data;
 }
 

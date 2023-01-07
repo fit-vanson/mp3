@@ -289,8 +289,11 @@ class ApiV5Controller extends Controller
 
     public function getAllMusics(Request $request){
         $androidId = $request->android_id;
+        $start = $request->start ?? 0 ;
+        $end = $request->end ?? 10;
+        $limit = $end-$start;
         $site = getSite();
-        $getMusic = get_all_music($site,10);
+        $getMusic = get_all_music($site,$limit,$start);
 
         $getResource = [];
 
