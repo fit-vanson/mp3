@@ -267,4 +267,19 @@ class ApiV5Controller extends Controller
         return response()->json($getResource);
     }
 
+    public function playMusic(Request $request){
+        $music_id = $request->music_id;
+        $androidId = $request->android_id;
+        $site = getSite();
+        $music = update_song_view($music_id);
+        $check_favourite = check_favourite($site,$androidId,$music_id) ? 1 : 0;
+        $music->fav = $check_favourite;
+        $result= new MusicResource($music);
+
+        return response()->json($result);
+
+        dd($check_favourite);
+        dd($request->all());
+    }
+
 }

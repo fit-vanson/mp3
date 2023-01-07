@@ -112,6 +112,7 @@ Route::group([
     Route::post('/home_components', [ApiV5Controller::class, 'home_components']);
     Route::post('/home', [ApiV5Controller::class, 'home']);
     Route::post('/getCategoryMusic', [ApiV5Controller::class, 'getCategoryMusic']);
+    Route::post('/playMusic', [ApiV5Controller::class, 'playMusic']);
 
 
 
