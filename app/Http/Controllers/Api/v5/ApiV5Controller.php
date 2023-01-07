@@ -246,18 +246,18 @@ class ApiV5Controller extends Controller
 
         $site = getSite();
         $category = Categories::findOrFail($category_id);
-//        $data = get_category_details($site,$category,20);
+        $data = get_category_details($site,$category,20);
 
-        $data = $category
-            ->music()
-            ->with(['categories' => function($query) {
-                $query->where('site_id', getSite()->id);
-            }])
-            ->where('status',0)
-            ->distinct()
-            ->skip($start)
-            ->take($page_limit)
-            ->get();
+//        $data = $category
+//            ->music()
+//            ->with(['categories' => function($query) {
+//                $query->where('site_id', getSite()->id);
+//            }])
+//            ->where('status',0)
+//            ->distinct()
+//            ->skip($start)
+//            ->take($page_limit)
+//            ->get();
 
 
         $getResource = [];
