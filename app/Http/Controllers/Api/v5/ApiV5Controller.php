@@ -293,7 +293,7 @@ class ApiV5Controller extends Controller
         $end = $request->end ?? 10;
         $limit = $end-$start;
         $site = getSite();
-        $getMusic = get_all_music($site,$limit,$start);
+        $getMusic = get_all_music($site,1000);
 
         $getResource = [];
 
