@@ -275,11 +275,16 @@ class ApiV5Controller extends Controller
         $check_favourite = check_favourite($site,$androidId,$music_id) ? 1 : 0;
         $music->fav = $check_favourite;
         $result= new MusicResource($music);
-
         return response()->json($result);
-
-        dd($check_favourite);
-        dd($request->all());
     }
+    public function update_song_favourite(Request $request){
+        $music_id = $request->like_type_id;
+        $androidId = $request->android_id;
+        $site = getSite();
+        $result = update_song_favourite($site,$androidId,$music_id);
+        return response()->json($result);
+    }
+
+
 
 }
