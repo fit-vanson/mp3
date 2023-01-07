@@ -16,7 +16,7 @@ class VisitorFavorite extends Model
 
     public function music()
     {
-        return $this->belongsTo(Musics::class,  'music_id');
+        return $this->belongsTo(Musics::class);
     }
 
 

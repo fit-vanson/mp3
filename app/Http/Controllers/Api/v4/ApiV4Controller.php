@@ -10,6 +10,7 @@ use App\Http\Resources\v4\MusicForCategoryResource;
 use App\Http\Resources\v4\MusicResource;
 use App\Musics;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ApiV4Controller extends Controller
 {
@@ -407,8 +408,12 @@ class ApiV4Controller extends Controller
 
 
         foreach($getMusic as $music){
-            $music->music->fav = true;
-            $getResource[] = new MusicResource($music->music);
+            try {
+                $music->music->fav = true;
+                $getResource[] = new MusicResource($music->music);
+            }catch (\Exception $ex) {
+                Log::error('Message: favorite ' . $ex->getMessage() .'--: '.$music->id. ' -----' . $ex->getLine());
+            }
         }
 
 

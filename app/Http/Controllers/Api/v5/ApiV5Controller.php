@@ -8,6 +8,7 @@ use App\Http\Resources\v5\CategoryHomeResource;
 use App\Http\Resources\v5\CategoryResource;
 use App\Http\Resources\v5\MusicResource;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ApiV5Controller extends Controller
 {
@@ -277,11 +278,34 @@ class ApiV5Controller extends Controller
         $result= new MusicResource($music);
         return response()->json($result);
     }
+
     public function update_song_favourite(Request $request){
         $music_id = $request->like_type_id;
         $androidId = $request->android_id;
         $site = getSite();
         $result = update_song_favourite($site,$androidId,$music_id);
+        return response()->json($result);
+    }
+
+    public function favorite(Request $request){
+        $androidId = $request->android_id;
+        $site = getSite();
+        $getMusic = get_song_favourite($site,$androidId,10);
+        $getResource = [];
+
+        foreach($getMusic as $music){
+            try {
+                $music->music->fav = 1;
+                $getResource[] = new MusicResource($music->music);
+            }catch (\Exception $ex) {
+                Log::error('Message: favorite ' . $ex->getMessage() .'--: '.$music->id. ' -----' . $ex->getLine());
+            }
+
+        }
+        return response()->json($getResource);
+
+
+        dd($result);
         return response()->json($result);
     }
 
