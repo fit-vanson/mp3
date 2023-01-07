@@ -19,7 +19,7 @@ class MusicResource extends JsonResource
             'music_title' =>($this->music_title),
             'music_file' => route('musics.getLinkYTB',['id'=>$this->music_id_ytb]) ,
             'music_image' => $this->music_thumbnail_link ,
-            'music_duration' => gmdate('H:i:s',$this->lengthSeconds) ,
+            'music_duration' => gmdate('i:s',$this->lengthSeconds) ,
             'playCount' => $this->music_view_count ,
             'like_count' => $this->music_like_count ,
             'is_in_playlist' => 0 ,
