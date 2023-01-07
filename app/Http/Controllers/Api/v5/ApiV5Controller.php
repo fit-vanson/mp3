@@ -205,24 +205,24 @@ class ApiV5Controller extends Controller
         $home_components_name = $request->home_components_name;
         switch ($home_components_name){
             case 'Banner Slider':
-                $data = get_categories($site,10);
+                $data = get_categories($site,100);
                 $getResource = CategoryHomeResource::collection($data);
                 break;
             case 'Category':
-                $data = get_categories($site,10);
+                $data = get_categories($site,100);
                 $getResource = CategoryResource::collection($data);
                 break;
             case 'Top Sounds':
-                $data = get_songs($site,10,'music_like_count');
+                $data = get_songs($site,100,'music_like_count');
                 $getResource = MusicResource::collection($data);
                 break;
             case 'Popular Sounds':
             case 'Recently Played':
-                $data = get_songs($site,10,'music_view_count');
+                $data = get_songs($site,100,'music_view_count');
                 $getResource = MusicResource::collection($data);
                 break;
             case 'Sleep Stories':
-                $data = get_songs($site,10);
+                $data = get_songs($site,100);
                 $getResource = MusicResource::collection($data);
                 break;
 
@@ -284,7 +284,7 @@ class ApiV5Controller extends Controller
     public function favorite(Request $request){
         $androidId = $request->android_id;
         $site = getSite();
-        $getMusic = get_song_favourite($site,$androidId,10);
+        $getMusic = get_song_favourite($site,$androidId,1000);
         $getResource = [];
 
         foreach($getMusic as $music){
