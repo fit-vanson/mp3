@@ -113,6 +113,8 @@ Route::group([
     Route::post('/home', [ApiV5Controller::class, 'home']);
     Route::post('/getCategoryMusic', [ApiV5Controller::class, 'getCategoryMusic']);
     Route::post('/playMusic', [ApiV5Controller::class, 'playMusic']);
+    Route::post('/getAllMusics', [ApiV5Controller::class, 'getAllMusics']);
+    Route::post('/favorite', [ApiV5Controller::class, 'favorite']);
     Route::post('/like', [ApiV5Controller::class, 'update_song_favourite']);
     Route::post('/unlike', [ApiV5Controller::class, 'update_song_favourite']);
 
