@@ -225,6 +225,10 @@ class ApiV5Controller extends Controller
                 $data = get_songs($site,5);
                 $getResource = MusicResource::collection($data);
                 break;
+            default:
+                $data = get_songs($site,1000,$request->order);
+                $getResource = MusicResource::collection($data);
+                break;
 
         }
         return \Response::json($getResource);
