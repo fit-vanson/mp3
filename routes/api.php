@@ -111,6 +111,7 @@ Route::group([
     Route::get('/settingsFlag', [ApiV5Controller::class, 'settingsFlag']);
     Route::post('/home_components', [ApiV5Controller::class, 'home_components']);
     Route::post('/home', [ApiV5Controller::class, 'home']);
+    Route::post('/category', [ApiV5Controller::class, 'getCategories']);
     Route::post('/getCategoryMusic', [ApiV5Controller::class, 'getCategoryMusic']);
     Route::post('/playMusic', [ApiV5Controller::class, 'playMusic']);
     Route::post('/getAllMusics', [ApiV5Controller::class, 'getAllMusics']);

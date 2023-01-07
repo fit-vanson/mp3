@@ -205,28 +205,35 @@ class ApiV5Controller extends Controller
         $home_components_name = $request->home_components_name;
         switch ($home_components_name){
             case 'Banner Slider':
-                $data = get_categories($site,100);
+                $data = get_categories($site,5);
                 $getResource = CategoryHomeResource::collection($data);
                 break;
             case 'Category':
-                $data = get_categories($site,100);
+                $data = get_categories($site,5);
                 $getResource = CategoryResource::collection($data);
                 break;
             case 'Top Sounds':
-                $data = get_songs($site,100,'music_like_count');
+                $data = get_songs($site,5,'music_like_count');
                 $getResource = MusicResource::collection($data);
                 break;
             case 'Popular Sounds':
             case 'Recently Played':
-                $data = get_songs($site,100,'music_view_count');
+                $data = get_songs($site,5,'music_view_count');
                 $getResource = MusicResource::collection($data);
                 break;
             case 'Sleep Stories':
-                $data = get_songs($site,100);
+                $data = get_songs($site,5);
                 $getResource = MusicResource::collection($data);
                 break;
 
         }
+        return \Response::json($getResource);
+    }
+
+    public function getCategories(){
+        $site = getSite();
+        $data = get_categories($site,1000);
+        $getResource = CategoryResource::collection($data);
         return \Response::json($getResource);
     }
 
