@@ -69,6 +69,19 @@ class ApiV5Controller extends Controller
 
     }
 
+    public function signin(){
+        $data = '{
+            "user_id": "939",
+            "user_name": "zxcv",
+            "user_email": "zxcv@gmail.com",
+            "user_password": "123456",
+            "user_profile_pic": "uploads/user/",
+            "created_date": "2023-01-05 02:17:40",
+            "message": "Welcome zxcv"
+            }';
+        return $data;
+    }
+
     public function settingsFlag(){
 
 
