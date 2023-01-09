@@ -218,7 +218,7 @@ class ApiV5Controller extends Controller
                 break;
             case 'Popular Sounds':
             case 'Recently Played':
-                $data = get_songs($site,5,'music_view_count');
+                $data = get_songs($site,5,'updated_at');
                 $getResource = MusicResource::collection($data);
                 break;
             case 'Sleep Stories':
@@ -306,6 +306,20 @@ class ApiV5Controller extends Controller
                 Log::error('Message: favorite ' . $ex->getMessage() .'--: '.$music->id. ' -----' . $ex->getLine());
             }
 
+        }
+        return response()->json($getResource);
+    }
+
+    public function search(Request $request){
+        $search = $request->search;
+        $androidId = $request->android_id;
+        $site = getSite();
+        $result_music = get_search_music($site,$search,10);
+        $getResource = [];
+        foreach ($result_music as $item ){
+            $item->fav = check_favourite($site,$androidId,$item->id);
+            $item->search_text = $search;
+            $getResource[] = new MusicResource($item);
         }
         return response()->json($getResource);
     }
