@@ -89,7 +89,7 @@ class ApiV5Controller extends Controller
         foreach ($data as $key=>$value){
             $home_components[] =[
                 'settings_flag_value' => "ENABLE",
-                'settings_flag_parameters' => [
+                'settings_flag_parameters' => [[
                     'appads' => [
                         'ads_id_value' => "ca-app-pub-3940256099942544~3347511713"
                     ],
@@ -99,7 +99,7 @@ class ApiV5Controller extends Controller
                     'interstitialads' => [
                         'ads_id_value' => "ca-app-pub-3940256099942544~3347511713"
                     ],
-                ] ,
+                ]] ,
             ];
         }
 
