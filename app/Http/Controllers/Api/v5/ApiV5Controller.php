@@ -88,22 +88,25 @@ class ApiV5Controller extends Controller
         $data = ['Notification','Package','Ads'];
         foreach ($data as $key=>$value){
             $home_components[] =[
-
                 'settings_flag_value' => "ENABLE",
-                'settings_flag_parameters' => [
-                    'appads' => [
-                        'ads_id_value' => "ca-app-pub-3940256099942544~3347511713"
-                    ],
-                    'bannerads' => [
-                        'ads_id_value' => "ca-app-pub-3940256099942544~3347511713"
-                    ],
-                    'interstitialads' => [
-                        'ads_id_value' => "ca-app-pub-3940256099942544~3347511713"
-                    ],
-                ] ,
-
             ];
         }
+
+        $home_components[] = [
+            'settings_flag_parameters' => [
+                'appads' => [
+                    'ads_id_value' => "ca-app-pub-3940256099942544~3347511713"
+                ],
+                'bannerads' => [
+                    'ads_id_value' => "ca-app-pub-3940256099942544~3347511713"
+                ],
+                'interstitialads' => [
+                    'ads_id_value' => "ca-app-pub-3940256099942544~3347511713"
+                ],
+            ] ,
+        ];
+
+
         return \Response::json($home_components);
 
 
