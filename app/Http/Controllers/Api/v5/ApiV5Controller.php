@@ -75,17 +75,23 @@ class ApiV5Controller extends Controller
 
         $home_components[] = [
             'settings_flag_value' => "ENABLE",
-//            'settings_flag_parameters' => "ENABLE"
+            'settings_flag_parameters' => [
+                'ads_id_value' =>[
+
+                ]
+            ]
         ];
 
-
+//        $home_components = [];
+//
+//
 //        $data = ['Banner Slider','Category','Top Sounds','Popular Sounds','Recently Played','Sleep Stories'];
 //        foreach ($data as $key=>$value){
 //            $home_components[] =[
-//                'home_components_id' => $key+1,
-//                'home_components_name' => $value,
-//                'home_components_order' => $key+1,
-//                'settings_flag_value' => "ENABLE"
+//
+//                'settings_flag_value' => "ENABLE",
+//                'settings_flag_parameters' => ,
+//
 //            ];
 //        }
         return \Response::json($home_components);
