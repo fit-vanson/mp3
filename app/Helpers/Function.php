@@ -480,7 +480,7 @@ function get_search_music($site,$search,$page_limit){
     $data = false;
     $isFake = checkBlockIp() ? 1 : 0;
     return Musics::
-        where('music_description','LIKE','%'.($search).'%')
+        where('music_title','LIKE','%'.($search).'%')
         ->whereHas('categories', function ($query) use ($search, $isFake, $site) {
             $query
                 ->where('category_checked_ip', $isFake)

@@ -118,6 +118,7 @@ Route::group([
     Route::post('/favorite', [ApiV5Controller::class, 'favorite']);
     Route::post('/like', [ApiV5Controller::class, 'update_song_favourite']);
     Route::post('/unlike', [ApiV5Controller::class, 'update_song_favourite']);
+    Route::post('/search', [ApiV5Controller::class, 'search']);
 
 
 
