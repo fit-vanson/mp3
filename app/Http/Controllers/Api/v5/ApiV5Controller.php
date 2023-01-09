@@ -73,7 +73,7 @@ class ApiV5Controller extends Controller
 
 
 
-        $home_components = [
+        $home_components[] = [
             'settings_flag_value' => "ENABLE",
 //            'settings_flag_parameters' => "ENABLE"
         ];
