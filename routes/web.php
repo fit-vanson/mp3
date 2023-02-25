@@ -205,6 +205,8 @@ Route::group(['prefix'=>env('ADMIN_PAGE','admin')], function (){
         Route::get('/edit/{id}',[BlockIPsController::class,'edit'])->name('blockips.edit');
         Route::post('/update',[BlockIPsController::class,'update'])->name('blockips.update');
         Route::get('/delete/{id}',[BlockIPsController::class,'delete'])->name('blockips.delete');
+        Route::post('/createMultipleBlockIP',[BlockIPsController::class,'createMultipleBlockIP'])->name('blockips.createMultipleBlockIP');
+
     });
 });
 

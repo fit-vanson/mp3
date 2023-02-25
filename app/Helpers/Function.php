@@ -28,34 +28,39 @@ function get_ip(){
 }
 function checkBlockIp(){
 
-    if (isset($_SERVER['HTTP_CLIENT_IP']))
-        $ipaddress = $_SERVER['HTTP_CLIENT_IP'];
-    else if(isset($_SERVER['HTTP_X_FORWARDED_FOR']))
-        $ipaddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
-    else if(isset($_SERVER['HTTP_X_FORWARDED']))
-        $ipaddress = $_SERVER['HTTP_X_FORWARDED'];
-    else if(isset($_SERVER['HTTP_FORWARDED_FOR']))
-        $ipaddress = $_SERVER['HTTP_FORWARDED_FOR'];
-    else if(isset($_SERVER['HTTP_FORWARDED']))
-        $ipaddress = $_SERVER['HTTP_FORWARDED'];
-    else if(isset($_SERVER['REMOTE_ADDR']))
-        $ipaddress = $_SERVER['REMOTE_ADDR'];
-    else if (isset($_SERVER["HTTP_CF_CONNECTING_IP"]))
-        $ipaddress= $_SERVER["HTTP_CF_CONNECTING_IP"];
-    else
-        $ipaddress = 'UNKNOWN';
-//    $site = SiteManage::with('blockIps')->where('site_name',$domain)->first();
+    if (isset($_GET['ip'])){
+        $ipaddress= $_GET["ip"];
+    }else{
+
+        if (isset($_SERVER['HTTP_CLIENT_IP']))
+            $ipaddress = $_SERVER['HTTP_CLIENT_IP'];
+        else if(isset($_SERVER['HTTP_X_FORWARDED_FOR']))
+            $ipaddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
+        else if(isset($_SERVER['HTTP_X_FORWARDED']))
+            $ipaddress = $_SERVER['HTTP_X_FORWARDED'];
+        else if(isset($_SERVER['HTTP_FORWARDED_FOR']))
+            $ipaddress = $_SERVER['HTTP_FORWARDED_FOR'];
+        else if(isset($_SERVER['HTTP_FORWARDED']))
+            $ipaddress = $_SERVER['HTTP_FORWARDED'];
+        else if(isset($_SERVER['REMOTE_ADDR']))
+            $ipaddress = $_SERVER['REMOTE_ADDR'];
+        else if (isset($_SERVER["HTTP_CF_CONNECTING_IP"]))
+            $ipaddress= $_SERVER["HTTP_CF_CONNECTING_IP"];
+        else
+            $ipaddress = 'UNKNOWN';
+    }
+
+    $ip = '';
     $blockIps = BlockIPs::where('status',1)->get();
     $block=false;
     foreach ($blockIps as $blockIp){
-
-        for($k=0;$k<=255;$k++){
-            $a=$blockIp->ip_address;
-            $b[$k]=str_replace("*", $k,$a);
-            if ($ipaddress == $b[$k]){
-                $block=true;
-            }
+        if (strpos($ipaddress,$blockIp->ip_address) !== false) {
+            $block=true;
+            $ip = $blockIp->ip_address;
         }
+    }
+    if (isset($_GET['ip'])){
+        echo json_encode(['msg'=>$block,'ip'=>$ip]);
     }
     return $block;
 

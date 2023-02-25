@@ -15,10 +15,13 @@ class BlockIPsController extends Controller
     public function index()
     {
         $page_title =  'Block IPs';
-        $action = ['create'];
+        $button = [
+            'Multiple'   => ['id'=>'MultipleBlockIP','style'=>'warning'],
+
+        ];
         return view('blockips.index',[
             'page_title' => $page_title,
-            'action' => $action,
+            'button' => $button,
         ]);
     }
 
@@ -99,6 +102,18 @@ class BlockIPsController extends Controller
             'success'=>'Thêm mới thành công',
         ]);
     }
+
+    public function createMultipleBlockIP(Request $request)
+    {
+        $data = array_map('trim',explode("\r\n",$request->MultipleBlockIP_address));
+        foreach ($data as $item){
+            BlockIPs::updateOrCreate(['ip_address'=>$item,'status'=>1]);
+        }
+        return response()->json([
+            'success'=>'Thêm mới thành công',
+        ]);
+    }
+
     public function update(Request $request){
 
         $id = $request->id;

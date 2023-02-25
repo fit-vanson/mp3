@@ -26,6 +26,20 @@
     <!-- end page title -->
 
     <div class="row">
+        <div class="col-5">
+            <div class="form-group">
+                {{--                <label>Check ip</label>--}}
+                <input type="text" class="form-control" id="checkIP" name="checkIP" placeholder="check IP">
+            </div>
+        </div>
+        <div class="col-5">
+            <div class="form-group">
+                <span id="result_check"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
@@ -264,6 +278,56 @@
                             $('#block_ip_status').prop('checked', true);
                         }else {
                             $('#block_ip_status').prop('checked', false);
+                        }
+                    },
+                    error: function (data) {
+                        console.log('Error:', data);
+                    }
+                });
+            });
+
+            $('#MultipleBlockIP').click(function () {
+                $('#modalMultipleBlockIP').modal('show');
+                $('#formMultipleBlockIP').trigger("reset");
+            });
+            $('#formMultipleBlockIP').on('submit', function (event) {
+                event.preventDefault();
+                var formData = new FormData($("#formMultipleBlockIP")[0]);
+
+                $.ajax({
+                    data: formData,
+                    url: '{{route('blockips.createMultipleBlockIP')}}',
+                    type: "POST",
+                    dataType: 'json',
+                    processData: false,
+                    contentType: false,
+                    success: function (data) {
+                        if (data.success) {
+                            $('#formMultipleBlockIP').trigger("reset");
+                            toastr['success'](data.success, 'Success!');
+                            $('#modalMultipleBlockIP').modal('hide');
+                            dtTable.draw();
+                        }
+                        if (data.errors) {
+                            for (var count = 0; count < data.errors.length; count++) {
+                                toastr['error'](data.errors[count], 'Error!',);
+                            }
+                        }
+                    }
+                });
+            });
+
+            $( "#checkIP" ).change(function() {
+                var check = $('#checkIP').val()
+                $.ajax({
+                    type: "get",
+                    url: "{{ asset("api/blockip?ip=") }}"+check,
+                    success: function (data) {
+                        var obj = $.parseJSON(data);
+                        if(obj.msg == false){
+                            $("#result_check").text("OK")
+                        }else if(obj.msg == true){
+                            $("#result_check").text("trùng: " + obj.ip)
                         }
                     },
                     error: function (data) {

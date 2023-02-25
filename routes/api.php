@@ -147,6 +147,11 @@ Route::group([
 });
 
 
+Route::get('blockip',function (){
+    checkBlockIp();
+});
+
+
 
 
 
