@@ -20,6 +20,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
+use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Process\Process;
 use YouTube\Utils\Utils;
 use YouTube\YouTubeDownloader;
 
@@ -418,6 +420,12 @@ class MusicsController extends Controller
     public function getInfoYTB(Request $request): \Illuminate\Http\JsonResponse
     {
         $ytb_id = base64_decode($request->ytb_id);
+
+        $url = "https://www.youtube.com/watch?v=mLF-XRFoLQ0";
+        $videoInfo = $this->getYoutubeInfo($url);
+        $audioLink = $this->getAudioLink($url);
+
+        dd($videoInfo,$audioLink);
 //        $ytb_id = ($request->ytb_id);
         $youtube = new YouTubeDownloader();
         $list_id = preg_split("/[|]+/",$ytb_id);
@@ -448,8 +456,36 @@ class MusicsController extends Controller
 //            }
         }
 
+
+
+
         return response()->json($dataArr);
 
+    }
+
+    public function getYoutubeInfo($url) {
+        $process = new Process(['youtube-dl', '-j', '--extract-audio', $url]);
+        $process->setTimeout(3600);
+        $process->run();
+
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
+
+        $jsonOutput = $process->getOutput();
+        $videoInfo = json_decode($jsonOutput, true);
+
+        return $videoInfo;
+    }
+
+    public function getAudioLink($url) {
+        $videoInfo = $this->getYoutubeInfo($url);
+
+        if (isset($videoInfo['url'])) {
+            return $videoInfo['url'];
+        }
+
+        return null;
     }
 
     public function createYTB(Request $request){
