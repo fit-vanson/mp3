@@ -421,7 +421,8 @@ class MusicsController extends Controller
 
     public function getInfoYTB(Request $request): \Illuminate\Http\JsonResponse
     {
-        $ytb_id = base64_decode($request->ytb_id);
+//        $ytb_id = base64_decode($request->ytb_id);
+        $ytb_id = ($request->ytb_id);
         $youtube = new YouTubeDownloader();
         $list_id = preg_split("/[|]+/",$ytb_id);
 
@@ -436,11 +437,8 @@ class MusicsController extends Controller
                 }
 
                 $info = $downloadOptions->getInfo();
-//                dd($info->);
                 $dataArr[] = [
-//                    'videoId' => trim($id),
                     'videoId' => $info->getId(),
-//                    'author' => $info->getAuthor(),
                     'title' => $info->getTitle(),
                     'viewCount' => $info->getViewCount(),
                     'keywords' => $info->getKeywords()? implode(",\n",$info->getKeywords()):'',
