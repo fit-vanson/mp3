@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 
-use Alaouy\Youtube\Youtube;
+//use Alaouy\Youtube\Youtube;
 use App\Musics;
 
 use App\Tags;
@@ -39,7 +39,6 @@ class MusicsController extends Controller
         $this->middleware('auth')->except('streamID','getLinkUrl','getLinkYTB');
     }
 
-
     public function index()
     {
         $header = [
@@ -55,9 +54,6 @@ class MusicsController extends Controller
         $tags = Tags::latest()->get();
         return view('musics.index')->with(compact('header','tags'));
     }
-
-
-
 
     public function getIndex(Request $request)
     {
@@ -421,8 +417,8 @@ class MusicsController extends Controller
 
     public function getInfoYTB(Request $request): \Illuminate\Http\JsonResponse
     {
-        $ytb_id = base64_decode($request->ytb_id);
-//        $ytb_id = ($request->ytb_id);
+//        $ytb_id = base64_decode($request->ytb_id);
+        $ytb_id = ($request->ytb_id);
         $youtube = new YouTubeDownloader();
         $list_id = preg_split("/[|]+/",$ytb_id);
 
