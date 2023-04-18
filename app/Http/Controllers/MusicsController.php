@@ -425,6 +425,7 @@ class MusicsController extends Controller
         $ytb_id = ($request->ytb_id);
         $youtube = new YouTubeDownloader();
         $list_id = preg_split("/[|]+/",$ytb_id);
+        dd($list_id);
 
         $dataArr = [];
         foreach ($list_id as $id){
