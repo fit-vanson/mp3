@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
+use YouTube\Utils\Utils;
 use YouTube\YouTubeDownloader;
 
 
@@ -37,34 +38,7 @@ class MusicsController extends Controller
     {
         $this->middleware('auth')->except('streamID','getLinkUrl','getLinkYTB');
     }
-//    public function index()
-//    {
-//        $page_title =  'Musics';
-//        $action = ['update_multiple','delete_multiple',];
-//        $tags = Tags::latest()->get();
-//
-//        $search = null;
-//        if (isset($_GET['search'])){
-//            $search = $_GET['search'];
-//        }
-//        if (isset($_GET['view']) && $_GET['view'] == 'grid' ){
-//            $data = Ringtones::latest('ringtone_name')
-//                ->orwhereRelation('tags','tag_name', 'like', '%' . $search . '%')
-//                ->paginate(12);
-//            $data->load('tags');
-//            return view('ringtones.index',[
-//                'page_title' => $page_title,
-//                'tags' => $tags,
-//                'data' => $data,
-//            ]);
-//        }else{
-//            return view('musics.index',[
-//                'page_title' => $page_title,
-//                'action' => $action,
-//                'tags' => $tags,
-//            ]);
-//        }
-//    }
+
 
     public function index()
     {
@@ -81,99 +55,7 @@ class MusicsController extends Controller
         $tags = Tags::latest()->get();
         return view('musics.index')->with(compact('header','tags'));
     }
- /**
-    public function getIndex(Request $request)
-    {
 
-        $draw = $request->get('draw');
-        $start = $request->get("start");
-        $rowperpage = $request->get("length"); // total number of rows per page
-
-        $columnIndex_arr = $request->get('order');
-        $columnName_arr = $request->get('columns');
-        $order_arr = $request->get('order');
-        $search_arr = $request->get('search');
-
-        $columnIndex = $columnIndex_arr[0]['column']; // Column index
-
-        $columnName = $columnName_arr[$columnIndex]['data']; // Column name
-        $columnSortOrder = $order_arr[0]['dir']; // asc or desc
-        $searchValue = $search_arr['value']; // Search value
-
-       // Total records
-        $totalRecords = Musics::select('count(*) as allcount')->count();
-
-        $totalRecordswithFilter = Musics::select('count(*) as allcount')
-            ->where('music_name', 'like', '%' . $searchValue . '%')
-            ->orwhereRelation('tags','tag_name','like', '%' . $searchValue . '%')
-            ->count();
-
-        // Get records, also we have included search filter as well
-        $records = Musics::with('tags')
-            ->where('music_name', 'like', '%' . $searchValue . '%')
-            ->orwhereRelation('tags','tag_name','like', '%' . $searchValue . '%')
-            ->select('*')
-            ->orderBy($columnName, $columnSortOrder)
-            ->skip($start)
-            ->take($rowperpage)
-            ->get();
-
-        if ($request->get('null_tag') == 1){
-            $totalRecordswithFilter = Musics::select('count(*) as allcount')
-                ->doesntHave('tags')
-                ->where('music_name', 'like', '%' . $searchValue . '%')
-                ->count();
-            $records = Musics::doesntHave('tags')
-                ->where('music_name', 'like', '%' . $searchValue . '%')
-                ->select('*')
-                ->orderBy($columnName, $columnSortOrder)
-                ->skip($start)
-                ->take($rowperpage)
-                ->get();
-        }
-
-        $data_arr = array();
-        foreach ($records as $record) {
-            $btn = ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-warning editMusics"><i class="ti-pencil-alt"></i></a>';
-            $btn .= ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-danger deleteMusics"><i class="ti-trash"></i></a>';
-
-            $image = $record->music_image ?  '<img class="rounded-circle" alt="'.$record->music_name.'"  src="'.url('storage/musics/images/'.$record->music_image) .'" width="150">'   : '<img class="rounded-circle" alt="'.$record->music_name.'"  src="'. url('storage/default.png') .'" width="150">' ;
-            $image_url = $record->music_url_image ? '<img class="rounded-circle" alt="'.$record->music_name.'"  src="'.$record->music_url_image .'" width="150" ">' : null;
-
-            $music_file     = $record->music_file    ?   '<h5 class="mt-0 font-16">On Site</h5><audio class="audio-player" controls><source src="'.url('/storage/musics/files').'/'.$record->music_file.'" type="audio/mp3"/></audio>' :  null;
-//            $music_link_1   = checkLink($record->music_link_1)  ?   '<h5 class="mt-0 font-16">Link 1</h5><audio class="audio-player" controls><source src="'.$record->music_link_1.'" type="audio/mp3"/></audio>' : null ;
-            $music_link_1   = '<h5 class="mt-0 font-16">Link 1</h5><audio class="audio-player" controls><source src="'.$record->music_link_1.'" type="audio/mp3"/></audio>';
-            $music_link_2   = '<h5 class="mt-0 font-16">Link 2</h5><audio class="audio-player" controls><source src="'.$record->music_link_2.'" type="audio/mp3"/></audio>';
-//            $music_link_2   = checkLink($record->music_link_2)  ?   '<h5 class="mt-0 font-16">Link 2</h5><audio class="audio-player" controls><source src="'.$record->music_link_2.'" type="audio/mp3"/></audio>' : null ;
-            $music_ytb      = $record->music_id_ytb ? '<h5 class="mt-0 font-16">YTB</h5><audio class="audio-player" controls><source src="'.$this->getLinkUrl($record->music_id_ytb,'url').'" type="audio/mp3"/></audio>' : null ;
-
-
-            $data_arr[] = array(
-                "id" => $record->id,
-                "music_file" => $music_file.$music_link_1.$music_link_2.$music_ytb,
-//                "music_file" => $check,
-                "music_name" => $image.$image_url.  '<h5 class="mt-0 font-16">'.$record->id.'</h5>'  .     '<span class="card-title-desc">'.$record->music_name.'</span>',
-                "music_view_count" => $record->music_view_count,
-                "music_like_count" => $record->music_like_count,
-                "music_link" => $record->music_link ? '<a target="_blank" href="'.$record->music_link.'" class="btn btn-outline-warning"><i class="ti-link"></i></a>': null,
-                "tags" => $record->tags,
-                "action" => $btn,
-            );
-        }
-
-        $response = array(
-            "draw" => intval($draw),
-            "iTotalRecords" => $totalRecords,
-            "iTotalDisplayRecords" => $totalRecordswithFilter,
-            "aaData" => $data_arr,
-        );
-
-        echo json_encode($response);
-
-
-    }
-
-  **/
 
 
 
@@ -266,19 +148,6 @@ class MusicsController extends Controller
 
     public function create(Request $request){
 
-
-//        $rules = [
-//            'file.*' => 'max:20000|mimes:mp3,txt,jpg',
-//        ];
-//        $message = [
-//            'file.mimes'=>'Định dạng File',
-//            'file.max'=>'Dung lượng File',
-//
-//        ];
-//        $error = Validator::make($request->all(),$rules, $message );
-//        if($error->fails()){
-//            return response()->json(['errors'=> $error->errors()->all()]);
-//        }
         $now = new \DateTime('now'); //Datetime
         $monthNum = $now->format('m');
         $dateObj   = DateTime::createFromFormat('!m', $monthNum);
@@ -567,6 +436,7 @@ class MusicsController extends Controller
                 }
 
                 $info = $downloadOptions->getInfo();
+//                dd($info->);
                 $dataArr[] = [
 //                    'videoId' => trim($id),
                     'videoId' => $info->getId(),
