@@ -429,7 +429,7 @@ class MusicsController extends Controller
 
         $dataArr = [];
         foreach ($list_id as $id){
-//            try {
+            try {
 
                 if (filter_var($id, FILTER_VALIDATE_URL) === FALSE) {
                     $downloadOptions = $youtube->getDownloadLinks("https://www.youtube.com/watch?v=" . trim($id));
@@ -447,9 +447,9 @@ class MusicsController extends Controller
                     'image' => 'https://i.ytimg.com/vi_webp/'.$info->getId().'/mqdefault.webp',
                     'url_audio' => $downloadOptions->getSplitFormats()->audio->url,
                 ];
-//            }catch (\Exception $ex) {
-//                Log::error('Error: Not link ID YTB: '.$id);
-//            }
+            }catch (\Exception $ex) {
+                Log::error('Error: Not link ID YTB: '.$id);
+            }
         }
 
         return response()->json($dataArr);
