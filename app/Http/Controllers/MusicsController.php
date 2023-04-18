@@ -417,8 +417,8 @@ class MusicsController extends Controller
 
     public function getInfoYTB(Request $request): \Illuminate\Http\JsonResponse
     {
-//        $ytb_id = base64_decode($request->ytb_id);
-        $ytb_id = ($request->ytb_id);
+        $ytb_id = base64_decode($request->ytb_id);
+//        $ytb_id = ($request->ytb_id);
         $youtube = new YouTubeDownloader();
         $list_id = preg_split("/[|]+/",$ytb_id);
 
