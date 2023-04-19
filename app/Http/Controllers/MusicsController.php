@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 
 use Alaouy\Youtube\Youtube;
-
 use App\Musics;
 
 use App\Tags;
@@ -21,8 +20,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
-use YouTube\Utils\Utils;
 use YouTube\YouTubeDownloader;
+
 class MusicsController extends Controller
 {
 
@@ -334,7 +333,7 @@ class MusicsController extends Controller
             $link = $music->music_url_link_ytb;
         }else{
             $link = $this->checkLink($music->music_link_1) ? $this->checkLink($music->music_link_1) :
-                    ( $this->checkLink($music->music_link_2) ? $this->checkLink($music->music_link_2) : url('/storage/musics/files').'/'.$music->music_file) ;
+                ( $this->checkLink($music->music_link_2) ? $this->checkLink($music->music_link_2) : url('/storage/musics/files').'/'.$music->music_file) ;
             $music->update([
                 'music_url_link_ytb'=>$this->getLinkUrl($music->music_id_ytb,'url') ? $this->getLinkUrl($music->music_id_ytb,'url') : null,
                 'music_duration'=>$this->getLinkUrl($music->music_id_ytb,'lengthSeconds'),
@@ -370,35 +369,35 @@ class MusicsController extends Controller
         try {
             $youtube = new YouTubeDownloader();
             $downloadOptions = $youtube->getDownloadLinks("https://www.youtube.com/watch?v=" . $id_ytb);
-                if ( $downloadOptions->getAllFormats() && $downloadOptions->getInfo()) {
+            if ( $downloadOptions->getAllFormats() && $downloadOptions->getInfo()) {
 
-                    if(isset($_GET['action']) && $_GET['action'] =='all' ){
-                        dd($downloadOptions);
-                        return response()->json($downloadOptions->getVideoInfo());
+                if(isset($_GET['action']) && $_GET['action'] =='all' ){
+                    dd($downloadOptions);
+                    return response()->json($downloadOptions->getVideoInfo());
 
-                    }else{
-                        switch ($option){
-                            case 'url':
-                                return $downloadOptions->getFirstCombinedFormat()->url;
-                                break;
-                            case 'lengthSeconds':
-                                return  $downloadOptions->getInfo()->getLengthSeconds();
+                }else{
+                    switch ($option){
+                        case 'url':
+                            return $downloadOptions->getFirstCombinedFormat()->url;
+                            break;
+                        case 'lengthSeconds':
+                            return  $downloadOptions->getInfo()->getLengthSeconds();
 
-                            default :
-                                $result = [
-                                    'url' => $downloadOptions->getFirstCombinedFormat()->url,
-                                    'title' =>  $downloadOptions->getInfo()->getTitle(),
-                                    'lengthSeconds' =>  $downloadOptions->getInfo()->getLengthSeconds(),
-                                ];
-                                return response()->json($result);
-                        }
+                        default :
+                            $result = [
+                                'url' => $downloadOptions->getFirstCombinedFormat()->url,
+                                'title' =>  $downloadOptions->getInfo()->getTitle(),
+                                'lengthSeconds' =>  $downloadOptions->getInfo()->getLengthSeconds(),
+                            ];
+                            return response()->json($result);
                     }
-
-
-
-                } else {
-                    return  false;
                 }
+
+
+
+            } else {
+                return  false;
+            }
 
         }catch (\Exception $ex) {
             Log::error('Error: Not link ID YTB: '.$id_ytb);
@@ -407,15 +406,12 @@ class MusicsController extends Controller
 
     }
 
-
-
     public function getInfoYTB(Request $request): \Illuminate\Http\JsonResponse
     {
         $ytb_id = base64_decode($request->ytb_id);
-//        $ytb_id = ($request->ytb_id);
         $youtube = new YouTubeDownloader();
-        $youtube->getBrowser()->consentCookies();
         $list_id = preg_split("/[|]+/",$ytb_id);
+
         $dataArr = [];
         foreach ($list_id as $id){
             try {
@@ -443,7 +439,6 @@ class MusicsController extends Controller
         return response()->json($dataArr);
 
     }
-
 
     public function createYTB(Request $request){
 
