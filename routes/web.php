@@ -48,6 +48,14 @@ Route::get('/link',function (){
     echo 1;
 });
 
+Route::get('/info', function () {
+    try {
+        echo phpinfo();
+    } catch (Exception $exception) {
+        Log::error('info ' . $exception->getMessage());
+    }
+});
+
 
 Route::get('/stream/{id}',[MusicsController::class,'streamID'])->name('musics.stream');
 Route::get('/getLinkUrl/{id}',[MusicsController::class,'getLinkUrl'])->name('musics.getLinkUrl');
