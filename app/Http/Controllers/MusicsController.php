@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 
-//use Alaouy\Youtube\Youtube;
+use Alaouy\Youtube\Youtube;
+
 use App\Musics;
 
 use App\Tags;
@@ -20,8 +21,6 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
-use Symfony\Component\Process\Exception\ProcessFailedException;
-use Symfony\Component\Process\Process;
 use YouTube\Utils\Utils;
 use YouTube\YouTubeDownloader;
 
