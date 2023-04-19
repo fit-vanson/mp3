@@ -419,21 +419,16 @@ class MusicsController extends Controller
 
     public function getInfoYTB(Request $request): \Illuminate\Http\JsonResponse
     {
-        $ytb_id = base64_decode($request->ytb_id);
-
-        $url = "https://www.youtube.com/watch?v=mLF-XRFoLQ0";
-        $videoInfo = $this->getYoutubeInfo($url);
-        $audioLink = $this->getAudioLink($url);
-
-        dd($videoInfo,$audioLink);
-//        $ytb_id = ($request->ytb_id);
+//        $ytb_id = base64_decode($request->ytb_id);
+        $ytb_id = ($request->ytb_id);
         $youtube = new YouTubeDownloader();
+        $youtube->getBrowser()->consentCookies();
         $list_id = preg_split("/[|]+/",$ytb_id);
 
 
         $dataArr = [];
         foreach ($list_id as $id){
-//            try {
+            try {
 
                 if (filter_var($id, FILTER_VALIDATE_URL) === FALSE) {
                     $downloadOptions = $youtube->getDownloadLinks("https://www.youtube.com/watch?v=" . trim($id));
@@ -449,44 +444,18 @@ class MusicsController extends Controller
                     'shortDescription' => $info->getShortDescription(),
                     'lengthSeconds' => gmdate("H:i:s",$info->getLengthSeconds()),
                     'image' => 'https://i.ytimg.com/vi_webp/'.$info->getId().'/mqdefault.webp',
-//                    'url_audio' => $downloadOptions->getSplitFormats()->audio->url,
+                    'url_audio' => $downloadOptions->getSplitFormats()->audio->url,
                 ];
-//            }catch (\Exception $ex) {
-//                Log::error('Error: Not link ID YTB: '.$id);
-//            }
+            }catch (\Exception $ex) {
+                Log::error('Error: Not link ID YTB: '.$id);
+            }
         }
 
-
-
-
+        dd($dataArr);
         return response()->json($dataArr);
 
     }
 
-    public function getYoutubeInfo($url) {
-        $process = new Process(['youtube-dl', '-j', '--extract-audio', $url]);
-        $process->setTimeout(3600);
-        $process->run();
-
-        if (!$process->isSuccessful()) {
-            throw new ProcessFailedException($process);
-        }
-
-        $jsonOutput = $process->getOutput();
-        $videoInfo = json_decode($jsonOutput, true);
-
-        return $videoInfo;
-    }
-
-    public function getAudioLink($url) {
-        $videoInfo = $this->getYoutubeInfo($url);
-
-        if (isset($videoInfo['url'])) {
-            return $videoInfo['url'];
-        }
-
-        return null;
-    }
 
     public function createYTB(Request $request){
 
