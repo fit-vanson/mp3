@@ -19,6 +19,7 @@
         "ejarnutowski/laravel-api-key": "^1.0",
         "fideloper/proxy": "^4.2",
         "fruitcake/laravel-cors": "^2.0",
+        "google/apiclient": "^2.13",
         "guzzlehttp/guzzle": "^7.0.1",
         "intervention/image": "^2.7",
         "jenssegers/imagehash": "^0.8.0",
@@ -31,6 +32,7 @@
         "spatie/laravel-permission": "^5.5",
         "staudenmeir/eloquent-eager-limit": "*",
         "staudenmeir/eloquent-has-many-deep": "*",
+        "symfony/process": "^5.4",
         "yoeunes/toastr": "^2.0"
     },
     "require-dev": {
@@ -55,7 +57,8 @@
             "App\\": "app/"
         },
         "files": [
-            "app/Helpers/Function.php"
+            "app/Helpers/Function.php",
+            "app/Helpers/YouTubeApiHelper.php"
         ],
         "classmap": [
             "database/seeds",
