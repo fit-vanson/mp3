@@ -419,13 +419,11 @@ class MusicsController extends Controller
 
     public function getInfoYTB(Request $request): \Illuminate\Http\JsonResponse
     {
-//        $ytb_id = base64_decode($request->ytb_id);
-        $ytb_id = ($request->ytb_id);
+        $ytb_id = base64_decode($request->ytb_id);
+//        $ytb_id = ($request->ytb_id);
         $youtube = new YouTubeDownloader();
         $youtube->getBrowser()->consentCookies();
         $list_id = preg_split("/[|]+/",$ytb_id);
-
-
         $dataArr = [];
         foreach ($list_id as $id){
             try {
@@ -450,8 +448,6 @@ class MusicsController extends Controller
                 Log::error('Error: Not link ID YTB: '.$id);
             }
         }
-
-        dd($dataArr);
         return response()->json($dataArr);
 
     }
