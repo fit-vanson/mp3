@@ -168,8 +168,8 @@ class TagsController extends Controller
             }
         }
 
-        $tag->wallpaper()->detach();
-        $tag->ringtone()->detach();
+//        $tag->wallpaper()->detach();
+//        $tag->ringtone()->detach();
         $tag->categories()->detach();
         $tag->delete();
         return response()->json(['success'=>'Xoá thành công']);

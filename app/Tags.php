@@ -12,15 +12,15 @@ class Tags extends Model
         'tag_name'
     ];
 
-    public function wallpaper()
-    {
-        return $this->belongsToMany(Wallpapers::class, TagsHasWallpaper::class, 'tag_id', 'wallpaper_id');
-    }
-
-    public function ringtone()
-    {
-        return $this->belongsToMany(Ringtones::class, TagsHasRingtone::class, 'tag_id', 'ringtone_id');
-    }
+//    public function wallpaper()
+//    {
+//        return $this->belongsToMany(Wallpapers::class, TagsHasWallpaper::class, 'tag_id', 'wallpaper_id');
+//    }
+//
+//    public function ringtone()
+//    {
+//        return $this->belongsToMany(Ringtones::class, TagsHasRingtone::class, 'tag_id', 'ringtone_id');
+//    }
 
     public function music()
     {
