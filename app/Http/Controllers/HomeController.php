@@ -159,7 +159,7 @@ class HomeController extends Controller
             ->get()
             ->map(function($row) {
                 return [
-                    "logo" => '<div><img src="'.asset('storage/sites').'/'.$row->sites->site_image.'" width="70" class="rounded-circle mr-3"><a  href="'.route('sites.view',['id'=>$row->sites->id]).'"  target="_blank"> '.$row->sites->site_name.'</a></div>',
+                    "logo" => '<div><img src="'.asset('storage/sites').'/'.$row->sites->id.'/'.$row->sites->site_image.'" width="70" class="rounded-circle mr-3"><a  href="'.route('sites.view',['id'=>$row->sites->id]).'"  target="_blank"> '.$row->sites->site_name.'</a></div>',
                     'count_today' => number_format($row->count_today),
                     'count_lastday' => number_format($row->count_lastday),
                     'count_7day' => number_format($row->count_7day),
