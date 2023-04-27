@@ -33,6 +33,7 @@
         "staudenmeir/eloquent-eager-limit": "*",
         "staudenmeir/eloquent-has-many-deep": "*",
         "symfony/process": "^5.4",
+        "torann/geoip": "^3.0",
         "yoeunes/toastr": "^2.0"
     },
     "require-dev": {

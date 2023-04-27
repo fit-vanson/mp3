@@ -180,6 +180,7 @@ return [
         Ejarnutowski\LaravelApiKey\Providers\ApiKeyServiceProvider::class,
         Barryvdh\Debugbar\ServiceProvider::class,
         Mavinoo\Batch\BatchServiceProvider::class,
+        Torann\GeoIP\GeoIPServiceProvider::class,
 
 
     ],
@@ -234,6 +235,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Debugbar' => Barryvdh\Debugbar\Facades\Debugbar::class,
         'Batch' => Mavinoo\Batch\BatchFacade::class,
+        'GeoIP' => Torann\GeoIP\Facades\GeoIP::class,
 
 
     ],

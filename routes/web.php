@@ -71,12 +71,21 @@ Route::get('/policy', [HomeController::class, 'policy'])->name('policy');
 
 Route::get('/directlink', [SitesController::class, 'directlink'])->name('directlink');
 Route::get('/cloudflare/{id}', [HomeController::class, 'cloudflare'])->name('cloudflare');
+Route::get('/add-country', [HomeController::class, 'addCountry'])->name('addCountry');
+
 
 
 Route::group(['prefix'=>env('ADMIN_PAGE','admin')], function (){
 //    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
     Route::get('/load_data', [HomeController::class, 'load_data'])->name('home.load_data');
     Route::get('/', [HomeController::class, 'index'])->name('home.index');
+
+    Route::get('/clear_IP', [App\Http\Controllers\HomeController::class, 'clear_IP'])->name('admin.clear_IP');
+
+
+    Route::post('/load_mostApp', [HomeController::class, 'load_mostApp'])->name('home.load_mostApp');
+    Route::post('/load_mostCountry', [HomeController::class, 'load_mostCountry'])->name('home.load_mostCountry');
+
 
 
     Route::group(['prefix'=>'users'], function (){

@@ -14,4 +14,9 @@ class ListIP extends Model
         'id_site',
         'count',
     ];
+
+    public function sites()
+    {
+        return $this->belongsTo(Sites::class,'id_site');
+    }
 }

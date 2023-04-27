@@ -5,6 +5,8 @@
 @section('css')
     <link href="{{ URL::asset('/assets/libs/chartist/chartist.min.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ URL::asset('/assets/libs/select2/select2.min.css') }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ URL::asset('assets/libs/datatables/datatables.min.css') }}" rel="stylesheet" type="text/css" />
+
 @endsection
 
 @section('content')
@@ -75,6 +77,50 @@
 
     <div class="row">
 
+        <div class="col-xl-6">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title mb-4">Best App</h4>
+                    <div class="table-responsive">
+                        <table class="table table-hover mostappTable" style="width: 100%;">
+                            <thead>
+                            <tr>
+                                <th style="width: 60%" scope="col">Site</th>
+                                <th style="width: 10%"scope="col">Today</th>
+                                <th style="width: 10%" scope="col">Last Day</th>
+                                <th style="width: 10%" scope="col">In 7 Day</th>
+                                <th style="width: 10%" scope="col">In Month</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-6">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title mb-4">Country</h4>
+                    <div class="table-responsive">
+                        <table class="table table-hover mostcountryTable" style="width: 100%;">
+                            <thead>
+                            <tr>
+
+                                <th style="width: 50%;" scope="col">Country</th>
+                                <th style="width: 50%;" scope="col">Count</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="col-xl-12">
             <div class="card">
                 <div class="card-body">
@@ -95,6 +141,8 @@
     <!-- plugin js -->
     <script src="{{ URL::asset('/assets/libs/chart-js/chart-js.min.js') }}"></script>
 
+    <script src="{{ URL::asset('/assets/libs/datatables/datatables.min.js') }}"></script>
+
 
     <script>
         $(".select2").select2({});
@@ -113,16 +161,19 @@
                         },
 
                         options: {
-                            legend: {
-                                display: false
-                            },
+                            // legend: {
+                            //     display: false
+                            // },
                             scales: {
                                 yAxes: [{
-                                    // ticks: {
-                                    //     // max: 100,
-                                    //     // min: 20,
-                                    //     stepSize: 10
-                                    // }
+                                    id: 'A',
+                                    type: 'linear',
+                                    position: 'left',
+                                }, {
+                                    id: 'B',
+                                    type: 'linear',
+                                    position: 'right',
+
                                 }]
                             }
 
@@ -131,13 +182,92 @@
                 }
             });
         }
+        loaddata();
 
-        // function myFunction() {
-        //     $("#first").val();
-        //     var id = $("#select_sites").val();
-        //     loaddata(id)
-        // }
+        $(document).ready(function() {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            var dtTable = $('.mostappTable').DataTable({
+                processing: true,
+                serverSide: true,
+                paging: false,
+                bInfo : false,
+                searching: false,
+                ordering: false,
+                ajax: {
+                    url: "{{route('home.load_mostApp')}}",
+                    type: "post"
+                },
+                columns: [
+                    // columns according to JSON
+                    {data: 'logo',},
+                    {data: 'count_today'},
+                    {data: 'count_lastday'},
+                    {data: 'count_7day'},
+                    {data: 'count_month'},
+                ],
+                // order: [1, 'asc'],
 
-        loaddata(); // This will run on page load
+                // fnDrawCallback: function () {
+                //     $('.image-popup-no-margins').magnificPopup({
+                //         type: 'image',
+                //         closeOnContentClick: true,
+                //         closeBtnInside: false,
+                //         fixedContentPos: true,
+                //         mainClass: 'mfp-no-margins mfp-with-zoom',
+                //         image: {
+                //             verticalFit: true
+                //         },
+                //         zoom: {
+                //             enabled: true,
+                //             duration: 300 // don't foget to change the duration also in CSS
+                //
+                //         }
+                //     });
+                // }
+
+            });
+
+            var dtTable = $('.mostcountryTable').DataTable({
+                processing: true,
+                serverSide: true,
+                paging: false,
+                bInfo : false,
+                searching: false,
+                ordering: false,
+                ajax: {
+                    url: "{{route('home.load_mostCountry')}}",
+                    type: "post"
+                },
+                columns: [
+                    // columns according to JSON
+                    {data: 'country'},
+                    {data: 'count_today'},
+                ],
+                // order: [1, 'asc'],
+
+                // fnDrawCallback: function () {
+                //     $('.image-popup-no-margins').magnificPopup({
+                //         type: 'image',
+                //         closeOnContentClick: true,
+                //         closeBtnInside: false,
+                //         fixedContentPos: true,
+                //         mainClass: 'mfp-no-margins mfp-with-zoom',
+                //         image: {
+                //             verticalFit: true
+                //         },
+                //         zoom: {
+                //             enabled: true,
+                //             duration: 300 // don't foget to change the duration also in CSS
+                //
+                //         }
+                //     });
+                // }
+
+            });
+        })
     </script>
 @endsection
