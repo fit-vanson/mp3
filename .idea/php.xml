@@ -125,9 +125,6 @@
       <path value="$PROJECT_DIR$/vendor/paragonie/random_compat" />
       <path value="$PROJECT_DIR$/vendor/jenssegers/imagehash" />
       <path value="$PROJECT_DIR$/vendor/cloudflare/sdk" />
-      <path value="$PROJECT_DIR$/vendor/athlon1600/php-curl-file-downloader" />
-      <path value="$PROJECT_DIR$/vendor/athlon1600/php-curl-client" />
-      <path value="$PROJECT_DIR$/vendor/athlon1600/youtube-downloader" />
       <path value="$PROJECT_DIR$/vendor/mavinoo/laravel-batch" />
       <path value="$PROJECT_DIR$/vendor/alaouy/youtube" />
       <path value="$PROJECT_DIR$/vendor/guzzlehttp/guzzle" />
@@ -145,6 +142,12 @@
       <path value="$PROJECT_DIR$/vendor/google/apiclient" />
       <path value="$PROJECT_DIR$/vendor/google/apiclient-services" />
       <path value="$PROJECT_DIR$/vendor/torann/geoip" />
+      <path value="$PROJECT_DIR$/vendor/athlon1600/youtube-downloader" />
+      <path value="$PROJECT_DIR$/vendor/athlon1600/php-curl-file-downloader" />
+      <path value="$PROJECT_DIR$/vendor/athlon1600/php-curl-client" />
+      <path value="$PROJECT_DIR$/vendor/madcoda/php-youtube-api" />
+      <path value="$PROJECT_DIR$/vendor/norkunas/youtube-dl-php" />
+      <path value="$PROJECT_DIR$/vendor/symfony/filesystem" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.3" />

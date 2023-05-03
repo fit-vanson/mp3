@@ -104,6 +104,7 @@ class SitesController extends Controller
 //            $btn .= ' <a href="'.route('sites.view',$record->id).'" class="btn btn-info"><i class="ti-info-alt"></i></a>';
 
 
+
             $Load_Feature = 'Load Feature: ';
             $Categories = 'Categories: ';
             $Wallpaper = 'Wallpaper: ';

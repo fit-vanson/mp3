@@ -421,6 +421,7 @@ class MusicsController extends Controller
                 }else{
                     $downloadOptions = $youtube->getDownloadLinks(trim($id));
                 }
+
                 $info = $downloadOptions->getInfo();
                 $dataArr[] = [
                     'videoId' => $info->getId(),
@@ -438,6 +439,31 @@ class MusicsController extends Controller
         }
         return response()->json($dataArr);
 
+    }
+
+    public function getYoutubeAudioUrl($videoId) {
+        $api_key = 'AIzaSyAuDQzIPOb00m9uU9B1lFpvJers7Kds8CI'; // Thay YOUR_API_KEY bằng API key của bạn
+        $url = "https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=".$videoId."&key=".$api_key;
+
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HEADER, false);
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        $data = json_decode($response, true);
+        if (isset($data['items']) && count($data['items']) > 0) {
+            $duration = $data['items'][0]['contentDetails']['duration'];
+            preg_match_all('/\d+/', $duration, $matches);
+            $total_seconds = 0;
+            foreach ($matches[0] as $key => $match) {
+                $total_seconds += ($match * pow(60, (count($matches[0]) - 1 - $key)));
+            }
+            $format = $total_seconds < 3600 ? 'mm:ss' : 'HH:mm:ss';
+            $audioUrl = "https://www.youtube.com/watch?v=".$videoId."&t=0s&disable_polymer=true&hl=en&has_verified=1&bpctr=".time()."&app=desktop&autoplay=1&start=0&end=".$total_seconds;
+            return $audioUrl;
+        }
+        return null;
     }
 
     public function createYTB(Request $request){
