@@ -86,6 +86,19 @@ class MusicsController extends Controller
             ->get();
 
 
+        if ($request->get('null_tag') == 1){
+            $totalRecordswithFilter = Musics::select('count(*) as allcount')
+                ->doesntHave('tags')
+                ->where('music_id_ytb', 'like', '%' . $searchValue . '%')
+                ->count();
+            $records = Musics::doesntHave('tags')
+                ->where('music_id_ytb', 'like', '%' . $searchValue . '%')
+                ->select('*')
+                ->orderBy($columnName, $columnSortOrder)
+                ->skip($start)
+                ->take($rowperpage)
+                ->get();
+        }
 
 
 
@@ -132,19 +145,7 @@ class MusicsController extends Controller
             }
         }
 
-        if ($request->get('null_tag') == 1){
-            $totalRecordswithFilter = Musics::select('count(*) as allcount')
-                ->doesntHave('tags')
-                ->where('music_id_ytb', 'like', '%' . $searchValue . '%')
-                ->count();
-            $records = Musics::doesntHave('tags')
-                ->where('music_id_ytb', 'like', '%' . $searchValue . '%')
-                ->select('*')
-                ->orderBy($columnName, $columnSortOrder)
-                ->skip($start)
-                ->take($rowperpage)
-                ->get();
-        }
+
 
         $data_arr = array();
         foreach ($records as $record) {
