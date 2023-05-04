@@ -407,7 +407,7 @@ $button = $header['button'];
             });
 
             $('#musics_all').on('click', function () {
-                $('#musics_status').val();
+                $('#musics_status').val(null);
                 dtTable.draw();
             });
 
