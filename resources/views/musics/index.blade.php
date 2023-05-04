@@ -26,64 +26,16 @@ $button = $header['button'];
     <div class="row align-items-center">
         <div class="col-sm-6">
             <div class="page-title-box">
-
+                <div class="d-inline-block" style="padding-right: 30px;">
+                    <input class="custom-control-input" type="hidden" name="musics_status" id="musics_status" />
+                    <button type="button" id="musics_all" class="btn btn-success waves-effect waves-light">All</button>
+                    <button type="button" id="musics_publish" class="btn btn-primary waves-effect waves-light" value="0">Publish</button>
+                    <button type="button" id="musics_error" class="btn btn-danger waves-effect waves-light" value="1">Error</button>
+                </div>
             </div>
         </div>
     </div>
     <!-- end page title -->
-
-    <!--  Modal content for the above example -->
-    <div class="modal fade" id="modalMusicEdit" tabindex="-1" role="dialog"
-         aria-labelledby="myLargeModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title mt-0" id="ModalEditLabel"></h5>
-                    <button type="button" class="close" data-dismiss="modal"
-                            aria-hidden="true">×</button>
-                </div>
-                <div class="card-body">
-                    <form id="formEditMusic">
-                        <input type="hidden" name="id" id="id">
-
-                        <div class="form-group">
-                            <label>Title</label>
-                            <input type="text" class="form-control" id="music_title" name="music_title" >
-                        </div>
-                        <div class="form-group">
-                            <label>Link Url Image</label>
-                            <input  type="text" class="form-control" id="music_thumbnail_link" name="music_thumbnail_link" >
-                            <img id="link_thumbnail"  src=""/>
-                        </div>
-
-
-                        <div class="form-group">
-                            <label class="control-label">Tags Select</label>
-                            <select  class="select2 form-control select2-multiple" id="select_tags_edit"
-                                    name="select_tags[]" multiple="multiple"
-                                    data-placeholder="Choose ..." style="width: 100%" required   >
-                                @foreach($tags as $tag)
-                                    <option value="{{$tag->id}}">{{$tag->tag_name}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-
-
-                        <div class="form-group mb-0">
-                            <div>
-                                <button type="submit" id="saveBtnEdit" class="btn btn-primary waves-effect waves-light mr-1">
-                                    Submit
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
-
-
 
     <div class="row">
         <div class="col-12">
@@ -124,6 +76,56 @@ $button = $header['button'];
         </div> <!-- end col -->
     </div> <!-- end row -->
 
+    <!--  Modal content for the above example -->
+    <div class="modal fade" id="modalMusicEdit" tabindex="-1" role="dialog"
+         aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title mt-0" id="ModalEditLabel"></h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-hidden="true">×</button>
+                </div>
+                <div class="card-body">
+                    <form id="formEditMusic">
+                        <input type="hidden" name="id" id="id">
+
+                        <div class="form-group">
+                            <label>Title</label>
+                            <input type="text" class="form-control" id="music_title" name="music_title" >
+                        </div>
+                        <div class="form-group">
+                            <label>Link Url Image</label>
+                            <input  type="text" class="form-control" id="music_thumbnail_link" name="music_thumbnail_link" >
+                            <img id="link_thumbnail"  src=""/>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="control-label">Tags Select</label>
+                            <select  class="select2 form-control select2-multiple" id="select_tags_edit"
+                                     name="select_tags[]" multiple="multiple"
+                                     data-placeholder="Choose ..." style="width: 100%" required   >
+                                @foreach($tags as $tag)
+                                    <option value="{{$tag->id}}">{{$tag->tag_name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+
+
+                        <div class="form-group mb-0">
+                            <div>
+                                <button type="submit" id="saveBtnEdit" class="btn btn-primary waves-effect waves-light mr-1">
+                                    Submit
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
     <!-- Create from YTB-->
     <div class="modal fade" id="modalCreateYTB" tabindex="-1" role="dialog"
          aria-labelledby="myLargeModalLabel" aria-hidden="true">
@@ -176,7 +178,6 @@ $button = $header['button'];
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
-
     <!-- Create from Channel-->
     <div class="modal fade" id="modalCreateList" tabindex="-1" role="dialog"
          aria-labelledby="myLargeModalLabel" aria-hidden="true">
@@ -323,7 +324,9 @@ $button = $header['button'];
                     type: "post",
                     data: function(data){
                         var active = $('#null_tag').prop("checked") ? 1 : 0 ;
+                        var status =  $('#musics_status').val();
                         data.null_tag = $('#null_tag').val();
+                        data.status = $('#musics_status').val();
                     },
                 },
                 columns: [
@@ -403,6 +406,21 @@ $button = $header['button'];
                 $('#table{{preg_replace('/\s+/','',$page_title)}}').DataTable().ajax.reload();
             });
 
+            $('#musics_all').on('click', function () {
+                $('#musics_status').val();
+                dtTable.draw();
+            });
+
+            $('#musics_publish').on('click', function () {
+                $('#musics_status').val(0);
+                dtTable.draw();
+            });
+
+            $('#musics_error').on('click', function () {
+                $('#musics_status').val(1);
+                dtTable.draw();
+            });
+
 
 
             $(document).on('click', '#createYTB', function () {
@@ -427,6 +445,8 @@ $button = $header['button'];
                         let tab_content_result_getInfo = '';
                         let active = '';
                         $.each(data, function (k,v){
+
+                            console.log(v);
 
                             active = k==0 ? 'active':'';
 
@@ -465,6 +485,7 @@ $button = $header['button'];
 
                                 '<div class="form-group col-lg-6">' +
                                 '<img id="getInfo_'+v.videoId+'_image" name="getInfo['+v.videoId+'][image]" width="300px" src="'+v.image+'">' +
+                                '<input type="hidden" name="getInfo['+v.videoId+'][image]"  value="'+v.image+'">'+
                                 '</div>'+
 
                                 '<div class="form-group col-lg-6">' +
@@ -509,7 +530,6 @@ $button = $header['button'];
                     // processData: false,
                     // contentType: false,
                     success: function (data) {
-                        console.log(data)
                         if (data.success) {
                             $('#formCreateYTB').trigger("reset");
                             toastr['success'](data.success, 'Success!');

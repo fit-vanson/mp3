@@ -51,4 +51,14 @@ class VideoDetails
     {
         return Utils::arrayGet($this->videoDetails, 'lengthSeconds');
     }
+
+    public function getThumbnail()
+    {
+        return Utils::arrayGet($this->videoDetails, 'thumbnail');
+    }
+
+    public function getThumbnailMqdefault()
+    {
+        return $this->getThumbnail()['thumbnails'][1];
+    }
 }

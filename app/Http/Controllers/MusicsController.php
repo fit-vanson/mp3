@@ -39,8 +39,7 @@ class MusicsController extends Controller
             'button' => [
 //                'Create'            => ['id'=>'createMusics','style'=>'primary'],
                 'Create YTB'        => ['id'=>'createYTB','style'=>'success'],
-                'Play List'        => ['id'=>'videoList','style'=>'primary'],
-//                'Update Multiple'   => ['id'=>'update_multipleMusics','style'=>'warning'],
+                'Play List'         => ['id'=>'videoList','style'=>'primary'],
             ]
 
         ];
@@ -95,6 +94,34 @@ class MusicsController extends Controller
                 ->count();
             $records = Musics::doesntHave('tags')
                 ->where('music_id_ytb', 'like', '%' . $searchValue . '%')
+                ->select('*')
+                ->orderBy($columnName, $columnSortOrder)
+                ->skip($start)
+                ->take($rowperpage)
+                ->get();
+        }
+
+
+
+        if ($request->get('status') !== null){
+            $totalRecordswithFilter = Musics::select('count(*) as allcount')
+
+                ->where('status', $request->get('status'))
+                ->where(function ($query) use ($searchValue) {
+                    $query ->where('music_id_ytb', 'like', '%' . $searchValue . '%')
+                        ->orwhere('music_title', 'like', '%' . utf8_encode($searchValue) . '%')
+                        ->orwhereRelation('tags','tag_name','like', '%' . $searchValue . '%');
+                })
+                ->count();
+
+            // Get records, also we have included search filter as well
+            $records = Musics::with('tags')
+                ->where('status', $request->get('status'))
+                ->where(function ($query) use ($searchValue) {
+                    $query ->where('music_id_ytb', 'like', '%' . $searchValue . '%')
+                        ->orwhere('music_title', 'like', '%' . utf8_encode($searchValue) . '%')
+                        ->orwhereRelation('tags','tag_name','like', '%' . $searchValue . '%');
+                })
                 ->select('*')
                 ->orderBy($columnName, $columnSortOrder)
                 ->skip($start)
@@ -430,7 +457,7 @@ class MusicsController extends Controller
                     'keywords' => $info->getKeywords()? implode(",\n",$info->getKeywords()):'',
                     'shortDescription' => $info->getShortDescription(),
                     'lengthSeconds' => gmdate("H:i:s",$info->getLengthSeconds()),
-                    'image' => 'https://i.ytimg.com/vi_webp/'.$info->getId().'/mqdefault.webp',
+                    'image' => $info->getThumbnailMqdefault()['url'],
                     'url_audio' => $downloadOptions->getSplitFormats()->audio->url,
                 ];
             }catch (\Exception $ex) {
@@ -440,42 +467,12 @@ class MusicsController extends Controller
         return response()->json($dataArr);
 
     }
-
-    public function getYoutubeAudioUrl($videoId) {
-        $api_key = 'AIzaSyAuDQzIPOb00m9uU9B1lFpvJers7Kds8CI'; // Thay YOUR_API_KEY bằng API key của bạn
-        $url = "https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=".$videoId."&key=".$api_key;
-
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HEADER, false);
-        $response = curl_exec($ch);
-        curl_close($ch);
-
-        $data = json_decode($response, true);
-        if (isset($data['items']) && count($data['items']) > 0) {
-            $duration = $data['items'][0]['contentDetails']['duration'];
-            preg_match_all('/\d+/', $duration, $matches);
-            $total_seconds = 0;
-            foreach ($matches[0] as $key => $match) {
-                $total_seconds += ($match * pow(60, (count($matches[0]) - 1 - $key)));
-            }
-            $format = $total_seconds < 3600 ? 'mm:ss' : 'HH:mm:ss';
-            $audioUrl = "https://www.youtube.com/watch?v=".$videoId."&t=0s&disable_polymer=true&hl=en&has_verified=1&bpctr=".time()."&app=desktop&autoplay=1&start=0&end=".$total_seconds;
-            return $audioUrl;
-        }
-        return null;
-    }
-
     public function createYTB(Request $request){
-
-
         $rules = [
             'select_tags' =>'required',
         ];
         $message = [
             'select_tags.required'=>'Vui lòng chọn tags',
-
-
         ];
         $error = Validator::make($request->all(),$rules, $message );
 
@@ -501,7 +498,7 @@ class MusicsController extends Controller
                 [
                     'music_url_link_audio_ytb'=>$value['url_audio'],
                     'music_title'=> ($value['title']),
-                    'music_thumbnail_link'=>  "https://i.ytimg.com/vi_webp/$key/mqdefault.webp",
+                    'music_thumbnail_link'=> $value['image'],
                     'expire' => time(),
                 ]
             );
