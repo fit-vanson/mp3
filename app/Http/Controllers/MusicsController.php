@@ -68,42 +68,6 @@ class MusicsController extends Controller
         // Total records
         $totalRecords = Musics::select('count(*) as allcount')->count();
 
-        $totalRecordswithFilter = Musics::select('count(*) as allcount')
-            ->where('music_id_ytb', 'like', '%' . $searchValue . '%')
-            ->orwhere('music_title', 'like', '%' . utf8_encode($searchValue) . '%')
-            ->orwhereRelation('tags','tag_name','like', '%' . $searchValue . '%')
-            ->count();
-
-        // Get records, also we have included search filter as well
-        $records = Musics::with('tags')
-            ->where('music_id_ytb', 'like', '%' . $searchValue . '%')
-            ->orwhere('music_title', 'like', '%' . utf8_encode($searchValue) . '%')
-            ->orwhereRelation('tags','tag_name','like', '%' . $searchValue . '%')
-            ->select('*')
-            ->orderBy($columnName, $columnSortOrder)
-            ->skip($start)
-            ->take($rowperpage)
-            ->get();
-
-
-        if ($request->get('null_tag') == 1){
-            $totalRecordswithFilter = Musics::select('count(*) as allcount')
-                ->doesntHave('tags')
-                ->where('music_id_ytb', 'like', '%' . $searchValue . '%')
-                ->count();
-            $records = Musics::doesntHave('tags')
-                ->where('music_id_ytb', 'like', '%' . $searchValue . '%')
-                ->select('*')
-                ->orderBy($columnName, $columnSortOrder)
-                ->skip($start)
-                ->take($rowperpage)
-                ->get();
-        }
-
-
-
-
-
         if ($request->get('status') !== null){
             $totalRecordswithFilter = Musics::select('count(*) as allcount')
                 ->where('status', $request->get('status'))
@@ -111,9 +75,7 @@ class MusicsController extends Controller
                     $query ->where('music_id_ytb', 'like', '%' . $searchValue . '%')
                         ->orwhere('music_title', 'like', '%' . utf8_encode($searchValue) . '%')
                         ->orwhereRelation('tags','tag_name','like', '%' . $searchValue . '%');
-                })
-                ->count();
-
+                });
             // Get records, also we have included search filter as well
             $records = Musics::with('tags')
                 ->where('status', $request->get('status'))
@@ -121,31 +83,34 @@ class MusicsController extends Controller
                     $query ->where('music_id_ytb', 'like', '%' . $searchValue . '%')
                         ->orwhere('music_title', 'like', '%' . utf8_encode($searchValue) . '%')
                         ->orwhereRelation('tags','tag_name','like', '%' . $searchValue . '%');
-                })
-                ->select('*')
-                ->orderBy($columnName, $columnSortOrder)
-                ->skip($start)
-                ->take($rowperpage)
-                ->get();
+                });
+        }else{
+            $totalRecordswithFilter = Musics::select('count(*) as allcount')
+                ->where(function ($query) use ($searchValue) {
+                    $query->where('music_id_ytb', 'like', '%' . $searchValue . '%')
+                        ->orwhere('music_title', 'like', '%' . utf8_encode($searchValue) . '%')
+                        ->orwhereRelation('tags', 'tag_name', 'like', '%' . $searchValue . '%');
+                });
 
-            if ($request->get('null_tag') == 1){
-                $totalRecordswithFilter = Musics::select('count(*) as allcount')
-                    ->doesntHave('tags')
-                    ->where('status', $request->get('status'))
-                    ->where('music_id_ytb', 'like', '%' . $searchValue . '%')
-                    ->count();
-                $records = Musics::doesntHave('tags')
-                    ->where('music_id_ytb', 'like', '%' . $searchValue . '%')
-                    ->where('status', $request->get('status'))
-                    ->select('*')
-                    ->orderBy($columnName, $columnSortOrder)
-                    ->skip($start)
-                    ->take($rowperpage)
-                    ->get();
-            }
+            // Get records, also we have included search filter as well
+            $records = Musics::with('tags')
+                ->where(function ($query) use ($searchValue) {
+                    $query->where('music_id_ytb', 'like', '%' . $searchValue . '%')
+                        ->orwhere('music_title', 'like', '%' . utf8_encode($searchValue) . '%')
+                        ->orwhereRelation('tags', 'tag_name', 'like', '%' . $searchValue . '%');
+                });
         }
 
-
+        if ($request->get('null_tag') == 1){
+            $totalRecordswithFilter = $totalRecordswithFilter->whereDoesntHave('tags');
+            $records = $records->whereDoesntHave('tags');
+        }
+        $totalRecordswithFilter = $totalRecordswithFilter->count();
+        $records = $records->select('*')
+            ->orderBy($columnName, $columnSortOrder)
+            ->skip($start)
+            ->take($rowperpage)
+            ->get();
 
         $data_arr = array();
         foreach ($records as $record) {
