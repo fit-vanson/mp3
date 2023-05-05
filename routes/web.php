@@ -175,6 +175,7 @@ Route::group(['prefix'=>env('ADMIN_PAGE','admin')], function (){
 //        Route::get('/importToDb', [RingtonesController::class, 'importToDb'])->name('wallpapers.importToDb');
         Route::get('/compare', [MusicsController::class, 'compare'])->name('musics.compare');
 
+        Route::get('/get-ytb-error',[MusicsController::class,'getYtbError'])->name('musics.getYtbError');
         Route::get('/get-info-ytb',[MusicsController::class,'getInfoYTB'])->name('musics.getInfoYTB');
         Route::post('/createYTB}',[MusicsController::class,'createYTB'])->name('musics.createYTB');
 

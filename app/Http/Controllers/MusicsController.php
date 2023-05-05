@@ -13,13 +13,16 @@ use DateTime;
 use Facade\FlareClient\Http\Response;
 
 use GuzzleHttp\Pool;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
+use Mavinoo\Batch\Batch;
 use YouTube\YouTubeDownloader;
 
 class MusicsController extends Controller
@@ -72,7 +75,8 @@ class MusicsController extends Controller
             $totalRecordswithFilter = Musics::select('count(*) as allcount')
                 ->where('status', $request->get('status'))
                 ->where(function ($query) use ($searchValue) {
-                    $query ->where('music_id_ytb', 'like', '%' . $searchValue . '%')
+                    $query
+                        ->where('music_id_ytb', 'like', '%' . $searchValue . '%')
                         ->orwhere('music_title', 'like', '%' . utf8_encode($searchValue) . '%')
                         ->orwhereRelation('tags','tag_name','like', '%' . $searchValue . '%');
                 });
@@ -80,14 +84,16 @@ class MusicsController extends Controller
             $records = Musics::with('tags')
                 ->where('status', $request->get('status'))
                 ->where(function ($query) use ($searchValue) {
-                    $query ->where('music_id_ytb', 'like', '%' . $searchValue . '%')
+                    $query
+                        ->where('music_id_ytb', 'like', '%' . $searchValue . '%')
                         ->orwhere('music_title', 'like', '%' . utf8_encode($searchValue) . '%')
                         ->orwhereRelation('tags','tag_name','like', '%' . $searchValue . '%');
                 });
         }else{
             $totalRecordswithFilter = Musics::select('count(*) as allcount')
                 ->where(function ($query) use ($searchValue) {
-                    $query->where('music_id_ytb', 'like', '%' . $searchValue . '%')
+                    $query
+                        ->where('music_id_ytb', 'like', '%' . $searchValue . '%')
                         ->orwhere('music_title', 'like', '%' . utf8_encode($searchValue) . '%')
                         ->orwhereRelation('tags', 'tag_name', 'like', '%' . $searchValue . '%');
                 });
@@ -95,7 +101,8 @@ class MusicsController extends Controller
             // Get records, also we have included search filter as well
             $records = Musics::with('tags')
                 ->where(function ($query) use ($searchValue) {
-                    $query->where('music_id_ytb', 'like', '%' . $searchValue . '%')
+                    $query
+                        ->where('music_id_ytb', 'like', '%' . $searchValue . '%')
                         ->orwhere('music_title', 'like', '%' . utf8_encode($searchValue) . '%')
                         ->orwhereRelation('tags', 'tag_name', 'like', '%' . $searchValue . '%');
                 });
@@ -450,6 +457,7 @@ class MusicsController extends Controller
         return response()->json($dataArr);
 
     }
+
     public function createYTB(Request $request){
         $rules = [
             'select_tags' =>'required',
@@ -562,6 +570,57 @@ class MusicsController extends Controller
         }
 
     }
+
+    public function getYtbError($status = 1, $limit = 10, $time = 3) : JsonResponse {
+        $YouTubeDownloader = new YouTubeDownloader();
+        $status = $_GET['status'] ?? $status;
+        $limit = $_GET['limit'] ?? $limit;
+        $time = $_GET['time'] ?? $time;
+        $musics = Musics::where('status', $status)->paginate($limit);
+
+        if ($musics->count() === 0) {
+            return response()->json(['success' => true]);
+        }
+
+        $updatedMusics = [];
+        $musics->each(function($music) use ($YouTubeDownloader, &$updatedMusics) {
+            try {
+                $downloadOptions = $YouTubeDownloader->getDownloadLinks("https://www.youtube.com/watch?v=" . trim($music->music_id_ytb));
+                $music->music_url_link_audio_ytb = $downloadOptions->getSplitFormats()->audio->url;
+                $music->status = 0;
+            } catch (\Exception $e) {
+                $music->music_url_link_audio_ytb = null;
+                $music->status += 1;
+                Log::error("Error getting YouTube download links for music ID {$music->id}: " . $e->getMessage());
+            }
+            $updatedMusics[] =[
+                'id' => $music->id,
+                'music_url_link_audio_ytb' => $music->music_url_link_audio_ytb,
+                'status' => $music->status,
+                'updated_at' => now(),
+            ];
+        });
+        $musicsInstance = new Musics;
+        $index = 'id';
+        $result = batch()->update($musicsInstance, $updatedMusics, $index);
+
+        if ($musics->hasMorePages()) {
+            header("Refresh: $time; URL=" . $musics->nextPageUrl() . "&status=$status&time=$time&limit=$limit");
+            return response()->json([
+                'success' => false,
+                'result' => $result,
+                'next_page_url' => $musics->nextPageUrl()
+            ]);
+        }
+
+        return response()->json([
+            'success' => true, 'result' => $result
+        ]);
+    }
+
+
+
+
 
     function parse_query($var)
     {

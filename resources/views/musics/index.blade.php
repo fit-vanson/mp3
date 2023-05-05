@@ -31,6 +31,7 @@ $button = $header['button'];
                     <button type="button" id="musics_all" class="btn btn-success waves-effect waves-light">All</button>
                     <button type="button" id="musics_publish" class="btn btn-primary waves-effect waves-light" value="0">Publish</button>
                     <button type="button" id="musics_error" class="btn btn-danger waves-effect waves-light" value="1">Error</button>
+                    <button type="button" id="musics_reset" class="btn btn-warning waves-effect waves-light" >Reset</button>
                 </div>
             </div>
         </div>
@@ -421,6 +422,87 @@ $button = $header['button'];
                 dtTable.draw();
             });
 
+            $('#musics_reset').on('click', function () {
+                $.ajax({
+                    type: "get",
+                    url: "{{ route("musics.getYtbError") }}",
+                    success: function (data) {
+                        $('#tablist_result_getInfo').show();
+                        $('#saveBtnCreateYTB').show();
+                        let nav_tabs_result_getInfo = '';
+                        let tab_content_result_getInfo = '';
+                        let active = '';
+                        $.each(data, function (k,v){
+
+                            console.log(v);
+
+                            active = k==0 ? 'active':'';
+
+                            nav_tabs_result_getInfo +=
+                                '<li class="nav-item" role="presentation">'+
+                                '<a class="nav-link '+active+'"  data-toggle="tab"  href="#tab_'+v.videoId+'" role="tab" id="nav_'+v.videoId+'">'+
+                                '<span class="d-none d-sm-block">'+v.videoId+'</span>'+
+                                '</a>'+
+                                '</li>';
+
+                            tab_content_result_getInfo +=
+                                '<div class="tab-pane p-3 '+active+'" id="tab_' + v.videoId + '" role="tabpanel">'+
+                                '<div  class="row">' +
+
+
+
+
+                                '<div class="form-group col-lg-4">' +
+                                '<h6 class="mt-0 header-title">Download</h6>'+
+                                // '<label for="name">Download </label>' +
+                                '<input type="checkbox" id="getInfo_'+v.videoId+'_download" name="getInfo['+v.videoId+'][download]" switch="none" >'+
+                                '<label for="getInfo_'+v.videoId+'_download" data-on-label="Yes" data-off-label="No"></label>'+
+                                '</div>'+
+
+
+                                '<input id="getInfo_'+v.videoId+'_url_audio" name="getInfo['+v.videoId+'][url_audio]" hidden value="'+v.url_audio+'">' +
+
+                                '<div class="form-group col-lg-4">' +
+                                '<label for="name">Time </label>' +
+                                '<input type="text" id="getInfo_'+v.videoId+'_lengthSeconds" name="getInfo['+v.videoId+'][lengthSeconds]" disabled class="form-control" value="'+v.lengthSeconds+'" >' +
+                                '</div>'+
+                                '<div class="form-group col-lg-4">' +
+                                '<label for="name">View Count</label>' +
+                                '<input type="text" id="getInfo_'+v.videoId+'_viewCount" name="getInfo['+v.videoId+'][viewCount]" class="form-control"   value="'+v.viewCount+'">' +
+                                '</div>'+
+
+                                '<div class="form-group col-lg-6">' +
+                                '<img id="getInfo_'+v.videoId+'_image" name="getInfo['+v.videoId+'][image]" width="300px" src="'+v.image+'">' +
+                                '<input type="hidden" name="getInfo['+v.videoId+'][image]"  value="'+v.image+'">'+
+                                '</div>'+
+
+                                '<div class="form-group col-lg-6">' +
+                                '<label for="name">Title</label>' +
+                                '<textarea type="text" id="getInfo_'+v.videoId+'_title" rows="6" name="getInfo['+v.videoId+'][title]" class="form-control" >' +v.title +'</textarea>'+
+                                '</div>'+
+
+                                '<div class="form-group col-lg-6">' +
+                                '<label for="name">Keywords</label>' +
+                                '<textarea  id="getInfo_'+v.videoId+'_keywords" name="getInfo['+v.videoId+'][keywords]" class="form-control"  rows="8">' +v.keywords +'</textarea>'+
+                                '</div>'+
+
+                                '<div class="form-group col-lg-6">' +
+                                '<label for="name">Description</label>' +
+                                '<textarea  id="getInfo_'+v.videoId+'_description" name="getInfo['+v.videoId+'][description]" class="form-control"  rows="8">' +v.shortDescription +'</textarea>'+
+                                '</div>'+
+                                '</div>'+
+                                '</div>';
+                            // $('#tab_content_result_getInfo').append(html);
+                        })
+                        $('#nav_tabs_result_getInfo').html(nav_tabs_result_getInfo);
+                        $('#tab_content_result_getInfo').html(tab_content_result_getInfo);
+                    },
+                    error: function (data) {
+                        console.log('Error:', data);
+                    }
+                });
+            });
+
 
 
             $(document).on('click', '#createYTB', function () {
@@ -434,7 +516,6 @@ $button = $header['button'];
 
             $(document).on('click', '.getInfoID', function () {
                 const _id = $("#music_id_ytb").val();
-
                 $.ajax({
                     type: "get",
                     url: "{{ asset("admin/musics/get-info-ytb?ytb_id=") }}" + btoa(_id),
@@ -514,8 +595,6 @@ $button = $header['button'];
                     }
                 });
 
-
-                console.log(_id);
             });
 
             $('#formCreateYTB').on('submit', function (event) {
