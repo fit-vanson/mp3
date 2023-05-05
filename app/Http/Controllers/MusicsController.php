@@ -577,6 +577,9 @@ class MusicsController extends Controller
         $limit = $_GET['limit'] ?? $limit;
         $time = $_GET['time'] ?? $time;
         $musics = Musics::where('status', $status)->paginate($limit);
+        if (isset($_GET['view'])){
+            dd($musics);
+        }
 
         if ($musics->count() === 0) {
             return response()->json(['success' => true]);
