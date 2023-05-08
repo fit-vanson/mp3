@@ -593,6 +593,10 @@ class MusicsController extends Controller
                 $music->music_url_link_audio_ytb = $downloadOptions->getSplitFormats()->audio->url;
                 $music->status = 0;
             } catch (\Exception $e) {
+                if($music->status >5 ){
+                    Log::error("Delete music ID {$music->music_id_ytb}: " . $e->getMessage());
+                    $music->delete();
+                }
                 $music->music_url_link_audio_ytb = null;
                 $music->status += 1;
                 Log::error("Error getting YouTube download links for music ID {$music->music_id_ytb}: " . $e->getMessage());
