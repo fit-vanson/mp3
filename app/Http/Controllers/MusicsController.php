@@ -439,7 +439,7 @@ class MusicsController extends Controller
                     $downloadOptions = $youtube->getDownloadLinks(trim($id));
                 }
 
-                $info = $downloadOptions->getSplitFormats()->audio;
+                $info = $downloadOptions->getInfo();
                 $dataArr[] = [
                     'videoId' => $info->getId(),
                     'title' => $info->getTitle(),
