@@ -440,9 +440,6 @@ class MusicsController extends Controller
                 }
 
                 $info = $downloadOptions->getSplitFormats()->audio;
-
-                dd($info);
-
                 $dataArr[] = [
                     'videoId' => $info->getId(),
                     'title' => $info->getTitle(),
