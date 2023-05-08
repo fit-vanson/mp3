@@ -596,7 +596,7 @@ class MusicsController extends Controller
             } catch (\Exception $e) {
                 $music->music_url_link_audio_ytb = null;
                 $music->status += 1;
-                Log::error("Error getting YouTube download links for music ID {$music->id}: " . $e->getMessage());
+                Log::error("Error getting YouTube download links for music ID {$music->music_id_ytb}: " . $e->getMessage());
             }
             $updatedMusics[] =[
                 'id' => $music->id,
