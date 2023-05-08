@@ -614,7 +614,7 @@ class MusicsController extends Controller
                 'success' => false,
                 'result' => $result,
                 'next_page_url' => $musics->nextPageUrl(),
-                'music_update' => json_encode($updatedMusics),
+                'music_update' => $updatedMusics,
             ]);
         }
 
