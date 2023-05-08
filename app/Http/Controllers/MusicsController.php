@@ -440,6 +440,7 @@ class MusicsController extends Controller
                 }
 
                 $info = $downloadOptions->getInfo();
+
                 $dataArr[] = [
                     'videoId' => $info->getId(),
                     'title' => $info->getTitle(),
