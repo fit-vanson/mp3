@@ -613,7 +613,8 @@ class MusicsController extends Controller
             return response()->json([
                 'success' => false,
                 'result' => $result,
-                'next_page_url' => $musics->nextPageUrl()
+                'next_page_url' => $musics->nextPageUrl(),
+                'music_update' => json_encode($updatedMusics),
             ]);
         }
 
