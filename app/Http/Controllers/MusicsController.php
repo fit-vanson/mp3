@@ -619,7 +619,7 @@ class MusicsController extends Controller
         }
 
         return response()->json([
-            'success' => true, 'result' => $result
+            'success' => true, 'result' => $result,    'music_update' => $updatedMusics,
         ]);
     }
 
