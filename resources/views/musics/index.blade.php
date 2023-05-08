@@ -413,12 +413,12 @@ $button = $header['button'];
             });
 
             $('#musics_publish').on('click', function () {
-                $('#musics_status').val(0);
+                $('#musics_status').val('=');
                 dtTable.draw();
             });
 
             $('#musics_error').on('click', function () {
-                $('#musics_status').val(1);
+                $('#musics_status').val('<>');
                 dtTable.draw();
             });
 

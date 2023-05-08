@@ -73,7 +73,7 @@ class MusicsController extends Controller
 
         if ($request->get('status') !== null){
             $totalRecordswithFilter = Musics::select('count(*) as allcount')
-                ->where('status', $request->get('status'))
+                ->where('status', $request->get('status'),0)
                 ->where(function ($query) use ($searchValue) {
                     $query
                         ->where('music_id_ytb', 'like', '%' . $searchValue . '%')
@@ -82,7 +82,7 @@ class MusicsController extends Controller
                 });
             // Get records, also we have included search filter as well
             $records = Musics::with('tags')
-                ->where('status', $request->get('status'))
+                ->where('status', $request->get('status'),0)
                 ->where(function ($query) use ($searchValue) {
                     $query
                         ->where('music_id_ytb', 'like', '%' . $searchValue . '%')
@@ -593,7 +593,7 @@ class MusicsController extends Controller
                 $music->music_url_link_audio_ytb = $downloadOptions->getSplitFormats()->audio->url;
                 $music->status = 0;
             } catch (\Exception $e) {
-                if($music->status >5 ){
+                if($music->status > 5 ){
                     Log::error("Delete music ID {$music->music_id_ytb}: " . $e->getMessage());
                     $music->delete();
                 }
