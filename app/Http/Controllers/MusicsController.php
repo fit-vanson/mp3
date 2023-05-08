@@ -578,7 +578,7 @@ class MusicsController extends Controller
         $time = $_GET['time'] ?? $time;
         $musics = Musics::where('status', $status)->paginate($limit);
         if (isset($_GET['view'])){
-            $musics = Musics::where('status', '<>', $status)->paginate($limit);
+            $musics = Musics::where('status', $status)->paginate($limit);
             dd($musics);
         }
 
