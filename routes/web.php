@@ -237,6 +237,7 @@ Route::group(['prefix'=>env('ADMIN_PAGE','admin')], function (){
         Route::post('/create',[GoogleAdsController::class,'create'])->name('google_ads.create');
         Route::get('/edit/{id}',[GoogleAdsController::class,'edit'])->name('google_ads.edit');
         Route::get('/update',[GoogleAdsController::class,'update'])->name('google_ads.update');
+        Route::post('/updatePost',[GoogleAdsController::class,'updatePost'])->name('google_ads.updatePost');
         Route::get('/delete/{id}',[GoogleAdsController::class,'delete'])->name('google_ads.delete');
 
     });

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\GoogleAds;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class GoogleAdsController extends Controller
 {
@@ -12,7 +13,7 @@ class GoogleAdsController extends Controller
         $header = [
             'title' => 'Google Ads Service',
             'button' => [
-//                'Create'            => ['id'=>'createGoogle_Ads','style'=>'primary'],
+                'Create'            => ['id'=>'createGoogle_Ads','style'=>'primary'],
 //                'Play List'         => ['id'=>'videoList','style'=>'primary'],
             ]
 
@@ -58,11 +59,14 @@ class GoogleAdsController extends Controller
             ->get();
         $data_arr = array();
         foreach ($records as $record) {
+            $btn = ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-warning editGoogle_ads"><i class="ti-pencil-alt"></i></a>';
 
             $data_arr[] = array(
                 "id" => $record->id,
-                "name" => $record->name,
+                "is_Devices" => $record->is_Devices == 0 ? '<span class="badge badge-success">Devices</span>' : '<span class="badge badge-warning">Country</span>',
+                "name" => '<a href="#" data-pk="'.$record->id.'" class="editable" data-url="">'.$record->name.'</a>',
                 "value" => '<a href="#" data-pk="'.$record->id.'" class="editable" data-url="">'.$record->value.'</a>',
+                "action" => $btn,
             );
 
         }
@@ -77,14 +81,45 @@ class GoogleAdsController extends Controller
         echo json_encode($response);
     }
 
+    public function create(){
+        $data = new GoogleAds();
+        $data->name = Str::random(10);
+        $data->save();
+        return response()->json([
+            'success'=>'Thêm mới thành công',
+        ]);
+
+    }
+
+    public function edit($id)
+    {
+        $data = GoogleAds::find($id);
+        return response()->json($data);
+    }
+
     public function update(Request $request)
     {
         $id = $request->id;
         $data= GoogleAds::find($id);
-        $data->value = trim($request->value);
+        $data->value = trim($request->name);
         $data->save();
         return response()->json(['success'=>'Cập nhật thành công']);
     }
+
+    public function updatePost(Request $request)
+    {
+        $id = $request->GoogleAds_id;
+        $data= GoogleAds::find($id);
+        $data->name = trim($request->GoogleAds_name);
+        $data->url_block = trim($request->GoogleAds_url_block);
+        $data->html = $request->GoogleAds_html;
+        $data->is_Devices = $request->GoogleAds_is_Devices;
+        $data->country_value =  json_encode($request->GoogleAds_country);
+        $data->devices_value =  json_encode($request->GoogleAds_Devices);
+        $data->save();
+        return response()->json(['success'=>'Cập nhật thành công']);
+    }
+
 
     public function show_direct(Request $request)
     {

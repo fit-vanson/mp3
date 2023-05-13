@@ -8,4 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class GoogleAds extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'name',
+        'country_value',
+        'devices_value',
+        'html',
+        'url_block',
+        'is_Devices',
+    ];
 }
