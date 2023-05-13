@@ -434,8 +434,6 @@ $button = $header['button'];
                         let active = '';
                         $.each(data, function (k,v){
 
-                            console.log(v);
-
                             active = k==0 ? 'active':'';
 
                             nav_tabs_result_getInfo +=
@@ -526,8 +524,6 @@ $button = $header['button'];
                         let tab_content_result_getInfo = '';
                         let active = '';
                         $.each(data, function (k,v){
-
-                            console.log(v);
 
                             active = k==0 ? 'active':'';
 

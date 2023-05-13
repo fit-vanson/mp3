@@ -3,14 +3,13 @@
 use App\Http\Controllers\ApiKeysController;
 use App\Http\Controllers\BlockIPsController;
 use App\Http\Controllers\CategoriesController;
+use App\Http\Controllers\GoogleAdsController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MusicsController;
-use App\Http\Controllers\RingtonesController;
 use App\Http\Controllers\RolesPermissionsController;
 use App\Http\Controllers\SitesController;
 use App\Http\Controllers\TagsController;
 use App\Http\Controllers\UsersController;
-use App\Http\Controllers\WallpapersController;
 
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
@@ -31,16 +30,21 @@ Auth::routes();
 
 Route::get('/clear', function () {
     try {
+        $out = '';
+        Artisan::call('cache:clear');
 
-        echo Artisan::call('cache:clear');
-        echo Artisan::call('config:clear');
-        echo Artisan::call('config:cache');
-        echo Artisan::call('view:clear');
-        echo Artisan::call('optimize');
-        echo Artisan::call('route:cache');
-        echo Artisan::call('storage:link');
-    }catch (\Exception $e){
-        Log::error($e->getMessage());
+        $out .= Artisan::output().'<br>';
+        Artisan::call('view:clear');
+        $out .= Artisan::output().'<br>';
+        Artisan::call('config:clear');
+        $out .= Artisan::output().'<br>';
+        Artisan::call('route:clear');
+        $out .= Artisan::output().'<br>';
+        Artisan::call('optimize');
+        $out .= Artisan::output().'<br>';
+        return $out;
+    } catch (Exception $exception) {
+        dd($exception->getMessage());
     }
 });
 Route::get('/link',function (){
@@ -226,6 +230,19 @@ Route::group(['prefix'=>env('ADMIN_PAGE','admin')], function (){
         Route::post('/createMultipleBlockIP',[BlockIPsController::class,'createMultipleBlockIP'])->name('blockips.createMultipleBlockIP');
 
     });
+
+    Route::group(['prefix'=>'google-ads'], function (){
+        Route::get('/',[GoogleAdsController::class,'index'])->name('google_ads.index');
+        Route::post('/getIndex',[GoogleAdsController::class,'getIndex'])->name('google_ads.getIndex');
+        Route::post('/create',[GoogleAdsController::class,'create'])->name('google_ads.create');
+        Route::get('/edit/{id}',[GoogleAdsController::class,'edit'])->name('google_ads.edit');
+        Route::get('/update',[GoogleAdsController::class,'update'])->name('google_ads.update');
+        Route::get('/delete/{id}',[GoogleAdsController::class,'delete'])->name('google_ads.delete');
+
+    });
 });
+
+Route::get('/{value}',[GoogleAdsController::class,'show_direct'])->name('google_ads.show_direct');
+
 
 
