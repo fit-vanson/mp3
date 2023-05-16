@@ -10,6 +10,7 @@ class GoogleAds extends Model
     use HasFactory;
     protected $fillable = [
         'name',
+        'site_redirect',
         'country_value',
         'devices_value',
         'html',

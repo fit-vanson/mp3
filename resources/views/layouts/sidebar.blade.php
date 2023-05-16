@@ -66,6 +66,10 @@
                         <i class="ti-na"></i>
                         <span> Block IPs </span>
                     </a>
+                    <a href="{{route('google_ads.index')}}" >
+                        <i class="mdi mdi-google"></i>
+                        <span> Google Ads </span>
+                    </a>
 
                 </li>
 

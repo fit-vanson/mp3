@@ -40,8 +40,8 @@ Route::get('/clear', function () {
         $out .= Artisan::output().'<br>';
         Artisan::call('route:clear');
         $out .= Artisan::output().'<br>';
-        Artisan::call('optimize');
-        $out .= Artisan::output().'<br>';
+//        Artisan::call('optimize');
+//        $out .= Artisan::output().'<br>';
         return $out;
     } catch (Exception $exception) {
         dd($exception->getMessage());

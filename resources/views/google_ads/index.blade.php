@@ -42,6 +42,7 @@ $button = $header['button'];
                                 <th style="width: 5%">ID</th>
                                 <th style="width: 30%">Name</th>
                                 <th style="width: 5%">Devices</th>
+                                <th style="width: 50%">Site</th>
                                 <th>Action</th>
                             </tr>
                             </thead>
@@ -84,6 +85,11 @@ $button = $header['button'];
                             <textarea class="form-control" id="GoogleAds_html" name="GoogleAds_html" rows="10"></textarea>
                         </div>
 
+                        <div class="form-group">
+                            <label>Site <code>Phân tách bởi | hoặc Enter</code></label>
+                            <textarea class="form-control" id="GoogleAds_sites" name="GoogleAds_sites" rows="5"></textarea>
+                        </div>
+
 
                         <div class="form-group">
                             <div class="custom-control custom-radio custom-control-inline">
@@ -97,16 +103,18 @@ $button = $header['button'];
                         </div>
 
 
+
                         <div class="is_Country">
+                            <code>iso code ISO Alpha-2. Truy cập vào <a href="https://www.nationsonline.org/oneworld/country_code_list.htm" target="_blank">đây</a> để biết thêm iso_code</code>
                             <div class="form-group repeater">
                                 <div data-repeater-list="GoogleAds_country">
                                     <div data-repeater-item class="row">
                                         <div  class="form-group col-lg-4">
-                                            <input type="text" id="GoogleAds_country" name="country" class="form-control" placeholder="Quốc gia" />
+                                            <input type="text" name="country" class="form-control" placeholder="Quốc gia" />
                                         </div>
 
                                         <div  class="form-group col-lg-6">
-                                            <input type="text" id="GoogleAds_url" name="url" class="form-control" placeholder="URL"/>
+                                            <input type="text" name="url" class="form-control" placeholder="URL"/>
                                         </div>
                                         <div class="form-group col-lg-2 align-self-center">
                                             <input data-repeater-delete type="button" class="btn btn-danger btn-block" value="Delete"/>
@@ -122,7 +130,7 @@ $button = $header['button'];
                                 <div class="row">
                                     <label class="col-sm-2 col-form-label">Android</label>
                                     <div class="col-sm-10">
-                                        <input class="form-control" type="text" id="GoogleAds_Devices_Android" name="GoogleAds_Devices['Android']">
+                                        <input class="form-control" type="text" id="GoogleAds_Android" name="GoogleAds_Devices[GoogleAds_Android]">
                                     </div>
                                 </div>
                             </div>
@@ -131,7 +139,7 @@ $button = $header['button'];
                                 <div class="row">
                                     <label for="example-number-input" class="col-sm-2 col-form-label">OS</label>
                                     <div class="col-sm-10">
-                                        <input class="form-control" type="text" id="GoogleAds_Devices_OS" name="GoogleAds_Devices['OS']">
+                                        <input class="form-control" type="text" id="GoogleAds_OS" name="GoogleAds_Devices[GoogleAds_OS]">
                                     </div>
                                 </div>
                             </div>
@@ -140,7 +148,7 @@ $button = $header['button'];
                                 <div class="row">
                                     <label for="example-number-input" class="col-sm-2 col-form-label">Windows</label>
                                     <div class="col-sm-10">
-                                        <input class="form-control" type="text" id="GoogleAds_Devices_Windows" name="GoogleAds_Devices['Windows']">
+                                        <input class="form-control" type="text" id="GoogleAds_Windows" name="GoogleAds_Devices[GoogleAds_Windows]">
                                     </div>
                                 </div>
                             </div>
@@ -149,7 +157,7 @@ $button = $header['button'];
                                 <div class="row">
                                     <label for="example-number-input" class="col-sm-2 col-form-label">Other</label>
                                     <div class="col-sm-10">
-                                        <input class="form-control" type="text" id="GoogleAds_Devices_Other" name="GoogleAds_Devices['Other']">
+                                        <input class="form-control" type="text" id="GoogleAds_Other" name="GoogleAds_Devices[GoogleAds_Other]">
                                     </div>
                                 </div>
                             </div>
@@ -187,11 +195,11 @@ $button = $header['button'];
     <script src="{{ URL::asset('plugins/x-editable/js/bootstrap-editable.min.js') }}"></script>
 
     <script src="{{ URL::asset('plugins/jquery-repeater/jquery.repeater.min.js') }}"></script>
+
     <script src="{{ URL::asset('assets/pages/form-repeater.int.js') }}"></script>
 
 
     <script>
-
         $(function () {
             $.ajaxSetup({
                 headers: {
@@ -210,8 +218,6 @@ $button = $header['button'];
                 }
             });
 
-
-
             const GoogleAdsTable = $('#GoogleAdsTable').dataTable({
                 processing: true,
                 serverSide: true,
@@ -223,6 +229,7 @@ $button = $header['button'];
                     {data: 'id'},
                     {data: 'name'},
                     {data: 'is_Devices'},
+                    {data: 'site_redirect'},
                     {data: 'action'},
                 ],
                 order: [0, 'desc'],
@@ -251,6 +258,7 @@ $button = $header['button'];
                 },
             });
 
+
             $(document).on('click', '#createGoogle_Ads', function () {
                 $.ajax({
                     type: "post",
@@ -276,22 +284,58 @@ $button = $header['button'];
                 $('#modalGoogleAdsEdit').modal('show');
                 $('#modalGoogleAdsLabel').html('Edit Google Ads');
 
+                // Reset the form
+                $('#modalGoogleAdsEdit form')[0].reset();
+                $('.is_Country .form-group.repeater [data-repeater-list="GoogleAds_country"] [data-repeater-item]:not(:first)').remove();
+
                 const GoogleAds_id =  $(this).data("id");
                 $.ajax({
                     type: "get",
                     url: "{{ route('google_ads.edit', ':id') }}".replace(':id', GoogleAds_id),
                     success: function (data) {
+
+                        var site_redirect =  JSON.parse(data.site_redirect);
+
                         $('#GoogleAds_name').val(data.name);
                         $('#GoogleAds_id').val(GoogleAds_id);
                         $('#GoogleAds_url_block').val(data.url_block);
                         $('#GoogleAds_html').val(data.html);
+                        $('#GoogleAds_sites').val(site_redirect.join("\n"));
+
+                        var devices_value = JSON.parse(data.devices_value);
+                        if (devices_value != null){
+                            $.each(devices_value, function (k,v){
+                                $("#" + k).val(v);
+                            })
+                        }else {
+                            $("#GoogleAds_Android").val(null);
+                            $("#GoogleAds_OS").val(null);
+                            $("#GoogleAds_Windows").val(null);
+                            $("#GoogleAds_Other").val(null);
+                        }
 
 
+                        var country_value = JSON.parse(data.country_value);
 
-
-
-
-
+                        // Fill input fields with data from server
+                        var rows = $('.is_Country .form-group.repeater [data-repeater-list="GoogleAds_country"] [data-repeater-item]');
+                        // Clear first row
+                        rows.first().find('[name="GoogleAds_country[0][country]"]').val('');
+                        rows.first().find('[name="GoogleAds_country[0][url]"]').val('');
+                        $.each(country_value, function(index, value) {
+                            var country = value.country;
+                            var url = value.url;
+                            var row = $('.is_Country .form-group.repeater [data-repeater-list="GoogleAds_country"] [data-repeater-item]').eq(index);
+                            if (index < rows.length) {
+                                row.find('[name="GoogleAds_country[' + index + '][country]"]').val(country);
+                                row.find('[name="GoogleAds_country[' + index + '][url]"]').val(url);
+                            } else {
+                                var newRow = rows.first().clone();
+                                newRow.find('[name="GoogleAds_country[0][country]"]').attr('name', 'GoogleAds_country[' + index + '][country]').val(country);
+                                newRow.find('[name="GoogleAds_country[0][url]"]').attr('name', 'GoogleAds_country[' + index + '][url]').val(url);
+                                $('.is_Country .form-group.repeater [data-repeater-list="GoogleAds_country"]').append(newRow);
+                            }
+                        });
 
                         if(data.is_Devices == 0){
                             $('#is_Devices').prop('checked', true);
@@ -338,9 +382,9 @@ $button = $header['button'];
 
             });
 
+
         })
     </script>
-
 
 
 @endsection
