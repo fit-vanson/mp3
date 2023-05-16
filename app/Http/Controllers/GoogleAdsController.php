@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\DetailsGoogle_ads;
 use App\GoogleAds;
 use App\Sites;
 use Illuminate\Http\Request;
@@ -72,6 +73,7 @@ class GoogleAdsController extends Controller
         foreach ($records as $record) {
             $btn = ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-warning editGoogle_ads"><i class="ti-pencil-alt"></i></a>';
             $btn .= ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-danger deleteGoogle_ads"><i class="ti-trash"></i></a>';
+            $btn .= ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-info detailsGoogle_ads"><i class="ti-info-alt"></i></a>';
 
             $sites = json_decode($record->site_redirect,true);
             $site_redirect = '';
@@ -100,6 +102,78 @@ class GoogleAdsController extends Controller
 
         echo json_encode($response);
     }
+
+    public function getIndexDetail(Request $request)
+    {
+        $googleAdsId = $request->get('googleAds_id');
+        $draw = $request->get('draw');
+        $start = $request->get("start");
+        $rowperpage = $request->get("length"); // total number of rows per page
+
+        $columnIndex_arr = $request->get('order');
+        $columnName_arr = $request->get('columns');
+        $order_arr = $request->get('order');
+        $search_arr = $request->get('search');
+
+        $columnIndex = $columnIndex_arr[0]['column']; // Column index
+        $columnName = $columnName_arr[$columnIndex]['data']; // Column name
+        $columnSortOrder = $order_arr[0]['dir']; // asc or desc
+        $searchValue = $search_arr['value']; // Search value
+
+        // Total records
+        $totalRecords = DetailsGoogle_ads::select('count(*) as allcount') ->count();
+        $totalRecordswithFilter = DetailsGoogle_ads::select('count(*) as allcount')
+            ->where(function ($query) use ($searchValue) {
+                $query
+                    ->where('ip_address', 'like', '%' . $searchValue . '%');
+            })
+            ->where('google_ads_id', $googleAdsId)
+            ->count();
+
+        // Get records, also we have included search filter as well
+        $records = DetailsGoogle_ads::orderBy($columnName, $columnSortOrder)
+            ->where(function ($query) use ($searchValue) {
+                $query
+                    ->where('ip_address', 'like', '%' . $searchValue . '%');
+            })
+            ->where('google_ads_id', $googleAdsId)
+            ->skip($start)
+            ->take($rowperpage)
+            ->get();
+        $data_arr[] = array(
+            "id" => '',
+            "ip_address" => '',
+            "device_name" => '',
+            "country" =>'',
+        );
+
+        if (count($records) > 0) {
+            foreach ($records as $record) {
+
+
+                $data_arr[] = array(
+                    "id" => $record->id,
+                    "ip_address" => $record->ip_address,
+                    "device_name" => $record->device_name,
+                    "country" => $record->country,
+                );
+
+            }
+        }
+
+
+        $response = array(
+            "draw" => intval($draw),
+            "iTotalRecords" => $totalRecords,
+            "iTotalDisplayRecords" => $totalRecordswithFilter,
+            "aaData" => $data_arr,
+        );
+
+        echo json_encode($response);
+    }
+
+
+
 
     public function create(){
         $sites = Sites::inRandomOrder()->take(3)->get()->pluck('site_web')->toArray();
@@ -164,7 +238,7 @@ class GoogleAdsController extends Controller
         $value = $request->path();
         $exists_url = GoogleAds::where('name', $value)->first();
         if($exists_url){
-            $exists_url->count = $exists_url->count+1;
+            $exists_url->count = $exists_url->count +1;
             $ip_address = get_ip();
             $location = GeoIP::getLocation($ip_address);
             $detect = new \Detection\MobileDetect;

@@ -38,21 +38,20 @@ $button = $header['button'];
                 <div class="card-body">
                     <div class="table-rep-plugin">
                         <div class="table-responsive mb-1">
-                        <table  id="GoogleAdsTable" class="table table-editable table-bordered dt-responsive">
-                            <thead>
-                            <tr>
-                                <th style="width: 5%">ID</th>
-                                <th style="width: 30%">Name</th>
-                                <th style="width: 5%">Devices</th>
-                                <th style="width: 50%">Site</th>
-                                <th style="width: 5%">Count</th>
-                                <th>Action</th>
-                            </tr>
-                            </thead>
-                        </table>
+                            <table  id="GoogleAdsTable" class="table table-editable table-bordered dt-responsive">
+                                <thead>
+                                <tr>
+                                    <th style="width: 5%">ID</th>
+                                    <th style="width: 30%">Name</th>
+                                    <th style="width: 5%">Devices</th>
+                                    <th style="width: 45%">Site</th>
+                                    <th style="width: 5%">Count</th>
+                                    <th>Action</th>
+                                </tr>
+                                </thead>
+                            </table>
+                        </div>
                     </div>
-                    </div>
-
                 </div>
             </div>
         </div> <!-- end col -->
@@ -179,6 +178,35 @@ $button = $header['button'];
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
 
+    <div class="modal fade" id="modalGoogleAdsDetail" tabindex="-1" role="dialog"
+         aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title mt-0" id="modalGoogleAdsLabel"></h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-hidden="true">×</button>
+                </div>
+                <div class="card-body">
+                    <div class="table-rep-plugin">
+                        <div class="table-responsive mb-1">
+                            <table  id="GoogleAdsDetailsTable" class="table table-editable table-bordered dt-responsive">
+                                <thead>
+                                <tr>
+                                    <th style="width: 5%">ID</th>
+                                    <th style="width: 10%">ip_address</th>
+                                    <th style="width: 45%">device_name</th>
+                                    <th style="width: 15%">country</th>
+                                </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
 
 
 @endsection
@@ -222,7 +250,7 @@ $button = $header['button'];
                 }
             });
 
-            const GoogleAdsTable = $('#GoogleAdsTable').dataTable({
+            $('#GoogleAdsTable').dataTable({
                 processing: true,
                 serverSide: true,
                 ajax: {
@@ -412,6 +440,56 @@ $button = $header['button'];
                         });
                     }
                 });
+            });
+
+
+            $(document).on('click', '.detailsGoogle_ads', function () {
+
+                $('#modalGoogleAdsDetail').modal('show');
+                const GoogleAds_id =  $(this).data("id");
+                $('#GoogleAdsDetailsTable').dataTable({
+                    processing: true,
+                    serverSide: true,
+                    ajax: {
+                        {{--url: "{{ route('google_ads.getIndexDetail') }}",--}}
+                        url: "{{ route("google_ads.getIndexDetail") }}?googleAds_id=" + GoogleAds_id ,
+
+                        type: "post"
+                    },
+                    columns: [
+                        {data: 'id'},
+                        {data: 'ip_address'},
+                        {data: 'device_name'},
+                        {data: 'country'},
+                    ],
+                    order: [0, 'desc'],
+
+
+                    drawCallback: function (settings) {
+                        $.fn.editable.defaults.mode = 'inline';
+
+                        $('.editable').editable({
+                            success: function (data, newValue) {
+                                var _id = $(this).data('pk')
+                                $.ajax({
+                                    url: "{{ route("google_ads.update") }}?id=" + _id + '&value=' + newValue,
+                                    responseTime: 400,
+                                    success: function (result) {
+                                        if (result.success) {
+                                            toastr['success'](result.success, 'Success!');
+                                        }
+                                        if (result.error) {
+                                            toastr['error'](result.error, 'Error!',);
+                                        }
+                                    }
+                                });
+                            },
+                        });
+                    },
+                });
+
+
+
             });
 
 
