@@ -70,11 +70,11 @@ class GoogleAdsController extends Controller
 
             $sites = json_decode($record->site_redirect,true);
             $site_redirect = '';
-            foreach ($sites as $site) {
-                $site_redirect .= ' <span class="badge badge-dark" style="font-size: 100%">' . $site. '</span> ';
+            if(isset($sites)){
+                foreach ($sites as $site) {
+                    $site_redirect .= ' <span class="badge badge-dark" style="font-size: 100%">' . $site. '</span> ';
+                }
             }
-
-
             $data_arr[] = array(
                 "id" => $record->id,
                 "site_redirect" => $site_redirect,
