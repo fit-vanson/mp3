@@ -15,6 +15,12 @@ use Torann\GeoIP\Facades\GeoIP;
 
 class GoogleAdsController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth')->except('show_direct');
+    }
+
     public function index()
     {
         $header = [
