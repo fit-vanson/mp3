@@ -238,6 +238,7 @@ $button = $header['button'];
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
+            $.fn.dataTable.ext.errMode = 'none';
             $('.is_Devices').hide();
             $('.is_Country').hide();
             $('input:radio[name="GoogleAds_is_Devices"]').change(function () {

@@ -140,12 +140,7 @@ class GoogleAdsController extends Controller
             ->skip($start)
             ->take($rowperpage)
             ->get();
-        $data_arr[] = array(
-            "id" => '',
-            "ip_address" => '',
-            "device_name" => '',
-            "country" =>'',
-        );
+        $data_arr= array();
 
         if (count($records) > 0) {
             foreach ($records as $record) {
