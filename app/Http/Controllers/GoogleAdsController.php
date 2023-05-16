@@ -55,8 +55,7 @@ class GoogleAdsController extends Controller
         $totalRecordswithFilter = GoogleAds::select('count(*) as allcount')
             ->where(function ($query) use ($searchValue) {
                 $query
-                    ->where('name', 'like', '%' . $searchValue . '%')
-                    ->orwhere('value', 'like', '%' .$searchValue . '%');
+                    ->where('name', 'like', '%' . $searchValue . '%');
             })
             ->count();
 
@@ -64,8 +63,7 @@ class GoogleAdsController extends Controller
         $records = GoogleAds::orderBy($columnName, $columnSortOrder)
             ->where(function ($query) use ($searchValue) {
                 $query
-                    ->where('name', 'like', '%' . $searchValue . '%')
-                    ->orwhere('value', 'like', '%' .$searchValue . '%');
+                    ->where('name', 'like', '%' . $searchValue . '%');
             })
             ->skip($start)
             ->take($rowperpage)
@@ -87,7 +85,7 @@ class GoogleAdsController extends Controller
                 "site_redirect" => $site_redirect,
                 "is_Devices" => $record->is_Devices == 0 ? '<span class="badge badge-success">Devices</span>' : '<span class="badge badge-warning">Country</span>',
                 "name" => '<a href="#" data-pk="'.$record->id.'" class="editable" data-url="">'.$record->name.'</a>',
-//                "value" => '<a href="#" data-pk="'.$record->id.'" class="editable" data-url="">'.$record->value.'</a>',
+                "count" => $record->count,
                 "action" => $btn,
             );
 
@@ -166,6 +164,21 @@ class GoogleAdsController extends Controller
         $value = $request->path();
         $exists_url = GoogleAds::where('name', $value)->first();
         if($exists_url){
+            $exists_url->count = $exists_url->count+1;
+            $ip_address = get_ip();
+            $location = GeoIP::getLocation($ip_address);
+            $detect = new \Detection\MobileDetect;
+
+            $exists_url->details_google_ads()->updateOrcreate(
+                [
+                    'google_ads_id' => $exists_url->id,
+                    'device_name' => $detect->getUserAgent(),
+                    'ip_address' => $ip_address,
+                    'country' => $location['country']
+                ]);
+
+            $exists_url->save();
+
             $sites = json_decode($exists_url->site_redirect,true);
             $site_check = getDomain();
 
@@ -188,8 +201,7 @@ class GoogleAdsController extends Controller
                 }else{
                     $is_Devices = $exists_url->is_Devices;
                     if($is_Devices == 1){
-                        $ip_address = get_ip();
-                        $location = GeoIP::getLocation($ip_address);
+
                         $iso_code = $location['iso_code'];
                         $iso_code_database = json_decode($exists_url->country_value,true);
 
@@ -204,8 +216,6 @@ class GoogleAdsController extends Controller
                     }else{
                         $url_devices = json_decode($exists_url->devices_value, true);
                         $url_redirect = null;
-
-                        $detect = new \Detection\MobileDetect;
 
                         if ($detect->isAndroidOS() && isset($url_devices['GoogleAds_Android'])) {
                             $url_redirect = $url_devices['GoogleAds_Android'];

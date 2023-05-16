@@ -17,4 +17,9 @@ class GoogleAds extends Model
         'url_block',
         'is_Devices',
     ];
+
+    public function details_google_ads()
+    {
+        return $this->hasMany(DetailsGoogle_ads::class,  'google_ads_id');
+    }
 }

@@ -45,6 +45,7 @@ $button = $header['button'];
                                 <th style="width: 30%">Name</th>
                                 <th style="width: 5%">Devices</th>
                                 <th style="width: 50%">Site</th>
+                                <th style="width: 5%">Count</th>
                                 <th>Action</th>
                             </tr>
                             </thead>
@@ -233,6 +234,7 @@ $button = $header['button'];
                     {data: 'name'},
                     {data: 'is_Devices'},
                     {data: 'site_redirect'},
+                    {data: 'count'},
                     {data: 'action'},
                 ],
                 order: [0, 'desc'],
