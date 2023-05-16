@@ -9,6 +9,8 @@ $button = $header['button'];
 @section('css')
     <link href="{{ URL::asset('assets/libs/toastr/toastr.min.css') }}" rel="stylesheet" type="text/css"/>
     <link href="{{ URL::asset('assets/libs/toastr/ext-component-toastr.css') }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ URL::asset('assets/libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet" type="text/css"/>
+
     <!-- DataTables -->
     <link href="{{ URL::asset('plugins/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ URL::asset('plugins/datatables/autoFill.bootstrap4.css') }}" rel="stylesheet" type="text/css" />
@@ -189,6 +191,7 @@ $button = $header['button'];
     <script src="{{ URL::asset('plugins/datatables/autoFill.bootstrap4.min.js') }}"></script>
     <script src="{{ URL::asset('plugins/datatables/dataTables.keyTable.min.js') }}"></script>
     <script src="{{ URL::asset('/assets/libs/toastr/toastr.min.js') }}"></script>
+    <script src="{{ URL::asset('/assets/libs/sweetalert2/sweetalert2.min.js') }}"></script>
 
     <!-- Responsive examples -->
     <script src="{{ URL::asset('plugins/datatables/dataTables.responsive.min.js') }}"></script>
@@ -380,6 +383,33 @@ $button = $header['button'];
                         }
                     });
 
+            });
+
+            $(document).on('click', '.deleteGoogle_ads', function (data) {
+                var id = $(this).data("id");
+                Swal.fire({
+                    title: "Are you sure?",
+                    text: "You won't be able to revert this!",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#34c38f",
+                    cancelButtonColor: "#f46a6a",
+                    confirmButtonText: "Yes, delete it!"
+                }).then(function (result) {
+                    if (result.value) {
+                        $.ajax({
+                            type: "get",
+                            url: "{{ route('google_ads.delete', ':id') }}".replace(':id', id),
+                            success: function (data) {
+                                toastr['success'](data.success, 'Success!');
+                                $('#GoogleAdsTable').DataTable().draw();
+                            },
+                            error: function (data) {
+                                console.log('Error:', data);
+                            }
+                        });
+                    }
+                });
             });
 
 

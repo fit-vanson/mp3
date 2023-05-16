@@ -67,6 +67,7 @@ class GoogleAdsController extends Controller
         $data_arr = array();
         foreach ($records as $record) {
             $btn = ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-warning editGoogle_ads"><i class="ti-pencil-alt"></i></a>';
+            $btn .= ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-danger deleteGoogle_ads"><i class="ti-trash"></i></a>';
 
             $sites = json_decode($record->site_redirect,true);
             $site_redirect = '';
@@ -143,6 +144,13 @@ class GoogleAdsController extends Controller
         return response()->json(['success'=>'Cập nhật thành công']);
     }
 
+
+    public function delete($id)
+    {
+        $GoogleAds = GoogleAds::find($id);
+        $GoogleAds->delete();
+        return response()->json(['success'=>'Xoá thành công']);
+    }
 
     public function show_direct(Request $request)
     {
