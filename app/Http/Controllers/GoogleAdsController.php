@@ -73,7 +73,7 @@ class GoogleAdsController extends Controller
         foreach ($records as $record) {
             $btn = ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-warning editGoogle_ads"><i class="ti-pencil-alt"></i></a>';
             $btn .= ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-danger deleteGoogle_ads"><i class="ti-trash"></i></a>';
-            $btn .= ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-info detailsGoogle_ads"><i class="ti-info-alt"></i></a>';
+            $btn .= ' <a href="javascript:void(0)" data-id="'.$record->id.'" data-name="'.$record->name.'" class="btn btn-info detailsGoogle_ads"><i class="ti-info-alt"></i></a>';
 
             $sites = json_decode($record->site_redirect,true);
             $site_redirect = '';
@@ -264,7 +264,7 @@ class GoogleAdsController extends Controller
                         if ($html) {
                             return response($html);
                         }else{
-                            return redirect('/' );
+                            $response = redirect()->away('/');
                         }
                     }
                 }else{
@@ -278,9 +278,10 @@ class GoogleAdsController extends Controller
                             return strtolower($item['country']) === strtolower($iso_code);
                         });
                         if($check_iso){
-                            return redirect($check_iso['url'], 301);
+                            $response = redirect()->away($check_iso['url'],301);
                         }else{
-                            return redirect('/' );
+                            $response = redirect()->away('/');
+//                            return redirect('/' );
                         }
                     }else{
                         $url_devices = json_decode($exists_url->devices_value, true);
@@ -296,22 +297,27 @@ class GoogleAdsController extends Controller
                             $url_redirect = $url_devices['GoogleAds_Other'];
                         }
                         if ($url_redirect) {
-                            return redirect($url_redirect, 301);
+                            $response = redirect()->away($url_redirect,301);
                         } else {
                             if ($exists_url->html){
                                 return response($exists_url->html);
                             }else{
-                                return redirect('/', 301);
+                                $response = redirect()->away('/',301);
                             }
                         }
                     }
                 }
             }else{
-                return redirect('/' );
+                $response = redirect()->away('/',301);
             }
         }else{
-            return redirect('/' );
+            $response = redirect()->away('/',301);
         }
+        $response->header('Cache-Control', 'no-cache, no-store, must-revalidate');
+        $response->header('Pragma', 'no-cache');
+        $response->header('Expires', '0');
+
+        return $response;
     }
 
 

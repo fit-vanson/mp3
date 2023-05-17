@@ -183,7 +183,7 @@ $button = $header['button'];
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title mt-0" id="modalGoogleAdsLabel"></h5>
+                    <h5 class="modal-title mt-0" id="modalGoogleAdsDetailsLabel"></h5>
                     <button type="button" class="close" data-dismiss="modal"
                             aria-hidden="true">×</button>
                 </div>
@@ -443,18 +443,18 @@ $button = $header['button'];
                 });
             });
 
-
             $(document).on('click', '.detailsGoogle_ads', function () {
-
                 $('#modalGoogleAdsDetail').modal('show');
+                $('#modalGoogleAdsDetailsLabel').html('Details '+$(this).data("name"));
+
                 const GoogleAds_id =  $(this).data("id");
+                const table = $('#GoogleAdsDetailsTable').DataTable();
+                table.destroy();
                 $('#GoogleAdsDetailsTable').dataTable({
                     processing: true,
                     serverSide: true,
                     ajax: {
-                        {{--url: "{{ route('google_ads.getIndexDetail') }}",--}}
                         url: "{{ route("google_ads.getIndexDetail") }}?googleAds_id=" + GoogleAds_id ,
-
                         type: "post"
                     },
                     columns: [
@@ -464,36 +464,8 @@ $button = $header['button'];
                         {data: 'country'},
                     ],
                     order: [0, 'desc'],
-
-
-                    drawCallback: function (settings) {
-                        $.fn.editable.defaults.mode = 'inline';
-
-                        $('.editable').editable({
-                            success: function (data, newValue) {
-                                var _id = $(this).data('pk')
-                                $.ajax({
-                                    url: "{{ route("google_ads.update") }}?id=" + _id + '&value=' + newValue,
-                                    responseTime: 400,
-                                    success: function (result) {
-                                        if (result.success) {
-                                            toastr['success'](result.success, 'Success!');
-                                        }
-                                        if (result.error) {
-                                            toastr['error'](result.error, 'Error!',);
-                                        }
-                                    }
-                                });
-                            },
-                        });
-                    },
                 });
-
-
-
             });
-
-
         })
     </script>
 
