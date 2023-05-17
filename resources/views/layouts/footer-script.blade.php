@@ -9,5 +9,17 @@
 
 <!-- App js -->
 <script src="{{ URL::asset('/assets/js/app.min.js') }}"></script>
+<script>
+    $(document).ready(function() {
+        $(document).on("click", ".copyButton", function(){
+            var $temp = $("<input>");
+            $("body").append($temp);
+            $temp.val($(this).html()).select();
+            document.execCommand("copy");
+            $temp.remove();
+            toastr['success']($(this).html(), 'Success!');
+        })
+    });
+</script>
 
 @yield('script-bottom')

@@ -79,7 +79,7 @@ class GoogleAdsController extends Controller
             $site_redirect = '';
             if(isset($sites)){
                 foreach ($sites as $site) {
-                    $site_redirect .= ' <span class="badge badge-dark" style="font-size: 100%">' . $site. '</span> ';
+                    $site_redirect .= ' <span class="badge badge-dark copyButton" style="font-size: 100%">' . $site. '</span> ';
                 }
             }
             $data_arr[] = array(
