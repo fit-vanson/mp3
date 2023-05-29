@@ -19,6 +19,15 @@
             $temp.remove();
             toastr['success']($(this).html(), 'Success!');
         })
+        $(document).on("click", ".copyButtonName", function(){
+            var $temp = $("<input>");
+            var dataName = $(this).attr("data-name");
+            $("body").append($temp);
+            $temp.val(dataName).select();
+            document.execCommand("copy");
+            $temp.remove();
+            toastr['success'](dataName, 'Success!');
+        });
     });
 </script>
 

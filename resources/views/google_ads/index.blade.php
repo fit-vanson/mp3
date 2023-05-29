@@ -466,6 +466,29 @@ $button = $header['button'];
                     order: [0, 'desc'],
                 });
             });
+
+            $(document).on('click', '.resetSite', function () {
+                const GoogleAds_id =  $(this).data("id");
+
+                $.ajax({
+
+                    type: "get",
+                    url: "{{ route('google_ads.reload_site', ':id') }}".replace(':id', GoogleAds_id),
+                    success: function (data) {
+                        if(data.success){
+                            toastr['success'](data.success, 'Success!');
+                            $('#GoogleAdsTable').DataTable().draw();
+                        }
+                        if(data.error){
+                            toastr['error'](data.error, 'Error!',);
+                        }
+
+                    },
+                    error: function (data) {
+                        console.log('Error:', data);
+                    }
+                });
+            });
         })
     </script>
 

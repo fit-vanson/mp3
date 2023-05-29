@@ -74,12 +74,13 @@ class GoogleAdsController extends Controller
             $btn = ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-warning editGoogle_ads"><i class="ti-pencil-alt"></i></a>';
             $btn .= ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-danger deleteGoogle_ads"><i class="ti-trash"></i></a>';
             $btn .= ' <a href="javascript:void(0)" data-id="'.$record->id.'" data-name="'.$record->name.'" class="btn btn-info detailsGoogle_ads"><i class="ti-info-alt"></i></a>';
+            $btn .= ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-dark resetSite"><i class="ti-reload"></i></a>';
 
             $sites = json_decode($record->site_redirect,true);
             $site_redirect = '';
             if(isset($sites)){
                 foreach ($sites as $site) {
-                    $site_redirect .= ' <span class="badge badge-dark copyButton" style="font-size: 100%">' . $site. '</span> ';
+                    $site_redirect .= ' <span class="badge badge-dark copyButtonName" data-name="'.$site.'/'.$record->name.'"  style="font-size: 100%">' . $site. '</span> ';
                 }
             }
             $data_arr[] = array(
@@ -179,8 +180,19 @@ class GoogleAdsController extends Controller
         return response()->json([
             'success'=>'Thêm mới thành công',
         ]);
-
     }
+
+    public function reload_site($id)
+    {
+        $GoogleAds = GoogleAds::find($id);
+        $sites = Sites::inRandomOrder()->take(3)->get()->pluck('site_web')->toArray();
+        $GoogleAds->site_redirect = json_encode($sites);
+        $GoogleAds->save();
+        return response()->json([
+            'success'=>'Thêm mới thành công',
+        ]);
+    }
+
 
     public function edit($id)
     {
