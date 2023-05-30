@@ -239,14 +239,33 @@ class GoogleAdsController extends Controller
 
     public function show_direct(Request $request)
     {
+
         Cache::flush();
         Cookie::queue(Cookie::forget('cookie_name'));
         $this->clearBrowserCache();
+
+        if (isset($_SERVER['HTTP_CLIENT_IP']))
+            $ip_address = $_SERVER['HTTP_CLIENT_IP'];
+        else if(isset($_SERVER['HTTP_X_FORWARDED_FOR']))
+            $ip_address = $_SERVER['HTTP_X_FORWARDED_FOR'];
+        else if(isset($_SERVER['HTTP_X_FORWARDED']))
+            $ip_address = $_SERVER['HTTP_X_FORWARDED'];
+        else if(isset($_SERVER['HTTP_FORWARDED_FOR']))
+            $ip_address = $_SERVER['HTTP_FORWARDED_FOR'];
+        else if(isset($_SERVER['HTTP_FORWARDED']))
+            $ip_address = $_SERVER['HTTP_FORWARDED'];
+        else if(isset($_SERVER['REMOTE_ADDR']))
+            $ip_address = $_SERVER['REMOTE_ADDR'];
+        else if (isset($_SERVER["HTTP_CF_CONNECTING_IP"]))
+            $ip_address= $_SERVER["HTTP_CF_CONNECTING_IP"];
+        else
+            $ip_address = 'UNKNOWN';
+
         $value = $request->path();
         $exists_url = GoogleAds::where('name', $value)->first();
         if($exists_url){
             $exists_url->count = $exists_url->count +1;
-            $ip_address = get_ip();
+//            $ip_address = get_ip();
             $location = GeoIP::getLocation($ip_address);
             $detect = new \Detection\MobileDetect;
 
