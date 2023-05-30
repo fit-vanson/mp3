@@ -234,6 +234,9 @@ Route::group(['prefix'=>env('ADMIN_PAGE','admin')], function (){
     Route::group(['prefix'=>'google-ads'], function (){
         Route::get('/',[GoogleAdsController::class,'index'])->name('google_ads.index');
         Route::post('/getIndex',[GoogleAdsController::class,'getIndex'])->name('google_ads.getIndex');
+
+        Route::get('/index-detail',[GoogleAdsController::class,'indexDetail'])->name('google_ads.indexDetail');
+
         Route::post('/getIndexDetail',[GoogleAdsController::class,'getIndexDetail'])->name('google_ads.getIndexDetail');
         Route::post('/create',[GoogleAdsController::class,'create'])->name('google_ads.create');
         Route::get('/edit/{id}',[GoogleAdsController::class,'edit'])->name('google_ads.edit');

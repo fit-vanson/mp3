@@ -178,7 +178,7 @@ $button = $header['button'];
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
 
-    <div class="modal fade" id="modalGoogleAdsDetail" tabindex="-1" role="dialog"
+<!--    <div class="modal fade" id="modalGoogleAdsDetail" tabindex="-1" role="dialog"
          aria-labelledby="myLargeModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
@@ -212,9 +212,9 @@ $button = $header['button'];
                         </div>
                     </div>
                 </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
+            </div>&lt;!&ndash; /.modal-content &ndash;&gt;
+        </div>&lt;!&ndash; /.modal-dialog &ndash;&gt;
+    </div>&lt;!&ndash; /.modal &ndash;&gt;-->
 
 
 
@@ -452,7 +452,7 @@ $button = $header['button'];
                 });
             });
 
-            $(document).on('click', '.detailsGoogle_ads', function () {
+/*            $(document).on('click', '.detailsGoogle_ads', function () {
                 $('#modalGoogleAdsDetail').modal('show');
                 $('#modalGoogleAdsDetailsLabel').html('Details: '+$(this).data("name"));
 
@@ -478,7 +478,7 @@ $button = $header['button'];
                     ],
                     order: [0, 'desc'],
                 });
-            });
+            });*/
 
             $(document).on('click', '.resetSite', function () {
                 const GoogleAds_id =  $(this).data("id");

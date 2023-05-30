@@ -73,7 +73,9 @@ class GoogleAdsController extends Controller
         foreach ($records as $record) {
             $btn = ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-warning editGoogle_ads"><i class="ti-pencil-alt"></i></a>';
             $btn .= ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-danger deleteGoogle_ads"><i class="ti-trash"></i></a>';
-            $btn .= ' <a href="javascript:void(0)" data-id="'.$record->id.'" data-name="'.$record->name.'" class="btn btn-info detailsGoogle_ads"><i class="ti-info-alt"></i></a>';
+//            $btn .= ' <a href="javascript:void(0)" data-id="'.$record->id.'" data-name="'.$record->name.'" class="btn btn-info detailsGoogle_ads"><i class="ti-info-alt"></i></a>';
+//            $btn .= ' <a href="'.route('google_ads.indexDetail', ['id'=>$record->id]).'" target="_blank" class="btn btn-info detailsGoogle_ads"><i class="ti-info-alt"></i></a>';
+            $btn .= ' <a href="'.route('google_ads.indexDetail', ['googleAds_id'=>$record->id]).'" target="_blank" class="btn btn-info detailsGoogle_ads"><i class="ti-info-alt"></i></a>';
             $btn .= ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-dark resetSite"><i class="ti-reload"></i></a>';
 
             $sites = json_decode($record->site_redirect,true);
@@ -104,6 +106,18 @@ class GoogleAdsController extends Controller
         echo json_encode($response);
     }
 
+
+    public function indexDetail()
+    {
+        $header = [
+            'title' => 'Detail Google Ads Service',
+            'button' => [
+//                'Create'            => ['id'=>'createGoogle_Ads','style'=>'primary'],
+            ]
+
+        ];
+        return view('google_ads.detail')->with(compact('header'));
+    }
     public function getIndexDetail(Request $request)
     {
         $googleAdsId = $request->get('googleAds_id');
@@ -127,26 +141,28 @@ class GoogleAdsController extends Controller
             ->where(function ($query) use ($searchValue) {
                 $query
                     ->where('ip_address', 'like', '%' . $searchValue . '%');
-            })
-            ->where('google_ads_id', $googleAdsId)
-            ->count();
+            });
 
         // Get records, also we have included search filter as well
         $records = DetailsGoogle_ads::orderBy($columnName, $columnSortOrder)
             ->where(function ($query) use ($searchValue) {
                 $query
                     ->where('ip_address', 'like', '%' . $searchValue . '%');
-            })
-            ->where('google_ads_id', $googleAdsId)
-            ->skip($start)
+            });
+        if ($googleAdsId){
+            $totalRecordswithFilter = $totalRecordswithFilter->where('google_ads_id', $googleAdsId);
+            $records = $records->where('google_ads_id', $googleAdsId);
+        }
+        $totalRecordswithFilter = $totalRecordswithFilter->count();
+        $records = $records->skip($start)
             ->take($rowperpage)
             ->get();
+
+
         $data_arr= array();
 
         if (count($records) > 0) {
             foreach ($records as $record) {
-
-
                 $data_arr[] = array(
                     "id" => $record->id,
                     "ip_address" => $record->ip_address,
@@ -154,10 +170,8 @@ class GoogleAdsController extends Controller
                     "country" => $record->country,
                     "updated_at" => $record->updated_at ? $record->updated_at->format('Y-m-d h:i:s') : "",
                 );
-
             }
         }
-
 
         $response = array(
             "draw" => intval($draw),
