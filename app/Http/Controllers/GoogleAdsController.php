@@ -80,7 +80,7 @@ class GoogleAdsController extends Controller
             $site_redirect = '';
             if(isset($sites)){
                 foreach ($sites as $site) {
-                    $site_redirect .= ' <span class="badge badge-dark copyButtonName" data-name="'.$site.'/'.$record->name.'"  style="font-size: 100%">' . $site. '</span> ';
+                    $site_redirect .= ' <span class="badge badge-dark copyButtonName" data-name="https://'.$site.'/'.$record->name.'"  style="font-size: 100%">' . $site. '</span> ';
                 }
             }
             $data_arr[] = array(
@@ -152,6 +152,7 @@ class GoogleAdsController extends Controller
                     "ip_address" => $record->ip_address,
                     "device_name" => $record->device_name,
                     "country" => $record->country,
+                    "updated_at" => $record->updated_at ? $record->updated_at->format('Y-m-d h:i:s') : "",
                 );
 
             }
