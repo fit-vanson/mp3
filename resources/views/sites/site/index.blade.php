@@ -449,6 +449,38 @@
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
 
+    <div class="modal fade" id="modalSiteIpBlock" tabindex="-1" role="dialog"
+         aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title mt-0" >Thêm mới</h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-hidden="true">×</button>
+                </div>
+                <div class="modal-body">
+                    <form id="formSiteIpBlock">
+                        <div class="form-group">
+                            <label>IP Address</label>
+                            <input type="text" class="form-control" id="add_block_ip_address" name="block_ip_address" required>
+                            <input type="hidden" class="form-control" id="block_ip_status" name="block_ip_status" value="1">
+                        </div>
+                        <div class="form-group mb-0">
+                            <div>
+                                <button type="submit" id="saveBtnSiteIpBlock" class="btn btn-primary waves-effect waves-light mr-1">
+                                    Submit
+                                </button>
+                                <button type="reset" class="btn btn-secondary waves-effect">
+                                    Cancel
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
 
 
 
@@ -923,7 +955,45 @@
                 ],
                 order: [1, 'asc'],
             });
+
+            $(document).on('click','#block_ip_address', function (data) {
+                var ip_address = $(this).data("ip_address");
+                $('#formSiteIpBlock').trigger("reset");
+                $('#modalSiteIpBlock').modal('show');
+                $('#add_block_ip_address').val(ip_address);
+            });
+            $('#formSiteIpBlock').on('submit', function (event) {
+                event.preventDefault();
+
+                var formData = new FormData($("#formSiteIpBlock")[0]);
+
+                $.ajax({
+                    data: formData,
+                    url: '{{route('blockips.create')}}',
+                    type: "POST",
+                    dataType: 'json',
+                    processData: false,
+                    contentType: false,
+                    success: function (data) {
+                        if (data.success) {
+                            toastr['success'](data.success, 'Success!');
+                            dtTable_listips.draw();
+                            $('#modalSiteIpBlock').modal('hide');
+
+                        }
+                        if (data.errors) {
+                            for (var count = 0; count < data.errors.length; count++) {
+                                toastr['error'](data.errors[count], 'Error!',);
+                            }
+                        }
+                    }
+                });
+
+
+            });
         })
+
+
         function changeImg(input){
             if(input.files && input.files[0]){
                 var reader = new FileReader();

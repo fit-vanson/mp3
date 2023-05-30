@@ -112,6 +112,37 @@
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
 
+    <div class="modal fade" id="modalMultipleBlockIP" tabindex="-1" role="dialog"
+         aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title mt-0" > Create</h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-hidden="true">×</button>
+                </div>
+                <div class="modal-body">
+                    <form id="formMultipleBlockIP">
+                        <div class="form-group">
+                            <label>IP Address</label>
+                            <textarea type="text" class="form-control" id="MultipleBlockIP_address" rows="10" name="MultipleBlockIP_address"> </textarea>
+                        </div>
+                        <div class="form-group mb-0">
+                            <div>
+                                <button type="submit" id="saveBtnMultipleBlockIP" class="btn btn-primary waves-effect waves-light mr-1">
+                                    Submit
+                                </button>
+                                <button type="reset" class="btn btn-secondary waves-effect">
+                                    Cancel
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
 @endsection
 
 @section('script')

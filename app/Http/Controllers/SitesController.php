@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\BlockIPs;
 use App\Categories;
 
 use App\ListIP;
@@ -673,10 +674,17 @@ class SitesController extends Controller
 
 
         $data_arr = array();
+        $blockIps = BlockIPs::where('status',1)->get();
         foreach ($records as $record) {
+            $block=false;
+            foreach ($blockIps as $blockIp){
+                if (strpos($record->ip_address,$blockIp->ip_address) !== false) {
+                    $block=true;
+                }
+            }
             $data_arr[] = array(
                 "id" => $record->id,
-                "ip_address" => $record->ip_address,
+                "ip_address" => $block ? '<span style="color:red">'.$record->ip_address.'</span>':'<span id="block_ip_address" data-ip_address="'.$record->ip_address.'">'.$record->ip_address.'</span>',
                 "count" => $record->count,
                 "updated_at" => $record->updated_at,
             );

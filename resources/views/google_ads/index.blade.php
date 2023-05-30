@@ -183,9 +183,17 @@ $button = $header['button'];
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title mt-0" id="modalGoogleAdsDetailsLabel"></h5>
-                    <button type="button" class="close" data-dismiss="modal"
-                            aria-hidden="true">×</button>
+                    <div class="col-sm-9">
+                        <h5 class="modal-title mt-0" id="modalGoogleAdsDetailsLabel"></h5>
+                    </div>
+
+                    <div class="col-sm-3">
+                        <button type="button" id="clearip_googleads" class="btn btn-info text-center m-t-15">Clear IP</button>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    </div>
+
+
+
                 </div>
                 <div class="card-body">
                     <div class="table-rep-plugin">
@@ -445,9 +453,12 @@ $button = $header['button'];
 
             $(document).on('click', '.detailsGoogle_ads', function () {
                 $('#modalGoogleAdsDetail').modal('show');
-                $('#modalGoogleAdsDetailsLabel').html('Details '+$(this).data("name"));
+                $('#modalGoogleAdsDetailsLabel').html('Details: '+$(this).data("name"));
+
+
 
                 const GoogleAds_id =  $(this).data("id");
+                $('#clearip_googleads').val(GoogleAds_id);
                 const table = $('#GoogleAdsDetailsTable').DataTable();
                 table.destroy();
                 $('#GoogleAdsDetailsTable').dataTable({

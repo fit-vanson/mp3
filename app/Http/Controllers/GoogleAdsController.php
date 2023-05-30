@@ -205,7 +205,6 @@ class GoogleAdsController extends Controller
         $id = $request->id;
         $data= GoogleAds::find($id);
         $data->name = trim($request->value);
-//        dd($data);
         $data->save();
         return response()->json(['success'=>'Cập nhật thành công']);
     }
@@ -309,10 +308,19 @@ class GoogleAdsController extends Controller
                             return strtolower($item['country']) === strtolower($iso_code);
                         });
                         if($check_iso){
-                            $response = redirect()->away($check_iso['url'],301);
+                            if (isset($check_iso['url'])){
+                                $response = redirect()->away($check_iso['url'],301);
+                            }else{
+                                $html = $exists_url->html;
+                                if ($html) {
+                                    return response($html);
+                                }else{
+                                    $response = redirect()->away('/');
+                                }
+                            }
+
                         }else{
                             $response = redirect()->away('/');
-//                            return redirect('/' );
                         }
                     }else{
                         $url_devices = json_decode($exists_url->devices_value, true);
