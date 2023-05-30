@@ -73,11 +73,10 @@ class GoogleAdsController extends Controller
         foreach ($records as $record) {
             $btn = ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-warning editGoogle_ads"><i class="ti-pencil-alt"></i></a>';
             $btn .= ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-danger deleteGoogle_ads"><i class="ti-trash"></i></a>';
-//            $btn .= ' <a href="javascript:void(0)" data-id="'.$record->id.'" data-name="'.$record->name.'" class="btn btn-info detailsGoogle_ads"><i class="ti-info-alt"></i></a>';
-//            $btn .= ' <a href="'.route('google_ads.indexDetail', ['id'=>$record->id]).'" target="_blank" class="btn btn-info detailsGoogle_ads"><i class="ti-info-alt"></i></a>';
-            $btn .= ' <a href="'.route('google_ads.indexDetail', ['googleAds_id'=>$record->id]).'" target="_blank" class="btn btn-info detailsGoogle_ads"><i class="ti-info-alt"></i></a>';
             $btn .= ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-dark resetSite"><i class="ti-reload"></i></a>';
-
+            if($record->count >0){
+                $btn .= ' <a href="'.route('google_ads.indexDetail', ['googleAds_id'=>$record->id]).'" target="_blank" class="btn btn-info detailsGoogle_ads"><i class="ti-info-alt"></i></a>';
+            }
             $sites = json_decode($record->site_redirect,true);
             $site_redirect = '';
             if(isset($sites)){
@@ -112,7 +111,7 @@ class GoogleAdsController extends Controller
         $header = [
             'title' => 'Detail Google Ads Service',
             'button' => [
-//                'Create'            => ['id'=>'createGoogle_Ads','style'=>'primary'],
+                'Clear IP'            => ['id'=>'clearIPGoogle_Ads','style'=>'danger'],
             ]
 
         ];
@@ -388,5 +387,14 @@ class GoogleAdsController extends Controller
         $response->cookie('cookiename', '', 0, '/');
 
         return $response;
+    }
+
+
+    public function clearIP($id)
+    {
+        $GoogleAds = DetailsGoogle_ads::where('google_ads_id',$id)->delete();
+        return response()->json([
+            'success'=>'Thêm mới thành công',
+        ]);
     }
 }

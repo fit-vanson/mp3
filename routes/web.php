@@ -244,6 +244,7 @@ Route::group(['prefix'=>env('ADMIN_PAGE','admin')], function (){
         Route::post('/updatePost',[GoogleAdsController::class,'updatePost'])->name('google_ads.updatePost');
         Route::get('/delete/{id}',[GoogleAdsController::class,'delete'])->name('google_ads.delete');
         Route::get('/reload-site/{id}',[GoogleAdsController::class,'reload_site'])->name('google_ads.reload_site');
+        Route::get('/clear-ip/{id}',[GoogleAdsController::class,'clearIP'])->name('google_ads.clearIP');
 
     });
 });

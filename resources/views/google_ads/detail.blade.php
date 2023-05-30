@@ -126,33 +126,26 @@ $button = $header['button'];
                 ],
                 order: [4, 'desc'],
             });
-/*            $(document).on('click', '.detailsGoogle_ads', function () {
-                $('#modalGoogleAdsDetail').modal('show');
-                $('#modalGoogleAdsDetailsLabel').html('Details: '+$(this).data("name"));
 
+            $(document).on('click', '#clearIPGoogle_Ads', function () {
+                $.ajax({
+                    type: "get",
+                    url: "{{ route('google_ads.clearIP', ':id') }}".replace(':id', googleAdsId),
+                    success: function (data) {
+                        if(data.success){
+                            toastr['success'](data.success, 'Success!');
+                            $('#GoogleAdsDetailsTable').DataTable().draw();
+                        }
+                        if(data.error){
+                            toastr['error'](data.error, 'Error!',);
+                        }
 
-
-                const GoogleAds_id =  $(this).data("id");
-                $('#clearip_googleads').val(GoogleAds_id);
-                const table = $('#GoogleAdsDetailsTable').DataTable();
-                table.destroy();
-                $('#GoogleAdsDetailsTable').dataTable({
-                    processing: true,
-                    serverSide: true,
-                    ajax: {
-                        url: "{{ route("google_ads.getIndexDetail") }}?googleAds_id=" + GoogleAds_id ,
-                        type: "post"
                     },
-                    columns: [
-                        {data: 'id'},
-                        {data: 'ip_address'},
-                        {data: 'device_name'},
-                        {data: 'country'},
-                        {data: 'updated_at'},
-                    ],
-                    order: [0, 'desc'],
+                    error: function (data) {
+                        console.log('Error:', data);
+                    }
                 });
-            });*/
+            });
 
         })
     </script>
