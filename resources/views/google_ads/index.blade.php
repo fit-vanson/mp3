@@ -272,7 +272,7 @@ $button = $header['button'];
                     {data: 'name'},
                     {data: 'is_Devices'},
                     {data: 'site_redirect'},
-                    {data: 'count'},
+                    {data: 'count_item'},
                     {data: 'action'},
                 ],
                 order: [0, 'desc'],

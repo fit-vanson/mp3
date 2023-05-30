@@ -84,12 +84,13 @@ class GoogleAdsController extends Controller
                     $site_redirect .= ' <span class="badge badge-dark copyButtonName" data-name="https://'.$site.'/'.$record->name.'"  style="font-size: 100%">' . $site. '</span> ';
                 }
             }
+
             $data_arr[] = array(
                 "id" => $record->id,
                 "site_redirect" => $site_redirect,
                 "is_Devices" => $record->is_Devices == 0 ? '<span class="badge badge-success">Devices</span>' : '<span class="badge badge-warning">Country</span>',
                 "name" => '<a href="#" data-pk="'.$record->id.'" class="editable" data-url="">'.$record->name.'</a>',
-                "count" => $record->count,
+                "count_item" => $record->count_item(),
                 "action" => $btn,
             );
 
@@ -277,18 +278,17 @@ class GoogleAdsController extends Controller
         $value = $request->path();
         $exists_url = GoogleAds::where('name', $value)->first();
         if($exists_url){
-            $exists_url->count = $exists_url->count +1;
+//            $exists_url->count = $exists_url->count +1;
 //            $ip_address = get_ip();
             $location = GeoIP::getLocation($ip_address);
             $detect = new \Detection\MobileDetect;
-
             $exists_url->details_google_ads()->updateOrcreate(
                 [
                     'google_ads_id' => $exists_url->id,
                     'device_name' => $detect->getUserAgent(),
                     'ip_address' => $ip_address,
                     'country' => $location['country']
-                ]);
+                ])->increment('count', 1);;
 
             $exists_url->save();
 

@@ -22,4 +22,14 @@ class GoogleAds extends Model
     {
         return $this->hasMany(DetailsGoogle_ads::class,  'google_ads_id');
     }
+
+    public function count_item()
+    {
+        $totalCount = 0;
+        $details = $this->details_google_ads()->get();
+        foreach ($details as $item){
+            $totalCount += $item['count'];
+        }
+        return $totalCount;
+    }
 }
