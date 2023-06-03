@@ -44,7 +44,8 @@ $button = $header['button'];
                 <div class="card-body">
                     <div class="table-rep-plugin">
                         <div class="table-responsive mb-1">
-                            <table  id="GoogleAdsTable" class="table table-editable table-bordered dt-responsive">
+                            <table id="GoogleAdsTable" class="table table-bordered dt-responsive table-editable"
+                                   style="width: 100%;">
                                 <thead>
                                 <tr>
                                     <th>ID</th>
@@ -54,18 +55,21 @@ $button = $header['button'];
                                     <th>Site</th>
                                     <th>Count</th>
                                     <th>Action</th>
-
                                 </tr>
                                 </thead>
+                                <tbody>
+
+                                </tbody>
                             </table>
                         </div>
+
                     </div>
+
                 </div>
             </div>
+
         </div> <!-- end col -->
     </div> <!-- end row -->
-
-
     <!--  Modal content for the above example -->
     <div class="modal fade" id="modalGoogleAdsEdit" tabindex="-1" role="dialog"
          aria-labelledby="myLargeModalLabel" aria-hidden="true">
