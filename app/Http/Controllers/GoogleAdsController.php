@@ -78,8 +78,8 @@ class GoogleAdsController extends Controller
         $data_arr = array();
         foreach ($records as $record) {
 
-
-            $btn = ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-warning editGoogle_ads"><i class="ti-pencil-alt"></i></a>';
+            $btn = '<p style="text-align: center">';
+            $btn .= ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-warning editGoogle_ads"><i class="ti-pencil-alt"></i></a>';
             $btn .= ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-danger deleteGoogle_ads"><i class="ti-trash"></i></a>';
             $btn .= ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-dark resetSite"><i class="ti-reload"></i></a>';
             $count_device_string ='';
@@ -92,6 +92,7 @@ class GoogleAdsController extends Controller
                 $count_device_string .= ' <span class="badge badge-warning" style="font-size: 100%">'.$count_device['Other'].'</span> ';
             }
 
+            $btn .= '</p>';
             $sites = json_decode($record->site_redirect,true);
             $site_redirect = '';
             if(isset($sites)){
@@ -109,7 +110,7 @@ class GoogleAdsController extends Controller
                 "is_Devices" => $record->is_Devices == 0 ? '<span class="badge badge-success">Devices</span>' : '<span class="badge badge-warning">Country</span>',
                 "name" => '<a href="#" data-action="name" data-pk="'.$record->id.'" class="editable" data-url="">'.$record->name.'</a>',
                 "url" =>  '<a href="#" data-action="url" data-pk="'.$record->id.'" class="editable" data-url="">'.$record->url.'</a>',
-                "count_item" => $record->count_item. $count_device_string,
+                "count_item" => '<p style="text-align: right;">'.$record->count_item. $count_device_string .'</p>',
                 "action" => $btn,
             );
 
