@@ -25,9 +25,15 @@ $button = $header['button'];
 @section('content')
 
     <div class="row align-items-center">
-        <div class="col-sm-6">
+        <div class="col-sm-12">
             <div class="page-title-box">
+                <div style="text-align: right; font-size: 150%">
+                    <span class="badge badge-primary">Android</span>
+                    <span class="badge badge-success">iOs</span>
+                    <span class="badge badge-info">Windows</span>
+                    <span class="badge badge-warning">Other</span>
 
+                </div>
             </div>
         </div>
     </div>
@@ -41,13 +47,14 @@ $button = $header['button'];
                             <table  id="GoogleAdsTable" class="table table-editable table-bordered dt-responsive">
                                 <thead>
                                 <tr>
-                                    <th style="width: 5%">ID</th>
-                                    <th style="width: 15%">Name</th>
-                                    <th style="width: 10%">Url</th>
-                                    <th style="width: 5%">Devices</th>
-                                    <th style="width: 40%">Site</th>
-                                    <th style="width: 10%">Count</th>
-                                    <th style="width: 15%">Action</th>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Url</th>
+                                    <th>Devices</th>
+                                    <th>Site</th>
+                                    <th>Count</th>
+                                    <th>Action</th>
+
                                 </tr>
                                 </thead>
                             </table>
@@ -184,46 +191,6 @@ $button = $header['button'];
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
 
-<!--    <div class="modal fade" id="modalGoogleAdsDetail" tabindex="-1" role="dialog"
-         aria-labelledby="myLargeModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <div class="col-sm-9">
-                        <h5 class="modal-title mt-0" id="modalGoogleAdsDetailsLabel"></h5>
-                    </div>
-
-                    <div class="col-sm-3">
-                        <button type="button" id="clearip_googleads" class="btn btn-info text-center m-t-15">Clear IP</button>
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    </div>
-
-
-
-                </div>
-                <div class="card-body">
-                    <div class="table-rep-plugin">
-                        <div class="table-responsive mb-1">
-                            <table  id="GoogleAdsDetailsTable" class="table table-editable table-bordered dt-responsive">
-                                <thead>
-                                <tr>
-                                    <th style="width: 5%">ID</th>
-                                    <th style="width: 10%">ip_address</th>
-                                    <th style="width: 55%">device_name</th>
-                                    <th style="width: 15%">country</th>
-                                    <th style="width: 15%">updated_at</th>
-                                </tr>
-                                </thead>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>&lt;!&ndash; /.modal-content &ndash;&gt;
-        </div>&lt;!&ndash; /.modal-dialog &ndash;&gt;
-    </div>&lt;!&ndash; /.modal &ndash;&gt;-->
-
-
-
 @endsection
 
 @section('script')
@@ -282,7 +249,7 @@ $button = $header['button'];
                     {data: 'count_item'},
                     {data: 'action'},
                 ],
-                order: [0, 'desc'],
+                order: [5, 'desc'],
 
 
                 drawCallback: function (settings) {

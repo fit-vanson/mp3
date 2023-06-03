@@ -13,6 +13,7 @@ class DetailsGoogle_ads extends Model
         'ip_address',
         'device_name',
         'device_name_full',
-        'country'
+        'country',
+        'count'
     ];
 }

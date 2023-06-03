@@ -10,6 +10,7 @@ class GoogleAds extends Model
     use HasFactory;
     protected $fillable = [
         'name',
+        'url',
         'site_redirect',
         'country_value',
         'devices_value',
@@ -23,12 +24,27 @@ class GoogleAds extends Model
         return $this->hasMany(DetailsGoogle_ads::class,  'google_ads_id');
     }
 
-    public function count_item()
+//    public function count_item()
+//    {
+//        $totalCount = 0;
+//        $details = $this->details_google_ads()->get();
+//        foreach ($details as $item){
+//            $totalCount += $item['count'];
+//        }
+//        return $totalCount;
+//    }
+
+    public function count_device()
     {
-        $totalCount = 0;
+        $totalCount = [
+            'Android' => 0,
+            'iOS' => 0,
+            'Windows' => 0,
+            'Other' => 0,
+        ];
         $details = $this->details_google_ads()->get();
         foreach ($details as $item){
-            $totalCount += $item['count'];
+            $totalCount[$item->device_name] += $item['count'];
         }
         return $totalCount;
     }

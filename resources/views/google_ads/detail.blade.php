@@ -126,7 +126,7 @@ $button = $header['button'];
                     {data: 'count'},
                     {data: 'updated_at'},
                 ],
-                order: [4, 'desc'],
+                order: [5, 'desc'],
             });
 
             $(document).on('click', '#clearIPGoogle_Ads', function () {

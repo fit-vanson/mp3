@@ -10,6 +10,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Torann\GeoIP\Facades\GeoIP;
@@ -62,23 +63,35 @@ class GoogleAdsController extends Controller
             ->count();
 
         // Get records, also we have included search filter as well
-        $records = GoogleAds::orderBy($columnName, $columnSortOrder)
+        $records = GoogleAds::select('google_ads.*', DB::raw('(SELECT SUM(count) FROM details_google_ads WHERE google_ads_id = google_ads.id) AS count_item'))
             ->where(function ($query) use ($searchValue) {
                 $query
                     ->where('name', 'like', '%' . $searchValue . '%')
-                    ->orwhere('url', 'like', '%' . $searchValue . '%');
+                    ->orWhere('url', 'like', '%' . $searchValue . '%');
             })
+            ->orderBy($columnName, $columnSortOrder)
             ->skip($start)
             ->take($rowperpage)
             ->get();
+
+
         $data_arr = array();
         foreach ($records as $record) {
+
+
             $btn = ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-warning editGoogle_ads"><i class="ti-pencil-alt"></i></a>';
             $btn .= ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-danger deleteGoogle_ads"><i class="ti-trash"></i></a>';
             $btn .= ' <a href="javascript:void(0)" data-id="'.$record->id.'" class="btn btn-dark resetSite"><i class="ti-reload"></i></a>';
-//            if($record->count >0){
+            $count_device_string ='';
+            if(count($record->details_google_ads) >0){
                 $btn .= ' <a href="'.route('google_ads.indexDetail', ['googleAds_id'=>$record->id]).'" target="_blank" class="btn btn-info detailsGoogle_ads"><i class="ti-info-alt"></i></a>';
-//            }
+                $count_device = $record->count_device();
+                $count_device_string .= ' <span class="badge badge-primary" style="font-size: 100%">'.$count_device['Android'].'</span> ';
+                $count_device_string .= ' <span class="badge badge-success" style="font-size: 100%">'.$count_device['iOS'].'</span> ';
+                $count_device_string .= ' <span class="badge badge-info" style="font-size: 100%">'.$count_device['Windows'].'</span> ';
+                $count_device_string .= ' <span class="badge badge-warning" style="font-size: 100%">'.$count_device['Other'].'</span> ';
+            }
+
             $sites = json_decode($record->site_redirect,true);
             $site_redirect = '';
             if(isset($sites)){
@@ -87,13 +100,16 @@ class GoogleAdsController extends Controller
                 }
             }
 
+
+
+
             $data_arr[] = array(
                 "id" => $record->id,
                 "site_redirect" => $site_redirect,
                 "is_Devices" => $record->is_Devices == 0 ? '<span class="badge badge-success">Devices</span>' : '<span class="badge badge-warning">Country</span>',
                 "name" => '<a href="#" data-action="name" data-pk="'.$record->id.'" class="editable" data-url="">'.$record->name.'</a>',
                 "url" =>  '<a href="#" data-action="url" data-pk="'.$record->id.'" class="editable" data-url="">'.$record->url.'</a>',
-                "count_item" => $record->count_item(),
+                "count_item" => $record->count_item. $count_device_string,
                 "action" => $btn,
             );
 
