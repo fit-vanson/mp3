@@ -24,13 +24,25 @@ $button = $header['button'];
 
 @section('content')
 
-    <div class="row align-items-center">
-        <div class="col-sm-6">
-            <div class="page-title-box">
+{{--    <div class="row align-items-center">--}}
+{{--        <div class="col-sm-6">--}}
+{{--            <div class="page-title-box">--}}
 
+{{--            </div>--}}
+{{--        </div>--}}
+{{--    </div>--}}
+
+    <div class="row align-items-center">
+        <div class="col-sm-12">
+            <div class="page-title-box">
+                <div style="text-align: right; font-size: 150%">
+                    {!! $count_device_string !!}
+
+                </div>
             </div>
         </div>
     </div>
+
 
     <div class="row">
         <div class="col-12">

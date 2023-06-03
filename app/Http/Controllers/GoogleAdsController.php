@@ -136,7 +136,21 @@ class GoogleAdsController extends Controller
             ]
 
         ];
-        return view('google_ads.detail')->with(compact('header'));
+        if(isset(\request()->googleAds_id)){
+            $googleAds_id = \request()->googleAds_id;
+            $GoogleAds = GoogleAds::find($googleAds_id);
+
+            $count_device_string ='';
+            if(count($GoogleAds->details_google_ads) >0){
+                $count_device = $GoogleAds->count_device();
+                $count_device_string .= ' <span class="badge badge-primary" style="font-size: 100%">Android: '.$count_device['Android'].'</span> ';
+                $count_device_string .= ' <span class="badge badge-success" style="font-size: 100%">iOS: '.$count_device['iOS'].'</span> ';
+                $count_device_string .= ' <span class="badge badge-info" style="font-size: 100%">Windows: '.$count_device['Windows'].'</span> ';
+                $count_device_string .= ' <span class="badge badge-warning" style="font-size: 100%">Other: '.$count_device['Other'].'</span> ';
+            }
+
+        }
+        return view('google_ads.detail')->with(compact('header','count_device_string'));
     }
     public function getIndexDetail(Request $request)
     {
