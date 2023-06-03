@@ -42,11 +42,12 @@ $button = $header['button'];
                                 <thead>
                                 <tr>
                                     <th style="width: 5%">ID</th>
-                                    <th style="width: 30%">Name</th>
+                                    <th style="width: 15%">Name</th>
+                                    <th style="width: 10%">Url</th>
                                     <th style="width: 5%">Devices</th>
-                                    <th style="width: 45%">Site</th>
-                                    <th style="width: 5%">Count</th>
-                                    <th>Action</th>
+                                    <th style="width: 40%">Site</th>
+                                    <th style="width: 10%">Count</th>
+                                    <th style="width: 15%">Action</th>
                                 </tr>
                                 </thead>
                             </table>
@@ -73,8 +74,13 @@ $button = $header['button'];
                         <input type="hidden" name="GoogleAds_id" id="GoogleAds_id">
 
                         <div class="form-group">
-                            <label>URL</label>
+                            <label>Name</label>
                             <input type="text" class="form-control" id="GoogleAds_name" name="GoogleAds_name" >
+                        </div>
+
+                        <div class="form-group">
+                            <label>URL</label>
+                            <input type="text" class="form-control" id="GoogleAds_url" name="GoogleAds_url" >
                         </div>
 
                         <div class="form-group">
@@ -270,6 +276,7 @@ $button = $header['button'];
                 columns: [
                     {data: 'id'},
                     {data: 'name'},
+                    {data: 'url'},
                     {data: 'is_Devices'},
                     {data: 'site_redirect'},
                     {data: 'count_item'},
@@ -284,8 +291,9 @@ $button = $header['button'];
                     $('.editable').editable({
                         success: function (data, newValue) {
                             var _id = $(this).data('pk')
+                            var _action = $(this).data('action')
                             $.ajax({
-                                url: "{{ route("google_ads.update") }}?id=" + _id + '&value=' + newValue,
+                                url: "{{ route("google_ads.update") }}?id=" + _id + '&value=' + newValue + '&action='+_action,
                                 responseTime: 400,
                                 success: function (result) {
                                     if (result.success) {
@@ -340,6 +348,7 @@ $button = $header['button'];
                         var site_redirect =  JSON.parse(data.site_redirect);
 
                         $('#GoogleAds_name').val(data.name);
+                        $('#GoogleAds_url').val(data.url);
                         $('#GoogleAds_id').val(GoogleAds_id);
                         $('#GoogleAds_url_block').val(data.url_block);
                         $('#GoogleAds_html').val(data.html);

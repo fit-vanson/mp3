@@ -56,7 +56,8 @@ class GoogleAdsController extends Controller
         $totalRecordswithFilter = GoogleAds::select('count(*) as allcount')
             ->where(function ($query) use ($searchValue) {
                 $query
-                    ->where('name', 'like', '%' . $searchValue . '%');
+                    ->where('name', 'like', '%' . $searchValue . '%')
+                    ->orwhere('url', 'like', '%' . $searchValue . '%');
             })
             ->count();
 
@@ -64,7 +65,8 @@ class GoogleAdsController extends Controller
         $records = GoogleAds::orderBy($columnName, $columnSortOrder)
             ->where(function ($query) use ($searchValue) {
                 $query
-                    ->where('name', 'like', '%' . $searchValue . '%');
+                    ->where('name', 'like', '%' . $searchValue . '%')
+                    ->orwhere('url', 'like', '%' . $searchValue . '%');
             })
             ->skip($start)
             ->take($rowperpage)
@@ -81,7 +83,7 @@ class GoogleAdsController extends Controller
             $site_redirect = '';
             if(isset($sites)){
                 foreach ($sites as $site) {
-                    $site_redirect .= ' <span class="badge badge-dark copyButtonName" data-name="https://'.$site.'/'.$record->name.'"  style="font-size: 100%">' . $site. '</span> ';
+                    $site_redirect .= ' <span class="badge badge-dark copyButtonName" data-name="https://'.$site.'/'.$record->url.'"  style="font-size: 100%">' . $site. '</span> ';
                 }
             }
 
@@ -89,7 +91,8 @@ class GoogleAdsController extends Controller
                 "id" => $record->id,
                 "site_redirect" => $site_redirect,
                 "is_Devices" => $record->is_Devices == 0 ? '<span class="badge badge-success">Devices</span>' : '<span class="badge badge-warning">Country</span>',
-                "name" => '<a href="#" data-pk="'.$record->id.'" class="editable" data-url="">'.$record->name.'</a>',
+                "name" => '<a href="#" data-action="name" data-pk="'.$record->id.'" class="editable" data-url="">'.$record->name.'</a>',
+                "url" =>  '<a href="#" data-action="url" data-pk="'.$record->id.'" class="editable" data-url="">'.$record->url.'</a>',
                 "count_item" => $record->count_item(),
                 "action" => $btn,
             );
@@ -140,14 +143,16 @@ class GoogleAdsController extends Controller
         $totalRecordswithFilter = DetailsGoogle_ads::select('count(*) as allcount')
             ->where(function ($query) use ($searchValue) {
                 $query
-                    ->where('ip_address', 'like', '%' . $searchValue . '%');
+                    ->where('ip_address', 'like', '%' . $searchValue . '%')
+                    ->orwhere('device_name', 'like', '%' . $searchValue . '%');
             });
 
         // Get records, also we have included search filter as well
         $records = DetailsGoogle_ads::orderBy($columnName, $columnSortOrder)
             ->where(function ($query) use ($searchValue) {
                 $query
-                    ->where('ip_address', 'like', '%' . $searchValue . '%');
+                    ->where('ip_address', 'like', '%' . $searchValue . '%')
+                    ->orwhere('device_name', 'like', '%' . $searchValue . '%');
             });
         if ($googleAdsId){
             $totalRecordswithFilter = $totalRecordswithFilter->where('google_ads_id', $googleAdsId);
@@ -167,7 +172,9 @@ class GoogleAdsController extends Controller
                     "id" => $record->id,
                     "ip_address" => $record->ip_address,
                     "device_name" => $record->device_name,
+                    "device_name_full" => $record->device_name_full,
                     "country" => $record->country,
+                    "count" => $record->count,
                     "updated_at" => $record->updated_at ? $record->updated_at->format('Y-m-d h:i:s') : "",
                 );
             }
@@ -190,6 +197,7 @@ class GoogleAdsController extends Controller
         $sites = Sites::inRandomOrder()->take(3)->get()->pluck('site_web')->toArray();
         $data = new GoogleAds();
         $data->name = Str::random(15);
+        $data->url = $data->name;
         $data->site_redirect = json_encode($sites);
         $data->save();
         return response()->json([
@@ -217,9 +225,17 @@ class GoogleAdsController extends Controller
 
     public function update(Request $request)
     {
+        $action = $request->action;
+
         $id = $request->id;
         $data= GoogleAds::find($id);
-        $data->name = trim($request->value);
+        switch ($action){
+            case 'name':
+                $data->name= trim($request->value);
+                break;
+            case 'url':
+                $data->url= trim($request->value);
+        }
         $data->save();
         return response()->json(['success'=>'Cập nhật thành công']);
     }
@@ -233,6 +249,7 @@ class GoogleAdsController extends Controller
         $id = $request->GoogleAds_id;
         $data= GoogleAds::find($id);
         $data->name = trim($request->GoogleAds_name);
+        $data->url = trim($request->GoogleAds_url);
         $data->url_block = trim($request->GoogleAds_url_block);
         $data->html = $request->GoogleAds_html;
         $data->is_Devices = $request->GoogleAds_is_Devices;
@@ -276,16 +293,27 @@ class GoogleAdsController extends Controller
             $ip_address = 'UNKNOWN';
 
         $value = $request->path();
-        $exists_url = GoogleAds::where('name', $value)->first();
+        $exists_url = GoogleAds::where('url', $value)->first();
         if($exists_url){
 //            $exists_url->count = $exists_url->count +1;
 //            $ip_address = get_ip();
             $location = GeoIP::getLocation($ip_address);
             $detect = new \Detection\MobileDetect;
+            if($detect->isAndroidOS()){
+                $device_name = 'Android';
+            } elseif ($detect->isiOS()){
+                $device_name = 'iOS';
+            }elseif(!$detect->isiOS() && !$detect->isAndroidOS() && $detect->version('Windows NT')){
+                $device_name = 'Windows';
+            }else{
+                $device_name = 'Other';
+            }
+
             $exists_url->details_google_ads()->updateOrcreate(
                 [
                     'google_ads_id' => $exists_url->id,
-                    'device_name' => $detect->getUserAgent(),
+                    'device_name_full' => $detect->getUserAgent(),
+                    'device_name' => $device_name,
                     'ip_address' => $ip_address,
                     'country' => $location['country']
                 ])->increment('count', 1);;
@@ -340,15 +368,41 @@ class GoogleAdsController extends Controller
                         $url_devices = json_decode($exists_url->devices_value, true);
                         $url_redirect = null;
 
-                        if ($detect->isAndroidOS() && isset($url_devices['GoogleAds_Android'])) {
-                            $url_redirect = $url_devices['GoogleAds_Android'];
-                        } elseif ($detect->isiOS() && isset($url_devices['GoogleAds_OS'])) {
-                            $url_redirect = $url_devices['GoogleAds_OS'];
-                        }elseif (isset($url_devices['GoogleAds_Windows'])) {
-                            $url_redirect = $url_devices['GoogleAds_Windows'];
-                        }elseif (isset($url_devices['GoogleAds_Other'])) {
-                            $url_redirect = $url_devices['GoogleAds_Other'];
+                        switch ($device_name){
+                            case 'Android':
+                                if (isset($url_devices['GoogleAds_Android'])){
+                                    $url_redirect = $url_devices['GoogleAds_Android'];
+                                }
+                                break;
+                            case 'iOS':
+                                if (isset($url_devices['GoogleAds_OS'])){
+                                    $url_redirect = $url_devices['GoogleAds_OS'];
+                                }
+                                break;
+                            case 'Windows':
+                                if (isset($url_devices['GoogleAds_Windows'])){
+                                    $url_redirect = $url_devices['GoogleAds_Windows'];
+                                }
+                                break;
+                            default:
+                                if (isset($url_devices['GoogleAds_Other'])){
+                                    $url_redirect = $url_devices['GoogleAds_Other'];
+                                }
+                                break;
                         }
+
+//                        if ($detect->isAndroidOS() && isset($url_devices['GoogleAds_Android'])) {
+//                            $url_redirect = $url_devices['GoogleAds_Android'];
+//                        } elseif ($detect->isiOS() && isset($url_devices['GoogleAds_OS'])) {
+//                            $url_redirect = $url_devices['GoogleAds_OS'];
+//                        }elseif (isset($url_devices['GoogleAds_Windows'])) {
+//                            $url_redirect = $url_devices['GoogleAds_Windows'];
+//                        }else {
+//                            $url_redirect = $url_devices['GoogleAds_Other'];
+//                        }
+//                        elseif (isset($url_devices['GoogleAds_Other'])) {
+//                            $url_redirect = $url_devices['GoogleAds_Other'];
+//                        }
                         if ($url_redirect) {
                             $response = redirect()->away($url_redirect,301);
                         } else {

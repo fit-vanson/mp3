@@ -46,6 +46,7 @@ $button = $header['button'];
                                     <th style="width: 10%">ip_address</th>
                                     <th style="width: 55%">device_name</th>
                                     <th style="width: 15%">country</th>
+                                    <th style="width: 15%">Count</th>
                                     <th style="width: 15%">updated_at</th>
                                 </tr>
                                 </thead>
@@ -120,8 +121,9 @@ $button = $header['button'];
                 columns: [
                     {data: 'id'},
                     {data: 'ip_address'},
-                    {data: 'device_name'},
+                    {data: 'device_name_full'},
                     {data: 'country'},
+                    {data: 'count'},
                     {data: 'updated_at'},
                 ],
                 order: [4, 'desc'],
