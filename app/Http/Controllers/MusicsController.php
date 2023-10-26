@@ -552,6 +552,7 @@ class MusicsController extends Controller
                 $music_url_link_audio_ytb = $downloadOptions->getSplitFormats()->audio->url;
                 $expire = $this->parse_query($music_url_link_audio_ytb)['expire'];
 
+
                 $info->update([
                     'music_url_link_audio_ytb'=>$music_url_link_audio_ytb,
                     'lengthSeconds'=>$downloadOptions->getInfo()->getLengthSeconds(),

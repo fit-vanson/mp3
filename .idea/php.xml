@@ -155,10 +155,10 @@
       <path value="$PROJECT_DIR$/vendor/athlon1600/youtube-downloader" />
       <path value="$PROJECT_DIR$/vendor/athlon1600/php-curl-file-downloader" />
       <path value="$PROJECT_DIR$/vendor/athlon1600/php-curl-client" />
-      <path value="$PROJECT_DIR$/vendor/madcoda/php-youtube-api" />
       <path value="$PROJECT_DIR$/vendor/norkunas/youtube-dl-php" />
       <path value="$PROJECT_DIR$/vendor/symfony/filesystem" />
       <path value="$PROJECT_DIR$/vendor/mobiledetect/mobiledetectlib" />
+      <path value="$PROJECT_DIR$/vendor/psr/clock" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.3" />

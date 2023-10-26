@@ -277,6 +277,8 @@ class GoogleAdsController extends Controller
             return $item['country'] !== null && $item['url'] !== null;
         });
 
+        dd($GoogleAds_country);
+
         $id = $request->GoogleAds_id;
         $data= GoogleAds::find($id);
         $data->name = trim($request->GoogleAds_name);
