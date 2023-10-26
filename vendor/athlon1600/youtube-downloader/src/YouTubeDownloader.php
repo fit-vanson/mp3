@@ -16,15 +16,22 @@ use YouTube\Utils\Utils;
 class YouTubeDownloader
 {
     protected $client;
+    protected $youtubeClientHeaders;
 
     function __construct()
     {
         $this->client = new Browser();
+        $this->youtubeClientHeaders = new YoutubeClientHeaders();
     }
 
     public function getBrowser()
     {
         return $this->client;
+    }
+
+    public function getYoutubeClientHeaders()
+    {
+        return $this->youtubeClientHeaders;
     }
 
     /**
@@ -100,10 +107,10 @@ class YouTubeDownloader
         $response = $this->client->post("https://www.youtube.com/youtubei/v1/player?key=" . $configData->getApiKey(), json_encode([
             "context" => [
                 "client" => [
-//                    "clientName" => "ANDROID_EMBEDDED_PLAYER",
-                    "clientName" => "WEB",
-                    "clientVersion" => "2.20210721.00.00",
-//                    "clientVersion" => "16.20",
+//                    "clientName" => "WEB",
+//                    "clientVersion" => "2.20210721.00.00",
+                    "clientName" => $this->youtubeClientHeaders->getClientName(),
+                    "clientVersion" => $this->youtubeClientHeaders->getClientVersion(),
                     "hl" => "en"
                 ]
             ],
